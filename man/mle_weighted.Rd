@@ -2,9 +2,9 @@
 % Please edit documentation in R/mle_weighted.R
 \name{mle_weighted}
 \alias{mle_weighted}
-\title{mle_weighted takes a list of MLEs for some parameter gamma and then
-combines them to form the MLE for gamma over all the information in the
-samples used to generate the list of MLEs.}
+\title{\code{mle_weighted} takes a list of MLEs for some parameter theta and then
+combines them to form the MLE for theta over all the information in the
+samples used to generate the MLEs in the list.}
 \usage{
 mle_weighted(mles)
 }
@@ -15,7 +15,7 @@ mle_weighted(mles)
 an object of type \code{mle_weighted}, which inherits from \code{mle}.
 }
 \description{
-mle_weighted takes a list of MLEs for some parameter gamma and then
-combines them to form the MLE for gamma over all the information in the
-samples used to generate the list of MLEs.
+\code{mle_weighted} takes a list of MLEs for some parameter theta and then
+combines them to form the MLE for theta over all the information in the
+samples used to generate the MLEs in the list.
 }

@@ -18,13 +18,39 @@ You can install the development version of `algebraic.mle` from
 devtools::install_github("queelius/algebraic.mle")
 ```
 
-## Example
+## Example: MLE of rate parameter in exponential distribution
 
-This is a basic example which shows you how to solve a common problem:
+Suppose we have a sample of *n* = 50 draws from EXP (*λ*=1).
+
+``` r
+n = 50
+rate = 1
+x <- stats::rexp(n,rate)
+head(x)
+#> [1] 0.1407042 0.3839293 2.7061341 0.2310358 2.2283157 0.3381703
+```
+
+Then, we can estimate *λ* with:
 
 ``` r
 library(algebraic.mle)
-## basic example code
+(rate.hat <- algebraic.mle::mle_exp(x))
+#> $theta.hat
+#> [1] 0.8838971
+#> 
+#> $info
+#>          [,1]
+#> [1,] 63.99802
+#> 
+#> $sigma
+#>            [,1]
+#> [1,] 0.01562548
+#> 
+#> $sample_size
+#> [1] 50
+#> 
+#> attr(,"class")
+#> [1] "mle_exp"   "mle"       "estimator"
 ```
 
 ## MLE from sum of MLEs

@@ -112,7 +112,7 @@ mle_distr <- function(x,f,n=1000,...)
 
 #' Computes the point estimate of an mle object.
 #'
-#' @param x the mle object.
+#' @param x the mle object(s).
 #' @param ... unused by \code{mle} objects. particular specializations of
 #'            \code{mle} objects may use it, however.
 #' @export

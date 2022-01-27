@@ -7,7 +7,7 @@
 mle_point(x, ...)
 }
 \arguments{
-\item{x}{the mle object.}
+\item{x}{the mle object(s).}
 
 \item{...}{unused by \code{mle} objects. particular specializations of
 \code{mle} objects may use it, however.}
