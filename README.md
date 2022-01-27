@@ -10,7 +10,7 @@ An algebra over maximum likelihood estimators.
 
 ## Installation
 
-You can install the development version of algebraic.mle from
+You can install the development version of `algebraic.mle` from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -26,3 +26,5 @@ This is a basic example which shows you how to solve a common problem:
 library(algebraic.mle)
 ## basic example code
 ```
+
+1 + 1 = *σ*

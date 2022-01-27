@@ -22,7 +22,7 @@ An algebra over maximum likelihood estimators.
 
 ## Installation
 
-You can install the development version of algebraic.mle from [GitHub](https://github.com/) with:
+You can install the development version of `algebraic.mle` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -38,3 +38,6 @@ library(algebraic.mle)
 ## basic example code
 ```
 
+$$
+    1+1 = \sigma
+$$
