@@ -38,15 +38,3 @@ mle_exp <- function(x)
         sample_size=n),
         class=c("mle_exp","mle","estimator"))
 }
-
-#' Computes the point estimate of an mle object.
-#'
-#' @param x the mle object(s).
-#' @param ... unused by \code{mle} objects. particular specializations of
-#'            \code{mle} objects may use it, however.
-#' @export
-point.exp_mle <- function(x,...)
-{
-    x$theta.hat
-}
-
