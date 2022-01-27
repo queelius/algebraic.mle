@@ -38,6 +38,15 @@ library(algebraic.mle)
 ## basic example code
 ```
 
+
+## MLE from sum of MLEs
+
+Consider $k$ mutually independent MLE estimators of parameter $\theta$,
+$\hat\theta_1,\ldots,\hat\theta_k$, where $\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))$.
+
+Then, the maximum likelihood estimator of $\theta$ that incorporates all of
+the data in $\hat\theta_1,\ldots,\hat\theta_k$ is given by the inverse-variance
+weighted mean,
 $$
-    1+1 = \sigma
+    \hat\theta = \left(\sum I_j(\theta)\right)^{-1} \left(\sum I_j(\theta) \theta_j\right).
 $$
