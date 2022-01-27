@@ -93,13 +93,13 @@ mse.mle <- function(x,...)
 distr.mle <- function(x,f,n=1000,...)
 {
     samp <- sampler(x,...)
-    data <- point(samp(n))
+    data <- samp(n)
     fx <- f(data)
     structure(list(
         n=n,
         sigma=stats::cov(fx),
-        theta.hat=mean(fx)),
-        class=c("mle_numerical","mle","estimate","distr",class(x)))
+        theta.hat=stats::mean(fx)),
+        class=c("mle_func","mle_numerical","mle","estimate","distr",class(x)))
 }
 
 #' Computes the point estimate of an mle object.

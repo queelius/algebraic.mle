@@ -50,9 +50,9 @@ mse <- function(x, ...)
 }
 
 #' Generic function for computing the distribution of \code{f(x)} where \code{x}
-#' models another distribution.
+#' models another distribution object.
 #'
-#' @param x an estimator object.
+#' @param x a \code{distr} object.
 #' @param f a function of the \code{x} object.
 #' @param n number of samples to take to estimate \code{f(x)}  with.
 #' @param ... additional arguments to pass.
