@@ -49,8 +49,8 @@ mse <- function(x, ...)
     UseMethod("mse",x)
 }
 
-#' Generic function for computing the estimator of \code{f(x)} where \code{x}
-#' models an estimator.
+#' Generic function for computing the distribution of \code{f(x)} where \code{x}
+#' models another distribution.
 #'
 #' @param x an estimator object.
 #' @param f a function of the \code{x} object.
