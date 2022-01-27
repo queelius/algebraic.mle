@@ -107,6 +107,7 @@ distr.mle <- function(x,f,n=1000,...)
 #' @param x the mle object(s).
 #' @param ... unused by \code{mle} objects. particular specializations of
 #'            \code{mle} objects may use it, however.
+#' @export
 point.mle <- function(x,...)
 {
     x$theta.hat
