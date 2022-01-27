@@ -95,9 +95,10 @@ distr.mle <- function(x,f,n=1000,...)
     samp <- sampler(x,...)
     data <- samp(n)
     fx <- f(data)
+
     structure(list(
         n=n,
-        sigma=stats::cov(fx),
+        sigma=stats::var(fx),
         theta.hat=stats::mean(fx)),
         class=c("mle_func","mle_numerical","mle","estimate","distr",class(x)))
 }
