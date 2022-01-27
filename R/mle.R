@@ -99,7 +99,7 @@ distr.mle <- function(x,f,n=1000,...)
     structure(list(
         n=n,
         sigma=stats::var(fx),
-        theta.hat=mean(fx)),
+        theta.hat=f(point(x))),
         class=c("mle_func","mle_numerical","mle","estimate","distr",class(x)))
 }
 
