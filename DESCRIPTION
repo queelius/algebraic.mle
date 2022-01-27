@@ -2,7 +2,9 @@ Package: algebraic.mle
 Type: Package
 Title: Algebraic maximum likelihood estimators
 Version: 0.1.0
-Author: Alex Towell
+Authors@R: 
+    person("Alexander", "Towell", , "lex@metafunctor.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-6443-9897"))
 Maintainer: Alex Towell <lex@metafunctor.com>
 Description: We define an algebra over maximum likelihood estimators by
     defining a set of operators over MLEs (closure) and various other functions.
@@ -14,7 +16,10 @@ Imports:
     purrr,
     MASS,
     stats,
-    dplyr
+    dplyr,
+    tibble,
+    matlib,
+    extraDistr
 RoxygenNote: 7.1.2
 URL: https://github.com/queelius/algebraic.mle
 BugReports: https://github.com/queelius/algebraic.mle/issues

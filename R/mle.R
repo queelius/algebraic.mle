@@ -1,29 +1,33 @@
-#' Function to compute the confidence intervals of the parameters of
-#' \code{mle} objects.
+#' Function to compute the confidence intervals of \code{mle} objects.
 #'
 #' @param object the \code{mle} object to compute the confidence intervals for.
-#' @param parm ?
+#' @param parm parameter indexes to compute the confidence intervals for,
+#'             defaults to all.
 #' @param level confidence level, defaults to 0.95 (alpha=.05).
 #' @param ... additional arguments to pass.
-#'
 #' @export
 confint.mle <- function(object, parm=NULL, level=0.95, ...)
 {
-    sigma <- diag(vcov(object))
-    theta <- point(object)
+    sigma <- diag(vcov(object,...))
+    theta <- point(object,...)
     p <- length(theta)
     q <- stats::qnorm(level)
+    if (is.null(parm))
+        parm <- 1:p
 
-    ci <- matrix(nrow=p,ncol=2)
+    parm <- parm[parm >= 1 & parm <= p]
+    ci <- matrix(nrow=length(parm),ncol=2)
     colnames(ci) <- c(paste((1-level)/2*100,"%"),
                       paste((1-(1-level)/2)*100,"%"))
 
-    # ci <- c(theta - q * sqrt(sigma))
-    for (j in 1:p)
+    i <- 1
+    for (j in parm)
     {
-        ci[j,] <- c(theta[j] - q * sqrt(sigma[j]),
+        ci[i,] <- c(theta[j] - q * sqrt(sigma[j]),
                     theta[j] + q * sqrt(sigma[j]))
+        i <- i + 1
     }
+    rownames(ci) <- parm
     ci
 }
 
@@ -48,12 +52,7 @@ sampler.mle <- function(x,...)
     }
 }
 
-#' Computes the variance-covariance matrix of the MLE.
-#'
-#' @param object a fitted \code{mle} object.
-#' @param ... this is not used for object type \code{mle}.
-#'
-#' @import stats
+#' @importFrom stats vcov
 #' @export
 vcov.mle <- function(object,...)
 {
@@ -73,7 +72,6 @@ vcov.mle <- function(object,...)
 #'
 #' @param x the \code{mle} object to compute the MSE of.
 #' @param ... this is not used for object type \code{mle}.
-#'
 #' @export
 mse.mle <- function(x,...)
 {
@@ -99,7 +97,7 @@ distr.mle <- function(x,f,n=1000,...)
     fx <- f(data)
     structure(list(
         n=n,
-        sigma=cov(fx),
+        sigma=stats::cov(fx),
         theta.hat=mean(fx)),
         class=c("mle_numerical","mle","estimate",class(x)))
 }
@@ -120,6 +118,7 @@ point.mle <- function(x,...)
 #' @param ... the list of \code{mle} objects to sum over.
 #' @param na.rm unused when summing over \code{mle} objects.
 #' @return an object of type \code{mle_weighted}.
+#' @export
 sum.mle <- function(...,na.rm=FALSE)
 {
     mle_weighted(...)

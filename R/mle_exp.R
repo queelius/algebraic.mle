@@ -1,9 +1,3 @@
-#' @export
-vcov.exp_mle <- function(object,...)
-{
-    object$sigma
-}
-
 #' Method for sampling from an \code{mle_exp} object.
 #'
 #' It creates a sampler for the \code{mle_exp} object. It returns a function
@@ -44,3 +38,15 @@ mle_exp <- function(x)
         sample_size=n),
         class=c("mle_exp","mle","estimator"))
 }
+
+#' Computes the point estimate of an mle object.
+#'
+#' @param x the mle object(s).
+#' @param ... unused by \code{mle} objects. particular specializations of
+#'            \code{mle} objects may use it, however.
+#' @export
+point.exp_mle <- function(x,...)
+{
+    x$theta.hat
+}
+

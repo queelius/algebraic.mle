@@ -9,7 +9,6 @@ point <- function(x, ...)
     UseMethod("point",x)
 }
 
-
 #' Generic function for sampling from distribution objects.
 #'
 #' It creates a sampler for the \code{x} object. It returns a function

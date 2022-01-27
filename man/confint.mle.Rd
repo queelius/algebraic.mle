@@ -2,21 +2,20 @@
 % Please edit documentation in R/mle.R
 \name{confint.mle}
 \alias{confint.mle}
-\title{Function to compute the confidence intervals of the parameters of
-\code{mle} objects.}
+\title{Function to compute the confidence intervals of \code{mle} objects.}
 \usage{
 \method{confint}{mle}(object, parm = NULL, level = 0.95, ...)
 }
 \arguments{
 \item{object}{the \code{mle} object to compute the confidence intervals for.}
 
-\item{parm}{?}
+\item{parm}{parameter indexes to compute the confidence intervals for,
+defaults to all.}
 
 \item{level}{confidence level, defaults to 0.95 (alpha=.05).}
 
 \item{...}{additional arguments to pass.}
 }
 \description{
-Function to compute the confidence intervals of the parameters of
-\code{mle} objects.
+Function to compute the confidence intervals of \code{mle} objects.
 }
