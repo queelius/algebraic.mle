@@ -2,12 +2,12 @@
 % Please edit documentation in R/generic_functions.R
 \name{sampler}
 \alias{sampler}
-\title{Generic function for sampling from distributions.}
+\title{Generic function for sampling from distribution objects.}
 \usage{
 sampler(x, ...)
 }
 \arguments{
-\item{x}{the \code{x} object to create sampler for}
+\item{x}{the \code{x} object to create a sampler for}
 
 \item{...}{additional arguments to pass.}
 }

@@ -10,13 +10,13 @@ point <- function(x, ...)
 }
 
 
-#' Generic function for sampling from distributions.
+#' Generic function for sampling from distribution objects.
 #'
 #' It creates a sampler for the \code{x} object. It returns a function
 #' that accepts a single parameter \code{n} denoting the number of samples
 #' to draw from the \code{x} object.
 #'
-#' @param x the \code{x} object to create sampler for
+#' @param x the \code{x} object to create a sampler for
 #' @param ... additional arguments to pass.
 #'
 #' @export

@@ -7,9 +7,9 @@
 #' @param ... additional arguments to pass.
 #'
 #' @export
-mle_confint <- function(object, parm=NULL, level=0.95, ...)
+confint.mle <- function(object, parm=NULL, level=0.95, ...)
 {
-    sigma <- diag(mle_cov(object))
+    sigma <- diag(vcov(object))
     theta <- point(object)
     p <- length(theta)
     q <- stats::qnorm(level)
@@ -26,8 +26,6 @@ mle_confint <- function(object, parm=NULL, level=0.95, ...)
     }
     ci
 }
-.S3method("confint", "mle", mle_confint)
-.S3method("confint", "mle_exp", mle_confint)
 
 #' Method for sampling from an \code{mle} object.
 #'
@@ -39,7 +37,7 @@ mle_confint <- function(object, parm=NULL, level=0.95, ...)
 #' @param ... additional arguments to pass to \code{mle} objects, like sampling
 #'            method, \code{?mvtnorm}.
 #' @export
-mle_sampler <- function(x,...)
+sampler.mle <- function(x,...)
 {
     sigma <- vcov(x)
     theta <- point(x)
@@ -49,7 +47,6 @@ mle_sampler <- function(x,...)
         mvtnorm::rmvnorm(n,theta,sigma,...)
     }
 }
-.S3method("sampler", "mle", mle_sampler)
 
 #' Computes the variance-covariance matrix of the MLE.
 #'
@@ -58,12 +55,10 @@ mle_sampler <- function(x,...)
 #'
 #' @import stats
 #' @export
-mle_cov <- function(object,...)
+vcov.mle <- function(object,...)
 {
     object$sigma
 }
-.S3method("vcov", "mle", mle_cov)
-
 
 #' Computes the MSE of an MLE
 #'
@@ -80,12 +75,10 @@ mle_cov <- function(object,...)
 #' @param ... this is not used for object type \code{mle}.
 #'
 #' @export
-mle_mse <- function(x,...)
+mse.mle <- function(x,...)
 {
     sum(diag(vcov(x)))
 }
-.S3method("mse", "mle", mle_mse)
-
 
 #' Computes the distribution of \code{f(x)} as a function of \code{x}, where
 #' \code{x} models a \code{mle} object.
@@ -99,7 +92,7 @@ mle_mse <- function(x,...)
 #'        of \code{f(x)}.
 #' @param ... additional arguments to pass to the \code{mle} sampler.
 #' @export
-mle_distr <- function(x,f,n=1000,...)
+distr.mle <- function(x,f,n=1000,...)
 {
     samp <- sample(x,...)
     data <- point(samp(n))
@@ -110,7 +103,6 @@ mle_distr <- function(x,f,n=1000,...)
         theta.hat=mean(fx)),
         class=c("mle_numerical","mle","estimate",class(x)))
 }
-.S3method("distr", "mle", mle_distr)
 
 #' Computes the point estimate of an mle object.
 #'
@@ -118,22 +110,20 @@ mle_distr <- function(x,f,n=1000,...)
 #' @param ... unused by \code{mle} objects. particular specializations of
 #'            \code{mle} objects may use it, however.
 #' @export
-mle_point <- function(x,...)
+point.mle <- function(x,...)
 {
     x$theta.hat
 }
-.S3method("point", "mle", mle_point)
 
 #' Compute the inverse-variance weighted MLE of the sum of MLE objects.
 #'
 #' @param ... the list of \code{mle} objects to sum over.
 #' @param na.rm unused when summing over \code{mle} objects.
 #' @return an object of type \code{mle_weighted}.
-mle_sum <- function(...,na.rm=FALSE)
+sum.mle <- function(...,na.rm=FALSE)
 {
     mle_weighted(...)
 }
-.S3method("sum", "mle", mle_sum)
 
 #' Function for obtaining the fisher information matrix of an \code{mle} object.
 #'
@@ -141,8 +131,7 @@ mle_sum <- function(...,na.rm=FALSE)
 #' @param ... unused by \code{mle} objects. particular specializations of
 #'            \code{mle} objects may use it, however.
 #' @export
-mle_fisher_info <- function(x, ...)
+fisher_info.mle <- function(x, ...)
 {
     x$info
 }
-.S3method("fisher_info", "mle", mle_fisher_info)
