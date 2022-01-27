@@ -11,6 +11,9 @@ mle_weighted(mles)
 \arguments{
 \item{mles}{A list of MLEs, all for the same parameter.}
 }
+\value{
+an object of type \code{mle_weighted}, which inherits from \code{mle}.
+}
 \description{
 mle_weighted takes a list of MLEs for some parameter gamma and then
 combines them to form the MLE for gamma over all the information in the

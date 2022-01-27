@@ -11,6 +11,9 @@ mle_sum(..., na.rm = FALSE)
 
 \item{na.rm}{unused when summing over \code{mle} objects.}
 }
+\value{
+an object of type \code{mle_weighted}.
+}
 \description{
 Compute the inverse-variance weighted MLE of the sum of MLE objects.
 }
