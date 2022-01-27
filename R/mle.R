@@ -9,7 +9,7 @@
 #' @export
 mle_confint <- function(object, parm=NULL, level=0.95, ...)
 {
-    sigma <- diag(vcov(object))
+    sigma <- diag(mle_cov(object))
     theta <- point(object)
     p <- length(theta)
     q <- stats::qnorm(level)
@@ -27,6 +27,7 @@ mle_confint <- function(object, parm=NULL, level=0.95, ...)
     ci
 }
 .S3method("confint", "mle", mle_confint)
+.S3method("confint", "mle_exp", mle_confint)
 
 #' Method for sampling from an \code{mle} object.
 #'
@@ -62,6 +63,7 @@ mle_cov <- function(object,...)
     object$sigma
 }
 .S3method("vcov", "mle", mle_cov)
+
 
 #' Computes the MSE of an MLE
 #'

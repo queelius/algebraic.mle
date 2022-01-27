@@ -1,3 +1,11 @@
+#' @export
+vcov.exp_mle <- function(object,...)
+{
+    object$sigma
+}
+.S3method("vcov", "exp_mle")
+
+
 
 #' Method for sampling from an \code{mle_exp} object.
 #'
@@ -8,14 +16,14 @@
 #' @param x the \code{mle_exp} object to create sampler for
 #' @param ... additional arguments to pass to \code{mle_exp} objects.
 #' @export
-mle_exp_sampler <- function(x,...)
+sampler.mle_exp <- function(x,...)
 {
     function(n=1)
     {
         stats::rnorm(n,point(x),sqrt(vcov(x)),...)
     }
 }
-.S3method("sampler", "mle_exp", mle_exp_sampler)
+.S3method("sampler", "mle_exp")
 
 #' MLE of the rate parameter of the exponential distribution given a
 #' random sample of observations drawn from it.

@@ -32,7 +32,7 @@ devtools::install_github("queelius/algebraic.mle")
 ## Example: MLE of rate parameter in exponential distribution
 
 Suppose we have a sample of $n=50$ draws from $\operatorname{EXP}(\lambda=1)$.
-```{r exp_example}
+```{r}
 n = 50
 rate = 1
 x <- stats::rexp(n,rate)
@@ -40,11 +40,29 @@ head(x)
 ```
 
 Then, we can estimate $\lambda$ with:
-```{r example}
+```{r}
 library(algebraic.mle)
-(rate.hat <- algebraic.mle::mle_exp(x))
+(rate.hat <- mle_exp(x))
 ```
 
+We can show the point estimator with:
+```{r}
+point(rate.hat)
+```
+
+We can show the confidence intervals with:
+```{r}
+mle_confint(rate.hat)
+```
+
+We can sample from the MLE $\hat\lambda$ with:
+```{r}
+library(ggplot2)
+library(tibble)
+rrate.mle <- sampler(rate.hat)
+#df <- tibble(x=rrate.mle(100000))
+#head(df)
+```
 
 ## MLE from sum of MLEs
 

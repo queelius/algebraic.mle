@@ -28,10 +28,3 @@ mle_weighted <- function(mles)
         sigma=cov.wt),
         class=c("mle_weighted","mle","estimate"))
 }
-
-#mles <- NULL
-#for (i in 1:10)
-#{
-#    mles[[i]] <- mle_exp(rexp(100,1))
-#}
-

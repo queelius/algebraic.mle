@@ -9,11 +9,28 @@ point <- function(x, ...)
     UseMethod("point",x)
 }
 
+
+#' Generic function for sampling from distributions.
+#'
+#' It creates a sampler for the \code{x} object. It returns a function
+#' that accepts a single parameter \code{n} denoting the number of samples
+#' to draw from the \code{x} object.
+#'
+#' @param x the \code{x} object to create sampler for
+#' @param ... additional arguments to pass.
+#'
+#' @export
+sampler <- function(x, ...)
+{
+    UseMethod("sampler",x)
+}
+
 #' Generic method for obtaining the fisher information
 #' matrix of an \code{mle} object.
 #'
 #' @param x the object to obtain the fisher information of
 #' @param ... additional arguments to pass.
+#'
 #' @export
 fisher_info <- function(x, ...)
 {
@@ -47,23 +64,3 @@ distr <- function(x, f, n=1000, ...)
     UseMethod("distr",x)
 }
 
-
-#' Generic function for sampling from distributions.
-#'
-#' It creates a sampler for the \code{x} object. It returns a function
-#' that accepts a single parameter \code{n} denoting the number of samples
-#' to draw from the \code{x} object.
-#'
-#' @param x the \code{x} object to create sampler for
-#' @param ... additional arguments to pass.
-#' @export
-sampler <- function(x, ...)
-{
-    sigma <- vcov(x)
-    theta <- point(x)
-
-    function(n=1)
-    {
-        mvtnorm::rmvnorm(n,theta,sigma,...)
-    }
-}
