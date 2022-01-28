@@ -40,18 +40,18 @@ from this sample (data frame) with:
 ``` r
 print(x)
 #> # A tibble: 1,000 × 1
-#>        x
-#>    <dbl>
-#>  1 0.842
-#>  2 0.459
-#>  3 0.597
-#>  4 0.987
-#>  5 1.10 
-#>  6 0.680
-#>  7 0.773
-#>  8 1.59 
-#>  9 1.12 
-#> 10 0.750
+#>         x
+#>     <dbl>
+#>  1 1.62  
+#>  2 1.33  
+#>  3 0.397 
+#>  4 0.0523
+#>  5 1.59  
+#>  6 1.59  
+#>  7 0.112 
+#>  8 0.108 
+#>  9 6.27  
+#> 10 0.246 
 #> # … with 990 more rows
 ```
 
@@ -76,15 +76,15 @@ estimation as implemented by the `algebraic.mle` package:
 library(algebraic.mle)
 (rate.hat <- mle_exp(x$x))
 #> $theta.hat
-#> [1] 0.9853597
+#> [1] 1.044433
 #> 
 #> $info
 #>          [,1]
-#> [1,] 1029.936
+#> [1,] 916.7246
 #> 
 #> $sigma
-#>              [,1]
-#> [1,] 0.0009709337
+#>            [,1]
+#> [1,] 0.00109084
 #> 
 #> $sample_size
 #> [1] 1000
@@ -97,7 +97,7 @@ We can show the point estimator with:
 
 ``` r
 point(rate.hat)
-#> [1] 0.9853597
+#> [1] 1.044433
 ```
 
 We can show the Fisher information and variance-covariance matrices
@@ -106,10 +106,10 @@ with:
 ``` r
 fisher_info(rate.hat)
 #>          [,1]
-#> [1,] 1029.936
+#> [1,] 916.7246
 vcov(rate.hat)
-#>              [,1]
-#> [1,] 0.0009709337
+#>            [,1]
+#> [1,] 0.00109084
 ```
 
 (If `rate.hat` had been a vector, `vcov` would have output a
@@ -121,7 +121,7 @@ We can show the confidence interval with:
 ``` r
 confint(rate.hat)
 #>       2.5 %   97.5 %
-#> 1 0.9341063 1.036613
+#> 1 0.9901069 1.098759
 ```
 
 ## Sampling distribution of the MLE
@@ -205,3 +205,69 @@ Then, the maximum likelihood estimator of *θ* that incorporates all of
 the data in *θ̂*<sub>1</sub>, …, *θ̂*<sub>*k*</sub> is given by the
 inverse-variance weighted mean,
 *θ̂* = (∑*I*<sub>*j*</sub>(*θ*))<sup>−1</sup>(∑*I*<sub>*j*</sub>(*θ*)*θ*<sub>*j*</sub>).
+
+To evaluate the performance of this estimator, we generate a sample of
+*N* = 1000 from EXP (*λ*=1). We compute the MLE for the observed sample,
+denoted by *θ*. We then divide the observed sample into *r* = 5
+sub-samples, each of size *N*/*r* = 100, and compute the MLE for each
+sub-sampled, denoted by *θ*<sup>(1)</sup>, …, *θ*<sup>(*r*)</sup>.
+Finally, we come these MLEs into the weighted MLE, denoted by
+*θ*<sub>*w*</sub>.
+
+``` r
+N <- 1000
+r <- 5
+data3 <- rexp(N)
+data3.mat <- matrix(data3,nrow=r)
+mles <- list(length=r)
+for (i in 1:r)
+{
+    mles[[i]] <- mle_exp(data3.mat[i,])
+}
+
+mle.wt <- mle_weighted(mles)
+print(mle.wt)
+#> $theta.hat
+#>           [,1]
+#> [1,] 0.9853028
+#> 
+#> $info
+#>          [,1]
+#> [1,] 1024.628
+#> 
+#> $sigma
+#>              [,1]
+#> [1,] 0.0009759642
+#> 
+#> attr(,"class")
+#> [1] "mle_weighted" "mle"          "estimate"
+
+mle.tot <- mle_exp(data3)
+print(mle.tot)
+#> $theta.hat
+#> [1] 0.9905221
+#> 
+#> $info
+#>          [,1]
+#> [1,] 1019.229
+#> 
+#> $sigma
+#>              [,1]
+#> [1,] 0.0009811339
+#> 
+#> $sample_size
+#> [1] 1000
+#> 
+#> attr(,"class")
+#> [1] "mle_exp"   "mle"       "estimator"
+
+confint(mle.wt)
+#>       2.5 %   97.5 %
+#> 1 0.9339169 1.036689
+confint(mle.tot)
+#>       2.5 %   97.5 %
+#> 1 0.9390002 1.042044
+```
+
+We see that *θ̂* and *θ̂*<sub>*w*</sub> model approximately the same
+sampling distribution for *θ*.

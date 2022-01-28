@@ -1,9 +1,13 @@
-#' \code{mle_weighted} takes a list of MLEs for some parameter theta and then
-#' combines them to form the MLE for theta over all the information in the
-#' samples used to generate the MLEs in the list.
+#' Accepts a list of \code{mle} objects for some parameter, say \code{theta},
+#' and combines them into a single estimator \code{mle_weighted}
 #'
-#' @param mles A list of MLEs, all for the same parameter.
-#' @return an object of type \code{mle_weighted}, which inherits from \code{mle}.
+#' It combines the \code{mle} objects by adding them together, weighted by
+#' the inverse of their respective variance-covariance matrix. Intuitively,
+#' the higher the variance, the less weight an \code{mle} is given in the
+#' summation.
+#'
+#' @param mles A list of \code{mle} objects, all for the same parameter.
+#' @return an object of type \code{mle_weighted} which inherits from \code{mle}.
 #' @export
 mle_weighted <- function(mles)
 {
@@ -18,8 +22,8 @@ mle_weighted <- function(mles)
         B <- B + A %*% point(mles[[i]])
     }
 
-    cov.wt <- solve(info.wt,diag(1,nrow(info.wt)))
-    #cov.wt <- MASS::ginv(info.wt)
+    #cov.wt <- solve(info.wt,diag(1,nrow(info.wt)))
+    cov.wt <- MASS::ginv(info.wt)
     theta.wt <- cov.wt %*% B
 
     structure(list(
