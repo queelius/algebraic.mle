@@ -58,8 +58,8 @@ mse <- function(x, ...)
 #' @param ... additional arguments to pass.
 #'
 #' @export
-distr <- function(x, f, n=1000, ...)
+fn_distr <- function(x, f, n=1000, ...)
 {
-    UseMethod("distr",x)
+    UseMethod("fn_distr",x)
 }
 

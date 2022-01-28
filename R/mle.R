@@ -90,17 +90,33 @@ mse.mle <- function(x,...)
 #'        of \code{f(x)}.
 #' @param ... additional arguments to pass to the \code{mle} sampler.
 #' @export
-distr.mle <- function(x,f,n=1000,...)
+fn_distr.mle <- function(x,f,n=1000,...)
 {
     samp <- sampler(x,...)
-    data <- samp(n)
-    fx <- f(data)
+    data <- unlist(samp(n))
+    fx <- f(data[1])
+    p <- length(fx)
+
+    f.data <- matrix(nrow=n,ncol=p)
+    i <- 1
+    for (x in data)
+    {
+        fx <- f(x)
+        f.data[i,] <- fx
+    }
+
+    sigma <- NULL
+    if (p == 1)
+        sigma <- stats::var(f.data)
+    else
+        sigma <- stats::cov(f.data)
 
     structure(list(
         n=n,
-        sigma=stats::var(fx),
+        sigma=sigma,
+        info=MASS::ginv(sigma),
         theta.hat=f(point(x))),
-        class=c("mle_func","mle_numerical","mle","estimate","distr",class(x)))
+        class=c("mle_func",class(x)))
 }
 
 #' Computes the point estimate of an mle object.
