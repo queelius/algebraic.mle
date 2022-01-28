@@ -19,41 +19,84 @@ You can install the development version of `algebraic.mle` from
 ``` r
 # install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
-#> Skipping install of 'algebraic.mle' from a github remote, the SHA1 (8ed1f6f5) has not changed since last install.
-#>   Use `force = TRUE` to force installation
 ```
 
 ## Example: MLE of rate parameter in exponential distribution
 
-Suppose we have a sample of *n* = 50 draws from EXP (*λ*=1).
+Consider an exponentially distributed random variable
+*X*<sub>*i*</sub> ∼ EXP (*λ*=1) and we draw a random sample from it:
 
 ``` r
 library(stats)
-n = 2000
-rate = 1
-x <- stats::rexp(n,rate)
-head(x)
-#> [1] 1.39230914 0.54734058 0.07918932 0.20741784 1.47882354 0.24072950
+library(tidyverse)
+#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+#> ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+#> ✓ tibble  3.1.6     ✓ dplyr   1.0.7
+#> ✓ tidyr   1.1.4     ✓ stringr 1.4.0
+#> ✓ readr   2.1.1     ✓ forcats 0.5.1
+#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+#> x dplyr::filter() masks stats::filter()
+#> x dplyr::lag()    masks stats::lag()
+n <- 1000
+rate <- 1
+x <- tibble(x=stats::rexp(n,rate))
 ```
 
-Then, we can estimate *λ* with:
+We have observed a sample of size *n* = 1000. We show some observations
+from this sample (data frame) with:
+
+``` r
+print(x)
+#> # A tibble: 1,000 × 1
+#>          x
+#>      <dbl>
+#>  1 0.283  
+#>  2 0.186  
+#>  3 1.73   
+#>  4 0.618  
+#>  5 0.00966
+#>  6 3.57   
+#>  7 2.42   
+#>  8 0.0681 
+#>  9 0.421  
+#> 10 1.03   
+#> # … with 990 more rows
+```
+
+We show a histogram of the sample, and a plot of the exponential
+function’s pdf, with:
+
+``` r
+library(ggplot2)
+ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
+    xlim(0,6) + 
+    geom_function(fun=dexp)
+#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+#> Warning: Removed 2 rows containing non-finite values (stat_bin).
+#> Warning: Removed 2 rows containing missing values (geom_bar).
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+If we would like to estimate *λ*, we can do so using maximum likelihood
+estimation as implemented by the `algebraic.mle` package:
 
 ``` r
 library(algebraic.mle)
-(rate.hat <- mle_exp(x))
+(rate.hat <- mle_exp(x$x))
 #> $theta.hat
-#> [1] 1.012049
+#> [1] 1.025417
 #> 
 #> $info
 #>          [,1]
-#> [1,] 1952.659
+#> [1,] 951.0412
 #> 
 #> $sigma
-#>              [,1]
-#> [1,] 0.0005121221
+#>             [,1]
+#> [1,] 0.001051479
 #> 
 #> $sample_size
-#> [1] 2000
+#> [1] 1000
 #> 
 #> attr(,"class")
 #> [1] "mle_exp"   "mle"       "estimator"
@@ -63,69 +106,95 @@ We can show the point estimator with:
 
 ``` r
 point(rate.hat)
-#> [1] 1.012049
+#> [1] 1.025417
 ```
 
-We can show the variance with:
+We can show the Fisher information and variance-covariance matrices
+with:
 
 ``` r
+fisher_info(rate.hat)
+#>          [,1]
+#> [1,] 951.0412
 vcov(rate.hat)
-#>              [,1]
-#> [1,] 0.0005121221
+#>             [,1]
+#> [1,] 0.001051479
 ```
 
-If `rate.hat` had been a vector, `vcov` would have output a
-variance-covariance martix.
+(If `rate.hat` had been a vector, `vcov` would have output a
+variance-covariance matrix. We may consider the above outputs 1 × 1
+matrices.)
 
-We can sample from *λ̂* with:
+We can show the confidence interval with:
 
 ``` r
-library(ggplot2)
-library(tidyverse)
-#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
-#> ✓ tibble  3.1.6     ✓ dplyr   1.0.7
-#> ✓ tidyr   1.1.4     ✓ stringr 1.4.0
-#> ✓ readr   2.1.1     ✓ forcats 0.5.1
-#> ✓ purrr   0.3.4
-#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#> x dplyr::filter() masks stats::filter()
-#> x dplyr::lag()    masks stats::lag()
-library(gt)
-
-#tibble(algebraic.mle::distr(rate.hat
-#test
-
-
-rate.sampler <- sampler(rate.hat)
-data <- tibble(rate.hat=rate.sampler(100000))
-knitr::kable(head(data))
+confint(rate.hat)
+#>       2.5 %   97.5 %
+#> 1 0.9720797 1.078753
 ```
 
-|  rate.hat |
-|----------:|
-| 1.0134812 |
-| 1.0348350 |
-| 0.9845482 |
-| 1.0325074 |
-| 1.0023182 |
-| 1.0296314 |
+### Sampling distribution of the MLE
+
+In general, to estimate the sampling distribution, we generate
+*B* = 10000 samples (of size 1000) and their corresponding estimators,
+*θ̂*<sup>(1)</sup>, …, *θ̂*<sup>(*B*)</sup>. We observe the empirical
+sampling distribution of *θ̂* with:
 
 ``` r
-ggplot(data, aes(x=rate.hat)) + geom_histogram()
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+B <- 1000
+data0 <- numeric(length=B)
+for (i in 1:B)
+{
+    x <- stats::rexp(n,rate)
+    data0[i] <- point(mle_exp(x))
+}
+ggplot(tibble(rate.hat=data0), aes(x=rate.hat)) +
+    geom_histogram(alpha=.2,bins=50) +
+    xlim(.89,1.11) + 
+    geom_function(fun=rnorm,sigma=sqrt(n/rate))
+#> Warning: Ignoring unknown parameters: sigma
+#> Warning: Removed 1 rows containing non-finite values (stat_bin).
+#> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+We overlay the theoretical normal density plot.
+
+Normally, we do not have *B* samples, and if we did, we would
+incorporate all *B* samples into one sample, since the larger sample
+would contain more Fisher information about *θ*.
+
+However, a nice property of MLEs is that, asymptotically, they converge
+to a normal distribution with a mean given by the true parameter and a
+variance-covariance given by the inverse of the Fisher information
+matrix, i.e., *λ̂* ∼ *N*(*λ*,*I*<sup>−1</sup>(*λ*)) where *I* is the
+Fisher information matrix. In this case, it is
+*I*(*λ*) = *n*/*λ*<sup>2</sup>. We do not know *λ*, but we may estimate
+it from a sample, and thus we may approximate the sampling distribution
+of *λ̂* with *N*(*λ̂*,*I*<sup>−1</sup>(*λ̂*)).
+
+We sample from the asymptotic distribution of *λ̂* with:
 
 ``` r
-
-#tibble(x=data) %>% ggplot(aes(x=x))
-
-#df <- tibble(x=rrate.mle(2000))
-#df
-#exp2 <- mle_exp(df$x)
-#print(exp2)
+data1 <- sampler(rate.hat)(B)
 ```
+
+Now, we wish to compare the empirical sampling distribution, `data0`,
+with the empirical asymptotic distribution, `data1`, along with its
+probability density plot:
+
+``` r
+data <- data.frame(values=c(data0,data1), group=c(rep("empirical",B),rep("asymptotic",B)))
+
+ggplot(data,aes(x=values,fill=group)) +
+    geom_histogram(aes(y=..density..),position="identity", alpha=0.2, bins=50) +
+    geom_density(alpha=.1)
+```
+
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+
+### Invariance property of the MLE
 
 ## Sum of maximum likelihood estimators
 
