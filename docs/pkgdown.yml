@@ -1,9 +1,0 @@
-pandoc: 2.14.0.3
-pkgdown: 2.0.2
-pkgdown_sha: ~
-articles: {}
-last_built: 2022-01-28T12:26Z
-urls:
-  reference: https://queelius.github.io/algebraic.mle/reference
-  article: https://queelius.github.io/algebraic.mle/articles
-
