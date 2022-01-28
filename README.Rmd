@@ -37,7 +37,7 @@ devtools::install_github("queelius/algebraic.mle")
 Consider an exponentially distributed random variable
 $X_i \sim \operatorname{EXP}(\lambda=1)$ and we draw a random sample from it:
 
-```{r}
+```{r,message=F,warning=F}
 library(stats)
 library(tidyverse)
 n <- 1000
@@ -53,7 +53,7 @@ print(x)
 
 We show a histogram of the sample, and a plot of the exponential function's
 pdf, with:
-```{r}
+```{r,message=F}
 library(ggplot2)
 ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
     xlim(0,6) + 
@@ -86,11 +86,23 @@ We can show the confidence interval with:
 confint(rate.hat)
 ```
 
-### Sampling distribution of the MLE
+## Sampling distribution of the MLE
 In general, to estimate the sampling distribution, we generate $B=10000$ samples
 (of size $`r n`$) and their corresponding estimators,
 $\hat\theta^{(1)},\ldots,\hat\theta^{(B)}$.
-We observe the empirical sampling distribution of $\hat\theta$ with:
+
+Normally, we do not have $B$ samples, and if we did, we would gather
+all $B$ samples into one sample (or used a weighted MLE), which would contain
+more (Fisher) information about $\theta$.
+
+However, a nice property of MLEs is that, asymptotically, they converge to
+a normal distribution with a mean given by the true parameter, in this case
+$\lambda$, and a variance-covariance given by the inverse of the Fisher
+information matrix, i.e., $\hat\lambda \sim N(\lambda,I^{-1}(\lambda))$ where
+$I$ is the Fisher information matrix, in this case $I(\lambda) = n/\lambda^2$.
+
+We observe the empirical sampling distribution of $\hat\theta$ overlaid with
+the theoretical asymptotic distribution with:
 ```{r}
 B <- 1000
 data0 <- numeric(length=B)
@@ -100,51 +112,40 @@ for (i in 1:B)
     data0[i] <- point(mle_exp(x))
 }
 ggplot(tibble(rate.hat=data0), aes(x=rate.hat)) +
-    geom_histogram(alpha=.2,bins=50) +
-    xlim(.89,1.11) + 
-    geom_function(fun=rnorm,sigma=sqrt(n/rate))
-
+    geom_histogram(aes(y=..density..),alpha=.3,bins=50) +
+    geom_function(fun=function(x) { dnorm(x,mean=rate,sd=rate/sqrt(n)) })
 ```
 
-We overlay the theoretical normal density plot.
-
-Normally, we do not have $B$ samples, and if we did, we would incorporate
-all $B$ samples into one sample, since the larger sample would contain more
-Fisher information about $\theta$.
-
-However, a nice property of MLEs is that, asymptotically, they converge to
-a normal distribution with a mean given by the true parameter and a
-variance-covariance given by the inverse of the Fisher information matrix, i.e.,
-$\hat\lambda \sim N(\lambda,I^{-1}(\lambda))$ where $I$ is the Fisher
-information matrix.
-In this case, it is $I(\lambda) = n/\lambda^2$.
 We do not know $\lambda$, but we may estimate it from a sample, and thus
 we may approximate the sampling distribution of $\hat\lambda$ with
 $N(\hat\lambda,I^{-1}(\hat\lambda))$.
 
-We sample from the asymptotic distribution of $\hat\lambda$ with:
+Since we are only giving one sample, we cannot do as we did before to provide
+$B$ estimates of $\lambda$.
+However, we can sample from the approximation of the asymptotic distribution of
+$\hat\lambda$ with:
 ```{r}
 data1 <- sampler(rate.hat)(B)
 ```
 
-Now, we wish to compare the empirical sampling distribution, `data0`, with the
-empirical asymptotic distribution, `data1`, along with its probability
-density plot:
-
-```{r}
-data <- data.frame(values=c(data0,data1), group=c(rep("empirical",B),rep("asymptotic",B)))
+We visually compare the two MLE samples, `data0` and `data1`, with:
+```{r,message=F,warning=F}
+data <- data.frame(values=c(data0,data1), group=c(rep("empirical",B),rep("approximation",B)))
 
 ggplot(data,aes(x=values,fill=group)) +
-    geom_histogram(aes(y=..density..),position="identity", alpha=0.2, bins=50) +
-    geom_density(alpha=.1)
+    geom_histogram(aes(y=..density..),position="identity", alpha=0.2, bins=50)
 ```
 
+Due to sampling error, we see that the approximation, the estimate of the
+asymptotic sampling distribution $N(\hat\lambda,\hat\lambda/n^{1/2})$, is
+shifted to the left of the sample from the true distribution, but they appear to
+be quite similar otherwise.
 
-### Invariance property of the MLE
+## Invariance property of the MLE
 ```{r}
 ```
 
-## Sum of maximum likelihood estimators
+## Weighted MLE: a weighted sum of maximum likelihood estimators
 
 Since the variance-covariance of an MLE is inversely proportional to the
 Fisher information that the MLE is defined with respect to, we can combine
