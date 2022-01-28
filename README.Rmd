@@ -32,11 +32,12 @@ You can install the development version of `algebraic.mle` from [GitHub](https:/
 devtools::install_github("queelius/algebraic.mle")
 ```
 
-## Example: MLE of rate parameter in exponential distribution
+## MLE of rate parameter in exponential distribution
+In what follows, to demonstrate the `algebraic.mle` R package, we consider a
+random sample from exponentially distributed random variable
+$X_i \sim \operatorname{EXP}(\lambda=1)$ for $i=1,\ldots,n$.
 
-Consider an exponentially distributed random variable
-$X_i \sim \operatorname{EXP}(\lambda=1)$ and we draw a random sample from it:
-
+We generate an observation from this random sample with:
 ```{r,message=F,warning=F}
 library(stats)
 library(tidyverse)
@@ -142,7 +143,15 @@ shifted to the left of the sample from the true distribution, but they appear to
 be quite similar otherwise.
 
 ## Invariance property of the MLE
+
+An interesting property of an MLE $\hat\lambda$ is that the MLE of $g(\lambda)$
+is given by $g(\hat\lambda)$.
+
+
 ```{r}
+g <- function(lambda) 2*lambda
+
+fn_distr(rate.hat,g,100)
 ```
 
 ## Weighted MLE: a weighted sum of maximum likelihood estimators

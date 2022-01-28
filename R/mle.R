@@ -78,47 +78,6 @@ mse.mle <- function(x,...)
     sum(diag(vcov(x)))
 }
 
-#' Computes the distribution of \code{f(x)} as a function of \code{x}, where
-#' \code{x} models a \code{mle} object.
-#'
-#' Since \code{x} is an MLE, asymptotically,
-#' \code{f(x) ~ N(mean(f(x)),vcov(f(x)))}.
-#'
-#' @param x an \code{mle} object.
-#' @param f a function that accepts objects like x (e.g., a vector).
-#' @param n number of samples to take from \code{x} to estimate distribution
-#'        of \code{f(x)}.
-#' @param ... additional arguments to pass to the \code{mle} sampler.
-#' @export
-fn_distr.mle <- function(x,f,n=1000,...)
-{
-    samp <- sampler(x,...)
-    data <- unlist(samp(n))
-    fx <- f(data[1])
-    p <- length(fx)
-
-    f.data <- matrix(nrow=n,ncol=p)
-    i <- 1
-    for (x in data)
-    {
-        fx <- f(x)
-        f.data[i,] <- fx
-    }
-
-    sigma <- NULL
-    if (p == 1)
-        sigma <- stats::var(f.data)
-    else
-        sigma <- stats::cov(f.data)
-
-    structure(list(
-        n=n,
-        sigma=sigma,
-        info=MASS::ginv(sigma),
-        theta.hat=f(point(x))),
-        class=c("mle_func",class(x)))
-}
-
 #' Computes the point estimate of an mle object.
 #'
 #' @param x the mle object(s).

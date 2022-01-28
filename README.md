@@ -21,10 +21,13 @@ You can install the development version of `algebraic.mle` from
 devtools::install_github("queelius/algebraic.mle")
 ```
 
-## Example: MLE of rate parameter in exponential distribution
+## MLE of rate parameter in exponential distribution
 
-Consider an exponentially distributed random variable
-*X*<sub>*i*</sub> ∼ EXP (*λ*=1) and we draw a random sample from it:
+In what follows, to demonstrate the `algebraic.mle` R package, we
+consider a random sample from exponentially distributed random variable
+*X*<sub>*i*</sub> ∼ EXP (*λ*=1) for *i* = 1, …, *n*.
+
+We generate an observation from this random sample with:
 
 ``` r
 library(stats)
@@ -40,18 +43,18 @@ from this sample (data frame) with:
 ``` r
 print(x)
 #> # A tibble: 1,000 × 1
-#>         x
-#>     <dbl>
-#>  1 1.62  
-#>  2 1.33  
-#>  3 0.397 
-#>  4 0.0523
-#>  5 1.59  
-#>  6 1.59  
-#>  7 0.112 
-#>  8 0.108 
-#>  9 6.27  
-#> 10 0.246 
+#>        x
+#>    <dbl>
+#>  1 0.154
+#>  2 0.128
+#>  3 4.52 
+#>  4 0.204
+#>  5 0.341
+#>  6 1.28 
+#>  7 0.730
+#>  8 0.552
+#>  9 0.442
+#> 10 0.334
 #> # … with 990 more rows
 ```
 
@@ -63,7 +66,7 @@ library(ggplot2)
 ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
     xlim(0,6) + 
     geom_function(fun=dexp)
-#> Warning: Removed 3 rows containing non-finite values (stat_bin).
+#> Warning: Removed 4 rows containing non-finite values (stat_bin).
 #> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
@@ -76,15 +79,15 @@ estimation as implemented by the `algebraic.mle` package:
 library(algebraic.mle)
 (rate.hat <- mle_exp(x$x))
 #> $theta.hat
-#> [1] 1.044433
+#> [1] 1.017336
 #> 
 #> $info
 #>          [,1]
-#> [1,] 916.7246
+#> [1,] 966.2084
 #> 
 #> $sigma
-#>            [,1]
-#> [1,] 0.00109084
+#>             [,1]
+#> [1,] 0.001034973
 #> 
 #> $sample_size
 #> [1] 1000
@@ -97,7 +100,7 @@ We can show the point estimator with:
 
 ``` r
 point(rate.hat)
-#> [1] 1.044433
+#> [1] 1.017336
 ```
 
 We can show the Fisher information and variance-covariance matrices
@@ -106,10 +109,10 @@ with:
 ``` r
 fisher_info(rate.hat)
 #>          [,1]
-#> [1,] 916.7246
+#> [1,] 966.2084
 vcov(rate.hat)
-#>            [,1]
-#> [1,] 0.00109084
+#>             [,1]
+#> [1,] 0.001034973
 ```
 
 (If `rate.hat` had been a vector, `vcov` would have output a
@@ -121,7 +124,7 @@ We can show the confidence interval with:
 ``` r
 confint(rate.hat)
 #>       2.5 %   97.5 %
-#> 1 0.9901069 1.098759
+#> 1 0.9644199 1.070253
 ```
 
 ## Sampling distribution of the MLE
@@ -189,6 +192,28 @@ appear to be quite similar otherwise.
 
 ## Invariance property of the MLE
 
+An interesting property of an MLE *λ̂* is that the MLE of *g*(*λ*) is
+given by *g*(*λ̂*).
+
+``` r
+g <- function(lambda) 2*lambda
+
+fn_distr(rate.hat,g,100)
+#> $sigma
+#>             [,1]
+#> [1,] 0.004631337
+#> 
+#> $info
+#>          [,1]
+#> [1,] 215.9204
+#> 
+#> $theta.hat
+#> [1] 2.034673
+#> 
+#> attr(,"class")
+#> [1] "mle_func"  "mle"       "estimator"
+```
+
 ## Weighted MLE: a weighted sum of maximum likelihood estimators
 
 Since the variance-covariance of an MLE is inversely proportional to the
@@ -228,16 +253,16 @@ for (i in 1:r)
 mle.wt <- mle_weighted(mles)
 print(mle.wt)
 #> $theta.hat
-#>           [,1]
-#> [1,] 0.9853028
+#>          [,1]
+#> [1,] 1.032892
 #> 
 #> $info
 #>          [,1]
-#> [1,] 1024.628
+#> [1,] 936.1397
 #> 
 #> $sigma
-#>              [,1]
-#> [1,] 0.0009759642
+#>             [,1]
+#> [1,] 0.001068217
 #> 
 #> attr(,"class")
 #> [1] "mle_weighted" "mle"          "estimate"
@@ -245,15 +270,15 @@ print(mle.wt)
 mle.tot <- mle_exp(data3)
 print(mle.tot)
 #> $theta.hat
-#> [1] 0.9905221
+#> [1] 1.0342
 #> 
 #> $info
 #>          [,1]
-#> [1,] 1019.229
+#> [1,] 934.9557
 #> 
 #> $sigma
-#>              [,1]
-#> [1,] 0.0009811339
+#>             [,1]
+#> [1,] 0.001069569
 #> 
 #> $sample_size
 #> [1] 1000
@@ -263,10 +288,10 @@ print(mle.tot)
 
 confint(mle.wt)
 #>       2.5 %   97.5 %
-#> 1 0.9339169 1.036689
+#> 1 0.9791321 1.086652
 confint(mle.tot)
 #>       2.5 %   97.5 %
-#> 1 0.9390002 1.042044
+#> 1 0.9804061 1.087994
 ```
 
 We see that *θ̂* and *θ̂*<sub>*w*</sub> model approximately the same

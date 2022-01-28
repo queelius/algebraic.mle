@@ -2,20 +2,20 @@
 % Please edit documentation in R/mle_weighted.R
 \name{mle_weighted}
 \alias{mle_weighted}
-\title{\code{mle_weighted} takes a list of MLEs for some parameter theta and then
-combines them to form the MLE for theta over all the information in the
-samples used to generate the MLEs in the list.}
+\title{Accepts a list of \code{mle} objects for some parameter, say \code{theta},
+and combines them into a single estimator \code{mle_weighted}}
 \usage{
 mle_weighted(mles)
 }
 \arguments{
-\item{mles}{A list of MLEs, all for the same parameter.}
+\item{mles}{A list of \code{mle} objects, all for the same parameter.}
 }
 \value{
-an object of type \code{mle_weighted}, which inherits from \code{mle}.
+an object of type \code{mle_weighted} which inherits from \code{mle}.
 }
 \description{
-\code{mle_weighted} takes a list of MLEs for some parameter theta and then
-combines them to form the MLE for theta over all the information in the
-samples used to generate the MLEs in the list.
+It combines the \code{mle} objects by adding them together, weighted by
+the inverse of their respective variance-covariance matrix. Intuitively,
+the higher the variance, the less weight an \code{mle} is given in the
+summation.
 }
