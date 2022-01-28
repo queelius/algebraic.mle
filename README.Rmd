@@ -65,7 +65,8 @@ If we would like to estimate $\lambda$, we can do so using maximum likelihood
 estimation as implemented by the `algebraic.mle` package:
 ```{r}
 library(algebraic.mle)
-(rate.hat <- mle_exp(x$x))
+rate.hat <- mle_exp(x$x)
+summary(rate.hat)
 ```
 
 We can show the point estimator with:
@@ -147,11 +148,35 @@ be quite similar otherwise.
 An interesting property of an MLE $\hat\lambda$ is that the MLE of $g(\lambda)$
 is given by $g(\hat\lambda)$.
 
+The method `fn_distr` applied to `mle` objects takes a function of the `mle`
+and a simulation sample size and then computes its MLE, i.e., returns an object
+of type `fn_mle`, which is also an MLE with a an asymptotic sampling
+distribution.
 
+### Example
+Suppose we are interested in $g(\lambda) = 2 \lambda$:
 ```{r}
 g <- function(lambda) 2*lambda
 
-fn_distr(rate.hat,g,100)
+g.hat <- fn_distr(rate.hat,g)
+point(g.hat)
+vcov(g.hat)
+confint(g.hat)
+```
+
+Let's compare this with a simulation of the actual distribution.
+
+We know that the MLE $\hat\lambda \sim N(\lambda,\lambda^2/n)$.
+We seek a transformation $g(\hat\lambda)$ such taht its expectation is
+$2 \lambda$, i.e., $g(\lambda) = 2\lambda$.
+Then, $\operatorname{var}(g(\hat\lambda)) = 4 \lambda^2/n$.
+Letting $\lambda=1$, we see that $g(\hat\lambda) \sim N(2 \lambda,4\lambda^2/n)$.
+We simulate drawing $n=1000$ observations from 
+
+```{r}
+data4 <- rnorm(1000,2,2/sqrt(1000))
+mean(data4)
+var(data4)
 ```
 
 ## Weighted MLE: a weighted sum of maximum likelihood estimators
@@ -188,18 +213,13 @@ data3 <- rexp(N)
 data3.mat <- matrix(data3,nrow=r)
 mles <- list(length=r)
 for (i in 1:r)
-{
     mles[[i]] <- mle_exp(data3.mat[i,])
-}
 
 mle.wt <- mle_weighted(mles)
-print(mle.wt)
+summary(mle.wt)
 
 mle.tot <- mle_exp(data3)
-print(mle.tot)
-
-confint(mle.wt)
-confint(mle.tot)
+summary(mle.tot)
 ```
 
 We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling

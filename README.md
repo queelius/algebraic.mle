@@ -43,18 +43,18 @@ from this sample (data frame) with:
 ``` r
 print(x)
 #> # A tibble: 1,000 × 1
-#>        x
-#>    <dbl>
-#>  1 0.154
-#>  2 0.128
-#>  3 4.52 
-#>  4 0.204
-#>  5 0.341
-#>  6 1.28 
-#>  7 0.730
-#>  8 0.552
-#>  9 0.442
-#> 10 0.334
+#>         x
+#>     <dbl>
+#>  1 0.0262
+#>  2 1.34  
+#>  3 0.296 
+#>  4 2.30  
+#>  5 0.490 
+#>  6 1.60  
+#>  7 0.659 
+#>  8 1.45  
+#>  9 1.08  
+#> 10 0.520 
 #> # … with 990 more rows
 ```
 
@@ -66,7 +66,7 @@ library(ggplot2)
 ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
     xlim(0,6) + 
     geom_function(fun=dexp)
-#> Warning: Removed 4 rows containing non-finite values (stat_bin).
+#> Warning: Removed 2 rows containing non-finite values (stat_bin).
 #> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
@@ -77,30 +77,33 @@ estimation as implemented by the `algebraic.mle` package:
 
 ``` r
 library(algebraic.mle)
-(rate.hat <- mle_exp(x$x))
-#> $theta.hat
-#> [1] 1.017336
 #> 
-#> $info
-#>          [,1]
-#> [1,] 966.2084
+#> Attaching package: 'algebraic.mle'
+#> The following object is masked from 'package:stats':
 #> 
-#> $sigma
-#>             [,1]
-#> [1,] 0.001034973
-#> 
-#> $sample_size
-#> [1] 1000
-#> 
-#> attr(,"class")
-#> [1] "mle_exp"   "mle"       "estimator"
+#>     nobs
+rate.hat <- mle_exp(x$x)
+summary(rate.hat)
+#> Maximum likelihood estimator, of type mle_exp ,
+#> is normally distributed with mean
+#> [1] 0.9775105
+#> and variance-covariance
+#>              [,1]
+#> [1,] 0.0009555267
+#> ---
+#> The asymptotic mean squared error 0.0009555267 
+#> The asymptotic 95% confidence interval is
+#>       2.5 %   97.5 %
+#> 1 0.9266654 1.028356
+#> The log-likelihood is -1022.746 
+#> The AIC is 2047.493
 ```
 
 We can show the point estimator with:
 
 ``` r
 point(rate.hat)
-#> [1] 1.017336
+#> [1] 0.9775105
 ```
 
 We can show the Fisher information and variance-covariance matrices
@@ -109,10 +112,10 @@ with:
 ``` r
 fisher_info(rate.hat)
 #>          [,1]
-#> [1,] 966.2084
+#> [1,] 1046.543
 vcov(rate.hat)
-#>             [,1]
-#> [1,] 0.001034973
+#>              [,1]
+#> [1,] 0.0009555267
 ```
 
 (If `rate.hat` had been a vector, `vcov` would have output a
@@ -124,7 +127,7 @@ We can show the confidence interval with:
 ``` r
 confint(rate.hat)
 #>       2.5 %   97.5 %
-#> 1 0.9644199 1.070253
+#> 1 0.9266654 1.028356
 ```
 
 ## Sampling distribution of the MLE
@@ -195,23 +198,43 @@ appear to be quite similar otherwise.
 An interesting property of an MLE *λ̂* is that the MLE of *g*(*λ*) is
 given by *g*(*λ̂*).
 
+The method `fn_distr` applied to `mle` objects takes a function of the
+`mle` and a simulation sample size and then computes its MLE, i.e.,
+returns an object of type `fn_mle`, which is also an MLE with a an
+asymptotic sampling distribution.
+
+### Example
+
+Suppose we are interested in *g*(*λ*) = 2*λ*:
+
 ``` r
 g <- function(lambda) 2*lambda
 
-fn_distr(rate.hat,g,100)
-#> $sigma
-#>             [,1]
-#> [1,] 0.004631337
-#> 
-#> $info
-#>          [,1]
-#> [1,] 215.9204
-#> 
-#> $theta.hat
-#> [1] 2.034673
-#> 
-#> attr(,"class")
-#> [1] "mle_func"  "mle"       "estimator"
+g.hat <- fn_distr(rate.hat,g)
+point(g.hat)
+#> [1] 1.955021
+vcov(g.hat)
+#>            [,1]
+#> [1,] 0.00384802
+confint(g.hat)
+#>      2.5 %   97.5 %
+#> 1 1.852987 2.057055
+```
+
+Let’s compare this with a simulation of the actual distribution.
+
+We know that the MLE *λ̂* ∼ *N*(*λ*,*λ*<sup>2</sup>/*n*). We seek a
+transformation *g*(*λ̂*) such taht its expectation is 2*λ*, i.e.,
+*g*(*λ*) = 2*λ*. Then, var (*g*(*λ̂*)) = 4*λ*<sup>2</sup>/*n*. Letting
+*λ* = 1, we see that *g*(*λ̂*) ∼ *N*(2*λ*,4*λ*<sup>2</sup>/*n*). We
+simulate drawing *n* = 1000 observations from
+
+``` r
+data4 <- rnorm(1000,2,2/sqrt(1000))
+mean(data4)
+#> [1] 2.005012
+var(data4)
+#> [1] 0.003933318
 ```
 
 ## Weighted MLE: a weighted sum of maximum likelihood estimators
@@ -246,52 +269,40 @@ data3 <- rexp(N)
 data3.mat <- matrix(data3,nrow=r)
 mles <- list(length=r)
 for (i in 1:r)
-{
     mles[[i]] <- mle_exp(data3.mat[i,])
-}
 
 mle.wt <- mle_weighted(mles)
-print(mle.wt)
-#> $theta.hat
+summary(mle.wt)
+#> Maximum likelihood estimator, of type mle_weighted ,
+#> is normally distributed with mean
 #>          [,1]
-#> [1,] 1.032892
-#> 
-#> $info
-#>          [,1]
-#> [1,] 936.1397
-#> 
-#> $sigma
+#> [1,] 1.004032
+#> and variance-covariance
 #>             [,1]
-#> [1,] 0.001068217
-#> 
-#> attr(,"class")
-#> [1] "mle_weighted" "mle"          "estimate"
+#> [1,] 0.001013711
+#> ---
+#> The asymptotic mean squared error 0.001013711 
+#> The asymptotic 95% confidence interval is
+#>       2.5 %   97.5 %
+#> 1 0.9516617 1.056402
+#> The log-likelihood is -987.5218 
+#> The AIC is 1977.044
 
 mle.tot <- mle_exp(data3)
-print(mle.tot)
-#> $theta.hat
-#> [1] 1.0342
-#> 
-#> $info
-#>          [,1]
-#> [1,] 934.9557
-#> 
-#> $sigma
+summary(mle.tot)
+#> Maximum likelihood estimator, of type mle_exp ,
+#> is normally distributed with mean
+#> [1] 1.00964
+#> and variance-covariance
 #>             [,1]
-#> [1,] 0.001069569
-#> 
-#> $sample_size
-#> [1] 1000
-#> 
-#> attr(,"class")
-#> [1] "mle_exp"   "mle"       "estimator"
-
-confint(mle.wt)
-#>       2.5 %   97.5 %
-#> 1 0.9791321 1.086652
-confint(mle.tot)
-#>       2.5 %   97.5 %
-#> 1 0.9804061 1.087994
+#> [1,] 0.001019373
+#> ---
+#> The asymptotic mean squared error 0.001019373 
+#> The asymptotic 95% confidence interval is
+#>      2.5 %   97.5 %
+#> 1 0.957124 1.062157
+#> The log-likelihood is -990.4059 
+#> The AIC is 1982.812
 ```
 
 We see that *θ̂* and *θ̂*<sub>*w*</sub> model approximately the same

@@ -9,7 +9,7 @@ sampler(x, ...)
 \arguments{
 \item{x}{the \code{x} object to create a sampler for}
 
-\item{...}{additional arguments to pass.}
+\item{...}{additional arguments to pass}
 }
 \description{
 It creates a sampler for the \code{x} object. It returns a function

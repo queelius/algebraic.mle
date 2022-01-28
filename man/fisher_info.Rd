@@ -10,7 +10,7 @@ fisher_info(x, ...)
 \arguments{
 \item{x}{the object to obtain the fisher information of}
 
-\item{...}{additional arguments to pass.}
+\item{...}{additional arguments to pass}
 }
 \description{
 Generic method for obtaining the fisher information

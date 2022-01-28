@@ -7,9 +7,9 @@
 point(x, ...)
 }
 \arguments{
-\item{x}{the object to obtain the point estimate of.}
+\item{x}{the object to obtain the point estimate of}
 
-\item{...}{additional arguments to pass.}
+\item{...}{additional arguments to pass}
 }
 \description{
 Generic method for obtaining the best point estimate from an estimator.

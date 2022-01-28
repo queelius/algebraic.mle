@@ -9,9 +9,9 @@ parameter value.}
 mse(x, ...)
 }
 \arguments{
-\item{x}{the object to compute the MSE of.}
+\item{x}{the object to compute the MSE of}
 
-\item{...}{additional arguments to pass.}
+\item{...}{additional arguments to pass}
 }
 \description{
 Generic function for obtaining the mean squared error (MSE) of an estimator,

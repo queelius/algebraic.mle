@@ -10,7 +10,7 @@
 \item{x}{the \code{mle} object to create sampler for}
 
 \item{...}{additional arguments to pass to \code{mle} objects, like sampling
-method, \code{?mvtnorm}.}
+method, \code{?mvtnorm}}
 }
 \description{
 It creates a sampler for the \code{mle} object. It returns a function

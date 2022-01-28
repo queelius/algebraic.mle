@@ -8,13 +8,13 @@ models another distribution object.}
 fn_distr(x, f, n = 1000, ...)
 }
 \arguments{
-\item{x}{a \code{distr} object.}
+\item{x}{a \code{distr} object}
 
-\item{f}{a function of the \code{x} object.}
+\item{f}{a function of the \code{x} object}
 
-\item{n}{number of samples to take to estimate \code{f(x)}  with.}
+\item{n}{number of samples to take to estimate \code{f(x)}  with}
 
-\item{...}{additional arguments to pass.}
+\item{...}{additional arguments to pass}
 }
 \description{
 Generic function for computing the distribution of \code{f(x)} where \code{x}

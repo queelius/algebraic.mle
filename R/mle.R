@@ -1,10 +1,24 @@
+#' @export
+nparams.mle <- function(x) length(x$theta.hat)
+
+#' @export
+aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
+
+#' @export
+nobs.mle <- function(x) x$sample_size
+
+#' @export
+loglike.mle <- function(x,...) x$loglike
+
 #' Function to compute the confidence intervals of \code{mle} objects.
 #'
-#' @param object the \code{mle} object to compute the confidence intervals for.
+#' @param object the \code{mle} object to compute the confidence intervals for
 #' @param parm parameter indexes to compute the confidence intervals for,
-#'             defaults to all.
-#' @param level confidence level, defaults to 0.95 (alpha=.05).
-#' @param ... additional arguments to pass.
+#'             defaults to all
+#' @param level confidence level, defaults to 0.95 (alpha=.05)
+#' @param ... additional arguments to pass
+#'
+#' @importFrom stats confint
 #' @export
 confint.mle <- function(object, parm=NULL, level=0.95, ...)
 {
@@ -39,7 +53,7 @@ confint.mle <- function(object, parm=NULL, level=0.95, ...)
 #'
 #' @param x the \code{mle} object to create sampler for
 #' @param ... additional arguments to pass to \code{mle} objects, like sampling
-#'            method, \code{?mvtnorm}.
+#'            method, \code{?mvtnorm}
 #' @export
 sampler.mle <- function(x,...)
 {
@@ -89,17 +103,6 @@ point.mle <- function(x,...)
     x$theta.hat
 }
 
-#' Compute the inverse-variance weighted MLE of the sum of MLE objects.
-#'
-#' @param ... the list of \code{mle} objects to sum over.
-#' @param na.rm unused when summing over \code{mle} objects.
-#' @return an object of type \code{mle_weighted}.
-#' @export
-sum.mle <- function(...,na.rm=FALSE)
-{
-    mle_weighted(...)
-}
-
 #' Function for obtaining the fisher information matrix of an \code{mle} object.
 #'
 #' @param x the \code{mle} object to obtain the fisher information of.
@@ -109,4 +112,20 @@ sum.mle <- function(...,na.rm=FALSE)
 fisher_info.mle <- function(x, ...)
 {
     x$info
+}
+
+#' @export
+summary.mle <- function(object,...)
+{
+    cat("Maximum likelihood estimator, of type",class(object)[1],",\n")
+    cat("is normally distributed with mean\n")
+    print(point(object))
+    cat("and variance-covariance\n")
+    print(vcov(object))
+    cat("---\n")
+    cat("The asymptotic mean squared error",mse(object),"\n")
+    cat("The asymptotic 95% confidence interval is\n")
+    print(confint(object))
+    cat("The log-likelihood is",loglike(object),"\n")
+    cat("The AIC is",aic(object),"\n")
 }
