@@ -201,7 +201,7 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span> <span class="fl">2</span><span class="op">*</span><span class="va">lambda</span>
 
-<span class="va">g.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fn_distr.html">fn_distr</a></span><span class="op">(</span><span class="va">rate.hat</span>,<span class="va">g</span><span class="op">)</span>
+<span class="va">g.hat</span> <span class="op">&lt;-</span> <span class="fu">fn_distr</span><span class="op">(</span><span class="va">rate.hat</span>,<span class="va">g</span><span class="op">)</span>
 <span class="fu"><a href="reference/point.html">point</a></span><span class="op">(</span><span class="va">g.hat</span><span class="op">)</span>
 <span class="co">#&gt; [1] 1.955021</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">g.hat</span><span class="op">)</span>
