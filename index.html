@@ -75,21 +75,8 @@
 </h2>
 <p>You can install the development version of <code>algebraic.mle</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"queelius/algebraic.mle"</span><span class="op">)</span>
-<span class="co">#&gt; Downloading GitHub repo queelius/algebraic.mle@HEAD</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;      checking for file ‘/tmp/RtmpoJ0zsT/remotes6d18d50f6e26a/queelius-algebraic.mle-3e1c165/DESCRIPTION’ ...  ✓  checking for file ‘/tmp/RtmpoJ0zsT/remotes6d18d50f6e26a/queelius-algebraic.mle-3e1c165/DESCRIPTION’</span>
-<span class="co">#&gt;   ─  preparing ‘algebraic.mle’:</span>
-<span class="co">#&gt;    checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information</span>
-<span class="co">#&gt;   ─  checking for LF line-endings in source and make files and shell scripts</span>
-<span class="co">#&gt;   ─  checking for empty or unneeded directories</span>
-<span class="co">#&gt;    Omitted ‘LazyData’ from DESCRIPTION</span>
-<span class="co">#&gt;   ─  building ‘algebraic.mle_0.1.0.tar.gz’</span>
-<span class="co">#&gt;      </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Installing package into '/usr/local/lib/R/site-library'</span>
-<span class="co">#&gt; (as 'lib' is unspecified)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"queelius/algebraic.mle"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="mle-of-exponential-distributions-rate-parameter">MLE of exponential distribution’s rate parameter<a class="anchor" aria-label="anchor" href="#mle-of-exponential-distributions-rate-parameter"></a>
@@ -106,18 +93,18 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 1,000 × 1</span>
-<span class="co">#&gt;         x</span>
-<span class="co">#&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 0.146 </span>
-<span class="co">#&gt;  2 0.182 </span>
-<span class="co">#&gt;  3 1.35  </span>
-<span class="co">#&gt;  4 0.0481</span>
-<span class="co">#&gt;  5 1.25  </span>
-<span class="co">#&gt;  6 0.189 </span>
-<span class="co">#&gt;  7 1.43  </span>
-<span class="co">#&gt;  8 0.111 </span>
-<span class="co">#&gt;  9 0.0494</span>
-<span class="co">#&gt; 10 0.617 </span>
+<span class="co">#&gt;        x</span>
+<span class="co">#&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 5.42 </span>
+<span class="co">#&gt;  2 0.263</span>
+<span class="co">#&gt;  3 0.897</span>
+<span class="co">#&gt;  4 0.926</span>
+<span class="co">#&gt;  5 1.46 </span>
+<span class="co">#&gt;  6 1.11 </span>
+<span class="co">#&gt;  7 2.34 </span>
+<span class="co">#&gt;  8 0.169</span>
+<span class="co">#&gt;  9 1.22 </span>
+<span class="co">#&gt; 10 0.918</span>
 <span class="co">#&gt; # … with 990 more rows</span></code></pre></div>
 <p>We show a histogram of the sample, and a plot of the exponential function’s pdf, with:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -138,35 +125,35 @@
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt; Maximum likelihood estimator, of type mle_exp ,</span>
 <span class="co">#&gt; is normally distributed with mean</span>
-<span class="co">#&gt; [1] 0.9509951</span>
+<span class="co">#&gt; [1] 0.9557682</span>
 <span class="co">#&gt; and variance-covariance</span>
 <span class="co">#&gt;              [,1]</span>
-<span class="co">#&gt; [1,] 0.0009043917</span>
+<span class="co">#&gt; [1,] 0.0009134928</span>
 <span class="co">#&gt; ---</span>
-<span class="co">#&gt; The asymptotic mean squared error 0.0009043917 </span>
+<span class="co">#&gt; The asymptotic mean squared error 0.0009134928 </span>
 <span class="co">#&gt; The asymptotic 95% confidence interval is</span>
-<span class="co">#&gt;       2.5 %   97.5 %</span>
-<span class="co">#&gt; 1 0.9015292 1.000461</span>
-<span class="co">#&gt; The log-likelihood is -1050.246 </span>
-<span class="co">#&gt; The AIC is 2102.493</span></code></pre></div>
+<span class="co">#&gt;      2.5 %   97.5 %</span>
+<span class="co">#&gt; 1 0.906054 1.005482</span>
+<span class="co">#&gt; The log-likelihood is -1045.24 </span>
+<span class="co">#&gt; The AIC is 2092.48</span></code></pre></div>
 <p>We can show the point estimator with:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/point.html">point</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.9509951</span></code></pre></div>
+<span class="co">#&gt; [1] 0.9557682</span></code></pre></div>
 <p>We can show the Fisher information and variance-covariance matrices with:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/fisher_info.html">fisher_info</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt;          [,1]</span>
-<span class="co">#&gt; [1,] 1105.716</span>
+<span class="co">#&gt; [1,] 1094.699</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt;              [,1]</span>
-<span class="co">#&gt; [1,] 0.0009043917</span></code></pre></div>
+<span class="co">#&gt; [1,] 0.0009134928</span></code></pre></div>
 <p>(If <code>rate.hat</code> had been a vector, <code>vcov</code> would have output a variance-covariance matrix. We may consider the above outputs 1 × 1 matrices.)</p>
 <p>We can show the confidence interval with:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
-<span class="co">#&gt;       2.5 %   97.5 %</span>
-<span class="co">#&gt; 1 0.9015292 1.000461</span></code></pre></div>
+<span class="co">#&gt;      2.5 %   97.5 %</span>
+<span class="co">#&gt; 1 0.906054 1.005482</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="sampling-distribution-of-the-mle">Sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#sampling-distribution-of-the-mle"></a>
@@ -211,17 +198,17 @@
 <p>We know that the MLE <em>λ̂</em> ∼ <em>N</em>(<em>λ</em>,<em>λ</em><sup>2</sup>/<em>n</em>). We seek a transformation <em>g</em>(<em>λ̂</em>) such that its expectation is 2<em>λ</em>, i.e., <em>g</em>(<em>λ</em>) = 2<em>λ</em>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span> <span class="fl">2</span><span class="op">*</span><span class="va">lambda</span></code></pre></div>
-<p>We compute the MLE of 2<em>λ̂</em> with:</p>
+<p>We compute the MLE of 2<em>λ̂</em> (using a simulation size <em>n</em> = 1000) with:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">g.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rmap.html">rmap</a></span><span class="op">(</span><span class="va">rate.hat</span>,<span class="va">f</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">g.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rmap.html">rmap</a></span><span class="op">(</span><span class="va">rate.hat</span>,<span class="va">f</span>,n<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></code></pre></div>
 <p>Then, var (<em>f</em>(<em>λ̂</em>)) = 4<em>λ</em><sup>2</sup>/<em>n</em>. Letting <em>λ</em> = 1, we see that, asymptotically, <em>g</em>(<em>λ̂</em>) ∼ <em>N</em>(2,4/<em>n</em>).</p>
 <p>We expected a mean of 2 and a variance of 4/<em>n</em> = 0.004, which is pretty close to what we obtained:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/point.html">point</a></span><span class="op">(</span><span class="va">g.hat</span><span class="op">)</span>
-<span class="co">#&gt; [1] 1.90199</span>
+<span class="co">#&gt; [1] 1.911536</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">g.hat</span><span class="op">)</span>
 <span class="co">#&gt;             [,1]</span>
-<span class="co">#&gt; [1,] 0.003469069</span></code></pre></div>
+<span class="co">#&gt; [1,] 0.003711212</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -230,49 +217,65 @@
 <p>Since the variance-covariance of an MLE is inversely proportional to the Fisher information that the MLE is defined with respect to, we can combine multiple MLEs of <em>θ</em>, each of which may be defined with respect to a different kind of sample, to arrive at the MLE that incorporates the Fisher information in all of those samples.</p>
 <p>Consider <em>k</em> mutually independent MLE estimators of parameter <em>θ</em>, <em>θ̂</em><sub>1</sub>, …, <em>θ̂</em><sub><em>k</em></sub>, where <em>θ̂</em><sub><em>j</em></sub> ∼ <em>N</em>(<em>θ</em>,<em>I</em><sub><em>j</em></sub><sup>−1</sup>(<em>θ</em>)).</p>
 <p>Then, the maximum likelihood estimator of <em>θ</em> that incorporates all of the data in <em>θ̂</em><sub>1</sub>, …, <em>θ̂</em><sub><em>k</em></sub> is given by the inverse-variance weighted mean, <em>θ̂</em> = (∑<em>I</em><sub><em>j</em></sub>(<em>θ</em>))<sup>−1</sup>(∑<em>I</em><sub><em>j</em></sub>(<em>θ</em>)<em>θ</em><sub><em>j</em></sub>).</p>
-<p>To evaluate the performance of this estimator, we generate a sample of <em>N</em> = 1000 from EXP (<em>λ</em>=1). We compute the MLE for the observed sample, denoted by <em>θ</em>. We then divide the observed sample into <em>r</em> = 5 sub-samples, each of size <em>N</em>/<em>r</em> = 100, and compute the MLE for each sub-sampled, denoted by <em>θ</em><sup>(1)</sup>, …, <em>θ</em><sup>(<em>r</em>)</sup>. Finally, we come these MLEs into the weighted MLE, denoted by <em>θ</em><sub><em>w</em></sub>.</p>
+<div class="section level3">
+<h3 id="example-1">Example<a class="anchor" aria-label="anchor" href="#example-1"></a>
+</h3>
+<p>To evaluate the performance of the weighted MLE, we generate a sample of <em>N</em> = 1000 observations from EXP (<em>λ</em>=1) and compute the MLE for the observed sample, denoted by <em>θ</em>.</p>
+<p>We then divide the observed sample into <em>r</em> = 5 sub-samples, each of size <em>N</em>/<em>r</em> = 100, and compute the MLE for each sub-sampled, denoted by <em>θ</em><sup>(1)</sup>, …, <em>θ</em><sup>(<em>r</em>)</sup>.</p>
+<p>Finally, we do a weighted combination these MLEs to form the weighted MLE, denoted by <em>θ</em><sub><em>w</em></sub>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
 <span class="va">r</span> <span class="op">&lt;-</span> <span class="fl">5</span>
-<span class="va">data3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span>
-<span class="va">data3.mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="va">data3</span>,nrow<span class="op">=</span><span class="va">r</span><span class="op">)</span>
-<span class="va">mles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>length<span class="op">=</span><span class="va">r</span><span class="op">)</span>
+<span class="va">samp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span>
+<span class="va">samp.sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="va">samp</span>,nrow<span class="op">=</span><span class="va">r</span><span class="op">)</span>
+<span class="va">mles.sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>length<span class="op">=</span><span class="va">r</span><span class="op">)</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">r</span><span class="op">)</span>
-    <span class="va">mles</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">data3.mat</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span><span class="op">)</span>
+    <span class="va">mles.sub</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">samp.sub</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span><span class="op">)</span>
 
-<span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_weighted.html">mle_weighted</a></span><span class="op">(</span><span class="va">mles</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span>
-<span class="co">#&gt; Maximum likelihood estimator, of type mle_weighted ,</span>
-<span class="co">#&gt; is normally distributed with mean</span>
-<span class="co">#&gt;           [,1]</span>
-<span class="co">#&gt; [1,] 0.9592375</span>
-<span class="co">#&gt; and variance-covariance</span>
-<span class="co">#&gt;              [,1]</span>
-<span class="co">#&gt; [1,] 0.0009211142</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; The asymptotic mean squared error 0.0009211142 </span>
-<span class="co">#&gt; The asymptotic 95% confidence interval is</span>
-<span class="co">#&gt;       2.5 %   97.5 %</span>
-<span class="co">#&gt; 1 0.9093164 1.009159</span>
-<span class="co">#&gt; The log-likelihood is -1040.018 </span>
-<span class="co">#&gt; The AIC is 2082.035</span>
-
-<span class="va">mle.tot</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">data3</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mle.tot</span><span class="op">)</span>
-<span class="co">#&gt; Maximum likelihood estimator, of type mle_exp ,</span>
-<span class="co">#&gt; is normally distributed with mean</span>
-<span class="co">#&gt; [1] 0.9602567</span>
-<span class="co">#&gt; and variance-covariance</span>
-<span class="co">#&gt;              [,1]</span>
-<span class="co">#&gt; [1,] 0.0009220928</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; The asymptotic mean squared error 0.0009220928 </span>
-<span class="co">#&gt; The asymptotic 95% confidence interval is</span>
-<span class="co">#&gt;       2.5 %   97.5 %</span>
-<span class="co">#&gt; 1 0.9103091 1.010204</span>
-<span class="co">#&gt; The log-likelihood is -1040.555 </span>
-<span class="co">#&gt; The AIC is 2083.109</span></code></pre></div>
+<span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_weighted.html">mle_weighted</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span>
+<span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></code></pre></div>
+We show the results in the following table:
+<table class="table">
+<caption>
+Weighted MLE vs MLE
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+point estimate
+</th>
+<th style="text-align:right;">
+variance
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+weighted MLE
+</td>
+<td style="text-align:right;">
+0.988
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MLE
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+</tbody>
+</table>
 <p>We see that <em>θ̂</em> and <em>θ̂</em><sub><em>w</em></sub> model approximately the same sampling distribution for <em>θ</em>.</p>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
