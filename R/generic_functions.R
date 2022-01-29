@@ -29,9 +29,17 @@ aic <- function(x)
     UseMethod("aic",x)
 }
 
-#' Generic method for obtaining the number of parameters of an MLE fit.
+#' Method for obtaining the parameters of a fitted object.
 #'
-#' @param x the object to obtain the number of parameters for
+#' @param x the fitted object to obtain the parameters of
+#'
+#' @export
+params.mle <- function(x) c(mu=point(x),sigma=vcov(x))
+
+
+#' Generic method for obtaining the number of parameters of an object.
+#'
+#' @param x the fitted object to obtain the number of parameters for
 #'
 #' @export
 nparams <- function(x)
@@ -91,16 +99,20 @@ mse <- function(x, ...)
 }
 
 #' Generic function for computing the distribution of \code{f(x)} where \code{x}
-#' models another distribution object.
+#' models a \code{dist} (distribution) object.
 #'
-#' @param x a \code{distr} object
-#' @param f a function of the \code{x} object
-#' @param n number of samples to take to estimate \code{f(x)}  with
-#' @param ... additional arguments to pass
+#' When we apply a function \code{f} to an argument \code{x}, we are applying
+#' the function to the argument, or evaluating the function by substituting the
+#' formal parameters of the function with the arguments. However, if the
+#' argument is a random variable, then \code{f(x)} is also a random variable.
 #'
+#' @param x a list of \code{dist} (distrubtion) objects.
+#' @param f a function that accepts arguments sampled from the \code{dist} items
+#'          in \code{x}.
+#' @param ... additional arguments to pass.
 #' @export
-fn_distr <- function(x, f, n=1000, ...)
+rmap <- function(x,f,...)
 {
-    UseMethod("fn_distr",x)
+    UseMethod("rmap",x)
 }
 

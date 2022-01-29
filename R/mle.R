@@ -1,12 +1,37 @@
+#' Method for obtaining the parameters of an \code{mle} object.
+#'
+#' @param x the \code{mle} object to obtain the parameters of
+#'
+#' @export
+params.mle <- function(x) c(mu=point(x),sigma=vcov(x))
+
+#' Method for obtaining the number of parameters of an \code{mle} object.
+#'
+#' @param x the \code{mle} object to obtain the number of parameters of
+#'
 #' @export
 nparams.mle <- function(x) length(x$theta.hat)
 
+#' Method for obtaining the AIC of an \code{mle} object.
+#'
+#' @param x the \code{mle} object to obtain the AIC of
+#'
 #' @export
 aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
 
+#' Method for obtaining the number of observations in the sample used by
+#' an \code{mle}.
+#'
+#' @param x the \code{mle} object to obtain the number of observations for
+#'
 #' @export
 nobs.mle <- function(x) x$sample_size
 
+#' Method for obtaining the log-likelihood of an \code{mle} object.
+#'
+#' @param x the log-likelihood \code{l} evaluated at \code{x}, \code{l(x)}.
+#' @param ... additional arguments to pass
+#'
 #' @export
 loglike.mle <- function(x,...) x$loglike
 

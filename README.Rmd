@@ -28,11 +28,11 @@ We define an algebra over MLEs.
 You can install the development version of `algebraic.mle` from [GitHub](https://github.com/) with:
 
 ```{r,eval=F}
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
 
-## MLE of rate parameter in exponential distribution
+## MLE of exponential distribution's rate parameter
 In what follows, to demonstrate the `algebraic.mle` R package, we consider a
 random sample from exponentially distributed random variable
 $X_i \sim \operatorname{EXP}(\lambda=1)$ for $i=1,\ldots,n$.
@@ -54,7 +54,7 @@ print(x)
 
 We show a histogram of the sample, and a plot of the exponential function's
 pdf, with:
-```{r,message=F}
+```{r,message=F,warning=F}
 library(ggplot2)
 ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
     xlim(0,6) + 
@@ -145,38 +145,36 @@ be quite similar otherwise.
 
 ## Invariance property of the MLE
 
-An interesting property of an MLE $\hat\lambda$ is that the MLE of $g(\lambda)$
-is given by $g(\hat\lambda)$.
+An interesting property of an MLE $\hat\lambda$ is that the MLE of $f(\lambda)$
+is given by $f(\hat\lambda)$.
 
-The method `fn_distr` applied to `mle` objects takes a function of the `mle`
-and a simulation sample size and then computes its MLE, i.e., returns an object
-of type `fn_mle`, which is also an MLE with a an asymptotic sampling
-distribution.
+The method `rmap` applied to an object `x` for which `is(x,"mle") == TRUE` and a
+function `f` compatible with `point(x)` (and optionally a simulation
+sample size) computes the MLE of `f(x)`.
 
 ### Example
-Suppose we are interested in $g(\lambda) = 2 \lambda$:
+We know that the MLE $\hat\lambda \sim N(\lambda,\lambda^2/n)$.
+We seek a transformation $g(\hat\lambda)$ such that its expectation is
+$2 \lambda$, i.e., $g(\lambda) = 2\lambda$:
 ```{r}
-g <- function(lambda) 2*lambda
-
-g.hat <- fn_distr(rate.hat,g)
-point(g.hat)
-vcov(g.hat)
-confint(g.hat)
+f <- function(lambda) 2*lambda
 ```
 
-Let's compare this with a simulation of the actual distribution.
-
-We know that the MLE $\hat\lambda \sim N(\lambda,\lambda^2/n)$.
-We seek a transformation $g(\hat\lambda)$ such taht its expectation is
-$2 \lambda$, i.e., $g(\lambda) = 2\lambda$.
-Then, $\operatorname{var}(g(\hat\lambda)) = 4 \lambda^2/n$.
-Letting $\lambda=1$, we see that $g(\hat\lambda) \sim N(2 \lambda,4\lambda^2/n)$.
-We simulate drawing $n=1000$ observations from 
-
+We compute the MLE of $2 \hat\lambda$ with:
 ```{r}
-data4 <- rnorm(1000,2,2/sqrt(1000))
-mean(data4)
-var(data4)
+g.hat <- rmap(rate.hat,f)
+```
+
+
+Then, $\operatorname{var}(f(\hat\lambda)) = 4 \lambda^2/n$.
+Letting $\lambda=1$, we see that, asymptotically,
+$g(\hat\lambda) \sim N(2,4/n)$.
+
+We expected a mean of $2$ and a variance of $4/n = 0.004$, which is pretty
+close to what we obtained:
+```{r}
+point(g.hat)
+vcov(g.hat)
 ```
 
 ## Weighted MLE: a weighted sum of maximum likelihood estimators

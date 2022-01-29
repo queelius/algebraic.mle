@@ -2,13 +2,13 @@
 % Please edit documentation in R/generic_functions.R
 \name{nparams}
 \alias{nparams}
-\title{Generic method for obtaining the number of parameters of an MLE fit.}
+\title{Generic method for obtaining the number of parameters of an object.}
 \usage{
 nparams(x)
 }
 \arguments{
-\item{x}{the object to obtain the number of parameters for}
+\item{x}{the fitted object to obtain the number of parameters for}
 }
 \description{
-Generic method for obtaining the number of parameters of an MLE fit.
+Generic method for obtaining the number of parameters of an object.
 }

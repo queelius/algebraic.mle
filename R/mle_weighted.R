@@ -49,5 +49,5 @@ mle_weighted <- function(mles)
         loglike=loglike,
         info=info.wt,
         sigma=cov.wt),
-        class=c("mle_weighted","mle","estimate"))
+        class=c("mle_weighted","mle","estimate","normal","dist"))
 }

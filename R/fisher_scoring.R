@@ -23,16 +23,14 @@ fisher_scoring <- function(theta0,info,score,eps=1e-5,max_iter=250L)
         theta0 <- theta1
     }
 
-    res <- list(theta.hat=theta1,
-                sigma=sigma,
-                score=s,
-                info=nfo,
-                eps=eps,
-                iter=iter,
-                max_iter=max_iter)
-
-    structure(
-        res,
-        class=c("mle_numerical","mle","estimate",class(res)))
+    structure(list(
+        theta.hat=theta1,
+        sigma=sigma,
+        score=s,
+        info=nfo,
+        eps=eps,
+        iter=iter,
+        max_iter=max_iter),
+        class=c("mle_numerical","mle","estimate","normal","dist"))
 }
 
