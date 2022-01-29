@@ -17,21 +17,8 @@ You can install the development version of `algebraic.mle` from
 [GitHub](https://github.com/) with:
 
 ``` r
-#install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
-#> Downloading GitHub repo queelius/algebraic.mle@HEAD
-#> 
-#>      checking for file ‘/tmp/RtmpoJ0zsT/remotes6d18d50f6e26a/queelius-algebraic.mle-3e1c165/DESCRIPTION’ ...  ✓  checking for file ‘/tmp/RtmpoJ0zsT/remotes6d18d50f6e26a/queelius-algebraic.mle-3e1c165/DESCRIPTION’
-#>   ─  preparing ‘algebraic.mle’:
-#>    checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-#>   ─  checking for LF line-endings in source and make files and shell scripts
-#>   ─  checking for empty or unneeded directories
-#>    Omitted ‘LazyData’ from DESCRIPTION
-#>   ─  building ‘algebraic.mle_0.1.0.tar.gz’
-#>      
-#> 
-#> Installing package into '/usr/local/lib/R/site-library'
-#> (as 'lib' is unspecified)
 ```
 
 ## MLE of exponential distribution’s rate parameter
@@ -56,18 +43,18 @@ from this sample (data frame) with:
 ``` r
 print(x)
 #> # A tibble: 1,000 × 1
-#>         x
-#>     <dbl>
-#>  1 0.146 
-#>  2 0.182 
-#>  3 1.35  
-#>  4 0.0481
-#>  5 1.25  
-#>  6 0.189 
-#>  7 1.43  
-#>  8 0.111 
-#>  9 0.0494
-#> 10 0.617 
+#>        x
+#>    <dbl>
+#>  1 5.42 
+#>  2 0.263
+#>  3 0.897
+#>  4 0.926
+#>  5 1.46 
+#>  6 1.11 
+#>  7 2.34 
+#>  8 0.169
+#>  9 1.22 
+#> 10 0.918
 #> # … with 990 more rows
 ```
 
@@ -97,24 +84,24 @@ rate.hat <- mle_exp(x$x)
 summary(rate.hat)
 #> Maximum likelihood estimator, of type mle_exp ,
 #> is normally distributed with mean
-#> [1] 0.9509951
+#> [1] 0.9557682
 #> and variance-covariance
 #>              [,1]
-#> [1,] 0.0009043917
+#> [1,] 0.0009134928
 #> ---
-#> The asymptotic mean squared error 0.0009043917 
+#> The asymptotic mean squared error 0.0009134928 
 #> The asymptotic 95% confidence interval is
-#>       2.5 %   97.5 %
-#> 1 0.9015292 1.000461
-#> The log-likelihood is -1050.246 
-#> The AIC is 2102.493
+#>      2.5 %   97.5 %
+#> 1 0.906054 1.005482
+#> The log-likelihood is -1045.24 
+#> The AIC is 2092.48
 ```
 
 We can show the point estimator with:
 
 ``` r
 point(rate.hat)
-#> [1] 0.9509951
+#> [1] 0.9557682
 ```
 
 We can show the Fisher information and variance-covariance matrices
@@ -123,10 +110,10 @@ with:
 ``` r
 fisher_info(rate.hat)
 #>          [,1]
-#> [1,] 1105.716
+#> [1,] 1094.699
 vcov(rate.hat)
 #>              [,1]
-#> [1,] 0.0009043917
+#> [1,] 0.0009134928
 ```
 
 (If `rate.hat` had been a vector, `vcov` would have output a
@@ -137,8 +124,8 @@ We can show the confidence interval with:
 
 ``` r
 confint(rate.hat)
-#>       2.5 %   97.5 %
-#> 1 0.9015292 1.000461
+#>      2.5 %   97.5 %
+#> 1 0.906054 1.005482
 ```
 
 ## Sampling distribution of the MLE
@@ -223,10 +210,10 @@ transformation *g*(*λ̂*) such that its expectation is 2*λ*, i.e.,
 f <- function(lambda) 2*lambda
 ```
 
-We compute the MLE of 2*λ̂* with:
+We compute the MLE of 2*λ̂* (using a simulation size *n* = 1000) with:
 
 ``` r
-g.hat <- rmap(rate.hat,f)
+g.hat <- rmap(rate.hat,f,n=1000)
 ```
 
 Then, var (*f*(*λ̂*)) = 4*λ*<sup>2</sup>/*n*. Letting *λ* = 1, we see
@@ -237,10 +224,10 @@ close to what we obtained:
 
 ``` r
 point(g.hat)
-#> [1] 1.90199
+#> [1] 1.911536
 vcov(g.hat)
 #>             [,1]
-#> [1,] 0.003469069
+#> [1,] 0.003711212
 ```
 
 ## Weighted MLE: a weighted sum of maximum likelihood estimators
@@ -260,56 +247,74 @@ the data in *θ̂*<sub>1</sub>, …, *θ̂*<sub>*k*</sub> is given by the
 inverse-variance weighted mean,
 *θ̂* = (∑*I*<sub>*j*</sub>(*θ*))<sup>−1</sup>(∑*I*<sub>*j*</sub>(*θ*)*θ*<sub>*j*</sub>).
 
-To evaluate the performance of this estimator, we generate a sample of
-*N* = 1000 from EXP (*λ*=1). We compute the MLE for the observed sample,
-denoted by *θ*. We then divide the observed sample into *r* = 5
-sub-samples, each of size *N*/*r* = 100, and compute the MLE for each
-sub-sampled, denoted by *θ*<sup>(1)</sup>, …, *θ*<sup>(*r*)</sup>.
-Finally, we come these MLEs into the weighted MLE, denoted by
-*θ*<sub>*w*</sub>.
+### Example
+
+To evaluate the performance of the weighted MLE, we generate a sample of
+*N* = 1000 observations from EXP (*λ*=1) and compute the MLE for the
+observed sample, denoted by *θ*.
+
+We then divide the observed sample into *r* = 5 sub-samples, each of
+size *N*/*r* = 100, and compute the MLE for each sub-sampled, denoted by
+*θ*<sup>(1)</sup>, …, *θ*<sup>(*r*)</sup>.
+
+Finally, we do a weighted combination these MLEs to form the weighted
+MLE, denoted by *θ*<sub>*w*</sub>:
 
 ``` r
 N <- 1000
 r <- 5
-data3 <- rexp(N)
-data3.mat <- matrix(data3,nrow=r)
-mles <- list(length=r)
+samp <- rexp(N)
+samp.sub <- matrix(samp,nrow=r)
+mles.sub <- list(length=r)
 for (i in 1:r)
-    mles[[i]] <- mle_exp(data3.mat[i,])
+    mles.sub[[i]] <- mle_exp(samp.sub[i,])
 
-mle.wt <- mle_weighted(mles)
-summary(mle.wt)
-#> Maximum likelihood estimator, of type mle_weighted ,
-#> is normally distributed with mean
-#>           [,1]
-#> [1,] 0.9592375
-#> and variance-covariance
-#>              [,1]
-#> [1,] 0.0009211142
-#> ---
-#> The asymptotic mean squared error 0.0009211142 
-#> The asymptotic 95% confidence interval is
-#>       2.5 %   97.5 %
-#> 1 0.9093164 1.009159
-#> The log-likelihood is -1040.018 
-#> The AIC is 2082.035
-
-mle.tot <- mle_exp(data3)
-summary(mle.tot)
-#> Maximum likelihood estimator, of type mle_exp ,
-#> is normally distributed with mean
-#> [1] 0.9602567
-#> and variance-covariance
-#>              [,1]
-#> [1,] 0.0009220928
-#> ---
-#> The asymptotic mean squared error 0.0009220928 
-#> The asymptotic 95% confidence interval is
-#>       2.5 %   97.5 %
-#> 1 0.9103091 1.010204
-#> The log-likelihood is -1040.555 
-#> The AIC is 2083.109
+mle.wt <- mle_weighted(mles.sub)
+mle <- mle_exp(samp)
 ```
+
+We show the results in the following table:
+<table>
+<caption>
+Weighted MLE vs MLE
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+point estimate
+</th>
+<th style="text-align:right;">
+variance
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+weighted MLE
+</td>
+<td style="text-align:right;">
+0.988
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MLE
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+</tbody>
+</table>
 
 We see that *θ̂* and *θ̂*<sub>*w*</sub> model approximately the same
 sampling distribution for *θ*.

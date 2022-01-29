@@ -1,5 +1,6 @@
 ---
 output: github_document
+#always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -28,7 +29,7 @@ We define an algebra over MLEs.
 You can install the development version of `algebraic.mle` from [GitHub](https://github.com/) with:
 
 ```{r,eval=F}
-#install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
 
@@ -194,29 +195,46 @@ $$
     \hat\theta = \left(\sum I_j(\theta)\right)^{-1} \left(\sum I_j(\theta) \theta_j\right).
 $$
 
+### Example
+To evaluate the performance of the weighted MLE, we generate a sample of
+$N=1000$ observations from $\operatorname{EXP}(\lambda=1)$ and compute the MLE
+for the observed sample, denoted by $\theta$.
 
-To evaluate the performance of this estimator, we generate a sample of $N=1000$
-from $\operatorname{EXP}(\lambda=1)$.
-We compute the MLE for the observed sample, denoted by $\theta$.
 We then divide the observed sample into $r=5$ sub-samples, each of size
 $N/r=100$, and compute the MLE for each sub-sampled, denoted by
 $\theta^{(1)},\ldots,\theta^{(r)}$.
-Finally, we come these MLEs into the weighted MLE, denoted by $\theta_w$.
 
+Finally, we do a weighted combination these MLEs to form the weighted MLE,
+denoted by $\theta_w$:
 ```{r}
 N <- 1000
 r <- 5
-data3 <- rexp(N)
-data3.mat <- matrix(data3,nrow=r)
-mles <- list(length=r)
+samp <- rexp(N)
+samp.sub <- matrix(samp,nrow=r)
+mles.sub <- list(length=r)
 for (i in 1:r)
-    mles[[i]] <- mle_exp(data3.mat[i,])
+    mles.sub[[i]] <- mle_exp(samp.sub[i,])
 
-mle.wt <- mle_weighted(mles)
-summary(mle.wt)
+mle.wt <- mle_weighted(mles.sub)
+mle <- mle_exp(samp)
+```
 
-mle.tot <- mle_exp(data3)
-summary(mle.tot)
+We show the results in the following table:
+```{r,echo=F,message=F}
+library(kableExtra)
+df <- data.frame(
+    c(point(mle.wt),point(mle)),
+    c(vcov(mle.wt),vcov(mle)))
+
+colnames(df) <- c("point estimate","variance")
+rownames(df) <- c("weighted MLE", "MLE")
+
+knitr::kable(df,
+             bootstrap_options="striped",
+             full_width=F,
+             digits=3,
+             label="weighted.mle",
+             caption="Weighted MLE vs MLE")
 ```
 
 We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling
