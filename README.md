@@ -17,11 +17,24 @@ You can install the development version of `algebraic.mle` from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
+#install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
+#> Downloading GitHub repo queelius/algebraic.mle@HEAD
+#> 
+#>      checking for file ‘/tmp/RtmpoJ0zsT/remotes6d18d50f6e26a/queelius-algebraic.mle-3e1c165/DESCRIPTION’ ...  ✓  checking for file ‘/tmp/RtmpoJ0zsT/remotes6d18d50f6e26a/queelius-algebraic.mle-3e1c165/DESCRIPTION’
+#>   ─  preparing ‘algebraic.mle’:
+#>    checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+#>   ─  checking for LF line-endings in source and make files and shell scripts
+#>   ─  checking for empty or unneeded directories
+#>    Omitted ‘LazyData’ from DESCRIPTION
+#>   ─  building ‘algebraic.mle_0.1.0.tar.gz’
+#>      
+#> 
+#> Installing package into '/usr/local/lib/R/site-library'
+#> (as 'lib' is unspecified)
 ```
 
-## MLE of rate parameter in exponential distribution
+## MLE of exponential distribution’s rate parameter
 
 In what follows, to demonstrate the `algebraic.mle` R package, we
 consider a random sample from exponentially distributed random variable
@@ -45,16 +58,16 @@ print(x)
 #> # A tibble: 1,000 × 1
 #>         x
 #>     <dbl>
-#>  1 0.0262
-#>  2 1.34  
-#>  3 0.296 
-#>  4 2.30  
-#>  5 0.490 
-#>  6 1.60  
-#>  7 0.659 
-#>  8 1.45  
-#>  9 1.08  
-#> 10 0.520 
+#>  1 0.146 
+#>  2 0.182 
+#>  3 1.35  
+#>  4 0.0481
+#>  5 1.25  
+#>  6 0.189 
+#>  7 1.43  
+#>  8 0.111 
+#>  9 0.0494
+#> 10 0.617 
 #> # … with 990 more rows
 ```
 
@@ -66,8 +79,6 @@ library(ggplot2)
 ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
     xlim(0,6) + 
     geom_function(fun=dexp)
-#> Warning: Removed 2 rows containing non-finite values (stat_bin).
-#> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
@@ -86,24 +97,24 @@ rate.hat <- mle_exp(x$x)
 summary(rate.hat)
 #> Maximum likelihood estimator, of type mle_exp ,
 #> is normally distributed with mean
-#> [1] 0.9775105
+#> [1] 0.9509951
 #> and variance-covariance
 #>              [,1]
-#> [1,] 0.0009555267
+#> [1,] 0.0009043917
 #> ---
-#> The asymptotic mean squared error 0.0009555267 
+#> The asymptotic mean squared error 0.0009043917 
 #> The asymptotic 95% confidence interval is
 #>       2.5 %   97.5 %
-#> 1 0.9266654 1.028356
-#> The log-likelihood is -1022.746 
-#> The AIC is 2047.493
+#> 1 0.9015292 1.000461
+#> The log-likelihood is -1050.246 
+#> The AIC is 2102.493
 ```
 
 We can show the point estimator with:
 
 ``` r
 point(rate.hat)
-#> [1] 0.9775105
+#> [1] 0.9509951
 ```
 
 We can show the Fisher information and variance-covariance matrices
@@ -112,10 +123,10 @@ with:
 ``` r
 fisher_info(rate.hat)
 #>          [,1]
-#> [1,] 1046.543
+#> [1,] 1105.716
 vcov(rate.hat)
 #>              [,1]
-#> [1,] 0.0009555267
+#> [1,] 0.0009043917
 ```
 
 (If `rate.hat` had been a vector, `vcov` would have output a
@@ -127,7 +138,7 @@ We can show the confidence interval with:
 ``` r
 confint(rate.hat)
 #>       2.5 %   97.5 %
-#> 1 0.9266654 1.028356
+#> 1 0.9015292 1.000461
 ```
 
 ## Sampling distribution of the MLE
@@ -195,46 +206,41 @@ appear to be quite similar otherwise.
 
 ## Invariance property of the MLE
 
-An interesting property of an MLE *λ̂* is that the MLE of *g*(*λ*) is
-given by *g*(*λ̂*).
+An interesting property of an MLE *λ̂* is that the MLE of *f*(*λ*) is
+given by *f*(*λ̂*).
 
-The method `fn_distr` applied to `mle` objects takes a function of the
-`mle` and a simulation sample size and then computes its MLE, i.e.,
-returns an object of type `fn_mle`, which is also an MLE with a an
-asymptotic sampling distribution.
+The method `rmap` applied to an object `x` for which
+`is(x,"mle") == TRUE` and a function `f` compatible with `point(x)` (and
+optionally a simulation sample size) computes the MLE of `f(x)`.
 
 ### Example
 
-Suppose we are interested in *g*(*λ*) = 2*λ*:
+We know that the MLE *λ̂* ∼ *N*(*λ*,*λ*<sup>2</sup>/*n*). We seek a
+transformation *g*(*λ̂*) such that its expectation is 2*λ*, i.e.,
+*g*(*λ*) = 2*λ*:
 
 ``` r
-g <- function(lambda) 2*lambda
-
-g.hat <- fn_distr(rate.hat,g)
-point(g.hat)
-#> [1] 1.955021
-vcov(g.hat)
-#>            [,1]
-#> [1,] 0.00384802
-confint(g.hat)
-#>      2.5 %   97.5 %
-#> 1 1.852987 2.057055
+f <- function(lambda) 2*lambda
 ```
 
-Let’s compare this with a simulation of the actual distribution.
-
-We know that the MLE *λ̂* ∼ *N*(*λ*,*λ*<sup>2</sup>/*n*). We seek a
-transformation *g*(*λ̂*) such taht its expectation is 2*λ*, i.e.,
-*g*(*λ*) = 2*λ*. Then, var (*g*(*λ̂*)) = 4*λ*<sup>2</sup>/*n*. Letting
-*λ* = 1, we see that *g*(*λ̂*) ∼ *N*(2*λ*,4*λ*<sup>2</sup>/*n*). We
-simulate drawing *n* = 1000 observations from
+We compute the MLE of 2*λ̂* with:
 
 ``` r
-data4 <- rnorm(1000,2,2/sqrt(1000))
-mean(data4)
-#> [1] 2.005012
-var(data4)
-#> [1] 0.003933318
+g.hat <- rmap(rate.hat,f)
+```
+
+Then, var (*f*(*λ̂*)) = 4*λ*<sup>2</sup>/*n*. Letting *λ* = 1, we see
+that, asymptotically, *g*(*λ̂*) ∼ *N*(2,4/*n*).
+
+We expected a mean of 2 and a variance of 4/*n* = 0.004, which is pretty
+close to what we obtained:
+
+``` r
+point(g.hat)
+#> [1] 1.90199
+vcov(g.hat)
+#>             [,1]
+#> [1,] 0.003469069
 ```
 
 ## Weighted MLE: a weighted sum of maximum likelihood estimators
@@ -275,34 +281,34 @@ mle.wt <- mle_weighted(mles)
 summary(mle.wt)
 #> Maximum likelihood estimator, of type mle_weighted ,
 #> is normally distributed with mean
-#>          [,1]
-#> [1,] 1.004032
+#>           [,1]
+#> [1,] 0.9592375
 #> and variance-covariance
-#>             [,1]
-#> [1,] 0.001013711
+#>              [,1]
+#> [1,] 0.0009211142
 #> ---
-#> The asymptotic mean squared error 0.001013711 
+#> The asymptotic mean squared error 0.0009211142 
 #> The asymptotic 95% confidence interval is
 #>       2.5 %   97.5 %
-#> 1 0.9516617 1.056402
-#> The log-likelihood is -987.5218 
-#> The AIC is 1977.044
+#> 1 0.9093164 1.009159
+#> The log-likelihood is -1040.018 
+#> The AIC is 2082.035
 
 mle.tot <- mle_exp(data3)
 summary(mle.tot)
 #> Maximum likelihood estimator, of type mle_exp ,
 #> is normally distributed with mean
-#> [1] 1.00964
+#> [1] 0.9602567
 #> and variance-covariance
-#>             [,1]
-#> [1,] 0.001019373
+#>              [,1]
+#> [1,] 0.0009220928
 #> ---
-#> The asymptotic mean squared error 0.001019373 
+#> The asymptotic mean squared error 0.0009220928 
 #> The asymptotic 95% confidence interval is
-#>      2.5 %   97.5 %
-#> 1 0.957124 1.062157
-#> The log-likelihood is -990.4059 
-#> The AIC is 1982.812
+#>       2.5 %   97.5 %
+#> 1 0.9103091 1.010204
+#> The log-likelihood is -1040.555 
+#> The AIC is 2083.109
 ```
 
 We see that *θ̂* and *θ̂*<sub>*w*</sub> model approximately the same

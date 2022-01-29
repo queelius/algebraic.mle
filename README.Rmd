@@ -28,7 +28,7 @@ We define an algebra over MLEs.
 You can install the development version of `algebraic.mle` from [GitHub](https://github.com/) with:
 
 ```{r,eval=F}
-install.packages("devtools")
+#install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
 
@@ -160,11 +160,10 @@ $2 \lambda$, i.e., $g(\lambda) = 2\lambda$:
 f <- function(lambda) 2*lambda
 ```
 
-We compute the MLE of $2 \hat\lambda$ with:
+We compute the MLE of $2 \hat\lambda$ (using a simulation size $n=1000$) with:
 ```{r}
-g.hat <- rmap(rate.hat,f)
+g.hat <- rmap(rate.hat,f,n=1000)
 ```
-
 
 Then, $\operatorname{var}(f(\hat\lambda)) = 4 \lambda^2/n$.
 Letting $\lambda=1$, we see that, asymptotically,
