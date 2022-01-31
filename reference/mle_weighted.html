@@ -82,33 +82,33 @@ summation.</p>
 <span class="r-in"><span class="va">data2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">2</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">mle1</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">data1</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="va">mle1</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.008297</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.105217</span>
 <span class="r-in"><span class="va">mle2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">data2</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="va">mle2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1.989683</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1.984715</span>
 <span class="r-in"><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu">mle_weighted</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mle1</span>,<span class="va">mle2</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Maximum likelihood estimator, of type mle_weighted ,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> is normally distributed with mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          [,1]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 1.995811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         [,1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 2.02179</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> and variance-covariance</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            [,1]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.01327779</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.01363576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The asymptotic mean squared error 0.01327779 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The asymptotic mean squared error 0.01363576 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> The asymptotic 95% confidence interval is</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      2.5 %   97.5 %</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.806276 2.185346</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The log-likelihood is -92.67623 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The AIC is 187.3525 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.829717 2.213863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The log-likelihood is -88.46304 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The AIC is 178.9261 </span>
 <span class="r-in"><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">data1</span>,<span class="va">data2</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.995849</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.02332</span>
 <span class="r-in"><span class="fu"><a href="aic.html">aic</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 187.3582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 179.1562</span>
 <span class="r-in"><span class="fu"><a href="loglike.html">loglike</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -92.67911</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -88.57808</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
