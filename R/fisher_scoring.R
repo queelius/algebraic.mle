@@ -51,8 +51,8 @@ gradient_ascent <- function(theta0,
                             score=NULL,
                             eps=1e-3,
                             normalize=F,
-                            max_alpha=1,
-                            randomize=T)
+                            max_alpha=3,
+                            randomize=F)
 {
     if (is.null(score))
         score <- function(theta) numDeriv::grad(loglike,theta)
@@ -60,7 +60,8 @@ gradient_ascent <- function(theta0,
     energy <- function(iter) { exp(-iter) }
     norm <- function(x) { x / sqrt(sum(x^2)) }
     ls <- function(t,p) { loglike(theta0 + t * p) }
-    stop_cond <- function(s) { sqrt(sum(s^2)) < eps }
+    #stop_cond <- function(s) { sqrt(sum(s^2)) < eps }
+    stop_cond <- function(s) { max(abs(s)) < eps }
     proj <- function(theta)
     {
         for (j in 1:length(theta))
@@ -75,7 +76,13 @@ gradient_ascent <- function(theta0,
     repeat
     {
         p <- score(theta0)
-        if (stop_cond(p))
+        #if (stop_cond(p))
+
+        #if (randomize) p <- p + energy(i)*stats::rnorm(n=length(theta0))
+        #if (normalize) p <- norm(p)
+
+        theta1 <- proj(theta0 + p)
+        if (stop_cond(theta0-theta1))
         {
             structure(list(
                 theta.hat=theta0,
@@ -85,11 +92,9 @@ gradient_ascent <- function(theta0,
                 class=c("mle_numerical","mle","estimate"))
         }
 
-        if (randomize) p <- p + energy(i)*stats::rnorm(n=length(theta0))
-        if (normalize) p <- norm(p)
 
-        alpha <- stats::optimise(ls,c(0,max_alpha),maximum=T,p=p)$maximum
-        theta0 <- proj(theta0 + alpha * p)
+        #alpha <- stats::optimise(ls,c(0,max_alpha),maximum=T,p=p)$maximum
+        #theta0 <- proj(theta0 + alpha * p)
         i <- i + 1
     }
 }

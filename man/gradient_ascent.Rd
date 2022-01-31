@@ -10,8 +10,8 @@ gradient_ascent(
   score = NULL,
   eps = 0.001,
   normalize = F,
-  max_alpha = 1,
-  randomize = T
+  max_alpha = 3,
+  randomize = F
 )
 }
 \arguments{
