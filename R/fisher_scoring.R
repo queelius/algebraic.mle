@@ -56,8 +56,12 @@ gradient_ascent <- function(theta0,
     repeat
     {
         s <- score(theta0)
-        theta1 <- theta0 + s
-        if (i == max_iter || max(abs(s) < eps))
+        alpha <- stats::optimise(function(t) loglike(theta0 + t * s),c(0,1),maximum=T)$maximum
+
+        theta1 <- theta0 + alpha*s
+        print(theta1)
+
+        if (i == max_iter || max(abs(s)) < eps)
         {
             structure(list(
                 theta.hat=theta0,
