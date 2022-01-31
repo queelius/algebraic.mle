@@ -17,13 +17,19 @@ fisher_scoring <- function(theta0,info,score,eps=1e-5,max_iter=250L)
 
     for (iter in 1:max_iter)
     {
+        print("---")
         nfo <- info(theta0)
+        print(nfo)
         sigma <- MASS::ginv(nfo)
+        print(sigma)
         s <- score(theta0)
+        print(s)
         theta1 <- theta0 + sigma %*% s
+        print(theta0)
         if (max(abs(theta1-theta0)) < eps)
             break
         theta0 <- theta1
+        print("###")
     }
 
     structure(list(
