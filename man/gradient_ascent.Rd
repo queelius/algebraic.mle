@@ -4,15 +4,7 @@
 \alias{gradient_ascent}
 \title{Gradient ascent}
 \usage{
-gradient_ascent(
-  theta0,
-  loglike,
-  score = NULL,
-  eps = 0.001,
-  normalize = F,
-  max_alpha = 3,
-  randomize = F
-)
+gradient_ascent(theta0, loglike, score = NULL, eps = 0.001, max_iter = 250L)
 }
 \arguments{
 \item{theta0}{initial guess of theta with \eqn{p} components}
@@ -23,12 +15,7 @@ gradient_ascent(
 
 \item{eps}{stopping condition}
 
-\item{normalize}{whether to normalize the jumps to a magnitude of max_alpha}
-
-\item{max_alpha}{maximum alpha step}
-
-\item{randomize}{randomize steps according to some energy function that
-decreases over time}
+\item{max_iter}{maximum iterations}
 }
 \description{
 Gradient ascent
