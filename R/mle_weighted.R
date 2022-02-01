@@ -8,6 +8,7 @@
 #'
 #' @param mles A list of \code{mle} objects, all for the same parameter.
 #' @return an object of type \code{mle_weighted} which inherits from \code{mle}.
+#' @export
 mle_weighted <- function(mles)
 {
     A <- fisher_info(mles[[1]])
