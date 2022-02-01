@@ -22,8 +22,6 @@ variables.
 First, we load the R package `algebraic.mle` with:
 
 ```{r setup}
-library(devtools)
-devtools::install_github("queelius/algebraic.mle")
 library(algebraic.mle)
 ```
 
@@ -201,7 +199,7 @@ $\theta^{(1)},\ldots,\theta^{(r)}$.
 
 Finally, we do a weighted combination these MLEs to form the weighted MLE,
 denoted by $\theta_w$:
-```{r}
+```{r,eval=F}
 N <- 1000
 r <- 5
 samp <- rexp(N)
@@ -216,7 +214,7 @@ mle <- mle_exp(samp)
 ```
 
 We show the results in the following table:
-```{r}
+```{r,eval=F}
 library(kableExtra)
 df <- data.frame(
     c(point(mle.wt),point(mle)),
