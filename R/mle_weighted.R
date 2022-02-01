@@ -8,6 +8,7 @@
 #'
 #' @param mles A list of \code{mle} objects, all for the same parameter.
 #' @return an object of type \code{mle_weighted} which inherits from \code{mle}.
+#'
 #' @export
 mle_weighted <- function(mles)
 {
@@ -26,7 +27,6 @@ mle_weighted <- function(mles)
         B <- B + A %*% point(mles[[i]])
     }
 
-    #cov.wt <- solve(info.wt,diag(1,nrow(info.wt)))
     cov.wt <- MASS::ginv(info.wt)
     theta.wt <- cov.wt %*% B
 
@@ -36,20 +36,4 @@ mle_weighted <- function(mles)
         info=info.wt,
         sigma=cov.wt),
         class=c("mle_weighted","mle"))
-
-    # examples
-    # #data1 <- rexp(100,2)
-    # #data2 <- rexp(200,2)
-    # #mle1 <- mle_exp(data1)
-    # #cat(point(mle1))
-    # #mle2 <- mle_exp(data2)
-    # #cat(point(mle2))
-    # #mle.wt <- mle_weighted(list(mle1,mle2))
-    # #summary(mle.wt)
-    # #mle <- mle_exp(c(data1,data2))
-    # #point(mle)
-    # #aic(mle)
-    # #loglike(mle)
-    # @export
-
 }

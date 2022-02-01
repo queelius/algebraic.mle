@@ -199,7 +199,7 @@ $\theta^{(1)},\ldots,\theta^{(r)}$.
 
 Finally, we do a weighted combination these MLEs to form the weighted MLE,
 denoted by $\theta_w$:
-```{r,eval=F}
+```{r}
 N <- 1000
 r <- 5
 samp <- rexp(N)
@@ -214,21 +214,14 @@ mle <- mle_exp(samp)
 ```
 
 We show the results in the following table:
-```{r,eval=F}
-library(kableExtra)
+```{r}
 df <- data.frame(
     c(point(mle.wt),point(mle)),
     c(vcov(mle.wt),vcov(mle)))
 
 colnames(df) <- c("point estimate","variance")
 rownames(df) <- c("weighted MLE", "MLE")
-
-knitr::kable(df,
-             bootstrap_options="striped",
-             full_width=F,
-             digits=3,
-             label="weighted.mle",
-             caption="Weighted MLE vs MLE")
+print(df)
 ```
 
 We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling

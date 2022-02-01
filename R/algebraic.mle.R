@@ -4,7 +4,7 @@
 #' The object representing a fitted model is a type of \code{mle} object, the maximum
 #' likelihood estimator of the model with respect to observed data.
 #' In what follows, we briefly define the API (generic functions, mostly) with
-#' default implementations for objects that inherit from \code{mle}:
+#' default implementations for objects that inherit from \code{mle}.
 #'
 #' \code{vcov(mle)} returns the variance-covariance matrix of the model
 #' parameter estimates.
