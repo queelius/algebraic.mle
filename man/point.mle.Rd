@@ -2,16 +2,15 @@
 % Please edit documentation in R/mle.R
 \name{point.mle}
 \alias{point.mle}
-\title{Computes the point estimate of an mle object.}
+\title{Computes the point estimate of an \code{mle} object.}
 \usage{
 \method{point}{mle}(x, ...)
 }
 \arguments{
-\item{x}{the mle object(s).}
+\item{x}{the \code{mle} object.}
 
-\item{...}{unused by \code{mle} objects. particular specializations of
-\code{mle} objects may use it, however.}
+\item{...}{pass additional arguments}
 }
 \description{
-Computes the point estimate of an mle object.
+Computes the point estimate of an \code{mle} object.
 }

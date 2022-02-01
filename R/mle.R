@@ -3,14 +3,14 @@
 #' @param x the \code{mle} object to obtain the parameters of
 #'
 #' @export
-params.mle <- function(x) c(mu=point(x),sigma=vcov(x))
+params.mle <- function(x) point(x)
 
 #' Method for obtaining the number of parameters of an \code{mle} object.
 #'
 #' @param x the \code{mle} object to obtain the number of parameters of
 #'
 #' @export
-nparams.mle <- function(x) length(x$theta.hat)
+nparams.mle <- function(x) length(params(x))
 
 #' Method for obtaining the AIC of an \code{mle} object.
 #'
@@ -22,10 +22,11 @@ aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
 #' Method for obtaining the number of observations in the sample used by
 #' an \code{mle}.
 #'
-#' @param x the \code{mle} object to obtain the number of observations for
-#'
+#' @param object the \code{mle} object to obtain the number of observations for
+#' @param ... additional arguments to pass
+#' @importFrom stats nobs
 #' @export
-nobs.mle <- function(x) x$sample_size
+nobs.mle <- function(object,...) object$sample_size
 
 #' Method for obtaining the log-likelihood of an \code{mle} object.
 #'
@@ -77,8 +78,7 @@ confint.mle <- function(object, parm=NULL, level=0.95, ...)
 #' to draw from the \code{mle} object.
 #'
 #' @param x the \code{mle} object to create sampler for
-#' @param ... additional arguments to pass to \code{mle} objects, like sampling
-#'            method, \code{?mvtnorm}
+#' @param ... additional arguments to pass
 #' @export
 sampler.mle <- function(x,...)
 {
@@ -91,6 +91,11 @@ sampler.mle <- function(x,...)
     }
 }
 
+#' Computes the variance-covariance matrix of \code{mle} objects.
+#'
+#' @param object the \code{mle} object to obtain the variance-covariance of
+#' @param ... additional arguments to pass
+#'
 #' @importFrom stats vcov
 #' @export
 vcov.mle <- function(object,...)
@@ -98,30 +103,30 @@ vcov.mle <- function(object,...)
     object$sigma
 }
 
-#' Computes the MSE of an MLE
+#' Computes the asymptotic MSE of an \code{mle} object.
 #'
-#' The MSE of an estimator \code{theta.hat} is defined as
-#'     \code{mse(theta.hat) = E[(theta.hat-theta)^2] = vcov(theta.hat) + (bias(theta.hat))^2}.
-#' where bias = E(theta.hat-theta), i.e., the MSE depends on theta.
-#' The definition of the MSE of \code{theta.hat} is given by
-#' the difference between the
-#' $$
-#'     f(theta.hat)
-#' $$
+#' The MSE of an estimator is just the expected sum of squared differences,
+#' e.g., if the true parameter value is \code{x} and we have an estimator \code{x.hat},
+#' then the MSE is
+#' \code{mse(x.hat) = E[(x.hat-x)^2] = trace(vcov(x.hat)) + (bias(x.hat))^2}.
+#'
+#' Since \code{x} is not typically known, the bias is not a statistic, and thus the
+#' MSE for biased estimators is not typically a statistic that can be computed.
+#' However, since the MLE is asymptotically unbiased, asymptotically,
+#' \code{mse(x.hat) = trace(vcov(theta.hat))}.
 #'
 #' @param x the \code{mle} object to compute the MSE of.
-#' @param ... this is not used for object type \code{mle}.
+#' @param ... pass additional arguments
 #' @export
 mse.mle <- function(x,...)
 {
     sum(diag(vcov(x)))
 }
 
-#' Computes the point estimate of an mle object.
+#' Computes the point estimate of an \code{mle} object.
 #'
-#' @param x the mle object(s).
-#' @param ... unused by \code{mle} objects. particular specializations of
-#'            \code{mle} objects may use it, however.
+#' @param x the \code{mle} object.
+#' @param ... pass additional arguments
 #' @export
 point.mle <- function(x,...)
 {
@@ -131,8 +136,7 @@ point.mle <- function(x,...)
 #' Function for obtaining the fisher information matrix of an \code{mle} object.
 #'
 #' @param x the \code{mle} object to obtain the fisher information of.
-#' @param ... unused by \code{mle} objects. particular specializations of
-#'            \code{mle} objects may use it, however.
+#' @param ... pass additional arguments
 #' @export
 fisher_info.mle <- function(x, ...)
 {

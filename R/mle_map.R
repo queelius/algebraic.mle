@@ -50,5 +50,5 @@ rmap.mle <- function(x,f,n=1000,...)
         sigma=sigma,
         info=info,
         theta.hat=theta.hat),
-        class=c("mle_func","mle","estimator"))
+        class=c("mle_func","mle"))
 }

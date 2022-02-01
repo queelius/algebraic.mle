@@ -5,10 +5,12 @@
 \title{Method for obtaining the number of observations in the sample used by
 an \code{mle}.}
 \usage{
-\method{nobs}{mle}(x)
+\method{nobs}{mle}(object, ...)
 }
 \arguments{
-\item{x}{the \code{mle} object to obtain the number of observations for}
+\item{object}{the \code{mle} object to obtain the number of observations for}
+
+\item{...}{additional arguments to pass}
 }
 \description{
 Method for obtaining the number of observations in the sample used by

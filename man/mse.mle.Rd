@@ -2,22 +2,24 @@
 % Please edit documentation in R/mle.R
 \name{mse.mle}
 \alias{mse.mle}
-\title{Computes the MSE of an MLE}
+\title{Computes the asymptotic MSE of an \code{mle} object.}
 \usage{
 \method{mse}{mle}(x, ...)
 }
 \arguments{
 \item{x}{the \code{mle} object to compute the MSE of.}
 
-\item{...}{this is not used for object type \code{mle}.}
+\item{...}{pass additional arguments}
 }
 \description{
-The MSE of an estimator \code{theta.hat} is defined as
-    \code{mse(theta.hat) = E[(theta.hat-theta)^2] = vcov(theta.hat) + (bias(theta.hat))^2}.
-where bias = E(theta.hat-theta), i.e., the MSE depends on theta.
-The definition of the MSE of \code{theta.hat} is given by
-the difference between the
-$$
-    f(theta.hat)
-$$
+The MSE of an estimator is just the expected sum of squared differences,
+e.g., if the true parameter value is \code{x} and we have an estimator \code{x.hat},
+then the MSE is
+\code{mse(x.hat) = E[(x.hat-x)^2] = trace(vcov(x.hat)) + (bias(x.hat))^2}.
+}
+\details{
+Since \code{x} is not typically known, the bias is not a statistic, and thus the
+MSE for biased estimators is not typically a statistic that can be computed.
+However, since the MLE is asymptotically unbiased, asymptotically,
+\code{mse(x.hat) = trace(vcov(theta.hat))}.
 }

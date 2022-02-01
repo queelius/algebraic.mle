@@ -19,17 +19,3 @@ the inverse of their respective variance-covariance matrix. Intuitively,
 the higher the variance, the less weight an \code{mle} is given in the
 summation.
 }
-\examples{
-data1 <- rexp(100,2)
-data2 <- rexp(200,2)
-mle1 <- mle_exp(data1)
-cat(point(mle1))
-mle2 <- mle_exp(data2)
-cat(point(mle2))
-mle.wt <- mle_weighted(list(mle1,mle2))
-summary(mle.wt)
-mle <- mle_exp(c(data1,data2))
-point(mle)
-aic(mle)
-loglike(mle)
-}

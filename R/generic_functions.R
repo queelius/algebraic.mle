@@ -1,13 +1,3 @@
-#' Generic method for obtaining the number of observations used by an MLE fit.
-#'
-#' @param x the object to compute the number of observations for
-#'
-#' @export
-nobs <- function(x)
-{
-    UseMethod("nobs",x)
-}
-
 #' Generic method for obtaining the log-likelihood of an MLE fit.
 #'
 #' @param x the object to obtain the log-likelihood of
@@ -34,7 +24,10 @@ aic <- function(x)
 #' @param x the fitted object to obtain the parameters of
 #'
 #' @export
-params.mle <- function(x) c(mu=point(x),sigma=vcov(x))
+params <- function(x)
+{
+    UseMethod("params",x)
+}
 
 
 #' Generic method for obtaining the number of parameters of an object.

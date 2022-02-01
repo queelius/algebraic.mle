@@ -9,8 +9,7 @@
 \arguments{
 \item{x}{the \code{mle} object to obtain the fisher information of.}
 
-\item{...}{unused by \code{mle} objects. particular specializations of
-\code{mle} objects may use it, however.}
+\item{...}{pass additional arguments}
 }
 \description{
 Function for obtaining the fisher information matrix of an \code{mle} object.
