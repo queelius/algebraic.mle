@@ -43,7 +43,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/exponential-mle.html">Maximum likelihood estimator of the exponential distribution</a>
+    <a class="dropdown-item" href="articles/exponential-mle.html">Exponential distribution MLE</a>
   </div>
 </li>
 <li class="nav-item">
@@ -102,18 +102,18 @@
 <h2 id="api">API<a class="anchor" aria-label="anchor" href="#api"></a>
 </h2>
 <p>The object representing a fitted model is a type of <code>mle</code> object, the maximum likelihood estimator of the model with respect to observed data.</p>
-<p>We define several generic functions with default implementations for objects that inherit from <code>mle</code>:</p>
+<p>For a full list of functions, see the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function reference</a> for <code>algebraic.mle</code>. In what follows, we briefly define the API (generic functions, mostly) with default implementations for objects that inherit from <code>mle</code>:</p>
 <ol style="list-style-type: decimal">
 <li><p><code>vcov(mle)</code> returns the variance-covariance matrix of the model’s parameter estimates.</p></li>
 <li><p><code>point(mle)</code> returns the point that maximizes the likelihood of the model.</p></li>
-<li><p><code>confint(mle)</code> returns confidence intervals of the point estimates of the <code>mle</code> object.</p></li>
-<li><p><code>sample(mle)</code> maps to a function that may be used to sample from the sampling distribution of <code>mle</code> object.</p></li>
+<li><p><code>confint(mle)</code> returns confidence intervals of the true parameter value estimated by the <code>mle</code> object.</p></li>
+<li><p><code>sampler(mle)</code> maps to a function that may be used to sample from the sampling distribution of the <code>mle</code> object.</p></li>
 <li><p><code>mse(mle)</code> computes the asymptotic mean squared error of the <code>mle</code> object.</p></li>
 <li><p><code>mle_weighted(mles)</code> computes the <em>weighted</em> maximum likelihood estimate from independent <code>mle</code> objects in the list argument <code>mles</code>.</p></li>
 <li><p><code>fisher_info(mle)</code> returns the Fisher information matrix of the model’s parameters.</p></li>
-<li><p><code>rmap(mle,g)</code> provides an approximation of the maximum likelihood estimator of <code>g(mle)</code>.</p></li>
+<li><p><code>rmap(mle,g)</code> provides an approximation of the maximum likelihood estimator of <em>g</em>(<em>θ</em>) where <code>mle</code> is an estimator of <em>θ</em>. The returned value is an <code>numerical_mle</code> estimator of <em>g</em>(<em>θ</em>). Note that <code>numerical_mle</code> inherits from <code>mle</code>.</p></li>
 <li>
-<p>Finally, since normal distributions are closed under linear transformations, then letting <em>A</em> be a <em>p</em>-by-<em>q</em> matrix and <em>θ̂</em> be a <em>q</em> dimensional random vector (MLE for estmiating <em>θ</em>), then *A**θ̂* is a <em>p</em> dimensional multivariate normal with a mean <em>A<strong>θ<em> and a variance-covariance </em>A<em>′vcov (</em>θ̂<em>)</em>A<em>. Furthermore, by the invariance property of the MLE, </em>A</strong>θ̂</em> is the MLE of <span class="math inline">$\\A\\theta$</span>.</p>
+<p>Finally, since normal distributions are closed under linear transformations, then letting <em>A</em> be a <em>p</em>-by-<em>q</em> matrix and <em>θ̂</em> be a <em>q</em> dimensional random vector (MLE for estimating <em>θ</em>), then *A**θ̂* is a <em>p</em> dimensional multivariate normal with a mean <em>A<strong>θ<em> and a variance-covariance </em>A<em>′vcov (</em>θ̂<em>)</em>A<em>. Furthermore, by the invariance property of the MLE, </em>A</strong>θ̂</em> is the MLE of *A**θ*.</p>
 <p>We define a set of generic functions for multiplying <code>mle</code> objects by (non-random) matrices and vectors to permit these sort of operations, with the asymptotic distributions of the operators applied to the <code>mle</code> objects exactly known if the asymptotic distribution of the <code>mle</code> objects are exactly known.</p>
 <p>See <code>rmap</code> for when the operation is non-linear.</p>
 </li>

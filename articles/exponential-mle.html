@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="algebraic.mle">
-<title>Maximum likelihood estimator of the exponential distribution • algebraic.mle</title>
+<title>Exponential distribution MLE • algebraic.mle</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Maximum likelihood estimator of the exponential distribution">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Exponential distribution MLE">
 <meta property="og:description" content="algebraic.mle">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -41,7 +41,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/exponential-mle.html">Maximum likelihood estimator of the exponential distribution</a>
+    <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
   </div>
 </li>
 <li class="nav-item">
@@ -70,7 +70,7 @@
 
 <script src="exponential-mle_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Maximum likelihood estimator of the exponential distribution</h1>
+      <img src="" class="logo" alt=""><h1>Exponential distribution MLE</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/queelius/algebraic.mle/blob/HEAD/vignettes/exponential-mle.Rmd" class="external-link"><code>vignettes/exponential-mle.Rmd</code></a></small>
@@ -85,7 +85,9 @@
 <p>To demonstrate the <code>algebraic.mle</code> R package, we consider the relatively simple case of a random sample from the exponentially distributed random variables.</p>
 <p>First, we load the R package <code>algebraic.mle</code> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co">#library(devtools)</span>
+<span class="co">#devtools::install_github("queelius/algebraic.mle")</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="generating-a-sample">Generating a sample<a class="anchor" aria-label="anchor" href="#generating-a-sample"></a>
@@ -103,10 +105,10 @@
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 1</span></span>
 <span class="co">#&gt;        x</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 0.143 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 0.901 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 0.575 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 0.073<span style="text-decoration: underline;">0</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 0.028<span style="text-decoration: underline;">2</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 0.041<span style="text-decoration: underline;">0</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 1.26  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 1.12</span></code></pre></div>
 <p>We show a histogram of the sample, and a plot of the exponential function’s pdf, with:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
@@ -125,35 +127,35 @@
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt; Maximum likelihood estimator, of type mle_exp ,</span>
 <span class="co">#&gt; is normally distributed with mean</span>
-<span class="co">#&gt; [1] 0.94025</span>
+<span class="co">#&gt; [1] 1.022601</span>
 <span class="co">#&gt; and variance-covariance</span>
-<span class="co">#&gt;              [,1]</span>
-<span class="co">#&gt; [1,] 0.0008840701</span>
+<span class="co">#&gt;             [,1]</span>
+<span class="co">#&gt; [1,] 0.001045712</span>
 <span class="co">#&gt; ---</span>
-<span class="co">#&gt; The asymptotic mean squared error 0.0008840701 </span>
+<span class="co">#&gt; The asymptotic mean squared error 0.001045712 </span>
 <span class="co">#&gt; The asymptotic 95% confidence interval is</span>
 <span class="co">#&gt;       2.5 %   97.5 %</span>
-<span class="co">#&gt; 1 0.8913431 0.989157</span>
-<span class="co">#&gt; The log-likelihood is -1061.609 </span>
-<span class="co">#&gt; The AIC is 2125.219</span></code></pre></div>
+<span class="co">#&gt; 1 0.9694101 1.075791</span>
+<span class="co">#&gt; The log-likelihood is -977.6511 </span>
+<span class="co">#&gt; The AIC is 1957.302</span></code></pre></div>
 <p>We can show the point estimator with:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.94025</span></code></pre></div>
+<span class="co">#&gt; [1] 1.022601</span></code></pre></div>
 <p>We can show the Fisher information and variance-covariance matrices with:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/fisher_info.html">fisher_info</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt;          [,1]</span>
-<span class="co">#&gt; [1,] 1131.132</span>
+<span class="co">#&gt; [1,] 956.2864</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
-<span class="co">#&gt;              [,1]</span>
-<span class="co">#&gt; [1,] 0.0008840701</span></code></pre></div>
+<span class="co">#&gt;             [,1]</span>
+<span class="co">#&gt; [1,] 0.001045712</span></code></pre></div>
 <p>(If <code>rate.hat</code> had been a vector, <code>vcov</code> would have output a variance-covariance matrix. We may consider the above outputs <span class="math inline">\(1 \times 1\)</span> matrices.)</p>
 <p>We can show the confidence interval with:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt;       2.5 %   97.5 %</span>
-<span class="co">#&gt; 1 0.8913431 0.989157</span></code></pre></div>
+<span class="co">#&gt; 1 0.9694101 1.075791</span></code></pre></div>
 <div class="section level3">
 <h3 id="sampling-distribution-of-the-mle">Sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#sampling-distribution-of-the-mle"></a>
 </h3>
@@ -204,23 +206,24 @@
 <p>We expected a mean of <span class="math inline">\(2\)</span> and a variance of <span class="math inline">\(4/n = 0.004\)</span>, which is pretty close to what we obtained:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">g.hat</span><span class="op">)</span>
-<span class="co">#&gt; [1] 1.8805</span>
+<span class="co">#&gt; [1] 2.045201</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">g.hat</span><span class="op">)</span>
-<span class="co">#&gt;             [,1]</span>
-<span class="co">#&gt; [1,] 0.003543372</span></code></pre></div>
+<span class="co">#&gt;            [,1]</span>
+<span class="co">#&gt; [1,] 0.00450384</span></code></pre></div>
 </div>
 </div>
-<div class="section level3">
-<h3 id="weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators">Weighted MLE: a weighted sum of maximum likelihood estimators<a class="anchor" aria-label="anchor" href="#weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators">Weighted MLE: a weighted sum of maximum likelihood estimators<a class="anchor" aria-label="anchor" href="#weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators"></a>
+</h2>
 <p>Since the variance-covariance of an MLE is inversely proportional to the Fisher information that the MLE is defined with respect to, we can combine multiple MLEs of <span class="math inline">\(\theta\)</span>, each of which may be defined with respect to a different kind of sample, to arrive at the MLE that incorporates the Fisher information in all of those samples.</p>
 <p>Consider <span class="math inline">\(k\)</span> mutually independent MLE estimators of parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span>, where <span class="math inline">\(\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))\)</span>.</p>
 <p>Then, the maximum likelihood estimator of <span class="math inline">\(\theta\)</span> that incorporates all of the data in <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span> is given by the inverse-variance weighted mean, <span class="math display">\[
     \hat\theta = \left(\sum I_j(\theta)\right)^{-1} \left(\sum I_j(\theta) \theta_j\right).
 \]</span></p>
-<div class="section level4">
-<h4 id="example-1">Example<a class="anchor" aria-label="anchor" href="#example-1"></a>
-</h4>
+<div class="section level3">
+<h3 id="example-1">Example<a class="anchor" aria-label="anchor" href="#example-1"></a>
+</h3>
 <p>To evaluate the performance of the weighted MLE, we generate a sample of <span class="math inline">\(N=1000\)</span> observations from <span class="math inline">\(\operatorname{EXP}(\lambda=1)\)</span> and compute the MLE for the observed sample, denoted by <span class="math inline">\(\theta\)</span>.</p>
 <p>We then divide the observed sample into <span class="math inline">\(r=5\)</span> sub-samples, each of size <span class="math inline">\(N/r=100\)</span>, and compute the MLE for each sub-sampled, denoted by <span class="math inline">\(\theta^{(1)},\ldots,\theta^{(r)}\)</span>.</p>
 <p>Finally, we do a weighted combination these MLEs to form the weighted MLE, denoted by <span class="math inline">\(\theta_w\)</span>:</p>
@@ -237,7 +240,6 @@
 <span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></code></pre></div>
 <p>We show the results in the following table:</p>
 <p>We see that <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\hat\theta_w\)</span> model approximately the same sampling distribution for <span class="math inline">\(\theta\)</span>.</p>
-</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
