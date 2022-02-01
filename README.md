@@ -32,8 +32,11 @@ devtools::install_github("queelius/algebraic.mle")
 The object representing a fitted model is a type of `mle` object, the
 maximum likelihood estimator of the model with respect to observed data.
 
-We define several generic functions with default implementations for
-objects that inherit from `mle`:
+For a full list of functions, see the [function
+reference](https://queelius.github.io/algebraic.mle/reference/index.html)
+for `algebraic.mle`. In what follows, we briefly define the API (generic
+functions, mostly) with default implementations for objects that inherit
+from `mle`:
 
 1.  `vcov(mle)` returns the variance-covariance matrix of the model’s
     parameter estimates.
@@ -41,11 +44,11 @@ objects that inherit from `mle`:
 2.  `point(mle)` returns the point that maximizes the likelihood of the
     model.
 
-3.  `confint(mle)` returns confidence intervals of the point estimates
-    of the `mle` object.
+3.  `confint(mle)` returns confidence intervals of the true parameter
+    value estimated by the `mle` object.
 
-4.  `sample(mle)` maps to a function that may be used to sample from the
-    sampling distribution of `mle` object.
+4.  `sampler(mle)` maps to a function that may be used to sample from
+    the sampling distribution of the `mle` object.
 
 5.  `mse(mle)` computes the asymptotic mean squared error of the `mle`
     object.
@@ -57,14 +60,16 @@ objects that inherit from `mle`:
     model’s parameters.
 
 8.  `rmap(mle,g)` provides an approximation of the maximum likelihood
-    estimator of `g(mle)`.
+    estimator of *g*(*θ*) where `mle` is an estimator of *θ*. The
+    returned value is an `numerical_mle` estimator of *g*(*θ*). Note
+    that `numerical_mle` inherits from `mle`.
 
 9.  Finally, since normal distributions are closed under linear
     transformations, then letting *A* be a *p*-by-*q* matrix and *θ̂* be
-    a *q* dimensional random vector (MLE for estmiating *θ*), then
+    a *q* dimensional random vector (MLE for estimating *θ*), then
     *A**θ̂* is a *p* dimensional multivariate normal with a mean *A**θ*
     and a variance-covariance *A*′vcov (*θ̂*)*A*. Furthermore, by the
-    invariance property of the MLE, *A**θ̂* is the MLE of $\\A\\theta$.
+    invariance property of the MLE, *A**θ̂* is the MLE of *A**θ*.
 
     We define a set of generic functions for multiplying `mle` objects
     by (non-random) matrices and vectors to permit these sort of

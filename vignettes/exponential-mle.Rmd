@@ -1,8 +1,8 @@
 ---
-title: "Maximum likelihood estimator of the exponential distribution"
+title: "Exponential distribution MLE"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{exponential-mle}
+  %\VignetteIndexEntry{Exponential distribution MLE}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,7 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 # Introduction
 To demonstrate the `algebraic.mle` R package, we consider the relatively
 simple case of a random sample from the exponentially distributed random
@@ -23,6 +22,8 @@ variables.
 First, we load the R package `algebraic.mle` with:
 
 ```{r setup}
+#library(devtools)
+#devtools::install_github("queelius/algebraic.mle")
 library(algebraic.mle)
 ```
 
@@ -168,7 +169,7 @@ point(g.hat)
 vcov(g.hat)
 ```
 
-## Weighted MLE: a weighted sum of maximum likelihood estimators
+# Weighted MLE: a weighted sum of maximum likelihood estimators
 
 Since the variance-covariance of an MLE is inversely proportional to the
 Fisher information that the MLE is defined with respect to, we can combine
@@ -186,7 +187,7 @@ $$
     \hat\theta = \left(\sum I_j(\theta)\right)^{-1} \left(\sum I_j(\theta) \theta_j\right).
 $$
 
-### Example
+## Example
 To evaluate the performance of the weighted MLE, we generate a sample of
 $N=1000$ observations from $\operatorname{EXP}(\lambda=1)$ and compute the MLE
 for the observed sample, denoted by $\theta$.
