@@ -10,6 +10,12 @@
     <loc>https://queelius.github.io/algebraic.mle/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/articles/exponential-mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/articles/index.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/authors.html</loc>
   </url>
   <url>
@@ -64,9 +70,6 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/mse.mle.html</loc>
   </url>
   <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/nobs.html</loc>
-  </url>
-  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/nobs.mle.html</loc>
   </url>
   <url>
@@ -74,6 +77,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/nparams.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/params.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/params.mle.html</loc>
@@ -98,5 +104,8 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/sampler.mle_exp.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/vcov.mle.html</loc>
   </url>
 </urlset>

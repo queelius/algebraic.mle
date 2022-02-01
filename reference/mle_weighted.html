@@ -29,6 +29,12 @@ summation."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/exponential-mle.html">Maximum likelihood estimator of the exponential distribution</a>
+  </div>
+</li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
@@ -76,41 +82,6 @@ summation.</p>
     <p>an object of type <code>mle_weighted</code> which inherits from <code>mle</code>.</p>
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">data1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">data2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mle1</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">data1</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="va">mle1</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.088479</span>
-<span class="r-in"><span class="va">mle2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="va">data2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="va">mle2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1.860736</span>
-<span class="r-in"><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu">mle_weighted</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mle1</span>,<span class="va">mle2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maximum likelihood estimator, of type mle_weighted ,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> is normally distributed with mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          [,1]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 1.925444</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> and variance-covariance</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            [,1]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.01239295</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The asymptotic mean squared error 0.01239295 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The asymptotic 95% confidence interval is</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      2.5 %   97.5 %</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.742333 2.108555</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The log-likelihood is -102.162 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The AIC is 206.3241 </span>
-<span class="r-in"><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">data1</span>,<span class="va">data2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.930923</span>
-<span class="r-in"><span class="fu"><a href="aic.html">aic</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 207.2011</span>
-<span class="r-in"><span class="fu"><a href="loglike.html">loglike</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -102.6006</span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

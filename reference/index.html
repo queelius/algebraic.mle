@@ -21,6 +21,12 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/exponential-mle.html">Maximum likelihood estimator of the exponential distribution</a>
+  </div>
+</li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
@@ -129,12 +135,7 @@ parameter value.</dd>
           
           <code><a href="mse.mle.html">mse(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the MSE of an MLE</dd>
-      </dl><dl><dt>
-          
-          <code><a href="nobs.html">nobs()</a></code> 
-        </dt>
-        <dd>Generic method for obtaining the number of observations used by an MLE fit.</dd>
+        <dd>Computes the asymptotic MSE of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="nobs.mle.html">nobs(<i>&lt;mle&gt;</i>)</a></code> 
@@ -153,9 +154,14 @@ an <code>mle</code>.</dd>
         <dd>Method for obtaining the number of parameters of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
-          <code><a href="params.mle.html">params.mle()</a></code> <code><a href="params.mle.html">params.mle()</a></code> 
+          <code><a href="params.html">params()</a></code> 
         </dt>
         <dd>Method for obtaining the parameters of a fitted object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="params.mle.html">params(<i>&lt;mle&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the parameters of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="point.html">point()</a></code> 
@@ -165,7 +171,7 @@ an <code>mle</code>.</dd>
           
           <code><a href="point.mle.html">point(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the point estimate of an mle object.</dd>
+        <dd>Computes the point estimate of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="rmap.html">rmap()</a></code> 
@@ -193,6 +199,11 @@ models a <code>dist</code> (distribution) object.</dd>
           <code><a href="sampler.mle_exp.html">sampler(<i>&lt;mle_exp&gt;</i>)</a></code> 
         </dt>
         <dd>Method for sampling from an <code>mle_exp</code> object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="vcov.mle.html">vcov(<i>&lt;mle&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the variance-covariance matrix of <code>mle</code> objects.</dd>
       </dl></div>
   </main></div>
 
