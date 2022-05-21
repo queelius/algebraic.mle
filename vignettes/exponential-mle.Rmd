@@ -160,9 +160,9 @@ We compute the MLE of $2 \hat\lambda$ (using a simulation size $n=1000$) with:
 f.hat <- rmap(rate.hat,f,n=1000)
 ```
 
-Note that the simulation size is only for estimating $f(\lambda)$, but the
-and we can make this as large as we wish, but it will only be as good as the
-original estimate of $\theta$, which we cannot control.
+Note that the simulation size is only for estimating $f(\lambda)$; regardless
+of how large large $n$ is, the MLE of $f(\hat \lambda)$ will have a sampling error
+that is, at best, a function of the sampling error $\hat\lambda$.
 
 Then, $\operatorname{var}(f(\hat\lambda)) = 4 \lambda^2/n$.
 Letting $\lambda=1$, we see that, asymptotically,
@@ -231,3 +231,4 @@ print(df)
 
 We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling
 distribution for $\theta$.
+
