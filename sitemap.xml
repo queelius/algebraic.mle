@@ -61,6 +61,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_exp.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_linear_transform.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_weighted.html</loc>
   </url>
   <url>
@@ -104,6 +107,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/sampler.mle_exp.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/summary.mle.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/vcov.mle.html</loc>
