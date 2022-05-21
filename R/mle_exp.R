@@ -37,5 +37,5 @@ mle_exp <- function(x)
         info=matrix(n/rate.hat^2),
         sigma=matrix(rate.hat^2/n),
         sample_size=n),
-        class=c("mle_exp","mle","estimator"))
+        class=c("mle_exp","mle"))
 }

@@ -15,8 +15,8 @@ knitr::opts_chunk$set(
 ```
 
 # Introduction
-To demonstrate the `algebraic.mle` R package, we consider the relatively
-simple case of a random sample from the exponentially distributed random
+To demonstrate the R package `algebraic.mle`, we consider the relatively
+simple case of a random sample from i.i.d. exponentially distributed random
 variables.
 
 First, we load the R package `algebraic.mle` with:
@@ -26,13 +26,18 @@ library(algebraic.mle)
 ```
 
 # Generating a sample
-We generate a random sample $X_i \sim \operatorname{EXP}(\lambda=1)$ for
+
+We define the parameters of the i.i.d. random sample with:
+```{r}
+n <- 1000
+rate <- 1
+```
+
+We generate a random sample $X_i \sim \operatorname{EXP}(\lambda=`r rate`)$ for
 $i=1,\ldots,n$ with:
 ```{r,message=F,warning=F}
 library(stats)
 library(tidyverse)
-n <- 1000
-rate <- 1
 x <- tibble(x=stats::rexp(n,rate))
 ```
 
@@ -42,8 +47,8 @@ We show some observations from this sample (data frame) with:
 print(head(x,n=4))
 ```
 
-We show a histogram of the sample, and a plot of the exponential function's
-pdf, with:
+We show a histogram of the sample overlaid with a plot of the exponential
+function's pdf, with:
 ```{r,message=F,warning=F}
 library(ggplot2)
 ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
@@ -52,7 +57,7 @@ ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
 ```
 
 # Maximum likelihood estimation
-If we would like to estimate $\lambda$, we can do so using maximum likelihood
+If we would like to estimate $\lambda=`r rate`$, we can do so using maximum likelihood
 estimation as implemented by the `algebraic.mle` package:
 ```{r}
 rate.hat <- mle_exp(x$x)

@@ -1,8 +1,9 @@
 #' \code{algebraic.mle}: A package for algebraically operating on and generating
-#' maximum likelihood estimators.
+#' maximum likelihood estimators from existing maximum likelihood estimators.
 #'
 #' The object representing a fitted model is a type of \code{mle} object, the maximum
 #' likelihood estimator of the model with respect to observed data.
+#'
 #' In what follows, we briefly define the API (generic functions, mostly) with
 #' default implementations for objects that inherit from \code{mle}.
 #'
@@ -26,10 +27,12 @@
 #' \code{fisher_info(mle)} returns the Fisher information matrix of the model's
 #' parameters.
 #'
-#' \code{rmap(mle,g)} provides an approximation of the maximum likelihood estimator
-#' that is a function of another \code{mle} object. Note that \code{numerical_mle}
-#' inherits from \code{mle}.
+#' \code{rmap(mle,g)} provides \code{numerical_mle} the maximum
+#' likelihood estimator of \code{g(mle)}. (Note that \code{numerical_mle}
+#' inherits from \code{mle}.)
 #'
+#' \code{mle_linear_transform(A,mle)} provides a closed-form solution
+#' of the linear
 #' Finally, since normal distributions are closed under linear transformations,
 #' then letting \code{A} be a \code{p}-by-\code{q} matrix and \code{x} be a
 #' \code{q} dimensional \code{mle} object, then \code{prod(A,x)} is a \code{p}
@@ -44,8 +47,6 @@
 #' the asymptotic distributions of the operators applied to the \code{mle} objects
 #' exactly known if the asymptotic distribution of the \code{mle} objects are
 #' exactly known.
-#'
-#' See \code{rmap} for when the operation is non-linear.
 #'
 #' @docType package
 #' @name algebraic.mle

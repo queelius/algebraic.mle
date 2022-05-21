@@ -143,6 +143,11 @@ fisher_info.mle <- function(x, ...)
     x$info
 }
 
+#' Function for obtaining a summary of an \code{mle} object.
+#'
+#' @param object the \code{mle} object
+#' @param ... pass additional arguments
+#'
 #' @export
 summary.mle <- function(object,...)
 {
