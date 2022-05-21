@@ -68,21 +68,16 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="algebraic-maximum-likelihood-estimators">Algebraic maximum likelihood estimators<a class="anchor" aria-label="anchor" href="#algebraic-maximum-likelihood-estimators"></a>
-</h1></div>
-<ul><li>
+  <main id="main" class="col-md-9"><ul><li>
 <a href="#r-package-algebraicmle" id="toc-r-package-algebraicmle">R package: <code>algebraic.mle</code></a><ul>
 <li><a href="#installation" id="toc-installation">Installation</a></li>
 <li><a href="#api" id="toc-api">API</a></li>
 </ul>
 </li></ul>
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-</div>
-<div class="section level1">
-<h1 id="r-package-algebraicmle">R package: <code>algebraic.mle</code>
+<!-- README.md is generated from README.Rmd. Please edit that file --><div class="section level1">
+<div class="page-header"><h1 id="r-package-algebraicmle">R package: <code>algebraic.mle</code>
 <a class="anchor" aria-label="anchor" href="#r-package-algebraicmle"></a>
-</h1>
+</h1></div>
 <!-- badges: start --><!-- badges: end --><p>An algebra over maximum likelihood estimators (MLE).</p>
 <p>MLEs have many desirable, well-defined statistical properties. We define an algebra over MLEs.</p>
 <div class="section level2">
@@ -98,25 +93,30 @@
 </h2>
 <p>The object representing a fitted model is a type of <code>mle</code> object, the maximum likelihood estimator of the model with respect to observed data.</p>
 <p>For a full list of functions, see the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function reference</a> for <code>algebraic.mle</code>. In what follows, we briefly define the API (generic functions, mostly) with default implementations for objects that inherit from <code>mle</code>:</p>
-<ol style="list-style-type: decimal">
-<li><p><code>vcov(mle)</code> returns the variance-covariance matrix of the model’s parameter estimates. <code>mse(mle)</code> computes the asymptotic mean squared error of the <code>mle</code> object. <code>sd(mle)</code> computes the asymptotic standard deviation of the <code>mle</code> object. <code>confint(mle)</code> returns the asymptotic confidence intervals of the components of the parameter value estimated by the <code>mle</code> object. <code>point(mle)</code> returns the point that maximizes a likelihood of the model.</p></li>
-<li><p><code>sampler(mle)</code> maps to a function that may be used to sample from the sampling distribution of the <code>mle</code> object.</p></li>
-<li><p><code>mle_weighted(mles)</code> computes the <em>weighted</em> maximum likelihood estimate from independent <code>mle</code> objects in the list argument <code>mles</code>.</p></li>
-<li><p><code>fisher_info(mle)</code> returns the Fisher information matrix of the model’s parameters.</p></li>
-<li><p><code>rmap(mle,g)</code> provides an approximation of the maximum likelihood estimator of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;g%28%5Ctheta%29" title="g(\theta)" alt="g()"> where <code>mle</code> is an estimator of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Ctheta" title="\theta" alt="">. The returned value is an <code>numerical_mle</code> estimator of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;g%28%5Ctheta%29" title="g(\theta)" alt="g()">. Note that <code>numerical_mle</code> inherits from <code>mle</code>.</p></li>
+<ul>
 <li>
-<p><code>linear_transform(A,mle)</code></p>
-<p>The normal distribution is closed under linear combinations and transformations. For instance, let <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A" title="A" alt="A"> be a <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;p" title="p" alt="p">-by-<img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;q" title="q" alt="q"> matrix and <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Chat%5Ctheta" title="\hat\theta" alt=""> be a <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;q" title="q" alt="q"> dimensional random vector (MLE of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Ctheta" title="\theta" alt="">), then <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A%5Chat%5Ctheta" title="A\hat\theta" alt="A"> is a <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;p" title="p" alt="p"> dimensional multivariate normal with a mean <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A%5Ctheta" title="A\theta" alt="A"> and a variance-covariance <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Coperatorname%7Btrans%7D%28A%29%5Coperatorname%7Bvcov%7D%28%5Chat%5Ctheta%29A" title="\operatorname{trans}(A)\operatorname{vcov}(\hat\theta)A" alt="(A)()A">. By the invariance property of the MLE, <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A%5Chat%5Ctheta" title="A\hat\theta" alt="A"> is the MLE of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A%5Ctheta" title="A\theta" alt="A">.</p>
-</li>
+<code>vcov(mle)</code> returns the variance-covariance matrix of the model’s parameter estimates.</li>
 <li>
-<p><code>+(mle1,mle2)</code>, <code>-(mle1,mle2)</code>, <code>neg(mle)</code>, and <code>pos(mle)</code></p>
-<p>Assuming <code>mle1</code> and <code>mle2</code> are independent <code>mle</code> objects, we also define addition and subtraction of <code>mle</code> objects, e.g., <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Chat%5Ctheta_1%20%2B%20%5Chat%5Ctheta_2" title="\hat\theta_1 + \hat\theta_2" alt="_1 + _2"> is asymptotically distributed as</p>
-<div class="figure">
-<img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;N%28%5Cmu%20%3D%20%5Ctheta_1%2B%5Ctheta_2%2C%5Csigma%5E2%20%3D%20%5Csigma_%7B%5Chat%5Ctheta_1%7D%5E2%20%2B%0A%20%20%20%20%5Csigma_%7B%5Chat%5Ctheta_2%7D%5E2%29." title="N(\mu = \theta_1+\theta_2,\sigma^2 = \sigma_{\hat\theta_1}^2 + \sigma_{\hat\theta_2}^2)." alt=""><p class="caption">N(= _1+_2,^2 = _{_1}^2 + _{_2}^2).</p>
-</div>
-<p>This linear combination is the MLE of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Ctheta_1%2B%5Ctheta_2" title="\theta_1+\theta_2" alt="_1+_2">.</p>
-</li>
-</ol>
+<code>mse(mle)</code> computes the asymptotic mean squared error of the <code>mle</code> object.</li>
+<li>
+<code>sd(mle)</code> computes the asymptotic standard deviation of the <code>mle</code> object.</li>
+<li>
+<code>confint(mle)</code> returns the asymptotic confidence intervals of the components of the parameter value estimated by the <code>mle</code> object.</li>
+<li>
+<code>point(mle)</code> returns the point that maximizes a likelihood of the model.</li>
+<li>
+<code>sampler(mle)</code> maps to a function that may be used to sample from the sampling distribution of the <code>mle</code> object.</li>
+<li>
+<code>mle_weighted(mles)</code> computes the <em>weighted</em> maximum likelihood estimate from independent <code>mle</code> objects in the list argument <code>mles</code>.</li>
+<li>
+<code>fisher_info(mle)</code> returns the Fisher information matrix of the model’s parameters.</li>
+<li>
+<code>rmap(mle,g)</code> provides an approximation of the maximum likelihood estimator of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;g%28%5Ctheta%29" title="g(\theta)" alt="g()"> where <code>mle</code> is an estimator of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Ctheta" title="\theta" alt="">. The returned value is an <code>numerical_mle</code> estimator of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;g%28%5Ctheta%29" title="g(\theta)" alt="g()">. Note that <code>numerical_mle</code> inherits from <code>mle</code>.</li>
+<li>
+<code>linear_transform(A,mle)</code> provides a linear transformation of <code>mle</code>. The normal distribution is closed under linear combinations and transformations. For instance, let <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A" title="A" alt="A"> be a <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;p" title="p" alt="p">-by-<img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;q" title="q" alt="q"> matrix and <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Chat%5Ctheta" title="\hat\theta" alt=""> be a <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;q" title="q" alt="q"> dimensional random vector (MLE of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Ctheta" title="\theta" alt="">), then <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A%5Chat%5Ctheta" title="A\hat\theta" alt="A"> is a <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;p" title="p" alt="p"> dimensional multivariate normal with a mean <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A%5Ctheta" title="A\theta" alt="A"> and a variance-covariance <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Coperatorname%7Bt%7D%28A%29%5Coperatorname%7Bvcov%7D%28%5Chat%5Ctheta%29A" title="\operatorname{t}(A)\operatorname{vcov}(\hat\theta)A" alt="(A)()A">. By the invariance property of the MLE, <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A%5Chat%5Ctheta" title="A\hat\theta" alt="A"> is the MLE of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;A%5Ctheta" title="A\theta" alt="A">.</li>
+<li>
+<code>+(mle1,mle2)</code>, <code>-(mle1,mle2)</code> provides linear operators on <code>mle</code> objects. Assuming <code>mle1</code> and <code>mle2</code> are independent <code>mle</code> objects, we also define addition and subtraction of <code>mle</code> objects, e.g., <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Chat%5Ctheta_1%20%2B%20%5Chat%5Ctheta_2" title="\hat\theta_1 + \hat\theta_2" alt="_1 + _2"> is asymptotically distributed as <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;N%28%5Cmu%20%3D%20%5Ctheta_1%2B%5Ctheta_2%2C%5Csigma%5E2%20%3D%20%5Csigma_%7B%5Chat%5Ctheta_1%7D%5E2%2B%5Csigma_%7B%5Chat%5Ctheta_2%7D%5E2%29" title="N(\mu = \theta_1+\theta_2,\sigma^2 = \sigma_{\hat\theta_1}^2+\sigma_{\hat\theta_2}^2)" alt="N(= _1+_2,^2 = _{_1}^2+_{_2}^2)">. This linear combination is the MLE of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Ctheta_1%2B%5Ctheta_2" title="\theta_1+\theta_2" alt="_1+_2">.</li>
+</ul>
 </div>
 </div>
 
