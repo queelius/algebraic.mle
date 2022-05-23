@@ -13,7 +13,7 @@ mle_iterative <- function(
         theta0,
         dir=function(theta) numDeriv::grad(l,theta),
         stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
-        sup=function(theta) all(theta) > 0,
+        sup=function(theta) all(theta > 0),
         r=0.5,
         max_iter=0L)
 {
@@ -41,6 +41,7 @@ mle_iterative <- function(
     }
 
     structure(list(
+        loglike=l(theta1),
         theta.hat=theta1,
         score=NULL,
         info=NULL,
@@ -51,6 +52,7 @@ mle_iterative <- function(
 
 #' Iterative MLE method using the Newton-Raphson method
 #'
+#' @param l log-likelihood function of type \eqn{R^p \mapsto R}
 #' @param theta0 initial guess of theta with \eqn{p} components
 #' @param info information matrix function of type \eqn{R^p -> R^{p \times q}}
 #' @param score score function of type \eqn{R^p -> R^p}
@@ -65,7 +67,7 @@ mle_newton_raphson <- function(
         info,
         score,
         stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
-        sup=function(theta) all(theta) > 0,
+        sup=function(theta) all(theta > 0),
         r=0.75,
         max_iter=0L)
 {
@@ -73,14 +75,14 @@ mle_newton_raphson <- function(
         l,
         theta0,
         dir=function(theta) MASS::ginv(info(theta)) %*% score(theta),
-        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
-        sup=function(theta) all(theta) > 0,
-        r=0.5,
-        max_iter=0L)
+        stop_cond=stop_cond,
+        sup=sup,
+        r=r,
+        max_iter=max_iter)
 
     res$score <- score(res$theta.hat)
     res$info <- info(res$theta.hat)
-
+    res$sigma <- MASS::ginv(res$info)
     res
 }
 
@@ -100,7 +102,7 @@ mle_gradient_ascent <- function(
         theta0,
         score=function(theta) numDeriv::grad(l,theta),
         stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
-        sup=function(theta) all(theta) > 0,
+        sup=function(theta) all(theta > 0),
         r=0.5,
         max_iter=0L)
 {
@@ -108,10 +110,13 @@ mle_gradient_ascent <- function(
         l,
         theta0,
         dir=score,
-        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
-        sup=function(theta) all(theta) > 0,
-        r=0.5,
-        max_iter=0L)
+        stop_cond=stop_cond,
+        sup=sup,
+        r=r,
+        max_iter=max_iter)
 
     res$score <- score(res$theta.hat)
+    res$info <- numDeriv::hessian(l,res$theta.hat)
+    res$sigma <- MASS::ginv(res$info)
+
 }

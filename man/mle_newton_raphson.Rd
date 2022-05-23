@@ -10,12 +10,14 @@ mle_newton_raphson(
   info,
   score,
   stop_cond = function(theta1, theta0) abs(max(theta1 - theta0)) < 1e-04,
-  sup = function(theta) all(theta) > 0,
+  sup = function(theta) all(theta > 0),
   r = 0.75,
   max_iter = 0L
 )
 }
 \arguments{
+\item{l}{log-likelihood function of type \eqn{R^p \mapsto R}}
+
 \item{theta0}{initial guess of theta with \eqn{p} components}
 
 \item{info}{information matrix function of type \eqn{R^p -> R^{p \times q}}}
