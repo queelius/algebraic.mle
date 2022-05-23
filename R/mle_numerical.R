@@ -1,0 +1,117 @@
+#' General iterative MLE method
+#'
+#' @param l log-likelihood function of type \eqn{R^p \mapsto R}
+#' @param theta0 initial guess of \eqn{\theta} with \eqn{p} components
+#' @param dir promising direction function of type \eqn{R^p \mapsto R^p}
+#' @param stop_cond stopping condition function of type \eqn{R^p \times R^p \mapsto \{true,false\}}
+#' @param sup domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelhood function \eqn{l}
+#' @param r backing tracking parameter
+#' @param max_iter maximum number of iterations
+#' @export
+mle_iterative <- function(
+        l,
+        theta0,
+        dir=function(theta) numDeriv::grad(l,theta),
+        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
+        sup=function(theta) all(theta) > 0,
+        r=0.5,
+        max_iter=0L)
+{
+    theta1 <- theta0
+    iter <- 1L
+    repeat
+    {
+        # we use backtracking for an approximate line search
+        alpha <- 1
+        d <- dir(theta0)
+        l0 <- l(theta0)
+        repeat
+        {
+            theta1 <- theta0 + alpha * d
+            if (sup(theta1) && l(theta1) > l0)
+                break
+            alpha <- r*alpha
+        }
+
+        if (iter == max_iter || stop_cond(theta1,theta0))
+            break
+
+        iter <- iter + 1L
+        theta0 <- theta1
+    }
+
+    structure(list(
+        theta.hat=theta1,
+        score=NULL,
+        info=NULL,
+        iter=iter,
+        max_iter=max_iter),
+        class=c("mle_numerical","mle"))
+}
+
+#' Iterative MLE method using the Newton-Raphson method
+#'
+#' @param theta0 initial guess of theta with \eqn{p} components
+#' @param info information matrix function of type \eqn{R^p -> R^{p \times q}}
+#' @param score score function of type \eqn{R^p -> R^p}
+#' @param stop_cond stopping condition function of type \eqn{R^p \times R^p \mapsto \{true,false\}}
+#' @param sup domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelhood function \eqn{l}
+#' @param r backing tracking parameter
+#' @param max_iter maximum number of iterations
+#' @export
+mle_newton_raphson <- function(
+        l,
+        theta0,
+        info,
+        score,
+        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
+        sup=function(theta) all(theta) > 0,
+        r=0.75,
+        max_iter=0L)
+{
+    res <- mle_iterative(
+        l,
+        theta0,
+        dir=function(theta) MASS::ginv(info(theta)) %*% score(theta),
+        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
+        sup=function(theta) all(theta) > 0,
+        r=0.5,
+        max_iter=0L)
+
+    res$score <- score(res$theta.hat)
+    res$info <- info(res$theta.hat)
+
+    res
+}
+
+
+#' Iterative MLE method using gradient ascent
+#'
+#' @param theta0 initial guess of theta with \eqn{p} components
+#' @param l log-likelihood function
+#' @param score score function of type \eqn{R^p -> R^p}
+#' @param stop_cond stopping condition function of type \eqn{R^p \times R^p \mapsto \{true,false\}}
+#' @param sup domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelhood function \eqn{l}
+#' @param r backing tracking parameter
+#' @param max_iter maximum iterations
+#' @export
+mle_gradient_ascent <- function(
+        l,
+        theta0,
+        score=function(theta) numDeriv::grad(l,theta),
+        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
+        sup=function(theta) all(theta) > 0,
+        r=0.5,
+        max_iter=0L)
+{
+    res <- mle_iterative(
+        l,
+        theta0,
+        dir=score,
+        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
+        sup=function(theta) all(theta) > 0,
+        r=0.5,
+        max_iter=0L)
+
+    res$score <- score(res$theta.hat)
+}

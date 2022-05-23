@@ -2,7 +2,8 @@
 % Please edit documentation in R/mle.R
 \name{summary.mle}
 \alias{summary.mle}
-\title{Function for obtaining a summary of an \code{mle} object.}
+\title{Function for obtaining a summary of \code{object}, which is a fitted
+\code{mle} object.}
 \usage{
 \method{summary}{mle}(object, ...)
 }
@@ -12,5 +13,6 @@
 \item{...}{pass additional arguments}
 }
 \description{
-Function for obtaining a summary of an \code{mle} object.
+Function for obtaining a summary of \code{object}, which is a fitted
+\code{mle} object.
 }

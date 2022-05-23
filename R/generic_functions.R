@@ -108,4 +108,3 @@ rmap <- function(x,f,...)
 {
     UseMethod("rmap",x)
 }
-

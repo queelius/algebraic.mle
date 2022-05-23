@@ -143,7 +143,8 @@ fisher_info.mle <- function(x, ...)
     x$info
 }
 
-#' Function for obtaining a summary of an \code{mle} object.
+#' Function for obtaining a summary of \code{object}, which is a fitted
+#' \code{mle} object.
 #'
 #' @param object the \code{mle} object
 #' @param ... pass additional arguments
@@ -162,4 +163,18 @@ summary.mle <- function(object,...)
     print(confint(object))
     cat("The log-likelihood is",loglike(object),"\n")
     cat("The AIC is",aic(object),"\n")
+}
+
+
+
+#' A function for computing the residuals of \code{object}, which is
+#' a fitted \code{mle} object.
+#'
+#' @param object a fitted \code{mle} object.
+#' @param ... additional arguments to pass.
+#' @importFrom stats resid
+#' @export
+resid.mle <- function(object,...)
+{
+    NULL
 }
