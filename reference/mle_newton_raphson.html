@@ -63,7 +63,7 @@
   <span class="va">info</span>,
   <span class="va">score</span>,
   stop_cond <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta1</span>, <span class="va">theta0</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">theta1</span> <span class="op">-</span> <span class="va">theta0</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1e-04</span>,
-  sup <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span>,
+  sup <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>,
   r <span class="op">=</span> <span class="fl">0.75</span>,
   max_iter <span class="op">=</span> <span class="fl">0L</span>
 <span class="op">)</span></code></pre></div>
@@ -71,7 +71,9 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>theta0</dt>
+    <dl><dt>l</dt>
+<dd><p>log-likelihood function of type \(R^p \mapsto R\)</p></dd>
+<dt>theta0</dt>
 <dd><p>initial guess of theta with \(p\) components</p></dd>
 <dt>info</dt>
 <dd><p>information matrix function of type \(R^p -&gt; R^{p \times q}\)</p></dd>
