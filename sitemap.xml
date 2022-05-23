@@ -43,12 +43,6 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/fisher_info.mle.html</loc>
   </url>
   <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/fisher_scoring.html</loc>
-  </url>
-  <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/gradient_ascent.html</loc>
-  </url>
-  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/index.html</loc>
   </url>
   <url>
@@ -61,7 +55,16 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_exp.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_gradient_ascent.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_iterative.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_linear_transform.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_newton_raphson.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_weighted.html</loc>
@@ -92,6 +95,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/point.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/resid.mle.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/rmap.html</loc>

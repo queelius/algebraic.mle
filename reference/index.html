@@ -94,16 +94,6 @@ matrix of an <code>mle</code> object.</dd>
         <dd>Function for obtaining the fisher information matrix of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
-          <code><a href="fisher_scoring.html">fisher_scoring()</a></code> 
-        </dt>
-        <dd>Fisher scoring algorithm.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="gradient_ascent.html">gradient_ascent()</a></code> 
-        </dt>
-        <dd>Gradient ascent</dd>
-      </dl><dl><dt>
-          
           <code><a href="loglike.html">loglike()</a></code> 
         </dt>
         <dd>Generic method for obtaining the log-likelihood of an MLE fit.</dd>
@@ -120,10 +110,25 @@ matrix of an <code>mle</code> object.</dd>
 random sample of observations drawn from it.</dd>
       </dl><dl><dt>
           
+          <code><a href="mle_gradient_ascent.html">mle_gradient_ascent()</a></code> 
+        </dt>
+        <dd>Iterative MLE method using gradient ascent</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mle_iterative.html">mle_iterative()</a></code> 
+        </dt>
+        <dd>General iterative MLE method</dd>
+      </dl><dl><dt>
+          
           <code><a href="mle_linear_transform.html">mle_linear_transform()</a></code> 
         </dt>
         <dd>Linearly transform an <code>mle</code> object <code>x</code> by multiplying it
 on the LHS by a matrix <code>A</code>.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mle_newton_raphson.html">mle_newton_raphson()</a></code> 
+        </dt>
+        <dd>Iterative MLE method using the Newton-Raphson method</dd>
       </dl><dl><dt>
           
           <code><a href="mle_weighted.html">mle_weighted()</a></code> 
@@ -180,6 +185,12 @@ an <code>mle</code>.</dd>
         <dd>Computes the point estimate of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
+          <code><a href="resid.mle.html">resid(<i>&lt;mle&gt;</i>)</a></code> 
+        </dt>
+        <dd>A function for computing the residuals of <code>object</code>, which is
+a fitted <code>mle</code> object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="rmap.html">rmap()</a></code> 
         </dt>
         <dd>Generic function for computing the distribution of <code>f(x)</code> where <code>x</code>
@@ -209,7 +220,8 @@ models a <code>dist</code> (distribution) object.</dd>
           
           <code><a href="summary.mle.html">summary(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Function for obtaining a summary of an <code>mle</code> object.</dd>
+        <dd>Function for obtaining a summary of <code>object</code>, which is a fitted
+<code>mle</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="vcov.mle.html">vcov(<i>&lt;mle&gt;</i>)</a></code> 
