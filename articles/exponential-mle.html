@@ -105,10 +105,10 @@
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 1</span></span>
 <span class="co">#&gt;        x</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 0.034<span style="text-decoration: underline;">8</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 0.846 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2.22  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 0.663</span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 1.83  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 0.075<span style="text-decoration: underline;">1</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2.05  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 2.53</span></code></pre></div>
 <p>We show a histogram of the sample overlaid with a plot of the exponential function’s pdf, with:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
@@ -126,35 +126,35 @@
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt; Maximum likelihood estimator, of type mle_exp ,</span>
 <span class="co">#&gt; is normally distributed with mean</span>
-<span class="co">#&gt; [1] 0.9958415</span>
+<span class="co">#&gt; [1] 0.9692816</span>
 <span class="co">#&gt; and variance-covariance</span>
 <span class="co">#&gt;              [,1]</span>
-<span class="co">#&gt; [1,] 0.0009917003</span>
+<span class="co">#&gt; [1,] 0.0009395067</span>
 <span class="co">#&gt; ---</span>
-<span class="co">#&gt; The asymptotic mean squared error 0.0009917003 </span>
+<span class="co">#&gt; The asymptotic mean squared error 0.0009395067 </span>
 <span class="co">#&gt; The asymptotic 95% confidence interval is</span>
-<span class="co">#&gt;       2.5 %  97.5 %</span>
-<span class="co">#&gt; 1 0.9440429 1.04764</span>
-<span class="co">#&gt; The log-likelihood is -1004.167 </span>
-<span class="co">#&gt; The AIC is 2010.334</span></code></pre></div>
+<span class="co">#&gt;       2.5 %   97.5 %</span>
+<span class="co">#&gt; 1 0.9188645 1.019699</span>
+<span class="co">#&gt; The log-likelihood is -1031.2 </span>
+<span class="co">#&gt; The AIC is 2064.4</span></code></pre></div>
 <p>We can show the point estimator with:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.9958415</span></code></pre></div>
+<span class="co">#&gt; [1] 0.9692816</span></code></pre></div>
 <p>We can show the Fisher information and variance-covariance matrices with:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/fisher_info.html">fisher_info</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt;          [,1]</span>
-<span class="co">#&gt; [1,] 1008.369</span>
+<span class="co">#&gt; [1,] 1064.388</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
 <span class="co">#&gt;              [,1]</span>
-<span class="co">#&gt; [1,] 0.0009917003</span></code></pre></div>
+<span class="co">#&gt; [1,] 0.0009395067</span></code></pre></div>
 <p>(If <code>rate.hat</code> had been a vector, <code>vcov</code> would have output a variance-covariance matrix. We may consider the above outputs <span class="math inline">\(1 \times 1\)</span> matrices.)</p>
 <p>We can show the confidence interval with:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>
-<span class="co">#&gt;       2.5 %  97.5 %</span>
-<span class="co">#&gt; 1 0.9440429 1.04764</span></code></pre></div>
+<span class="co">#&gt;       2.5 %   97.5 %</span>
+<span class="co">#&gt; 1 0.9188645 1.019699</span></code></pre></div>
 <div class="section level3">
 <h3 id="sampling-distribution-of-the-mle">Sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#sampling-distribution-of-the-mle"></a>
 </h3>
@@ -206,10 +206,10 @@
 <p>We expected a mean of <span class="math inline">\(2\)</span> and a variance of <span class="math inline">\(4/n = 0.004\)</span>, which is pretty close to what we obtained:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">f.hat</span><span class="op">)</span>
-<span class="co">#&gt; [1] 1.991683</span>
+<span class="co">#&gt; [1] 1.938563</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">f.hat</span><span class="op">)</span>
-<span class="co">#&gt;            [,1]</span>
-<span class="co">#&gt; [1,] 0.00375585</span></code></pre></div>
+<span class="co">#&gt;             [,1]</span>
+<span class="co">#&gt; [1,] 0.003884156</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -248,9 +248,9 @@
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"point estimate"</span>,<span class="st">"variance"</span><span class="op">)</span>
 <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"weighted MLE"</span>, <span class="st">"MLE"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>
-<span class="co">#&gt;              point estimate     variance</span>
-<span class="co">#&gt; weighted MLE      0.9756201 0.0009521169</span>
-<span class="co">#&gt; MLE               0.9759095 0.0009523994</span></code></pre></div>
+<span class="co">#&gt;              point estimate    variance</span>
+<span class="co">#&gt; weighted MLE       1.028601 0.001063347</span>
+<span class="co">#&gt; MLE                1.033779 0.001068700</span></code></pre></div>
 <p>We see that <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\hat\theta_w\)</span> model approximately the same sampling distribution for <span class="math inline">\(\theta\)</span>.</p>
 </div>
 </div>

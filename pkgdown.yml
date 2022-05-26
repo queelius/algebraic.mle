@@ -3,7 +3,7 @@ pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
   exponential-mle: exponential-mle.html
-last_built: 2022-05-23T10:27Z
+last_built: 2022-05-26T17:46Z
 urls:
   reference: https://queelius.github.io/algebraic.mle/reference
   article: https://queelius.github.io/algebraic.mle/articles
