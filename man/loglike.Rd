@@ -2,7 +2,8 @@
 % Please edit documentation in R/generic_functions.R
 \name{loglike}
 \alias{loglike}
-\title{Generic method for obtaining the log-likelihood of an MLE fit.}
+\title{Generic method for obtaining the log-likelihood of fitted distribution
+object, assuming it has a likelihood function, e.g., a fitted `mle` object.}
 \usage{
 loglike(x, ...)
 }
@@ -12,5 +13,6 @@ loglike(x, ...)
 \item{...}{additional arguments to pass}
 }
 \description{
-Generic method for obtaining the log-likelihood of an MLE fit.
+Generic method for obtaining the log-likelihood of fitted distribution
+object, assuming it has a likelihood function, e.g., a fitted `mle` object.
 }

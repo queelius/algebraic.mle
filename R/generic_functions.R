@@ -1,4 +1,5 @@
-#' Generic method for obtaining the log-likelihood of an MLE fit.
+#' Generic method for obtaining the log-likelihood of fitted distribution
+#' object, assuming it has a likelihood function, e.g., a fitted `mle` object.
 #'
 #' @param x the object to obtain the log-likelihood of
 #' @param ... additional arguments to pass
@@ -9,7 +10,7 @@ loglike <- function(x,...)
     UseMethod("loglike",x)
 }
 
-#' Generic method for obtaining the AIC of an MLE fit.
+#' Generic method for obtaining the AIC of a fitted distribution object fit.
 #'
 #' @param x the object to obtain the AIC of
 #'
@@ -19,7 +20,7 @@ aic <- function(x)
     UseMethod("aic",x)
 }
 
-#' Method for obtaining the parameters of a fitted object.
+#' Method for obtaining the parameters of a fitted distribution object.
 #'
 #' @param x the fitted object to obtain the parameters of
 #'
@@ -30,7 +31,8 @@ params <- function(x)
 }
 
 
-#' Generic method for obtaining the number of parameters of an object.
+#' Generic method for obtaining the number of parameters of a fitted
+#' distribution object.
 #'
 #' @param x the fitted object to obtain the number of parameters for
 #'
@@ -49,6 +51,23 @@ nparams <- function(x)
 point <- function(x, ...)
 {
     UseMethod("point",x)
+}
+
+
+#' Generic method for obtaining the best solutions for an estimator, e.g.,
+#' maximum likelihood estimation may have many possible solutions that satisfy
+#' the maximum likelihood equation, such that
+#' \code{argmax(x) = {L(x) : x in solution set}}
+#' is a set: empty set, singleton set (unique), or a set with more than one
+#' element.
+#'
+#' @param x the MLE object to obtain the solutions for
+#' @param ... additional arguments to pass
+#' @returns a set of points satisfying the MLE equations
+#' #' @export
+mle_sols <- function(x, ...)
+{
+     UseMethod("mle_sols",x)
 }
 
 #' Generic function for sampling from distribution objects.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/generic_functions.R
 \name{params}
 \alias{params}
-\title{Method for obtaining the parameters of a fitted object.}
+\title{Method for obtaining the parameters of a fitted distribution object.}
 \usage{
 params(x)
 }
@@ -10,5 +10,5 @@ params(x)
 \item{x}{the fitted object to obtain the parameters of}
 }
 \description{
-Method for obtaining the parameters of a fitted object.
+Method for obtaining the parameters of a fitted distribution object.
 }

@@ -7,7 +7,7 @@
 \method{sampler}{mle_exp}(x, ...)
 }
 \arguments{
-\item{x}{the \code{mle_exp} object to create sampler for}
+\item{x}{the \code{mle_exp} object to create sampler for.}
 
 \item{...}{additional arguments to pass to \code{mle_exp} objects.}
 }

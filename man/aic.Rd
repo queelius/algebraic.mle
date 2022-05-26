@@ -2,7 +2,7 @@
 % Please edit documentation in R/generic_functions.R
 \name{aic}
 \alias{aic}
-\title{Generic method for obtaining the AIC of an MLE fit.}
+\title{Generic method for obtaining the AIC of a fitted distribution object fit.}
 \usage{
 aic(x)
 }
@@ -10,5 +10,5 @@ aic(x)
 \item{x}{the object to obtain the AIC of}
 }
 \description{
-Generic method for obtaining the AIC of an MLE fit.
+Generic method for obtaining the AIC of a fitted distribution object fit.
 }

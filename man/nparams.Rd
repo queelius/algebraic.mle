@@ -2,7 +2,8 @@
 % Please edit documentation in R/generic_functions.R
 \name{nparams}
 \alias{nparams}
-\title{Generic method for obtaining the number of parameters of an object.}
+\title{Generic method for obtaining the number of parameters of a fitted
+distribution object.}
 \usage{
 nparams(x)
 }
@@ -10,5 +11,6 @@ nparams(x)
 \item{x}{the fitted object to obtain the number of parameters for}
 }
 \description{
-Generic method for obtaining the number of parameters of an object.
+Generic method for obtaining the number of parameters of a fitted
+distribution object.
 }

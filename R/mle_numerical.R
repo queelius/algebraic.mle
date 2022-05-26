@@ -103,7 +103,7 @@ mle_gradient_ascent <- function(
         score=function(theta) numDeriv::grad(l,theta),
         stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
         sup=function(theta) all(theta > 0),
-        r=0.5,
+        r=0.75,
         max_iter=0L)
 {
     res <- mle_iterative(
@@ -116,7 +116,7 @@ mle_gradient_ascent <- function(
         max_iter=max_iter)
 
     res$score <- score(res$theta.hat)
-    res$info <- numDeriv::hessian(l,res$theta.hat)
+    res$info <- -numDeriv::hessian(l,res$theta.hat)
     res$sigma <- MASS::ginv(res$info)
-
+    res
 }
