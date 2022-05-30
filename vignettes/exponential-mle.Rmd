@@ -5,6 +5,8 @@ vignette: >
   %\VignetteIndexEntry{Exponential distribution MLE}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{ggplot2}
+  %\VignetteDepends{tibble}
 ---
 
 ```{r, include = FALSE}
@@ -19,10 +21,13 @@ To demonstrate the R package `algebraic.mle`, we consider the relatively
 simple case of a random sample from i.i.d. exponentially distributed random
 variables.
 
-First, we load the R package `algebraic.mle` with:
+First, we load the R package `algebraic.mle`, along with other R packages we
+need, with:
 
 ```{r setup}
 library(algebraic.mle)
+library(tibble)
+library(ggplot2)
 ```
 
 # Generating a sample
@@ -36,9 +41,7 @@ rate <- 1
 We generate a random sample $X_i \sim \operatorname{EXP}(\lambda=`r rate`)$ for
 $i=1,\ldots,n$ with:
 ```{r,message=F,warning=F}
-library(stats)
-library(tidyverse)
-x <- tibble(x=stats::rexp(n,rate))
+x <- tibble(x=rexp(n,rate))
 ```
 
 We have observed a sample of size $n=`r n`$.
@@ -50,7 +53,6 @@ print(head(x,n=4))
 We show a histogram of the sample overlaid with a plot of the exponential
 function's pdf, with:
 ```{r,message=F,warning=F}
-library(ggplot2)
 ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
     xlim(0,6) + 
     geom_function(fun=dexp)

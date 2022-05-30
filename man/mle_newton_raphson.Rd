@@ -16,17 +16,17 @@ mle_newton_raphson(
 )
 }
 \arguments{
-\item{l}{log-likelihood function of type \eqn{R^p \mapsto R}}
+\item{l}{log-likelihood function of type \code{R^p -> R}}
 
-\item{theta0}{initial guess of theta with \eqn{p} components}
+\item{theta0}{initial guess of theta with \code{p} components}
 
-\item{info}{information matrix function of type \eqn{R^p -> R^{p \times q}}}
+\item{info}{information matrix function of type \code{R^p -> R^{p-by-q}}}
 
-\item{score}{score function of type \eqn{R^p -> R^p}}
+\item{score}{score function of type \code{R^p -> R^p}}
 
-\item{stop_cond}{stopping condition function of type \eqn{R^p \times R^p \mapsto \{true,false\}}}
+\item{stop_cond}{stopping condition function of type \code{(R^p,R^p) -> \{true,false\}}}
 
-\item{sup}{domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelhood function \eqn{l}}
+\item{sup}{domain of support function of type \code{R^p -> \{true,false\}} for the log-likelhood function \code{l}}
 
 \item{r}{backing tracking parameter}
 

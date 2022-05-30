@@ -6,15 +6,11 @@
 #'
 #' @param x the \code{mle_exp} object to create sampler for.
 #' @param ... additional arguments to pass to \code{mle_exp} objects.
+#' @importFrom stats rnorm
 #' @export
 sampler.mle_exp <- function(x,...)
 {
-    #mle <- sample_point(points=sols(x),prior=dunif,measure="mse")
-    function(n=1)
-    {
-        #stats::rnorm(n,point(mle),sqrt(vcov(mle)),...)
-        stats::rnorm(n,point(x),sqrt(vcov(x)),...)
-    }
+    function(n=1) rnorm(n,point(x),sqrt(vcov(x)),...)
 }
 
 #' MLE of the rate parameter of the exponential distribution given a
@@ -41,8 +37,3 @@ mle_exp <- function(x)
         sample_size=n),
         class=c("mle_exp","mle"))
 }
-
-#'sols <- function(x,...)
-#'{
-#'
-#'}

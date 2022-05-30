@@ -7,7 +7,7 @@
 mle_gradient_ascent(
   l,
   theta0,
-  score = function(theta) numDeriv::grad(l, theta),
+  score = function(theta) grad(l, theta),
   stop_cond = function(theta1, theta0) abs(max(theta1 - theta0)) < 1e-04,
   sup = function(theta) all(theta > 0),
   r = 0.75,
