@@ -60,9 +60,10 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mle_iterative</span><span class="op">(</span>
   <span class="va">l</span>,
   <span class="va">theta0</span>,
-  dir <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu">numDeriv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/numDeriv/man/grad.html" class="external-link">grad</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">theta</span><span class="op">)</span>,
+  dir <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu">grad</span><span class="op">(</span><span class="va">l</span>, <span class="va">theta</span><span class="op">)</span>,
   stop_cond <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta1</span>, <span class="va">theta0</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">theta1</span> <span class="op">-</span> <span class="va">theta0</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1e-04</span>,
   sup <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>,
+  eta <span class="op">=</span> <span class="fl">1</span>,
   r <span class="op">=</span> <span class="fl">0.5</span>,
   max_iter <span class="op">=</span> <span class="fl">0L</span>
 <span class="op">)</span></code></pre></div>
@@ -80,6 +81,8 @@
 <dd><p>stopping condition function of type \(R^p \times R^p \mapsto \{true,false\}\)</p></dd>
 <dt>sup</dt>
 <dd><p>domain of support function of type \(R^p \mapsto \{true,false\}\) for the log-likelhood function \(l\)</p></dd>
+<dt>eta</dt>
+<dd><p>learning rate</p></dd>
 <dt>r</dt>
 <dd><p>backing tracking parameter</p></dd>
 <dt>max_iter</dt>

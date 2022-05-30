@@ -72,17 +72,17 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>l</dt>
-<dd><p>log-likelihood function of type \(R^p \mapsto R\)</p></dd>
+<dd><p>log-likelihood function of type <code>R^p -&gt; R</code></p></dd>
 <dt>theta0</dt>
-<dd><p>initial guess of theta with \(p\) components</p></dd>
+<dd><p>initial guess of theta with <code>p</code> components</p></dd>
 <dt>info</dt>
-<dd><p>information matrix function of type \(R^p -&gt; R^{p \times q}\)</p></dd>
+<dd><p>information matrix function of type <code>R^p -&gt; R^{p-by-q}</code></p></dd>
 <dt>score</dt>
-<dd><p>score function of type \(R^p -&gt; R^p\)</p></dd>
+<dd><p>score function of type <code>R^p -&gt; R^p</code></p></dd>
 <dt>stop_cond</dt>
-<dd><p>stopping condition function of type \(R^p \times R^p \mapsto \{true,false\}\)</p></dd>
+<dd><p>stopping condition function of type <code>(R^p,R^p) -&gt; {true,false}</code></p></dd>
 <dt>sup</dt>
-<dd><p>domain of support function of type \(R^p \mapsto \{true,false\}\) for the log-likelhood function \(l\)</p></dd>
+<dd><p>domain of support function of type <code>R^p -&gt; {true,false}</code> for the log-likelhood function <code>l</code></p></dd>
 <dt>r</dt>
 <dd><p>backing tracking parameter</p></dd>
 <dt>max_iter</dt>
