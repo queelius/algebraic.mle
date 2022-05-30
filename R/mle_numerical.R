@@ -52,8 +52,8 @@ mle_iterative <- function(
         info=NULL,
         iter=iter,
         max_iter=max_iter,
-        learning_rate=eta,
-        class=c("mle_numerical","mle")))
+        learning_rate=eta),
+        class=c("mle_numerical","mle"))
 }
 
 #' Iterative MLE method using the Newton-Raphson method
