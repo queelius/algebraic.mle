@@ -62,9 +62,10 @@
   <span class="va">theta0</span>,
   <span class="va">info</span>,
   <span class="va">score</span>,
-  stop_cond <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta1</span>, <span class="va">theta0</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">theta1</span> <span class="op">-</span> <span class="va">theta0</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1e-04</span>,
-  sup <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>,
-  r <span class="op">=</span> <span class="fl">0.75</span>,
+  stop_cond <span class="op">=</span> <span class="cn">NULL</span>,
+  sup <span class="op">=</span> <span class="cn">NULL</span>,
+  eta <span class="op">=</span> <span class="fl">1</span>,
+  r <span class="op">=</span> <span class="fl">0.5</span>,
   max_iter <span class="op">=</span> <span class="fl">0L</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -80,9 +81,11 @@
 <dt>score</dt>
 <dd><p>score function of type <code>R^p -&gt; R^p</code></p></dd>
 <dt>stop_cond</dt>
-<dd><p>stopping condition function of type <code>(R^p,R^p) -&gt; {true,false}</code></p></dd>
+<dd><p>stopping condition function of type <code>(R^p,R^p) -&gt; {T,F}</code></p></dd>
 <dt>sup</dt>
-<dd><p>domain of support function of type <code>R^p -&gt; {true,false}</code> for the log-likelhood function <code>l</code></p></dd>
+<dd><p>domain of support function of type <code>R^p -&gt; {T,F}</code> for the log-likelihood function <code>l</code></p></dd>
+<dt>eta</dt>
+<dd><p>learning rate, defaults to 1</p></dd>
 <dt>r</dt>
 <dd><p>backing tracking parameter</p></dd>
 <dt>max_iter</dt>

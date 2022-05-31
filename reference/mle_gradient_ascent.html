@@ -61,9 +61,10 @@
   <span class="va">l</span>,
   <span class="va">theta0</span>,
   score <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu">grad</span><span class="op">(</span><span class="va">l</span>, <span class="va">theta</span><span class="op">)</span>,
-  stop_cond <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta1</span>, <span class="va">theta0</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">theta1</span> <span class="op">-</span> <span class="va">theta0</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1e-04</span>,
-  sup <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>,
-  r <span class="op">=</span> <span class="fl">0.75</span>,
+  stop_cond <span class="op">=</span> <span class="cn">NULL</span>,
+  sup <span class="op">=</span> <span class="cn">NULL</span>,
+  eta <span class="op">=</span> <span class="fl">1</span>,
+  r <span class="op">=</span> <span class="fl">0.5</span>,
   max_iter <span class="op">=</span> <span class="fl">0L</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -77,9 +78,11 @@
 <dt>score</dt>
 <dd><p>score function of type \(R^p -&gt; R^p\)</p></dd>
 <dt>stop_cond</dt>
-<dd><p>stopping condition function of type \(R^p \times R^p \mapsto \{true,false\}\)</p></dd>
+<dd><p>stopping condition function of type \(R^p \times R^p \mapsto \{T,F\}\)</p></dd>
 <dt>sup</dt>
-<dd><p>domain of support function of type \(R^p \mapsto \{true,false\}\) for the log-likelhood function \(l\)</p></dd>
+<dd><p>domain of support function of type \(R^p \mapsto \{true,false\}\) for the log-likelihood function \(l\)</p></dd>
+<dt>eta</dt>
+<dd><p>learning rate, defaults to 1</p></dd>
 <dt>r</dt>
 <dd><p>backing tracking parameter</p></dd>
 <dt>max_iter</dt>

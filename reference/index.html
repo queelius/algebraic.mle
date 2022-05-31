@@ -105,6 +105,11 @@ object, assuming it has a likelihood function, e.g., a fitted `mle` object.</dd>
         <dd>Method for obtaining the log-likelihood of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
+          <code><a href="make_mle.html">make_mle()</a></code> 
+        </dt>
+        <dd><code>make_mle</code> makes an <code>mle</code> object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="mle_exp.html">mle_exp()</a></code> 
         </dt>
         <dd>MLE of the rate parameter of the exponential distribution given a
@@ -177,6 +182,16 @@ distribution object.</dd>
         <dd>Method for obtaining the number of parameters of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
+          <code><a href="obs.html">obs()</a></code> 
+        </dt>
+        <dd>Method for obtaining the observations used by a fitted model <code>object</code>.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="obs.mle.html">obs(<i>&lt;mle&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the observations used by the <code>mle</code>.</dd>
+      </dl><dl><dt>
+          
           <code><a href="params.html">params()</a></code> 
         </dt>
         <dd>Method for obtaining the parameters of a fitted distribution object.</dd>
@@ -197,6 +212,12 @@ distribution object.</dd>
         <dd>Computes the point estimate of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
+          <code><a href="print.mle.html">print(<i>&lt;mle&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the number of observations in the sample used by
+an <code>mle</code> object <code>x</code>.</dd>
+      </dl><dl><dt>
+          
           <code><a href="resid.mle.html">resid(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>A function for computing the residuals of <code>object</code>, which is
@@ -206,13 +227,13 @@ a fitted <code>mle</code> object.</dd>
           <code><a href="rmap.html">rmap()</a></code> 
         </dt>
         <dd>Generic function for computing the distribution of <code>f(x)</code> where <code>x</code>
-models a <code>dist</code> (distribution) object.</dd>
+models a distribution (random element) object.</dd>
       </dl><dl><dt>
           
           <code><a href="rmap.mle.html">rmap(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd><code>rmap.mle</code> computes the distribution of <code>f(x)</code> as a function of
-<code>mle</code> object <code>x</code>.</dd>
+        <dd><code>rmap.mle</code> computes the distribution of <code>f(x)</code> where <code>x</code>
+is an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="sampler.html">sampler()</a></code> 

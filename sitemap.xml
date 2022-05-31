@@ -52,6 +52,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/loglike.mle.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/make_mle.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_exp.html</loc>
   </url>
   <url>
@@ -88,6 +91,12 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/nparams.mle.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/obs.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/obs.mle.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/params.html</loc>
   </url>
   <url>
@@ -98,6 +107,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/point.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/print.mle.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/resid.mle.html</loc>
