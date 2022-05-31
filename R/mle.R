@@ -1,3 +1,38 @@
+#' \code{make_mle} makes an \code{mle} object.
+#'
+#' @param theta.hat the MLE
+#' @param loglike the log-likelihood of the MLE given the data
+#' @param sigma the variance-covariance matrix of the MLE
+#' @param info the variance-covariance matrix of the MLE
+#' @param obs observation (sample) data
+#' @param sample_size the variance-covariance matrix of the MLE
+#' @importFrom stats var
+#' @importFrom stats cov
+#' @importFrom MASS ginv
+#' @export
+make_mle <- function(theta.hat,loglike=NULL,sigma=NULL,info=NULL,obs=NULL,sample_size=NULL)
+{
+    structure(list(
+        theta.hat=theta.hat,
+        loglike=loglike,
+        sigma=sigma,
+        info=info,
+        sample_size=sample_size),
+        class="mle")
+}
+
+#' Method for obtaining the number of observations in the sample used by
+#' an \code{mle} object \code{x}.
+#'
+#' @param x the \code{mle} object to print
+#' @param ... additional arguments to pass
+#' @export
+print.mle <- function(x,...)
+{
+    x$obs <- NULL
+    print.default(x)
+}
+
 #' Method for obtaining the parameters of an \code{mle} object.
 #'
 #' @param x the \code{mle} object to obtain the parameters of
@@ -27,6 +62,13 @@ aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
 #' @importFrom stats nobs
 #' @export
 nobs.mle <- function(object,...) object$sample_size
+
+#' Method for obtaining the observations used by the \code{mle}.
+#'
+#' @param object the \code{mle} object to obtain the number of observations for
+#' @param ... additional arguments to pass
+#' @export
+obs.mle <- function(object,...) object$obs
 
 #' Method for obtaining the log-likelihood of an \code{mle} object.
 #'

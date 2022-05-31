@@ -8,9 +8,10 @@ mle_gradient_ascent(
   l,
   theta0,
   score = function(theta) grad(l, theta),
-  stop_cond = function(theta1, theta0) abs(max(theta1 - theta0)) < 1e-04,
-  sup = function(theta) all(theta > 0),
-  r = 0.75,
+  stop_cond = NULL,
+  sup = NULL,
+  eta = 1,
+  r = 0.5,
   max_iter = 0L
 )
 }
@@ -21,9 +22,11 @@ mle_gradient_ascent(
 
 \item{score}{score function of type \eqn{R^p -> R^p}}
 
-\item{stop_cond}{stopping condition function of type \eqn{R^p \times R^p \mapsto \{true,false\}}}
+\item{stop_cond}{stopping condition function of type \eqn{R^p \times R^p \mapsto \{T,F\}}}
 
-\item{sup}{domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelhood function \eqn{l}}
+\item{sup}{domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelihood function \eqn{l}}
+
+\item{eta}{learning rate, defaults to 1}
 
 \item{r}{backing tracking parameter}
 

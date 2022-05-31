@@ -30,10 +30,15 @@ mle_weighted <- function(mles)
     cov.wt <- MASS::ginv(info.wt)
     theta.wt <- cov.wt %*% B
 
-    structure(list(
-        theta.hat=matrix(theta.wt,nrow=nrow(info.wt)),
-        loglike=loglike,
-        info=info.wt,
-        sigma=cov.wt),
-        class=c("mle_weighted","mle"))
+    #structure(list(
+    #    theta.hat=matrix(theta.wt,nrow=nrow(info.wt)),
+    #    loglike=loglike,
+    #    info=info.wt,
+    #    sigma=cov.wt),
+    #    class=c("mle_weighted","mle"))
+
+
+    mle <- make_mle(matrix(theta.wt,nrow=nrow(info.wt)),loglike,cov.wt,info.wt)
+    class(mle) <- unique(c("mle_weighted",class(mle)))
+    mle
 }

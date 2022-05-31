@@ -30,10 +30,11 @@ mle_exp <- function(x)
     n <- length(x)
 
     structure(list(
-        theta.hat=c(rate.hat),
+        theta.hat=rate.hat,
         loglike=n*log(rate.hat)-n,
         info=matrix(n/rate.hat^2),
         sigma=matrix(rate.hat^2/n),
-        sample_size=n),
-        class=c("mle_exp","mle"))
+        sample_size=n,
+        obs=x),
+        class=c("mle"))
 }

@@ -9,9 +9,10 @@ mle_newton_raphson(
   theta0,
   info,
   score,
-  stop_cond = function(theta1, theta0) abs(max(theta1 - theta0)) < 1e-04,
-  sup = function(theta) all(theta > 0),
-  r = 0.75,
+  stop_cond = NULL,
+  sup = NULL,
+  eta = 1,
+  r = 0.5,
   max_iter = 0L
 )
 }
@@ -24,9 +25,11 @@ mle_newton_raphson(
 
 \item{score}{score function of type \code{R^p -> R^p}}
 
-\item{stop_cond}{stopping condition function of type \code{(R^p,R^p) -> \{true,false\}}}
+\item{stop_cond}{stopping condition function of type \code{(R^p,R^p) -> \{T,F\}}}
 
-\item{sup}{domain of support function of type \code{R^p -> \{true,false\}} for the log-likelhood function \code{l}}
+\item{sup}{domain of support function of type \code{R^p -> \{T,F\}} for the log-likelihood function \code{l}}
+
+\item{eta}{learning rate, defaults to 1}
 
 \item{r}{backing tracking parameter}
 

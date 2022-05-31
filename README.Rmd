@@ -35,6 +35,11 @@ install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
 
+## TODO
+
+- Use generics and standard notation for operations on MLEs, e.g., `+`.mle
+- 
+
 ## API
 
 The object representing a fitted model is a type of `mle` object, the maximum

@@ -7,9 +7,9 @@
 mle_iterative(
   l,
   theta0,
-  dir = function(theta) grad(l, theta),
-  stop_cond = function(theta1, theta0) abs(max(theta1 - theta0)) < 1e-04,
-  sup = function(theta) all(theta > 0),
+  dir = NULL,
+  stop_cond = NULL,
+  sup = NULL,
   eta = 1,
   r = 0.5,
   max_iter = 0L
@@ -22,11 +22,11 @@ mle_iterative(
 
 \item{dir}{promising direction function of type \eqn{R^p \mapsto R^p}}
 
-\item{stop_cond}{stopping condition function of type \eqn{R^p \times R^p \mapsto \{true,false\}}}
+\item{stop_cond}{stopping condition function of type \eqn{R^p \times R^p \mapsto \{T,F\}}}
 
-\item{sup}{domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelhood function \eqn{l}}
+\item{sup}{domain of support function of type \eqn{R^p \mapsto \{T,F\}} for the log-likelihood function \eqn{l}}
 
-\item{eta}{learning rate}
+\item{eta}{learning rate, defaults to 1}
 
 \item{r}{backing tracking parameter}
 

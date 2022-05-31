@@ -3,9 +3,9 @@
 #' @param l log-likelihood function of type \eqn{R^p \mapsto R}
 #' @param theta0 initial guess of \eqn{\theta} with \eqn{p} components
 #' @param dir promising direction function of type \eqn{R^p \mapsto R^p}
-#' @param stop_cond stopping condition function of type \eqn{R^p \times R^p \mapsto \{true,false\}}
-#' @param sup domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelhood function \eqn{l}
-#' @param eta learning rate
+#' @param stop_cond stopping condition function of type \eqn{R^p \times R^p \mapsto \{T,F\}}
+#' @param sup domain of support function of type \eqn{R^p \mapsto \{T,F\}} for the log-likelihood function \eqn{l}
+#' @param eta learning rate, defaults to 1
 #' @param r backing tracking parameter
 #' @param max_iter maximum number of iterations
 #'
@@ -15,13 +15,17 @@
 mle_iterative <- function(
         l,
         theta0,
-        dir=function(theta) grad(l,theta),
-        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
-        sup=function(theta) all(theta > 0),
+        dir=NULL,
+        stop_cond=NULL,
+        sup=NULL,
         eta=1,
         r=0.5,
         max_iter=0L)
 {
+    if (is.null(dir)) dir <- function(theta) grad(l,theta)
+    if (is.null(stop_cond)) stop_cond <- function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4
+    if (is.null(sup)) sup <- function(theta) all(theta > 0)
+
     theta1 <- theta0
     iter <- 1L
     repeat
@@ -45,11 +49,13 @@ mle_iterative <- function(
         theta0 <- theta1
     }
 
+    nfo <- -hessian(l,theta1)
     structure(list(
         loglike=l(theta1),
         theta.hat=theta1,
-        score=NULL,
-        info=NULL,
+        score=grad(l,theta1),
+        info=-nfo,
+        sigma=ginv(nfo),
         iter=iter,
         max_iter=max_iter,
         learning_rate=eta),
@@ -62,8 +68,9 @@ mle_iterative <- function(
 #' @param theta0 initial guess of theta with \code{p} components
 #' @param info information matrix function of type \code{R^p -> R^{p-by-q}}
 #' @param score score function of type \code{R^p -> R^p}
-#' @param stop_cond stopping condition function of type \code{(R^p,R^p) -> \{true,false\}}
-#' @param sup domain of support function of type \code{R^p -> \{true,false\}} for the log-likelhood function \code{l}
+#' @param stop_cond stopping condition function of type \code{(R^p,R^p) -> \{T,F\}}
+#' @param sup domain of support function of type \code{R^p -> \{T,F\}} for the log-likelihood function \code{l}
+#' @param eta learning rate, defaults to 1
 #' @param r backing tracking parameter
 #' @param max_iter maximum number of iterations
 #'
@@ -74,9 +81,10 @@ mle_newton_raphson <- function(
         theta0,
         info,
         score,
-        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
-        sup=function(theta) all(theta > 0),
-        r=0.75,
+        stop_cond=NULL,
+        sup=NULL,
+        eta=1,
+        r=0.5,
         max_iter=0L)
 {
     res <- mle_iterative(
@@ -85,6 +93,7 @@ mle_newton_raphson <- function(
         dir=function(theta) ginv(info(theta)) %*% score(theta),
         stop_cond=stop_cond,
         sup=sup,
+        eta=eta,
         r=r,
         max_iter=max_iter)
 
@@ -94,14 +103,14 @@ mle_newton_raphson <- function(
     res
 }
 
-
 #' Iterative MLE method using gradient ascent
 #'
 #' @param theta0 initial guess of theta with \eqn{p} components
 #' @param l log-likelihood function
 #' @param score score function of type \eqn{R^p -> R^p}
-#' @param stop_cond stopping condition function of type \eqn{R^p \times R^p \mapsto \{true,false\}}
-#' @param sup domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelhood function \eqn{l}
+#' @param stop_cond stopping condition function of type \eqn{R^p \times R^p \mapsto \{T,F\}}
+#' @param sup domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelihood function \eqn{l}
+#' @param eta learning rate, defaults to 1
 #' @param r backing tracking parameter
 #' @param max_iter maximum iterations
 #'
@@ -113,9 +122,10 @@ mle_gradient_ascent <- function(
         l,
         theta0,
         score=function(theta) grad(l,theta),
-        stop_cond=function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4,
-        sup=function(theta) all(theta > 0),
-        r=0.75,
+        stop_cond=NULL,
+        sup=NULL,
+        eta=1,
+        r=0.5,
         max_iter=0L)
 {
     res <- mle_iterative(
@@ -124,11 +134,10 @@ mle_gradient_ascent <- function(
         dir=score,
         stop_cond=stop_cond,
         sup=sup,
+        eta=eta,
         r=r,
         max_iter=max_iter)
 
     res$score <- score(res$theta.hat)
-    res$info <- -hessian(l,res$theta.hat)
-    res$sigma <- ginv(res$info)
     res
 }

@@ -3,21 +3,21 @@
 \name{rmap}
 \alias{rmap}
 \title{Generic function for computing the distribution of \code{f(x)} where \code{x}
-models a \code{dist} (distribution) object.}
+models a distribution (random element) object.}
 \usage{
-rmap(x, f, ...)
+rmap(x, g, n, ...)
 }
 \arguments{
-\item{x}{a list of \code{dist} (distrubtion) objects.}
+\item{x}{a list of distribution (random element) objects.}
 
-\item{f}{a function that accepts arguments sampled from the \code{dist} items
-in \code{x}.}
+\item{g}{a function that accepts arguments sampled from the distribution
+objects in \code{x}.}
+
+\item{n}{number of samples for the distribution to draw from to estimate \code{f(x)}}
 
 \item{...}{additional arguments to pass.}
 }
 \description{
-When we apply a function \code{f} to an argument \code{x}, we are applying
-the function to the argument, or evaluating the function by substituting the
-formal parameters of the function with the arguments. However, if the
-argument is a random variable, then \code{f(x)} is also a random variable.
+When we apply a function \code{f} to a distribution \code{x}, the result
+is a distribution object \code{f(x)}.
 }

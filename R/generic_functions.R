@@ -111,19 +111,29 @@ mse <- function(x, ...)
 }
 
 #' Generic function for computing the distribution of \code{f(x)} where \code{x}
-#' models a \code{dist} (distribution) object.
+#' models a distribution (random element) object.
 #'
-#' When we apply a function \code{f} to an argument \code{x}, we are applying
-#' the function to the argument, or evaluating the function by substituting the
-#' formal parameters of the function with the arguments. However, if the
-#' argument is a random variable, then \code{f(x)} is also a random variable.
+#' When we apply a function \code{f} to a distribution \code{x}, the result
+#' is a distribution object \code{f(x)}.
 #'
-#' @param x a list of \code{dist} (distrubtion) objects.
-#' @param f a function that accepts arguments sampled from the \code{dist} items
-#'          in \code{x}.
+#' @param x a list of distribution (random element) objects.
+#' @param g a function that accepts arguments sampled from the distribution
+#'          objects in \code{x}.
+#' @param n number of samples for the distribution to draw from to estimate \code{f(x)}
 #' @param ... additional arguments to pass.
 #' @export
-rmap <- function(x,f,...)
+rmap <- function(x,g,n,...)
 {
     UseMethod("rmap",x)
+}
+
+
+#' Method for obtaining the observations used by a fitted model \code{object}.
+#'
+#' @param object the fitted object to obtain the number of observations used by the fit
+#' @param ... additional arguments to pass
+#' @export
+obs <- function(object,...)
+{
+    UseMethod("obs",object)
 }

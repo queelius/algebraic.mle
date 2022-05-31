@@ -2,6 +2,7 @@
 -   <a href="#r-package-algebraicmle" id="toc-r-package-algebraicmle">R
     package: <code>algebraic.mle</code></a>
     -   <a href="#installation" id="toc-installation">Installation</a>
+    -   <a href="#todo" id="toc-todo">TODO</a>
     -   <a href="#api" id="toc-api">API</a>
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -25,6 +26,12 @@ You can install the development version of `algebraic.mle` from
 install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
+
+## TODO
+
+-   Use generics and standard notation for operations on MLEs, e.g.,
+    `+`.mle
+-   
 
 ## API
 
