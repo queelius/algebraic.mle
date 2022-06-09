@@ -60,8 +60,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mle_newton_raphson</span><span class="op">(</span>
   <span class="va">l</span>,
   <span class="va">theta0</span>,
-  <span class="va">info</span>,
-  <span class="va">score</span>,
+  info <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="op">-</span><span class="fu">hessian</span><span class="op">(</span><span class="va">l</span>, <span class="va">theta</span><span class="op">)</span>,
+  score <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu">grad</span><span class="op">(</span><span class="va">l</span>, <span class="va">theta</span><span class="op">)</span>,
   stop_cond <span class="op">=</span> <span class="cn">NULL</span>,
   sup <span class="op">=</span> <span class="cn">NULL</span>,
   eta <span class="op">=</span> <span class="fl">1</span>,
@@ -78,9 +78,9 @@
 <dt>theta0</dt>
 <dd><p>initial guess of theta with <code>p</code> components</p></dd>
 <dt>info</dt>
-<dd><p>information matrix function of type <code>R^p -&gt; R^{p-by-q}</code></p></dd>
+<dd><p>information matrix function of type <code>R^p -&gt; R^{p-by-q}</code>, defaults to taking the negative of the hessian of <code>l</code>.</p></dd>
 <dt>score</dt>
-<dd><p>score function of type <code>R^p -&gt; R^p</code></p></dd>
+<dd><p>score function of type <code>R^p -&gt; R^p</code>, defaults to taking the gradient of <code>l</code>.</p></dd>
 <dt>stop_cond</dt>
 <dd><p>stopping condition function of type <code>(R^p,R^p) -&gt; {T,F}</code></p></dd>
 <dt>sup</dt>
