@@ -18,13 +18,15 @@ mle_samp_bs <- function(x,mle_solver,data=NULL,R=NULL,...)
         R <- ifelse(is.data.frame(x), nrow(data), length(data))
     stopifnot(R > 0)
 
-    boot(data,function(x,idx) point(mle_solver(x[idx])),R)
+    boot(data=data,
+         statistic=function(x,idx) point(mle_solver(x[idx])),
+         R=R)
 }
 
 #' A function for computing the sampling distribution of a statistic of the
 #' MLE's sampling distribution using the Bootstrap method.
 #'
-#' @param x a fitted \code{mle} object.
+#' @param mle a fitted \code{mle} object.
 #' @param loglike a generator for the log-likelihood function; it accepts
 #'                observations and constructs the log-likelihood function
 #'                with the \code{data} fixed and as a function of theta.
@@ -33,12 +35,13 @@ mle_samp_bs <- function(x,mle_solver,data=NULL,R=NULL,...)
 #' @param R bootstrap replicates
 #' @param ... additional arguments to pass.
 #' @export
-mle_samp_bs_loglike <- function(x,loglike,data=NULL,R=NULL,...)
+mle_samp_bs_loglike <- function(mle,loglike,data=NULL,R=NULL,...)
 {
     mle_samp_bs(
-        x,
-        mle_solver=function(data) mle_gradient_ascent(loglike(data),point(x)),
-        data,R,...)
+        mle=mle,
+        mle_solver=function(data) mle_gradient_ascent(loglike(data),point(mle)),
+        data=data,
+        R=R,...)
 }
 
 #' Method for obtaining the parameters of an \code{boot} object.

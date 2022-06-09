@@ -5,10 +5,10 @@
 \title{A function for computing the sampling distribution of a statistic of the
 MLE's sampling distribution using the Bootstrap method.}
 \usage{
-mle_samp_bs_loglike(x, loglike, data = NULL, R = NULL, ...)
+mle_samp_bs_loglike(mle, loglike, data = NULL, R = NULL, ...)
 }
 \arguments{
-\item{x}{a fitted \code{mle} object.}
+\item{mle}{a fitted \code{mle} object.}
 
 \item{loglike}{a generator for the log-likelihood function; it accepts
 observations and constructs the log-likelihood function

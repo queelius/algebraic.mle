@@ -8,6 +8,7 @@
 #' @param eta learning rate, defaults to 1
 #' @param r backing tracking parameter
 #' @param max_iter maximum number of iterations
+#' @param debug Boolean, output debugging information if TRUE; defaults to FALSE
 #'
 #' @importFrom numDeriv grad
 #' @importFrom numDeriv hessian
@@ -20,10 +21,11 @@ mle_iterative <- function(
         sup=NULL,
         eta=1,
         r=0.5,
-        max_iter=0L)
+        max_iter=0L,
+        debug=F)
 {
     if (is.null(dir)) dir <- function(theta) grad(l,theta)
-    if (is.null(stop_cond)) stop_cond <- function(theta1,theta0) abs(max(theta1-theta0)) < 1e-4
+    if (is.null(stop_cond)) stop_cond <- function(theta1,theta0) abs(max(theta1-theta0)) < 1e-3
     if (is.null(sup)) sup <- function(theta) all(theta > 0)
 
     theta1 <- theta0
@@ -41,6 +43,9 @@ mle_iterative <- function(
                 break
             eta0 <- r*eta0
         }
+
+        if (debug)
+            print(theta1)
 
         if (iter == max_iter || stop_cond(theta1,theta0))
             break
@@ -68,6 +73,7 @@ mle_iterative <- function(
 #' @param eta learning rate, defaults to 1
 #' @param r backing tracking parameter
 #' @param max_iter maximum number of iterations
+#' @param debug Boolean, output debugging information if TRUE; defaults to FALSE
 #'
 #' @importFrom MASS ginv
 #' @export
@@ -80,7 +86,8 @@ mle_newton_raphson <- function(
         sup=NULL,
         eta=1,
         r=0.5,
-        max_iter=0L)
+        max_iter=0L,
+        debug=F)
 {
     res <- mle_iterative(
         l,
@@ -90,7 +97,8 @@ mle_newton_raphson <- function(
         sup=sup,
         eta=eta,
         r=r,
-        max_iter=max_iter)
+        max_iter=max_iter,
+        debug=debug)
 
     res$score <- score(res$theta.hat)
     res$info <- info(res$theta.hat)
@@ -108,6 +116,7 @@ mle_newton_raphson <- function(
 #' @param eta learning rate, defaults to 1
 #' @param r backing tracking parameter
 #' @param max_iter maximum iterations
+#' @param debug Boolean, output debugging information if TRUE; defaults to FALSE
 #'
 #' @importFrom MASS ginv
 #' @importFrom numDeriv hessian
@@ -121,7 +130,8 @@ mle_gradient_ascent <- function(
         sup=NULL,
         eta=1,
         r=0.5,
-        max_iter=0L)
+        max_iter=0L,
+        debug=F)
 {
     res <- mle_iterative(
         l,
@@ -131,7 +141,8 @@ mle_gradient_ascent <- function(
         sup=sup,
         eta=eta,
         r=r,
-        max_iter=max_iter)
+        max_iter=max_iter,
+        debug=debug)
 
     res$score <- score(res$theta.hat)
     res$info <- -hessian(l,res$theta.hat)

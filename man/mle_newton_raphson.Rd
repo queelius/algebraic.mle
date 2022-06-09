@@ -13,7 +13,8 @@ mle_newton_raphson(
   sup = NULL,
   eta = 1,
   r = 0.5,
-  max_iter = 0L
+  max_iter = 0L,
+  debug = F
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ mle_newton_raphson(
 \item{r}{backing tracking parameter}
 
 \item{max_iter}{maximum number of iterations}
+
+\item{debug}{Boolean, output debugging information if TRUE; defaults to FALSE}
 }
 \description{
 Iterative MLE method using the Newton-Raphson method
