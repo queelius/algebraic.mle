@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,9 +78,30 @@
 maximum likelihood estimators from existing maximum likelihood estimators.</dd>
       </dl><dl><dt>
           
+          <code><a href="bias.html">bias()</a></code> 
+        </dt>
+        <dd>Computes the bias of an estimator object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="bias.boot.html">bias(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the estimate of the bias of a <code>boot</code> object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="confint.boot.html">confint(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Function to compute the confidence intervals of <code>mle</code> objects.</dd>
+      </dl><dl><dt>
+          
           <code><a href="confint.mle.html">confint(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Function to compute the confidence intervals of <code>mle</code> objects.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="exp_loglike.html">exp_loglike()</a></code> 
+        </dt>
+        <dd>log-likelihood function generator given data <code>x</code> for the exponential
+distribution</dd>
       </dl><dl><dt>
           
           <code><a href="fisher_info.html">fisher_info()</a></code> 
@@ -112,8 +133,8 @@ object, assuming it has a likelihood function, e.g., a fitted `mle` object.</dd>
           
           <code><a href="mle_exp.html">mle_exp()</a></code> 
         </dt>
-        <dd>MLE of the rate parameter of the exponential distribution given a
-random sample of observations drawn from it.</dd>
+        <dd>MLE of the rate parameter when we assume the sample is i.i.d. and drawn
+from the exponential distribution.</dd>
       </dl><dl><dt>
           
           <code><a href="mle_gradient_ascent.html">mle_gradient_ascent()</a></code> 
@@ -137,14 +158,16 @@ on the LHS by a matrix <code>A</code>.</dd>
         <dd>Iterative MLE method using the Newton-Raphson method</dd>
       </dl><dl><dt>
           
-          <code><a href="mle_sols.html">mle_sols()</a></code> 
+          <code><a href="mle_samp_bs.html">mle_samp_bs()</a></code> 
         </dt>
-        <dd>Generic method for obtaining the best solutions for an estimator, e.g.,
-maximum likelihood estimation may have many possible solutions that satisfy
-the maximum likelihood equation, such that
-<code>argmax(x) = {L(x) : x in solution set}</code>
-is a set: empty set, singleton set (unique), or a set with more than one
-element.</dd>
+        <dd>A function for estimating the empirical sampling distribution the
+MLE using the Bootstrap method.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mle_samp_bs_loglike.html">mle_samp_bs_loglike()</a></code> 
+        </dt>
+        <dd>A function for computing the sampling distribution of a statistic of the
+MLE's sampling distribution using the Bootstrap method.</dd>
       </dl><dl><dt>
           
           <code><a href="mle_weighted.html">mle_weighted()</a></code> 
@@ -160,9 +183,20 @@ and combines them into a single estimator <code>mle_weighted</code></dd>
 parameter value.</dd>
       </dl><dl><dt>
           
+          <code><a href="mse.boot.html">mse(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the estimate of the MSE of a <code>boot</code> object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="mse.mle.html">mse(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Computes the asymptotic MSE of an <code>mle</code> object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="nobs.boot.html">nobs(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the number of observations in the sample used by
+an <code>mle</code>.</dd>
       </dl><dl><dt>
           
           <code><a href="nobs.mle.html">nobs(<i>&lt;mle&gt;</i>)</a></code> 
@@ -177,6 +211,11 @@ an <code>mle</code>.</dd>
 distribution object.</dd>
       </dl><dl><dt>
           
+          <code><a href="nparams.boot.html">nparams(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the number of parameters of an <code>boot</code> object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="nparams.mle.html">nparams(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of parameters of an <code>mle</code> object.</dd>
@@ -185,6 +224,11 @@ distribution object.</dd>
           <code><a href="obs.html">obs()</a></code> 
         </dt>
         <dd>Method for obtaining the observations used by a fitted model <code>object</code>.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="obs.boot.html">obs(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the observations used by the <code>mle</code>.</dd>
       </dl><dl><dt>
           
           <code><a href="obs.mle.html">obs(<i>&lt;mle&gt;</i>)</a></code> 
@@ -197,6 +241,11 @@ distribution object.</dd>
         <dd>Method for obtaining the parameters of a fitted distribution object.</dd>
       </dl><dl><dt>
           
+          <code><a href="params.boot.html">params(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the parameters of an <code>boot</code> object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="params.mle.html">params(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the parameters of an <code>mle</code> object.</dd>
@@ -205,6 +254,11 @@ distribution object.</dd>
           <code><a href="point.html">point()</a></code> 
         </dt>
         <dd>Generic method for obtaining the best point estimate from an estimator.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="point.boot.html">point(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the point estimate of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="point.mle.html">point(<i>&lt;mle&gt;</i>)</a></code> 
@@ -216,12 +270,6 @@ distribution object.</dd>
         </dt>
         <dd>Method for obtaining the number of observations in the sample used by
 an <code>mle</code> object <code>x</code>.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="resid.mle.html">resid(<i>&lt;mle&gt;</i>)</a></code> 
-        </dt>
-        <dd>A function for computing the residuals of <code>object</code>, which is
-a fitted <code>mle</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="rmap.html">rmap()</a></code> 
@@ -241,20 +289,31 @@ is an <code>mle</code> object.</dd>
         <dd>Generic function for sampling from distribution objects.</dd>
       </dl><dl><dt>
           
+          <code><a href="sampler.boot.html">sampler(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for sampling from an <code>boot</code> object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="sampler.mle.html">sampler(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for sampling from an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
-          <code><a href="sampler.mle_exp.html">sampler(<i>&lt;mle_exp&gt;</i>)</a></code> 
+          <code><a href="summary.boot.html">summary(<i>&lt;boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for sampling from an <code>mle_exp</code> object.</dd>
+        <dd>Function for obtaining a summary of <code>object</code>, which is a fitted
+<code>boot</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="summary.mle.html">summary(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Function for obtaining a summary of <code>object</code>, which is a fitted
 <code>mle</code> object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="vcov.boot.html">vcov(<i>&lt;boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the variance-covariance matrix of <code>boot</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="vcov.mle.html">vcov(<i>&lt;mle&gt;</i>)</a></code> 

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">make_mle</span><span class="op">(</span>
   <span class="va">theta.hat</span>,
   loglike <span class="op">=</span> <span class="cn">NULL</span>,
+  score <span class="op">=</span> <span class="cn">NULL</span>,
   sigma <span class="op">=</span> <span class="cn">NULL</span>,
   info <span class="op">=</span> <span class="cn">NULL</span>,
   obs <span class="op">=</span> <span class="cn">NULL</span>,
@@ -72,15 +73,17 @@
     <dl><dt>theta.hat</dt>
 <dd><p>the MLE</p></dd>
 <dt>loglike</dt>
-<dd><p>the log-likelihood of the MLE given the data</p></dd>
+<dd><p>the log-likelihood of <code>theta.hat</code> given the data</p></dd>
+<dt>score</dt>
+<dd><p>the score function evaluated at <code>theta.hat</code></p></dd>
 <dt>sigma</dt>
-<dd><p>the variance-covariance matrix of the MLE</p></dd>
+<dd><p>the variance-covariance matrix of <code>theta.hat</code> given that data</p></dd>
 <dt>info</dt>
-<dd><p>the variance-covariance matrix of the MLE</p></dd>
+<dd><p>the information matrix of <code>theta.hat</code> given the data</p></dd>
 <dt>obs</dt>
 <dd><p>observation (sample) data</p></dd>
 <dt>sample_size</dt>
-<dd><p>the variance-covariance matrix of the MLE</p></dd>
+<dd><p>number of observations in <code>obs</code></p></dd>
 </dl></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -34,7 +34,19 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/algebraic.mle.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/bias.boot.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/bias.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/confint.boot.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/confint.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/exp_loglike.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/fisher_info.html</loc>
@@ -70,10 +82,16 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_newton_raphson.html</loc>
   </url>
   <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/mle_sols.html</loc>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_samp_bs.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_samp_bs_loglike.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_weighted.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mse.boot.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mse.html</loc>
@@ -82,7 +100,13 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/mse.mle.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/nobs.boot.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/nobs.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/nparams.boot.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/nparams.html</loc>
@@ -91,16 +115,25 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/nparams.mle.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/obs.boot.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/obs.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/obs.mle.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/params.boot.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/params.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/params.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/point.boot.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/point.html</loc>
@@ -112,13 +145,13 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/print.mle.html</loc>
   </url>
   <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/resid.mle.html</loc>
-  </url>
-  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/rmap.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/rmap.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/sampler.boot.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/sampler.html</loc>
@@ -127,10 +160,13 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/sampler.mle.html</loc>
   </url>
   <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/sampler.mle_exp.html</loc>
+    <loc>https://queelius.github.io/algebraic.mle/reference/summary.boot.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/summary.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/vcov.boot.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/vcov.mle.html</loc>
