@@ -66,8 +66,8 @@ mle_iterative <- function(
 #'
 #' @param l log-likelihood function of type \code{R^p -> R}
 #' @param theta0 initial guess of theta with \code{p} components
-#' @param info information matrix function of type \code{R^p -> R^{p-by-q}}
-#' @param score score function of type \code{R^p -> R^p}
+#' @param info information matrix function of type \code{R^p -> R^{p-by-q}}, defaults to taking the negative of the hessian of \code{l}.
+#' @param score score function of type \code{R^p -> R^p}, defaults to taking the gradient of \code{l}.
 #' @param stop_cond stopping condition function of type \code{(R^p,R^p) -> \{T,F\}}
 #' @param sup domain of support function of type \code{R^p -> \{T,F\}} for the log-likelihood function \code{l}
 #' @param eta learning rate, defaults to 1
@@ -80,8 +80,8 @@ mle_iterative <- function(
 mle_newton_raphson <- function(
         l,
         theta0,
-        info,
-        score,
+        info=function(theta) -hessian(l,theta),
+        score=function(theta) grad(l,theta),
         stop_cond=NULL,
         sup=NULL,
         eta=1,
