@@ -63,12 +63,12 @@ MLE's sampling distribution using the Bootstrap method.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mle_samp_bs_loglike</span><span class="op">(</span><span class="va">x</span>, <span class="va">loglike</span>, data <span class="op">=</span> <span class="cn">NULL</span>, R <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mle_samp_bs_loglike</span><span class="op">(</span><span class="va">mle</span>, <span class="va">loglike</span>, data <span class="op">=</span> <span class="cn">NULL</span>, R <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>x</dt>
+    <dl><dt>mle</dt>
 <dd><p>a fitted <code>mle</code> object.</p></dd>
 <dt>loglike</dt>
 <dd><p>a generator for the log-likelihood function; it accepts
