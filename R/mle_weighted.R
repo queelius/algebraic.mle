@@ -17,10 +17,12 @@ mle_weighted <- function(mles)
     info.wt <- A
     loglike <- loglike(mles[[1]])
     n <- nobs(mles[[1]])
+    total_obs <- obs(mles[[1]])
 
     for (i in 2:length(mles))
     {
         n <- n + nobs(mles[[i]])
+        total_obs <- append(total_obs,obs(mles[[i]]))
         loglike <- loglike + loglike(mles[[i]])
         A <- fisher_info(mles[[i]])
         info.wt <- info.wt + A
@@ -30,6 +32,8 @@ mle_weighted <- function(mles)
     cov.wt <- MASS::ginv(info.wt)
     theta.wt <- cov.wt %*% B
 
+
+
     #structure(list(
     #    theta.hat=matrix(theta.wt,nrow=nrow(info.wt)),
     #    loglike=loglike,
@@ -38,7 +42,14 @@ mle_weighted <- function(mles)
     #    class=c("mle_weighted","mle"))
 
 
-    mle <- make_mle(matrix(theta.wt,nrow=nrow(info.wt)),loglike,cov.wt,info.wt)
+    mle <- make_mle(
+        theta.hat=matrix(theta.wt,nrow=nrow(info.wt)),
+        loglike=loglike,
+        score=NULL,
+        sigma=cov.wt,
+        info=info.wt,
+        obs=total_obs,
+        sample_size=n)
     class(mle) <- unique(c("mle_weighted",class(mle)))
     mle
 }

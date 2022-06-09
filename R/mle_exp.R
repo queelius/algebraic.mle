@@ -1,40 +1,38 @@
-#' Method for sampling from an \code{mle_exp} object.
-#'
-#' It creates a sampler for the \code{mle_exp} object. It returns a function
-#' that accepts a single parameter \code{n} denoting the number of samples
-#' to draw from the \code{mle_exp} object.
-#'
-#' @param x the \code{mle_exp} object to create sampler for.
-#' @param ... additional arguments to pass to \code{mle_exp} objects.
-#' @importFrom stats rnorm
-#' @export
-sampler.mle_exp <- function(x,...)
-{
-    function(n=1) rnorm(n,point(x),sqrt(vcov(x)),...)
-}
-
-#' MLE of the rate parameter of the exponential distribution given a
-#' random sample of observations drawn from it.
+#' MLE of the rate parameter when we assume the sample is i.i.d. and drawn
+#' from the exponential distribution.
 #'
 #' Of course, the draws are unlikely to be exponential, but the exponential may
 #' be a sufficiently good model. Hypothesis testing, such as relative
 #' likelihoods, can be used to assess the appropriateness of the exponential
 #' model to the data.
 #'
-#' @param x vector of draws from exponential distribution.
-#' @return an \code{mle_exp} object.
+#' @param x a sample of observations
+#' @return an \code{mle} object.
 #' @export
 mle_exp <- function(x)
 {
-    rate.hat <- 1/mean(x)
     n <- length(x)
-
-    structure(list(
+    stopifnot(n > 0)
+    rate.hat <- 1/mean(x)
+    make_mle(
         theta.hat=rate.hat,
         loglike=n*log(rate.hat)-n,
-        info=matrix(n/rate.hat^2),
+        score=matrix(0),
         sigma=matrix(rate.hat^2/n),
-        sample_size=n,
-        obs=x),
-        class=c("mle"))
+        info=matrix(n/rate.hat^2),
+        obs=x,
+        sample_size=n)
 }
+
+#' log-likelihood function generator given data \code{x} for the exponential
+#' distribution
+#'
+#' @param x data
+#' @export
+exp_loglike <- function(x)
+{
+    n <- length(x)
+    s <- sum(x)
+    function(rate) n*log(rate) - rate*s
+}
+

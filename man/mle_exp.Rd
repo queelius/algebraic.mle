@@ -2,16 +2,16 @@
 % Please edit documentation in R/mle_exp.R
 \name{mle_exp}
 \alias{mle_exp}
-\title{MLE of the rate parameter of the exponential distribution given a
-random sample of observations drawn from it.}
+\title{MLE of the rate parameter when we assume the sample is i.i.d. and drawn
+from the exponential distribution.}
 \usage{
 mle_exp(x)
 }
 \arguments{
-\item{x}{vector of draws from exponential distribution.}
+\item{x}{a sample of observations}
 }
 \value{
-an \code{mle_exp} object.
+an \code{mle} object.
 }
 \description{
 Of course, the draws are unlikely to be exponential, but the exponential may

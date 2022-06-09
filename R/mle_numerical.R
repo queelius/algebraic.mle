@@ -49,17 +49,12 @@ mle_iterative <- function(
         theta0 <- theta1
     }
 
-    nfo <- -hessian(l,theta1)
-    structure(list(
-        loglike=l(theta1),
-        theta.hat=theta1,
-        score=grad(l,theta1),
-        info=-nfo,
-        sigma=ginv(nfo),
-        iter=iter,
-        max_iter=max_iter,
-        learning_rate=eta),
-        class=c("mle_numerical","mle"))
+    theta.hat <- make_mle(theta1,l(theta1))
+    theta.hat$iter <- iter
+    theta.hat$max_iter <- max_iter
+    theta.hat$learning_rate <- eta
+    class(theta.hat) <- unique(c("mle_numerical",class(theta.hat)))
+    theta.hat
 }
 
 #' Iterative MLE method using the Newton-Raphson method
@@ -139,5 +134,7 @@ mle_gradient_ascent <- function(
         max_iter=max_iter)
 
     res$score <- score(res$theta.hat)
+    res$info <- -hessian(l,res$theta.hat)
+    res$sigma <- ginv(res$info)
     res
 }

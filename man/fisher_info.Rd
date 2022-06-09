@@ -13,6 +13,13 @@ fisher_info(x, ...)
 \item{...}{additional arguments to pass}
 }
 \description{
-Generic method for obtaining the fisher information
-matrix of an \code{mle} object.
+Fisher information is a way of measuring the amount of
+information that an observable random variable `X`
+carries about an unknown parameter \code{theta}
+upon which the probability of `X` depends.
+}
+\details{
+The inverse of the Fisher information matrix
+is the variance-covariance of the MLE for
+\code{theta}.
 }

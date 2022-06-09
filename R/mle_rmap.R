@@ -30,14 +30,15 @@ rmap.mle <- function(x,g,n=1000,...)
         g.mle.samp[i,] <- g(mle.samp[i,])
     sigma <- stats::cov(g.mle.samp)
     info <- MASS::ginv(sigma)
-    os <- obs(x)
-
-    make_mle(g.theta.hat,
-             ifelse(is.null(os),NULL,loglike(x)-sum(log(grad(g,os)))),
-             sigma,
-             info,
-             NULL,
-             nobs(x))
+    data <- obs(x)
+    #loglik <- ifelse(is.null(data),NULL,loglike(x)-sum(log(grad(g,data))))
+    make_mle(theta.hat=g.theta.hat,
+             loglike=NULL,
+             score=NULL,
+             sigma=sigma,
+             info=info,
+             obs=data,
+             sample_size=nobs(x))
 }
 
 

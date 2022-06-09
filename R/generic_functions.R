@@ -53,23 +53,6 @@ point <- function(x, ...)
     UseMethod("point",x)
 }
 
-
-#' Generic method for obtaining the best solutions for an estimator, e.g.,
-#' maximum likelihood estimation may have many possible solutions that satisfy
-#' the maximum likelihood equation, such that
-#' \code{argmax(x) = {L(x) : x in solution set}}
-#' is a set: empty set, singleton set (unique), or a set with more than one
-#' element.
-#'
-#' @param x the MLE object to obtain the solutions for
-#' @param ... additional arguments to pass
-#' @returns a set of points satisfying the MLE equations
-#' #' @export
-mle_sols <- function(x, ...)
-{
-     UseMethod("mle_sols",x)
-}
-
 #' Generic function for sampling from distribution objects.
 #'
 #' It creates a sampler for the \code{x} object. It returns a function
@@ -87,6 +70,15 @@ sampler <- function(x, ...)
 
 #' Generic method for obtaining the fisher information
 #' matrix of an \code{mle} object.
+#'
+#' Fisher information is a way of measuring the amount of
+#' information that an observable random variable `X`
+#' carries about an unknown parameter \code{theta}
+#' upon which the probability of `X` depends.
+#'
+#' The inverse of the Fisher information matrix
+#' is the variance-covariance of the MLE for
+#' \code{theta}.
 #'
 #' @param x the object to obtain the fisher information of
 #' @param ... additional arguments to pass
@@ -109,6 +101,17 @@ mse <- function(x, ...)
 {
     UseMethod("mse",x)
 }
+
+#' Computes the bias of an estimator object.
+#'
+#' @param x the object to compute the bias of.
+#' @param ... pass additional arguments
+#' @export
+bias <- function(x,...)
+{
+    UseMethod("bias",x)
+}
+
 
 #' Generic function for computing the distribution of \code{f(x)} where \code{x}
 #' models a distribution (random element) object.
@@ -137,3 +140,7 @@ obs <- function(object,...)
 {
     UseMethod("obs",object)
 }
+
+
+
+

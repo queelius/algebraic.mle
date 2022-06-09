@@ -1,24 +1,24 @@
 #' \code{make_mle} makes an \code{mle} object.
 #'
 #' @param theta.hat the MLE
-#' @param loglike the log-likelihood of the MLE given the data
-#' @param sigma the variance-covariance matrix of the MLE
-#' @param info the variance-covariance matrix of the MLE
+#' @param loglike the log-likelihood of \code{theta.hat} given the data
+#' @param score the score function evaluated at \code{theta.hat}
+#' @param sigma the variance-covariance matrix of \code{theta.hat} given that data
+#' @param info the information matrix of \code{theta.hat} given the data
 #' @param obs observation (sample) data
-#' @param sample_size the variance-covariance matrix of the MLE
-#' @importFrom stats var
-#' @importFrom stats cov
-#' @importFrom MASS ginv
+#' @param sample_size number of observations in \code{obs}
 #' @export
-make_mle <- function(theta.hat,loglike=NULL,sigma=NULL,info=NULL,obs=NULL,sample_size=NULL)
+make_mle <- function(theta.hat,loglike=NULL,score=NULL,
+                     sigma=NULL,info=NULL,obs=NULL,sample_size=NULL)
 {
     structure(list(
         theta.hat=theta.hat,
         loglike=loglike,
+        score=score,
         sigma=sigma,
         info=info,
         sample_size=sample_size),
-        class="mle")
+        class=c("mle"))
 }
 
 #' Method for obtaining the number of observations in the sample used by
@@ -128,9 +128,7 @@ sampler.mle <- function(x,...)
     theta <- point(x)
 
     function(n=1)
-    {
         mvtnorm::rmvnorm(n,theta,sigma,...)
-    }
 }
 
 #' Computes the variance-covariance matrix of \code{mle} objects.
@@ -207,16 +205,3 @@ summary.mle <- function(object,...)
     cat("The AIC is",aic(object),"\n")
 }
 
-
-
-#' A function for computing the residuals of \code{object}, which is
-#' a fitted \code{mle} object.
-#'
-#' @param object a fitted \code{mle} object.
-#' @param ... additional arguments to pass.
-#' @importFrom stats resid
-#' @export
-resid.mle <- function(object,...)
-{
-    NULL
-}

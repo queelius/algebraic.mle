@@ -7,6 +7,7 @@
 make_mle(
   theta.hat,
   loglike = NULL,
+  score = NULL,
   sigma = NULL,
   info = NULL,
   obs = NULL,
@@ -16,15 +17,17 @@ make_mle(
 \arguments{
 \item{theta.hat}{the MLE}
 
-\item{loglike}{the log-likelihood of the MLE given the data}
+\item{loglike}{the log-likelihood of \code{theta.hat} given the data}
 
-\item{sigma}{the variance-covariance matrix of the MLE}
+\item{score}{the score function evaluated at \code{theta.hat}}
 
-\item{info}{the variance-covariance matrix of the MLE}
+\item{sigma}{the variance-covariance matrix of \code{theta.hat} given that data}
+
+\item{info}{the information matrix of \code{theta.hat} given the data}
 
 \item{obs}{observation (sample) data}
 
-\item{sample_size}{the variance-covariance matrix of the MLE}
+\item{sample_size}{number of observations in \code{obs}}
 }
 \description{
 \code{make_mle} makes an \code{mle} object.
