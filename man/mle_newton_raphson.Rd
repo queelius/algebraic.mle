@@ -7,8 +7,8 @@
 mle_newton_raphson(
   l,
   theta0,
-  info,
-  score,
+  info = function(theta) -hessian(l, theta),
+  score = function(theta) grad(l, theta),
   stop_cond = NULL,
   sup = NULL,
   eta = 1,
@@ -22,9 +22,9 @@ mle_newton_raphson(
 
 \item{theta0}{initial guess of theta with \code{p} components}
 
-\item{info}{information matrix function of type \code{R^p -> R^{p-by-q}}}
+\item{info}{information matrix function of type \code{R^p -> R^{p-by-q}}, defaults to taking the negative of the hessian of \code{l}.}
 
-\item{score}{score function of type \code{R^p -> R^p}}
+\item{score}{score function of type \code{R^p -> R^p}, defaults to taking the gradient of \code{l}.}
 
 \item{stop_cond}{stopping condition function of type \code{(R^p,R^p) -> \{T,F\}}}
 
