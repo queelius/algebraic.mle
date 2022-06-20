@@ -67,6 +67,12 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/make_mle.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_boot.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_boot_loglike.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_exp.html</loc>
   </url>
   <url>
@@ -80,12 +86,6 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_newton_raphson.html</loc>
-  </url>
-  <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/mle_samp_bs.html</loc>
-  </url>
-  <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/mle_samp_bs_loglike.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_weighted.html</loc>

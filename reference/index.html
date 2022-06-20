@@ -131,6 +131,18 @@ object, assuming it has a likelihood function, e.g., a fitted `mle` object.</dd>
         <dd><code>make_mle</code> makes an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
+          <code><a href="mle_boot.html">mle_boot()</a></code> 
+        </dt>
+        <dd>A function for estimating the empirical sampling distribution the
+MLE using the Bootstrap method.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mle_boot_loglike.html">mle_boot_loglike()</a></code> 
+        </dt>
+        <dd>A function for computing the sampling distribution of a statistic of the
+MLE's sampling distribution using the Bootstrap method.</dd>
+      </dl><dl><dt>
+          
           <code><a href="mle_exp.html">mle_exp()</a></code> 
         </dt>
         <dd>MLE of the rate parameter when we assume the sample is i.i.d. and drawn
@@ -156,18 +168,6 @@ on the LHS by a matrix <code>A</code>.</dd>
           <code><a href="mle_newton_raphson.html">mle_newton_raphson()</a></code> 
         </dt>
         <dd>Iterative MLE method using the Newton-Raphson method</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mle_samp_bs.html">mle_samp_bs()</a></code> 
-        </dt>
-        <dd>A function for estimating the empirical sampling distribution the
-MLE using the Bootstrap method.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mle_samp_bs_loglike.html">mle_samp_bs_loglike()</a></code> 
-        </dt>
-        <dd>A function for computing the sampling distribution of a statistic of the
-MLE's sampling distribution using the Bootstrap method.</dd>
       </dl><dl><dt>
           
           <code><a href="mle_weighted.html">mle_weighted()</a></code> 
@@ -256,9 +256,9 @@ distribution object.</dd>
         <dd>Generic method for obtaining the best point estimate from an estimator.</dd>
       </dl><dl><dt>
           
-          <code><a href="point.boot.html">point(<i>&lt;boot&gt;</i>)</a></code> 
+          <code><a href="point.boot.html">point(<i>&lt;boot&gt;</i>)</a></code> <code><a href="point.boot.html">point(<i>&lt;boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the point estimate of an <code>mle</code> object.</dd>
+        <dd>Method for obtaining the parameter estimate of a <code>boot</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="point.mle.html">point(<i>&lt;mle&gt;</i>)</a></code> 
