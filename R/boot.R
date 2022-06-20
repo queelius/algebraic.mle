@@ -10,17 +10,18 @@
 #' @param ... additional arguments to pass.
 #' @importFrom boot boot
 #' @export
-mle_samp_bs <- function(mle,mle_solver,data=NULL,R=NULL,...)
+mle_boot <- function(mle,mle_solver,data=NULL,R=NULL,...)
 {
     if (is.null(data)) data <- obs(mle)
     stopifnot(!is.null(data))
+
     if (is.null(R))
         R <- ifelse(is.data.frame(data), nrow(data), length(data))
     stopifnot(R > 0)
 
     boot(data=data,
-         statistic=function(x,idx) point(mle_solver(x[idx])),
-         R=R)
+         statistic=function(x,idx) point(mle_solver(x[idx,])),
+         R=R,...)
 }
 
 #' A function for computing the sampling distribution of a statistic of the
@@ -30,16 +31,20 @@ mle_samp_bs <- function(mle,mle_solver,data=NULL,R=NULL,...)
 #' @param loglike.gen a generator for the log-likelihood function; it accepts
 #'                observations and constructs the log-likelihood function
 #'                with the \code{data} fixed and as a function of theta.
-#' @param data data for generatinng MLEs for the bootstrap resampling; default
+#' @param data data for generating MLEs for the bootstrap resampling; default
 #'            is NULL. If NULL, then try to use \code{obs(x)} instead.
 #' @param R bootstrap replicates
 #' @param ... additional arguments to pass.
 #' @export
-mle_samp_bs_loglike <- function(mle,loglike.gen,data=NULL,R=NULL,...)
+mle_boot_loglike <- function(mle,loglike.gen,data=NULL,R=NULL,...)
 {
-    mle_samp_bs(
+    solver <- function(xs) mle_newton_raphson(
+        l=loglike.gen(xs),
+        theta0=point(mle))
+
+    mle_boot(
         mle=mle,
-        mle_solver=function(data) mle_gradient_ascent(loglike.gen(data),point(mle)),
+        mle_solver=solver,
         data=data,
         R=R,...)
 }
@@ -48,14 +53,21 @@ mle_samp_bs_loglike <- function(mle,loglike.gen,data=NULL,R=NULL,...)
 #'
 #' @param x the \code{boot} object to obtain the parameters of.
 #' @export
-params.boot <- function(x) x$t[1,]
+params.boot <- function(x) x$t0
+
+#' Method for obtaining the parameter estimate of a \code{boot} object.
+#'
+#' @param x the \code{boot} object to obtain the parameters of.
+#' @export
+point.boot <- function(x) x$t0
+
 
 #' Method for obtaining the number of parameters of an \code{boot} object.
 #'
 #' @param x the \code{boot} object to obtain the number of parameters of
 #'
 #' @export
-nparams.boot <- function(x) length(params(x))
+nparams.boot <- function(x) length(x$t0)
 
 #' Method for obtaining the number of observations in the sample used by
 #' an \code{mle}.
@@ -88,9 +100,30 @@ obs.boot <- function(object,...) object$data
 #' @importFrom stats confint
 #' @importFrom boot boot.ci
 #' @export
-confint.boot <- function(object, parm=NULL, level=0.95, type="bca",...)
+confint.boot <- function(object, parm=NULL, level=0.95, type="perc",...)
 {
-    boot.ci(object,conf=level,type=type,...)
+    sigma <- diag(vcov(object,...))
+    theta <- point(object,...)
+    p <- length(theta)
+    q <- stats::qnorm(level)
+    if (is.null(parm))
+        parm <- 1:p
+
+    parm <- parm[parm >= 1 & parm <= p]
+    ci <- matrix(nrow=length(parm),ncol=2)
+    colnames(ci) <- c(paste((1-level)/2*100,"%"),
+                      paste((1-(1-level)/2)*100,"%"))
+
+    i <- 1
+    for (j in parm)
+    {
+        ci[i,] <- c(theta[j] - q * sqrt(sigma[j]),
+                    theta[j] + q * sqrt(sigma[j]))
+        i <- i + 1
+    }
+    rownames(ci) <- parm
+    ci
+
 }
 
 #' Method for sampling from an \code{boot} object.
@@ -130,7 +163,7 @@ mse.boot <- function(x,par=NULL,...)
 {
     if (is.null(par))
         par <- point(x)
-    (mean(x$t-par))^2
+    mean(rowSums(t(t(x$t)-as.vector(par))^2))
 }
 
 #' Computes the estimate of the bias of a \code{boot} object.
@@ -144,7 +177,12 @@ bias.boot <- function(x,par=NULL,...)
 {
     if (is.null(par))
         par <- point(x)
-    mean(x$t-par)
+
+    m <- length(par)
+    b <- numeric(m)
+    for (j in 1:m)
+        b[j] <- mean(x$t[,j]-par[j])
+    b
 }
 
 #' Computes the point estimate of an \code{mle} object.

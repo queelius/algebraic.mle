@@ -4,7 +4,7 @@
 \alias{confint.boot}
 \title{Function to compute the confidence intervals of \code{mle} objects.}
 \usage{
-\method{confint}{boot}(object, parm = NULL, level = 0.95, type = "bca", ...)
+\method{confint}{boot}(object, parm = NULL, level = 0.95, type = "perc", ...)
 }
 \arguments{
 \item{object}{the \code{boot} object to compute the confidence intervals for}
