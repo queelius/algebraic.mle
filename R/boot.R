@@ -2,7 +2,7 @@
 #' A function for estimating the empirical sampling distribution the
 #' MLE using the Bootstrap method.
 #'
-#' @param x a fitted \code{mle} object.
+#' @param mle a fitted \code{mle} object.
 #' @param mle_solver given \code{data} find the MLE
 #' @param data data for generatinng MLEs for the bootstrap resampling; default
 #'            is NULL. If NULL, then try to use \code{obs(x)} instead.
@@ -10,12 +10,12 @@
 #' @param ... additional arguments to pass.
 #' @importFrom boot boot
 #' @export
-mle_samp_bs <- function(x,mle_solver,data=NULL,R=NULL,...)
+mle_samp_bs <- function(mle,mle_solver,data=NULL,R=NULL,...)
 {
-    if (is.null(data)) data <- obs(x)
+    if (is.null(data)) data <- obs(mle)
     stopifnot(!is.null(data))
     if (is.null(R))
-        R <- ifelse(is.data.frame(x), nrow(data), length(data))
+        R <- ifelse(is.data.frame(data), nrow(data), length(data))
     stopifnot(R > 0)
 
     boot(data=data,
@@ -27,7 +27,7 @@ mle_samp_bs <- function(x,mle_solver,data=NULL,R=NULL,...)
 #' MLE's sampling distribution using the Bootstrap method.
 #'
 #' @param mle a fitted \code{mle} object.
-#' @param loglike a generator for the log-likelihood function; it accepts
+#' @param loglike.gen a generator for the log-likelihood function; it accepts
 #'                observations and constructs the log-likelihood function
 #'                with the \code{data} fixed and as a function of theta.
 #' @param data data for generatinng MLEs for the bootstrap resampling; default
@@ -35,11 +35,11 @@ mle_samp_bs <- function(x,mle_solver,data=NULL,R=NULL,...)
 #' @param R bootstrap replicates
 #' @param ... additional arguments to pass.
 #' @export
-mle_samp_bs_loglike <- function(mle,loglike,data=NULL,R=NULL,...)
+mle_samp_bs_loglike <- function(mle,loglike.gen,data=NULL,R=NULL,...)
 {
     mle_samp_bs(
         mle=mle,
-        mle_solver=function(data) mle_gradient_ascent(loglike(data),point(mle)),
+        mle_solver=function(data) mle_gradient_ascent(loglike.gen(data),point(mle)),
         data=data,
         R=R,...)
 }
