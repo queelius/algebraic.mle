@@ -78,6 +78,18 @@ obs.mle <- function(object,...) object$obs
 #' @export
 loglike.mle <- function(x,...) x$loglike
 
+#' Method for obtaining the standard deviation of an \code{mle} object.
+#'
+#' @param x the \code{mle} object
+#' @param na.rm logical. Should missing values be removed?
+#'
+#' @importFrom stats sd
+#' @export
+sd.mle <- function(x, na.rm = FALSE)
+{
+    sqrt(diag(vcov(x)))
+}
+
 #' Function to compute the confidence intervals of \code{mle} objects.
 #'
 #' @param object the \code{mle} object to compute the confidence intervals for
@@ -105,8 +117,8 @@ confint.mle <- function(object, parm=NULL, level=0.95, ...)
     i <- 1
     for (j in parm)
     {
-        ci[i,] <- c(theta[j] - q * sqrt(sigma[j]),
-                    theta[j] + q * sqrt(sigma[j]))
+        ci[i,] <- c(theta[j] - q*sqrt(sigma[j]),
+                    theta[j] + q*sqrt(sigma[j]))
         i <- i + 1
     }
     rownames(ci) <- parm
