@@ -8,13 +8,13 @@
 #' @param ... additional arguments to pass.
 #' @importFrom boot boot
 #' @export
-mle_boot <- function(mle_solver,data,R=599)
+mle_boot <- function(mle_solver,data,R=599,...)
 {
     stopifnot(!is.function(mle_solver))
 
     boot(data=data,
          statistic=function(x,idx) point(mle_solver(x[idx,])),
-         R=R)
+         R=R,...)
 }
 
 #' A function for computing the sampling distribution of a statistic of the

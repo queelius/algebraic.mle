@@ -3,17 +3,14 @@
 \name{mle_boot}
 \alias{mle_boot}
 \title{A function for estimating the empirical sampling distribution the
-MLE using the Bootstrap method.}
+MLE given a MLE solver and a sample using the Bootstrap method.}
 \usage{
-mle_boot(mle, mle_solver, data = NULL, R = NULL, ...)
+mle_boot(mle_solver, data, R = 599, ...)
 }
 \arguments{
-\item{mle}{a fitted \code{mle} object.}
+\item{mle_solver}{given a data, find the MLE.}
 
-\item{mle_solver}{given \code{data} find the MLE}
-
-\item{data}{data for generatinng MLEs for the bootstrap resampling; default
-is NULL. If NULL, then try to use \code{obs(x)} instead.}
+\item{data}{data for resampling, where for each resample we generate an MLE}
 
 \item{R}{bootstrap replicates}
 
@@ -21,5 +18,5 @@ is NULL. If NULL, then try to use \code{obs(x)} instead.}
 }
 \description{
 A function for estimating the empirical sampling distribution the
-MLE using the Bootstrap method.
+MLE given a MLE solver and a sample using the Bootstrap method.
 }

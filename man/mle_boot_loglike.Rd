@@ -18,16 +18,15 @@ mle_boot_loglike(
 \item{mle}{a fitted \code{mle} object.}
 
 \item{loglike.gen}{a generator for the log-likelihood function; it accepts
-observations and constructs the log-likelihood function
-with the \code{data} fixed and as a function of theta.}
+observations and constructs the log-likelihood function}
 
-\item{data}{data for generating MLEs for the bootstrap resampling; default
-is NULL. If NULL, then try to use \code{obs(x)} instead.}
+\item{data}{data for generating MLEs for the bootstrap resampling.}
 
 \item{R}{bootstrap replicates}
 
-\item{method}{method for soliving the maximum likelihood equationsm, defaults
-to Newton-raphson.}
+\item{method}{method for solving the MLE, defaults to numerically solving
+the root of the gradient of the log-likelihood using
+Newton-raphson.}
 
 \item{...}{additional arguments to pass.}
 }
