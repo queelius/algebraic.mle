@@ -5,7 +5,14 @@
 \title{A function for computing the sampling distribution of a statistic of the
 MLE's sampling distribution using the Bootstrap method.}
 \usage{
-mle_boot_loglike(mle, loglike.gen, data = NULL, R = NULL, ...)
+mle_boot_loglike(
+  mle,
+  loglike.gen,
+  data = NULL,
+  R = NULL,
+  method = mle_newton_raphson,
+  ...
+)
 }
 \arguments{
 \item{mle}{a fitted \code{mle} object.}
@@ -18,6 +25,9 @@ with the \code{data} fixed and as a function of theta.}
 is NULL. If NULL, then try to use \code{obs(x)} instead.}
 
 \item{R}{bootstrap replicates}
+
+\item{method}{method for soliving the maximum likelihood equationsm, defaults
+to Newton-raphson.}
 
 \item{...}{additional arguments to pass.}
 }

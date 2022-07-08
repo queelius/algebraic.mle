@@ -1,27 +1,20 @@
 
 #' A function for estimating the empirical sampling distribution the
-#' MLE using the Bootstrap method.
+#' MLE given a MLE solver and a sample using the Bootstrap method.
 #'
-#' @param mle a fitted \code{mle} object.
-#' @param mle_solver given \code{data} find the MLE
-#' @param data data for generatinng MLEs for the bootstrap resampling; default
-#'            is NULL. If NULL, then try to use \code{obs(x)} instead.
+#' @param mle_solver given a data, find the MLE.
+#' @param data data for resampling, where for each resample we generate an MLE
 #' @param R bootstrap replicates
 #' @param ... additional arguments to pass.
 #' @importFrom boot boot
 #' @export
-mle_boot <- function(mle,mle_solver,data=NULL,R=NULL,...)
+mle_boot <- function(mle_solver,data,R=599)
 {
-    if (is.null(data)) data <- obs(mle)
-    stopifnot(!is.null(data))
-
-    if (is.null(R))
-        R <- ifelse(is.data.frame(data), nrow(data), length(data))
-    stopifnot(R > 0)
+    stopifnot(!is.function(mle_solver))
 
     boot(data=data,
          statistic=function(x,idx) point(mle_solver(x[idx,])),
-         R=R,...)
+         R=R)
 }
 
 #' A function for computing the sampling distribution of a statistic of the
@@ -30,23 +23,22 @@ mle_boot <- function(mle,mle_solver,data=NULL,R=NULL,...)
 #' @param mle a fitted \code{mle} object.
 #' @param loglike.gen a generator for the log-likelihood function; it accepts
 #'                observations and constructs the log-likelihood function
-#'                with the \code{data} fixed and as a function of theta.
-#' @param data data for generating MLEs for the bootstrap resampling; default
-#'            is NULL. If NULL, then try to use \code{obs(x)} instead.
+#' @param data data for generating MLEs for the bootstrap resampling.
 #' @param R bootstrap replicates
+#' @param method method for solving the MLE, defaults to numerically solving
+#'               the root of the gradient of the log-likelihood using
+#'               Newton-raphson.
 #' @param ... additional arguments to pass.
 #' @export
-mle_boot_loglike <- function(mle,loglike.gen,data=NULL,R=NULL,...)
+mle_boot_loglike <- function(mle,loglike.gen,data=NULL,R=NULL,method=mle_newton_raphson,...)
 {
-    solver <- function(xs) mle_newton_raphson(
+    solver <- function(xs) method(
         l=loglike.gen(xs),
-        theta0=point(mle))
+        theta0=point(mle),...)
 
-    mle_boot(
-        mle=mle,
-        mle_solver=solver,
-        data=data,
-        R=R,...)
+    boot(data=data,
+         statistic=function(x,idx) point(solver(x[idx,])),
+         R=R)
 }
 
 #' Method for obtaining the parameters of an \code{boot} object.
