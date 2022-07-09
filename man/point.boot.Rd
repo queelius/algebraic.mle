@@ -2,10 +2,8 @@
 % Please edit documentation in R/boot.R
 \name{point.boot}
 \alias{point.boot}
-\title{Method for obtaining the parameter estimate of a \code{boot} object.}
+\title{Computes the point estimate of an \code{mle} object.}
 \usage{
-\method{point}{boot}(x, ...)
-
 \method{point}{boot}(x, ...)
 }
 \arguments{
@@ -14,7 +12,5 @@
 \item{...}{pass additional arguments}
 }
 \description{
-Method for obtaining the parameter estimate of a \code{boot} object.
-
 Computes the point estimate of an \code{mle} object.
 }

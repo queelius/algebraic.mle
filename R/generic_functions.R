@@ -141,6 +141,14 @@ obs <- function(object,...)
     UseMethod("obs",object)
 }
 
+#' Method for obtaining an estimate of the standard error of an estimator.
+#'
+#' @param object the estimator
+#' @export
+se <- function(object)
+{
+    UseMethod("se",object)
+}
 
 
 

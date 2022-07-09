@@ -47,13 +47,6 @@ mle_boot_loglike <- function(mle,loglike.gen,data=NULL,R=NULL,method=mle_newton_
 #' @export
 params.boot <- function(x) x$t0
 
-#' Method for obtaining the parameter estimate of a \code{boot} object.
-#'
-#' @param x the \code{boot} object to obtain the parameters of.
-#' @export
-point.boot <- function(x) x$t0
-
-
 #' Method for obtaining the number of parameters of an \code{boot} object.
 #'
 #' @param x the \code{boot} object to obtain the number of parameters of
@@ -204,3 +197,13 @@ summary.boot <- function(object,...)
     print(confint(object))
 }
 
+#' Function for obtaining an estimate of the standard error of the bootstrap of
+#' the MLE \code{object}.
+#'
+#' @param object the bootstrapped MLE object
+#' @export
+se.boot <- function(object)
+{
+    #summary(object)$bootSE
+    sqrt(diag(vcov(object)))
+}

@@ -220,5 +220,14 @@ summary.mle <- function(object,...)
     cat("The AIC is",aic(object),"\n")
 }
 
+#' Function for obtaining an estimate of the standard error of the MLE
+#' \code{object}.
+#'
+#' @param object the MLE object
+#' @export
+se.mle <- function(object)
+{
+    sqrt(diag(vcov(object)))
+}
 
 
