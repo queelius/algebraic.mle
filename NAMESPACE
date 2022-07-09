@@ -2,6 +2,7 @@
 
 S3method(aic,mle)
 S3method(bias,boot)
+S3method(bias,mle)
 S3method(confint,boot)
 S3method(confint,mle)
 S3method(fisher_info,mle)

@@ -20,6 +20,7 @@ then the MSE is
 \details{
 Since \code{x} is not typically known, the bias is not a statistic, and thus the
 MSE for biased estimators is not typically a statistic that can be computed.
-However, since the MLE is asymptotically unbiased, asymptotically,
+However, assuming the regularity conditions, the MLE is asymptotically
+unbiased, and thus for sufficiently large samples,
 \code{mse(x.hat) = trace(vcov(theta.hat))}.
 }

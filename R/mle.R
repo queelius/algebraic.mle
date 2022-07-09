@@ -152,7 +152,8 @@ vcov.mle <- function(object,...)
 #'
 #' Since \code{x} is not typically known, the bias is not a statistic, and thus the
 #' MSE for biased estimators is not typically a statistic that can be computed.
-#' However, since the MLE is asymptotically unbiased, asymptotically,
+#' However, assuming the regularity conditions, the MLE is asymptotically
+#' unbiased, and thus for sufficiently large samples,
 #' \code{mse(x.hat) = trace(vcov(theta.hat))}.
 #'
 #' @param x the \code{mle} object to compute the MSE of.
@@ -161,6 +162,20 @@ vcov.mle <- function(object,...)
 mse.mle <- function(x,...)
 {
     sum(diag(vcov(x)))
+}
+
+#' Computes the asymptotic bias of an \code{mle} object.
+#'
+#' The bias of an estimator is just \code{E(point(mle)-theta)} where \code{theta}
+#' is the true parameter value. Assuming the regularity conditions, the bias
+#' is 0.
+#'
+#' @param x the \code{mle} object to compute the bias of.
+#' @param ... pass additional arguments
+#' @export
+bias.mle <- function(x,...)
+{
+    0
 }
 
 #' Computes the point estimate of an \code{mle} object.
