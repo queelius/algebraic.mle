@@ -122,7 +122,7 @@ confint.boot <- function(object, parm=NULL, level=0.95, type="perc",...)
 #' @export
 sampler.boot <- function(x,...)
 {
-    function(n=1) sample(x$t,size=n,replace=T,...)
+    function(n=1) x$t[sample(nrow(x$t),replace=T,size=n,...),]
 }
 
 #' Computes the variance-covariance matrix of \code{boot} object.

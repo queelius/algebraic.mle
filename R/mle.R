@@ -175,7 +175,10 @@ mse.mle <- function(x,...)
 #' @export
 bias.mle <- function(x,...)
 {
-    0
+    if (is.matrix(x))
+        return(rep(0,nrow(x)))
+    else
+        return(rep(0,length(x)))
 }
 
 #' Computes the point estimate of an \code{mle} object.
