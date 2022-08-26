@@ -5,7 +5,7 @@
 \title{A function for estimating the empirical sampling distribution the
 MLE given a MLE solver and a sample using the Bootstrap method.}
 \usage{
-mle_boot(mle_solver, data, R = 599, ...)
+mle_boot(mle_solver, data, R, ...)
 }
 \arguments{
 \item{mle_solver}{given a data, find the MLE.}

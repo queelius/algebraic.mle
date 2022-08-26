@@ -8,10 +8,9 @@
 #' @param ... additional arguments to pass.
 #' @importFrom boot boot
 #' @export
-mle_boot <- function(mle_solver,data,R=599,...)
+mle_boot <- function(mle_solver,data,R,...)
 {
     stopifnot(!is.function(mle_solver))
-
     boot(data=data,
          statistic=function(x,idx) point(mle_solver(x[idx,])),
          R=R,...)
@@ -32,6 +31,12 @@ mle_boot <- function(mle_solver,data,R=599,...)
 #' @export
 mle_boot_loglike <- function(mle,loglike.gen,data=NULL,R=NULL,method=mle_newton_raphson,...)
 {
+    if (is.null(data)) data <- obs(mle)
+    stopifnot(!is.null(data))
+
+    if (is.null(R)) R <- nobs(mle)
+    stopifnot(!is.null(R))
+
     solver <- function(xs) method(
         l=loglike.gen(xs),
         theta0=point(mle),...)
