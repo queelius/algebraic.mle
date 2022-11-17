@@ -5,15 +5,13 @@
 \title{Generic function for computing the distribution of \code{f(x)} where \code{x}
 models a distribution (random element) object.}
 \usage{
-rmap(x, g, n, ...)
+rmap(x, g, ...)
 }
 \arguments{
 \item{x}{a list of distribution (random element) objects.}
 
 \item{g}{a function that accepts arguments sampled from the distribution
 objects in \code{x}.}
-
-\item{n}{number of samples for the distribution to draw from to estimate \code{f(x)}}
 
 \item{...}{additional arguments to pass.}
 }

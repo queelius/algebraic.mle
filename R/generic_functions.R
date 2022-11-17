@@ -106,12 +106,22 @@ mse <- function(x, ...)
 #'
 #' @param x the object to compute the bias of.
 #' @param ... pass additional arguments
+#'
 #' @export
-bias <- function(x,...)
+bias <- function(x, ...)
 {
     UseMethod("bias",x)
 }
 
+#' Computes the score of an estimator object with respect to its log-likelihood.
+#'
+#' @param x the object to compute the score of.
+#' @param ... pass additional arguments
+#' @export
+score <- function(x,...)
+{
+    UseMethod("score",x)
+}
 
 #' Generic function for computing the distribution of \code{f(x)} where \code{x}
 #' models a distribution (random element) object.
@@ -122,14 +132,12 @@ bias <- function(x,...)
 #' @param x a list of distribution (random element) objects.
 #' @param g a function that accepts arguments sampled from the distribution
 #'          objects in \code{x}.
-#' @param n number of samples for the distribution to draw from to estimate \code{f(x)}
 #' @param ... additional arguments to pass.
 #' @export
-rmap <- function(x,g,n,...)
+rmap <- function(x,g,...)
 {
     UseMethod("rmap",x)
 }
-
 
 #' Method for obtaining the observations used by a fitted model \code{object}.
 #'
@@ -141,7 +149,7 @@ obs <- function(object,...)
     UseMethod("obs",object)
 }
 
-#' Method for obtaining an estimate of the standard error of an estimator.
+#' Method for obtaining the standard error of an estimator.
 #'
 #' @param object the estimator
 #' @export
@@ -150,5 +158,11 @@ se <- function(object)
     UseMethod("se",object)
 }
 
-
-
+#' Method for determining the orthogonal parameters of an estimator.
+#'
+#' @param x the estimator
+#' @export
+orthogonal <- function(x)
+{
+    UseMethod("orthogonal",x)
+}

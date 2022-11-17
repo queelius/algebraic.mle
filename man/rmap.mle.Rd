@@ -6,6 +6,8 @@
 is an \code{mle} object.}
 \usage{
 \method{rmap}{mle}(x, g, n = 1000, ...)
+
+\method{rmap}{mle}(x, g, n = 1000, ...)
 }
 \arguments{
 \item{x}{an \code{mle} object.}
@@ -25,4 +27,10 @@ distributed with an approximation given by
 the variance-covariance of \code{f(x)}, e.g., the sample
 covariance of \code{f(x1),...f(xn)} where \code{xj} is sampled from
 \code{sampler(x)}.
+
+By the invariance property of the MLE, if \code{x} is an \code{mle} object,
+then under the right conditions, asymptotically, \code{g(x)} is normally
+distributed with an approximation given by
+\code{g(x) ~ normal(g(point(x)),sigma)} where \code{sigma} is
+the variance-covariance of \code{g(x)}
 }

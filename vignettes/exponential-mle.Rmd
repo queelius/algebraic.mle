@@ -159,7 +159,7 @@ f <- function(lambda) 2*lambda
 
 We compute the MLE of $2 \hat\lambda$ (using a simulation size $n=1000$) with:
 ```{r}
-f.hat <- rmap(rate.hat,f,n=1000)
+f.hat <- rmap(rate.hat,f,n=1000L)
 ```
 
 Note that the simulation size is only for estimating $f(\lambda)$; regardless

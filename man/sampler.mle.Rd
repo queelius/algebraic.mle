@@ -4,10 +4,12 @@
 \alias{sampler.mle}
 \title{Method for sampling from an \code{mle} object.}
 \usage{
-\method{sampler}{mle}(x, ...)
+\method{sampler}{mle}(x, p = 1, ...)
 }
 \arguments{
 \item{x}{the \code{mle} object to create sampler for}
+
+\item{p}{the value that defines the \code{p}-confidence region sampled from, defaults to \code{1}}
 
 \item{...}{additional arguments to pass}
 }

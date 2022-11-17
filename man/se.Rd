@@ -2,7 +2,7 @@
 % Please edit documentation in R/generic_functions.R
 \name{se}
 \alias{se}
-\title{Method for obtaining an estimate of the standard error of an estimator.}
+\title{Method for obtaining the standard error of an estimator.}
 \usage{
 se(object)
 }
@@ -10,5 +10,5 @@ se(object)
 \item{object}{the estimator}
 }
 \description{
-Method for obtaining an estimate of the standard error of an estimator.
+Method for obtaining the standard error of an estimator.
 }

@@ -7,14 +7,15 @@
 mle_newton_raphson(
   l,
   theta0,
-  info = function(theta) -hessian(l, theta),
-  score = function(theta) grad(l, theta),
+  info = NULL,
+  score = NULL,
   stop_cond = NULL,
   sup = NULL,
   eta = 1,
   r = 0.5,
   max_iter = 0L,
-  debug = F
+  debug = F,
+  inverted = F
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ mle_newton_raphson(
 \item{max_iter}{maximum number of iterations}
 
 \item{debug}{Boolean, output debugging information if TRUE; defaults to FALSE}
+
+\item{inverted}{if T, then \code{info} is inverted (covariance matrix instead of info)}
 }
 \description{
 Iterative MLE method using the Newton-Raphson method

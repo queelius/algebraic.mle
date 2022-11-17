@@ -9,7 +9,8 @@
 #' @param sample_size number of observations in \code{obs}
 #' @export
 make_mle <- function(theta.hat,loglike=NULL,score=NULL,
-                     sigma=NULL,info=NULL,obs=NULL,sample_size=NULL)
+                     sigma=NULL,info=NULL,obs=NULL,sample_size=NULL,
+                     superclasses=NULL)
 {
     structure(list(
         theta.hat=theta.hat,
@@ -18,7 +19,9 @@ make_mle <- function(theta.hat,loglike=NULL,score=NULL,
         sigma=sigma,
         info=info,
         sample_size=sample_size),
-        class=c("mle"))
+        class=unique(c(superclasses,c("mle"))))
+
+
 }
 
 #' Method for obtaining the number of observations in the sample used by
@@ -120,15 +123,15 @@ confint.mle <- function(object, parm=NULL, level=0.95, ...)
 #' to draw from the \code{mle} object.
 #'
 #' @param x the \code{mle} object to create sampler for
+#' @param p the value that defines the \code{p}-confidence region sampled from, defaults to \code{1}
 #' @param ... additional arguments to pass
 #' @export
-sampler.mle <- function(x,...)
+sampler.mle <- function(x,p=1,...)
 {
-    sigma <- vcov(x)
-    theta <- point(x)
-
-    function(n=1)
-        mvtnorm::rmvnorm(n,theta,sigma,...)
+    ifelse(
+        p >= 1,
+        function(n=1) mvtnorm::rmvnorm(n,point(x),vcov(x),...),
+        function(n=1) sample_mle_region(n,x,p,...))
 }
 
 #' Computes the variance-covariance matrix of \code{mle} objects.
@@ -168,17 +171,16 @@ mse.mle <- function(x,...)
 #'
 #' The bias of an estimator is just \code{E(point(mle)-theta)} where \code{theta}
 #' is the true parameter value. Assuming the regularity conditions, the bias
-#' is 0.
+#' is 0. In general, we want the actual bias, but for a general MLE we do
+#' not know what it is. We can estimate it, e.g., using the Bootstrap method,
+#' and for particular MLEs we may analytically derive it.
 #'
 #' @param x the \code{mle} object to compute the bias of.
 #' @param ... pass additional arguments
 #' @export
 bias.mle <- function(x,...)
 {
-    if (is.matrix(x))
-        return(rep(0,nrow(x)))
-    else
-        return(rep(0,length(x)))
+    matrix(rep(0,nparams(x)))
 }
 
 #' Computes the point estimate of an \code{mle} object.
@@ -233,4 +235,73 @@ se.mle <- function(object)
     sqrt(diag(vcov(object)))
 }
 
+#' Determine if an object \code{x} is an \code{mle} object.
+#'
+#' @param x the object to test
+#' @export
+is_mle <- function(x)
+{
+    inherits(x,"mle")
+}
 
+#' Function for obtaining sample points for an \code{mle} object that is within
+#' the \code{p}-probability region.the number of observations in the sample used by
+#' an MLE object \code{x}.
+#'
+#' @param n the sample size
+#' @param x the \code{mle} object
+#' @param p the probability region
+#'
+#' @importFrom stats qchisq
+#' @importFrom stats mahalanobis
+#' @export
+sample_mle_region <- function(n,x,p=.95)
+{
+    stopifnot(p > 0.0 && p <= 1.0)
+    stopifnot(n >= 0L)
+    stopifnot(is_mle(x))
+
+    k <- nparams(x)
+    crit <- stats::qchisq(p,k)
+    nfo <- fisher_info(x)
+    mu <- point(x)
+
+    i <- 0L
+    samp <- sampler(x)
+    data <- matrix(nrow=n,ncol=k)
+    while (i < n)
+    {
+        x <- samp(1)
+        d <- stats::mahalanobis(x,center=mu,cov=nfo,inverted=T)
+        if (d <= crit)
+        {
+            i <- i + 1L
+            data[i,] <- x
+        }
+    }
+    data
+}
+
+#' Method for determining the orthogonal components of an \code{mle} object
+#' \code{x}.
+#'
+#' @param x the \code{mle} object
+#' @param tol the tolerance for determining if a number is close enough to zero
+#'
+#' @export
+orthogonal.mle <- function(x,tol=sqrt(.Machine$double.eps))
+{
+    abs(fisher_info(x)) <= tol
+}
+
+#' Computes the score of an \code{mle} object.
+#'
+#' If reguarlity conditions are satisfied, it should be zero (or approximately,
+#' if rounding errors occur).
+#'
+#' @param x the \code{mle} object to compute the score of.
+#' @export
+score.mle <- function(x)
+{
+    x$score
+}

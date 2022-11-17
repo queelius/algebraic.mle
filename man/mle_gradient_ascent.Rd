@@ -7,7 +7,7 @@
 mle_gradient_ascent(
   l,
   theta0,
-  score = function(theta) grad(l, theta),
+  score = NULL,
   stop_cond = NULL,
   sup = NULL,
   eta = 1,
