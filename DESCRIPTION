@@ -14,18 +14,24 @@ Encoding: UTF-8
 ByteCompile: true
 LazyData: true
 Imports:
+    CDFt,
+    zoo,
     mvtnorm,
     MASS,
     stats,
     numDeriv,
-    boot
-RoxygenNote: 7.2.0
+    boot,
+    dplyr
+RoxygenNote: 7.2.2
 URL: https://github.com/queelius/algebraic.mle,
     https://queelius.github.io/algebraic.mle/
 BugReports: https://github.com/queelius/algebraic.mle/issues
 Suggests: 
     rmarkdown,
+    dplyr,
     knitr,
     ggplot2,
-    tibble
+    tibble,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

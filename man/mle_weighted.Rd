@@ -3,7 +3,7 @@
 \name{mle_weighted}
 \alias{mle_weighted}
 \title{Accepts a list of \code{mle} objects for some parameter, say \code{theta},
-and combines them into a single estimator \code{mle_weighted}}
+and combines them into a single estimator \code{mle_weighted}.}
 \usage{
 mle_weighted(mles)
 }

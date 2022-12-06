@@ -11,21 +11,20 @@
 #' @param debug Boolean, output debugging information if TRUE; defaults to FALSE
 #'
 #' @importFrom numDeriv grad
-#' @importFrom numDeriv hessian
 #' @export
 mle_iterative <- function(
         l,
         theta0,
         dir=NULL,
-        stop_cond=NULL,
+        eps=1e-5,
         sup=NULL,
         eta=1,
         r=0.5,
         max_iter=0L,
         debug=F)
 {
+    stopifnot(eps > 0)
     if (is.null(dir)) dir <- function(theta) grad(l,theta)
-    if (is.null(stop_cond)) stop_cond <- function(theta1,theta0) abs(max(theta1-theta0)) < 1e-3
     if (is.null(sup)) sup <- function(theta) all(theta > 0)
 
     theta1 <- theta0
@@ -36,29 +35,47 @@ mle_iterative <- function(
         eta0 <- eta
         d <- dir(theta0)
         l0 <- l(theta0)
+
+        if (debug)
+            cat("dir =", d, "theta0 =",theta0, ", loglike =",l0,"\n")
+
         repeat
         {
             theta1 <- theta0 + eta0*d
-            if (sup(theta1) && l(theta1) >= l0)
-                break
+
+            if (debug)
+                cat("theta1 =",theta1,"\n")
+
+            if (sup(theta1))
+            {
+                l1 <- l(theta1)
+
+                if (is.na(l1))
+                    cat("NA:", l1, "theta1 =", theta1,"\n")
+
+                if (!is.na(l1) && l1 >= l0)
+                    break
+            }
             eta0 <- r*eta0
+            if (iter == max_iter)
+                break
+
+            iter <- iter + 1L
         }
 
-        if (debug)
-            cat("theta =",theta1, ", loglike =",l(theta1),"\n")
-
-        if (iter == max_iter || stop_cond(theta1,theta0))
+        if (iter == max_iter || abs(max(theta1-theta0)) < eps)
             break
 
-        iter <- iter + 1L
         theta0 <- theta1
     }
 
-    theta.hat <- make_mle(theta1,l(theta1))
+    theta.hat <- make_mle(
+        theta.hat=theta1,
+        loglike=l(theta1),
+        superclasses=c("mle_numerical"))
     theta.hat$iter <- iter
     theta.hat$max_iter <- max_iter
     theta.hat$learning_rate <- eta
-    class(theta.hat) <- unique(c("mle_numerical",class(theta.hat)))
     theta.hat
 }
 
@@ -69,7 +86,7 @@ mle_iterative <- function(
 #' @param info information matrix function of type \code{R^p -> R^{p-by-q}}, defaults to taking the negative of the hessian of \code{l}.
 #' @param score score function of type \code{R^p -> R^p}, defaults to taking the gradient of \code{l}.
 #' @param inverted if T, then \code{info} is inverted (covariance matrix instead of info)
-#' @param stop_cond stopping condition function of type \code{(R^p,R^p) -> \{T,F\}}
+#' @param eps stopping condition
 #' @param sup domain of support function of type \code{R^p -> \{T,F\}} for the log-likelihood function \code{l}
 #' @param eta learning rate, defaults to 1
 #' @param r backing tracking parameter
@@ -77,16 +94,13 @@ mle_iterative <- function(
 #' @param debug Boolean, output debugging information if TRUE; defaults to FALSE
 #'
 #' @importFrom MASS ginv
-#' @importFrom numDeriv grad
-#' @importFrom numDeriv hessian
-#' @importFrom numDeriv jacobian
 #' @export
 mle_newton_raphson <- function(
         l,
         theta0,
-        info=NULL,
-        score=NULL,
-        stop_cond=NULL,
+        info,
+        score,
+        eps=1e-5,
         sup=NULL,
         eta=1,
         r=0.5,
@@ -94,22 +108,13 @@ mle_newton_raphson <- function(
         debug=F,
         inverted=F)
 {
-    stopifnot(!inverted || !is.null(info))
-
-    if (is.null(info))
-        info <- ifelse(is.null(score),
-                       function(theta) -hessian(l,theta),
-                       function(theta) -jacobian(score,theta))
-    if (is.null(score))
-        score <- function(theta) grad(l,theta)
-
     res <- mle_iterative(
-        l,
-        theta0,
+        l=l,
+        theta0=theta0,
         dir=ifelse(inverted,
                    function(theta) info(theta) %*% score(theta),
                    function(theta) ginv(info(theta)) %*% score(theta)),
-        stop_cond=stop_cond,
+        eps=eps,
         sup=sup,
         eta=eta,
         r=r,
@@ -135,7 +140,7 @@ mle_newton_raphson <- function(
 #' @param theta0 initial guess of theta with \eqn{p} components
 #' @param l log-likelihood function
 #' @param score score function of type \eqn{R^p -> R^p}
-#' @param stop_cond stopping condition function of type \eqn{R^p \times R^p \mapsto \{T,F\}}
+#' @param eps stopping condition
 #' @param sup domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelihood function \eqn{l}
 #' @param eta learning rate, defaults to 1
 #' @param r backing tracking parameter
@@ -143,14 +148,12 @@ mle_newton_raphson <- function(
 #' @param debug Boolean, output debugging information if TRUE; defaults to FALSE
 #'
 #' @importFrom MASS ginv
-#' @importFrom numDeriv hessian
-#' @importFrom numDeriv grad
 #' @export
 mle_gradient_ascent <- function(
         l,
         theta0,
-        score=NULL,
-        stop_cond=NULL,
+        score,
+        eps=1e-5,
         sup=NULL,
         eta=1,
         r=0.5,
@@ -158,22 +161,51 @@ mle_gradient_ascent <- function(
         debug=F)
 {
     res <- mle_iterative(
-        l,
-        theta0,
-        dir=ifelse(is.null(score),function(theta) grad(l,theta),score),
-        stop_cond=stop_cond,
+        l=l,
+        theta0=theta0,
+        dir=score,
+        eps=eps,
         sup=sup,
         eta=eta,
         r=r,
         max_iter=max_iter,
         debug=debug)
 
-    res$info <- ifelse(is.null(score),
-                       -hessian(l,res$theta.hat),
-                       -jacobian(score,res$theta.hat))
-    res$score <- ifelse(is.null(score),
-                        grad(l,res$theta.hat),
-                        score(res$theta.hat))
+    res$info <- -hessian(l,res$theta.hat)
+    #res$info <- -jacobian(score,res$theta.hat)
+    res$score <- score(res$theta.hat)
     res$sigma <- ginv(res$info)
     res
+}
+
+
+
+
+
+#' Iterative MLE method using gradient ascent
+#'
+#' @param mle_solver MLE solver, takes a starting point
+#' @param start_gen starting point generator
+#' @param trials number of trials to run
+#' @export
+mle_solver_random_restarts <- function(
+        mle_solver,
+        start_gen,
+        trials=10)
+{
+    mle <- NULL
+    loglik <- -Inf
+
+    for (i in 1:trials)
+    {
+        mle.candidate <- mle_solver(start_gen())
+        l <- loglike(mle.candidate)
+        if (l > loglik)
+        {
+            loglik <- l
+            mle <- mle.candidate
+        }
+    }
+
+    mle
 }

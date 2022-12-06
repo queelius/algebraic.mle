@@ -8,7 +8,7 @@ mle_iterative(
   l,
   theta0,
   dir = NULL,
-  stop_cond = NULL,
+  eps = 1e-05,
   sup = NULL,
   eta = 1,
   r = 0.5,
@@ -23,8 +23,6 @@ mle_iterative(
 
 \item{dir}{promising direction function of type \eqn{R^p \mapsto R^p}}
 
-\item{stop_cond}{stopping condition function of type \eqn{R^p \times R^p \mapsto \{T,F\}}}
-
 \item{sup}{domain of support function of type \eqn{R^p \mapsto \{T,F\}} for the log-likelihood function \eqn{l}}
 
 \item{eta}{learning rate, defaults to 1}
@@ -34,6 +32,8 @@ mle_iterative(
 \item{max_iter}{maximum number of iterations}
 
 \item{debug}{Boolean, output debugging information if TRUE; defaults to FALSE}
+
+\item{stop_cond}{stopping condition function of type \eqn{R^p \times R^p \mapsto \{T,F\}}}
 }
 \description{
 General iterative MLE method

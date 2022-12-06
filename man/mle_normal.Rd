@@ -5,10 +5,12 @@
 \title{MLE of the (mu,sigma) parameter vector when we assume the sample is i.i.d. and
 drawn from the normal distribution.}
 \usage{
-mle_normal(x)
+mle_normal(x, keep_obs = F)
 }
 \arguments{
 \item{x}{a sample of observations}
+
+\item{keep_obs}{whether to store observations in \code{mle_normal} object}
 }
 \value{
 an \code{mle} object.

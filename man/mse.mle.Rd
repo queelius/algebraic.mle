@@ -2,14 +2,14 @@
 % Please edit documentation in R/mle.R
 \name{mse.mle}
 \alias{mse.mle}
-\title{Computes the asymptotic MSE of an \code{mle} object.}
+\title{Computes the MSE of an \code{mle} object.}
 \usage{
-\method{mse}{mle}(x, ...)
+\method{mse}{mle}(x, theta)
 }
 \arguments{
 \item{x}{the \code{mle} object to compute the MSE of.}
 
-\item{...}{pass additional arguments}
+\item{theta}{true parameter value}
 }
 \description{
 The MSE of an estimator is just the expected sum of squared differences,

@@ -7,8 +7,8 @@
 mle_gradient_ascent(
   l,
   theta0,
-  score = NULL,
-  stop_cond = NULL,
+  score,
+  eps = 1e-05,
   sup = NULL,
   eta = 1,
   r = 0.5,
@@ -23,7 +23,7 @@ mle_gradient_ascent(
 
 \item{score}{score function of type \eqn{R^p -> R^p}}
 
-\item{stop_cond}{stopping condition function of type \eqn{R^p \times R^p \mapsto \{T,F\}}}
+\item{eps}{stopping condition}
 
 \item{sup}{domain of support function of type \eqn{R^p \mapsto \{true,false\}} for the log-likelihood function \eqn{l}}
 

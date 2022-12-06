@@ -148,15 +148,19 @@ l.wei <- function(theta) sum(dweibull(sim.df$lifetime,
                                       shape=theta[1],
                                       scale=theta[2],
                                       log=T))
+score.wei <- function(theta) numDeriv::grad(l.wei,theta)
+info.wei <- function(theta) -numDeriv::hessian(l.wei,theta)
 ```
 
 An MLE is a point $(\hat\lambda,\hat k)'$ that is a maximum of `l.wei` over the
 parameter's domain. We find the MLE with the following R code:
 ```{r}
 mle.wei <- algebraic.mle::mle_newton_raphson(
-    l.wei,
+    l=l.wei,
     max_iter=100,
-    sim.theta)
+    theta0=sim.theta,
+    score=score.wei,
+    info=info.wei)
 
 summary(mle.wei)
 ```

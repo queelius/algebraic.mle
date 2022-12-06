@@ -7,6 +7,7 @@
 #' @param info the information matrix of \code{theta.hat} given the data
 #' @param obs observation (sample) data
 #' @param sample_size number of observations in \code{obs}
+#' @param superclasses class hierarchy, with \code{mle} as base
 #' @export
 make_mle <- function(theta.hat,loglike=NULL,score=NULL,
                      sigma=NULL,info=NULL,obs=NULL,sample_size=NULL,
@@ -33,7 +34,7 @@ make_mle <- function(theta.hat,loglike=NULL,score=NULL,
 print.mle <- function(x,...)
 {
     x$obs <- NULL
-    print.default(x)
+    print(unclass(x))
 }
 
 #' Method for obtaining the parameters of an \code{mle} object.
@@ -146,7 +147,7 @@ vcov.mle <- function(object,...)
     object$sigma
 }
 
-#' Computes the asymptotic MSE of an \code{mle} object.
+#' Computes the MSE of an \code{mle} object.
 #'
 #' The MSE of an estimator is just the expected sum of squared differences,
 #' e.g., if the true parameter value is \code{x} and we have an estimator \code{x.hat},
@@ -160,27 +161,35 @@ vcov.mle <- function(object,...)
 #' \code{mse(x.hat) = trace(vcov(theta.hat))}.
 #'
 #' @param x the \code{mle} object to compute the MSE of.
-#' @param ... pass additional arguments
+#' @param theta true parameter value
 #' @export
-mse.mle <- function(x,...)
+mse.mle <- function(x,theta)
 {
-    sum(diag(vcov(x)))
+    b <- bias(x,theta)
+    ifelse(is.null(b),NULL,sum(diag(vcov(x))) + sum(b^2))
 }
 
-#' Computes the asymptotic bias of an \code{mle} object.
+#' Computes the bias of an \code{mle} object.
 #'
-#' The bias of an estimator is just \code{E(point(mle)-theta)} where \code{theta}
-#' is the true parameter value. Assuming the regularity conditions, the bias
-#' is 0. In general, we want the actual bias, but for a general MLE we do
-#' not know what it is. We can estimate it, e.g., using the Bootstrap method,
-#' and for particular MLEs we may analytically derive it.
+#' The bias of an estimator is \code{E(point(mle)-theta)} where \code{theta}
+#' is the true parameter value.
+#'
+#' Assuming the regularity conditions, the *asymptotic* bias of the MLE is all
+#' zero (a vector in which each component is zero), but for finite sample sizes,
+#' particular small samples, we are generally interested in the actual bias.
+#'
+#' This method returns \code{NULL}. A particular \code{mle} object, say
+#' \code{mle_normal}, may return an actual bias.
+#'
+#' The bias may be estimated using the Bootstrap method, e.g.,
+#' \code{bias(mle_boot(...))}.
 #'
 #' @param x the \code{mle} object to compute the bias of.
 #' @param ... pass additional arguments
 #' @export
 bias.mle <- function(x,...)
 {
-    matrix(rep(0,nparams(x)))
+    NULL
 }
 
 #' Computes the point estimate of an \code{mle} object.
@@ -218,7 +227,6 @@ summary.mle <- function(object,...)
     cat("and variance-covariance\n")
     print(vcov(object))
     cat("---\n")
-    cat("The asymptotic mean squared error",mse(object),"\n")
     cat("The asymptotic 95% confidence interval is\n")
     print(confint(object))
     cat("The log-likelihood is",loglike(object),"\n")
@@ -287,11 +295,12 @@ sample_mle_region <- function(n,x,p=.95)
 #'
 #' @param x the \code{mle} object
 #' @param tol the tolerance for determining if a number is close enough to zero
+#' @param ... pass additional arguments
 #'
 #' @export
-orthogonal.mle <- function(x,tol=sqrt(.Machine$double.eps))
+orthogonal.mle <- function(x,tol=sqrt(.Machine$double.eps),...)
 {
-    abs(fisher_info(x)) <= tol
+    abs(fisher_info(x,...)) <= tol
 }
 
 #' Computes the score of an \code{mle} object.
@@ -300,8 +309,31 @@ orthogonal.mle <- function(x,tol=sqrt(.Machine$double.eps))
 #' if rounding errors occur).
 #'
 #' @param x the \code{mle} object to compute the score of.
+#' @param ... additional arguments to pass
+#'
 #' @export
-score.mle <- function(x)
+score.mle <- function(x,...)
 {
     x$score
+}
+
+#' Method for determining the sample size of an \code{mle} object.
+#'
+#' @param x the \code{mle} object
+#' @export
+sample_size.mle <- function(x)
+{
+    x$sample_size
+}
+
+#' Function for retrieving an unbiased point estimate from an MLE object
+#'
+#' @param x the \code{mle} object
+#' @param ... additional arguments to pass
+#' @export
+unbiased_point <- function(x,...)
+{
+    stopifnot(is_mle(x))
+
+    point(x) - bias(x,...)
 }

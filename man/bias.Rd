@@ -4,12 +4,12 @@
 \alias{bias}
 \title{Computes the bias of an estimator object.}
 \usage{
-bias(x, ...)
+bias(x, theta)
 }
 \arguments{
 \item{x}{the object to compute the bias of.}
 
-\item{...}{pass additional arguments}
+\item{theta}{the true parameter value}
 }
 \description{
 Computes the bias of an estimator object.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle.R
 \name{bias.mle}
 \alias{bias.mle}
-\title{Computes the asymptotic bias of an \code{mle} object.}
+\title{Computes the bias of an \code{mle} object.}
 \usage{
 \method{bias}{mle}(x, ...)
 }
@@ -12,7 +12,17 @@
 \item{...}{pass additional arguments}
 }
 \description{
-The bias of an estimator is just \code{E(point(mle)-theta)} where \code{theta}
-is the true parameter value. Assuming the regularity conditions, the bias
-is 0.
+The bias of an estimator is \code{E(point(mle)-theta)} where \code{theta}
+is the true parameter value.
+}
+\details{
+Assuming the regularity conditions, the *asymptotic* bias of the MLE is all
+zero (a vector in which each component is zero), but for finite sample sizes,
+particular small samples, we are generally interested in the actual bias.
+
+This method returns \code{NULL}. A particular \code{mle} object, say
+\code{mle_normal}, may return an actual bias.
+
+The bias may be estimated using the Bootstrap method, e.g.,
+\code{bias(mle_boot(...))}.
 }

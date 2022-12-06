@@ -14,6 +14,10 @@ pred.interval(x, g, n = 1000, alpha = 0.05, ...)
 \item{g}{the function to predict the value of with respect to input \code{x}}
 
 \item{n}{the sample size}
+
+\item{alpha}{confidence-level, (1-alpha)}
+
+\item{...}{pass additional arguments}
 }
 \description{
 Function for obtaining an empirical sampling distribution from the asymptotic

@@ -90,14 +90,12 @@ fisher_info <- function(x, ...)
 }
 
 #' Generic function for obtaining the mean squared error (MSE) of an estimator,
-#' \code{mse(x) = E[(x-mu)^2]} where \code{mu} is the (likely unknown) true
-#' parameter value.
+#' \code{mse(x) = E[(x-mu)^2]} where \code{mu} is the true parameter value.
 #'
 #' @param x the object to compute the MSE of
-#' @param ... additional arguments to pass
-#'
+#' @param theta the true parameter value
 #' @export
-mse <- function(x, ...)
+mse <- function(x,theta)
 {
     UseMethod("mse",x)
 }
@@ -105,10 +103,9 @@ mse <- function(x, ...)
 #' Computes the bias of an estimator object.
 #'
 #' @param x the object to compute the bias of.
-#' @param ... pass additional arguments
-#'
+#' @param theta the true parameter value
 #' @export
-bias <- function(x, ...)
+bias <- function(x,theta)
 {
     UseMethod("bias",x)
 }
@@ -117,6 +114,7 @@ bias <- function(x, ...)
 #'
 #' @param x the object to compute the score of.
 #' @param ... pass additional arguments
+#'
 #' @export
 score <- function(x,...)
 {
@@ -161,8 +159,19 @@ se <- function(object)
 #' Method for determining the orthogonal parameters of an estimator.
 #'
 #' @param x the estimator
+#' @param tol the tolerance for determining if a number is close enough to zero
+#' @param ... additional arguments to pass
 #' @export
-orthogonal <- function(x)
+orthogonal <- function(x,tol,...)
 {
     UseMethod("orthogonal",x)
+}
+
+#' Method for determining the sample size of an estimator object.
+#'
+#' @param x the estimator
+#' @export
+sample_size <- function(x)
+{
+    UseMethod("sample_size",x)
 }

@@ -2,22 +2,22 @@
 % Please edit documentation in R/tests.R
 \name{chisqr.test}
 \alias{chisqr.test}
-\title{MLE of the (mu,sigma) parameter vector when we assume the sample is i.i.d. and
-drawn from the normal distribution.}
+\title{chi-squar goodness-of-fit test}
 \usage{
 chisqr.test(obs, cdf, nbreaks = ceiling(sqrt(length(obs))), ...)
 }
 \arguments{
-\item{obs}{a sample of observations from reference distribution}
+\item{obs}{a sample of observations}
+
+\item{cdf}{the cdf of the reference distribution}
 
 \item{nbreaks}{number of bins}
+
+\item{...}{additional arguments to pass}
 }
 \value{
 a hypothesis test object
 }
 \description{
-Of course, the draws are unlikely to be normal, but the normal distribution
-is often a good model. Hypothesis testing, such as relative
-likelihoods, can be used to assess the appropriateness of the normal
-model to the data.
+chi-squar goodness-of-fit test
 }

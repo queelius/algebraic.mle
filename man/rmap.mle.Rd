@@ -5,9 +5,7 @@
 \title{\code{rmap.mle} computes the distribution of \code{f(x)} where \code{x}
 is an \code{mle} object.}
 \usage{
-\method{rmap}{mle}(x, g, n = 1000, ...)
-
-\method{rmap}{mle}(x, g, n = 1000, ...)
+\method{rmap}{mle}(x, g, n = 1000L, method = "mc", ...)
 }
 \arguments{
 \item{x}{an \code{mle} object.}
@@ -16,6 +14,8 @@ is an \code{mle} object.}
 
 \item{n}{number of samples to take to estimate distribution
 of \code{f(x)}.}
+
+\item{method}{method to use, defaults to "mc" for monte carlo, but "delta" for delta method is another option}
 
 \item{...}{additional arguments to pass to the \code{mle} sampler.}
 }
@@ -27,10 +27,4 @@ distributed with an approximation given by
 the variance-covariance of \code{f(x)}, e.g., the sample
 covariance of \code{f(x1),...f(xn)} where \code{xj} is sampled from
 \code{sampler(x)}.
-
-By the invariance property of the MLE, if \code{x} is an \code{mle} object,
-then under the right conditions, asymptotically, \code{g(x)} is normally
-distributed with an approximation given by
-\code{g(x) ~ normal(g(point(x)),sigma)} where \code{sigma} is
-the variance-covariance of \code{g(x)}
 }

@@ -192,8 +192,18 @@ Then, the maximum likelihood estimator of $\theta$ that incorporates all of
 the data in $\hat\theta_1,\ldots,\hat\theta_k$ is given by the inverse-variance
 weighted mean,
 $$
-    \hat\theta = \left(\sum I_j(\theta)\right)^{-1} \left(\sum I_j(\theta) \theta_j\right).
+    \hat\theta = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
 $$
+which, asymptotically, has an expected value of $\theta$ and a variance-covariance
+of $\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}$.
+
+The Fisher information, which is the inverse of the variance-covariance,
+is $\sum_{j=1}^k I_j(\theta)$, which is just the sum of the
+Fisher information from each sample that generated the MLEs $\hat\theta_1,\ldots,\hat\theta_k$,
+which is the maximum amount of information about $\theta$ that the samples
+contain.
+Thus, $\hat\theta_w$ asymptotically obtains the uniformly minimum-variance
+unbiased estimator (UMVUE).
 
 ## Example
 To evaluate the performance of the weighted MLE, we generate a sample of

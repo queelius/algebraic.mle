@@ -11,7 +11,8 @@ make_mle(
   sigma = NULL,
   info = NULL,
   obs = NULL,
-  sample_size = NULL
+  sample_size = NULL,
+  superclasses = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ make_mle(
 \item{obs}{observation (sample) data}
 
 \item{sample_size}{number of observations in \code{obs}}
+
+\item{superclasses}{class hierarchy, with \code{mle} as base}
 }
 \description{
 \code{make_mle} makes an \code{mle} object.

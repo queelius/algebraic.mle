@@ -7,9 +7,9 @@
 mle_newton_raphson(
   l,
   theta0,
-  info = NULL,
-  score = NULL,
-  stop_cond = NULL,
+  info,
+  score,
+  eps = 1e-05,
   sup = NULL,
   eta = 1,
   r = 0.5,
@@ -27,7 +27,7 @@ mle_newton_raphson(
 
 \item{score}{score function of type \code{R^p -> R^p}, defaults to taking the gradient of \code{l}.}
 
-\item{stop_cond}{stopping condition function of type \code{(R^p,R^p) -> \{T,F\}}}
+\item{eps}{stopping condition}
 
 \item{sup}{domain of support function of type \code{R^p -> \{T,F\}} for the log-likelihood function \code{l}}
 

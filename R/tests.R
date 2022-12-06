@@ -1,15 +1,13 @@
-#' MLE of the (mu,sigma) parameter vector when we assume the sample is i.i.d. and
-#' drawn from the normal distribution.
-#'
-#' Of course, the draws are unlikely to be normal, but the normal distribution
-#' is often a good model. Hypothesis testing, such as relative
-#' likelihoods, can be used to assess the appropriateness of the normal
-#' model to the data.
+#' chi-squar goodness-of-fit test
 #'
 #' @param obs a sample of observations
-#' @param obs a sample of observations from reference distribution
+#' @param cdf the cdf of the reference distribution
 #' @param nbreaks number of bins
+#' @param ... additional arguments to pass
 #' @return a hypothesis test object
+#'
+#' @importFrom stats chisq.test
+#' @importFrom zoo rollapply
 #' @export
 chisqr.test <- function(obs,
                         cdf,
@@ -17,9 +15,9 @@ chisqr.test <- function(obs,
                         ...)
 {
     h <- hist(obs,right=F,breaks=nbreaks)
-    t <- stats::chisq.test(
+    t <- chisq.test(
         h$counts,
-        p=zoo::rollapply(cdf(h$breaks,...),
+        p=rollapply(cdf(h$breaks,...),
                          2,
                          \(x) x[2]-x[1]),
         rescale.p=T,
@@ -37,10 +35,11 @@ chisqr.test <- function(obs,
 #' @param obs a sample of observations
 #' @param ref a sample from the reference distribution
 #' @return hypothesis test object
+#' @importFrom CDFt CramerVonMisesTwoSamples
 #' @export
 cramer.test <- function(obs,ref)
 {
-    stat <- CDFt::CramerVonMisesTwoSamples(obs,ref)
+    stat <- CramerVonMisesTwoSamples(obs,ref)
     structure(list(
         p.value=exp(-stat)/6.0,
         stat=stat,
@@ -57,6 +56,7 @@ cramer.test <- function(obs,ref)
 #' @param n sample size (for sampler)
 #' @param method the method for the two sample hypothesis test
 #' @return hypothesis test object
+#' @importFrom CDFt KolmogorovSmirnov
 #' @export
 two.sample.test <- function(sampler,obs,cdf=NULL,n=10000,method="cramer")
 {
@@ -76,7 +76,7 @@ two.sample.test <- function(sampler,obs,cdf=NULL,n=10000,method="cramer")
     {
         stopifnot(!is.null(sampler))
         ref <- sampler(n,...)
-        return(CDFt::KolmogorovSmirnov(obs,ref))
+        return(KolmogorovSmirnov(obs,ref))
     }
     else if (method=="chisqr")
     {

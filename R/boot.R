@@ -1,3 +1,43 @@
+#' Bootstrap method
+#'
+#' @param xs data
+#' @param stat statistic of data
+#' @param B bootstrap replicates
+#' @param ... additional arguments to pass.
+#' @importFrom plyr raply
+#' @export
+boot_estimate <- function(xs,stat,B=1000,...)
+{
+    n <- length(xs)
+    print(n)
+    theta.b <- raply(B,
+    {
+        stat(sample(xs,n,replace=T),...)
+    })
+
+    print(theta.b)
+
+    theta.hat <- stat(xs,...)
+    print(theta.hat)
+    structure(
+        list(theta.hat=theta.hat,
+             theta.b=theta.b,
+             stat=stat,
+             bias.hat=mean(theta.b)-theta.hat),
+        class="bootstrap")
+}
+
+#' @export
+print.bootstrap <- function(x,...)
+{
+    print("bootstrap of statistic:")
+    print(x$stat)
+    cat("estimate: ", x$theta.hat, "\n")
+    cat("estimate of bias: ", x$bias.hat, "\n")
+}
+
+
+
 
 #' A function for estimating the empirical sampling distribution the
 #' MLE given a MLE solver and a sample using the Bootstrap method.
@@ -88,6 +128,7 @@ obs.boot <- function(object,...) object$data
 #' @param ... additional arguments to pass
 #'
 #' @importFrom stats confint
+#' @importFrom stats qnorm
 #' @importFrom boot boot.ci
 #' @export
 confint.boot <- function(object, parm=NULL, level=0.95, type="perc",...)

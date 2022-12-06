@@ -5,10 +5,12 @@
 \title{MLE of the rate parameter when we assume the sample is i.i.d. and drawn
 from the exponential distribution.}
 \usage{
-mle_exp(x)
+mle_exp(x, keep_obs = F)
 }
 \arguments{
 \item{x}{a sample of observations}
+
+\item{keep_obs}{store the observations with the \code{mle} object, default is \code{F}}
 }
 \value{
 an \code{mle} object.

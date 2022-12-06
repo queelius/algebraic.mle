@@ -7,24 +7,28 @@
 #' model to the data.
 #'
 #' @param x a sample of observations
-#' @param keep_obs store the observations with the \object{mle} object, default is \code{F}
+#' @param keep_obs store the observations with the \code{mle} object, default is \code{F}
 #' @return an \code{mle} object.
 #' @export
 mle_exp <- function(x,keep_obs=F)
 {
     n <- length(x)
     stopifnot(n > 0)
-    rate.hat <- 1/mean(x)
+    rate.hat <- mle_exp_rate(x)
     mle <- make_mle(
         theta.hat=rate.hat,
         loglike=n*log(rate.hat)-n,
-        score=matrix(n/rate.hat-sum(x)),
+        score=matrix(0), # n/rate.hat-sum(x)) == 0
         sigma=matrix(rate.hat^2/n),
         info=matrix(n/rate.hat^2),
         obs=ifelse(keep_obs,x,NULL),
         sample_size=n,
-        superclasses="mle_exp")
+        superclasses=c("mle_exp"))
+}
 
+mle_exp_rate <- function(x)
+{
+    matrix(1/mean(x))
 }
 
 #' log-likelihood function generator given data \code{x} for the exponential
@@ -32,7 +36,7 @@ mle_exp <- function(x,keep_obs=F)
 #'
 #' @param x data
 #' @export
-exp_loglike <- function(x)
+exp_rate_loglike <- function(x)
 {
     n <- length(x)
     s <- sum(x)
@@ -43,23 +47,25 @@ exp_loglike <- function(x)
 #' for the exponential distribution
 #'
 #' @param x data
+#'
 #' @export
-exp_score <- function(x)
+exp_rate_score <- function(x)
 {
     n <- length(x)
     s <- sum(x)
-    function(rate) n/rate - s
+    function(rate) matrix(n/rate - s)
 }
 
 #' Fisher information function generator for the exponential
 #' distribution
 #'
 #' @param x data
+#'
 #' @export
-exp_fisher_info <- function(x)
+exp_rate_fisher_info <- function(x)
 {
     n <- length(x)
-    function(rate) n/rate^2
+    function(rate) matrix(n/rate^2)
 }
 
 #' Computes the bias of an \code{exp_mle} object (exponential mle).
@@ -69,8 +75,10 @@ exp_fisher_info <- function(x)
 #' \code{mle_exp} object.
 #'
 #' @param x the \code{mle_exp} object to compute the bias of.
+#' @param rate the true rate parameter value
+#'
 #' @export
-bias.mleexp <- function(x)
+bias.mle_exp <- function(x,rate)
 {
-    1/(nobs(x)-1)*point(x)
+    matrix(1/(nobs(x)-1)*rate)
 }

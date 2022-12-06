@@ -13,19 +13,19 @@
 #' @param g a function that accepts objects like \code{point(x)}.
 #' @param n number of samples to take to estimate distribution
 #'        of \code{f(x)}.
+#' @param method method to use, defaults to "mc" for monte carlo, but "delta" for delta method is another option
 #' @param ... additional arguments to pass to the \code{mle} sampler.
 #' @importFrom stats var
 #' @importFrom stats cov
 #' @importFrom MASS ginv
 #' @export
-rmap.mle <- function(x,g,n=1000L,...)
+rmap.mle <- function(x,g,n=1000L,method="mc",...)
 {
-    stopifnot(is.integer(n) && n >= 1L)
+    stopifnot(is.integer(n) && n >= 1)
     stopifnot(is_mle(x))
     stopifnot(is.function(g))
 
     mle.samp <- as.matrix(sampler(x,...)(n),nrow=n)
-    print(mle.samp)
     p <- length(g(mle.samp[1,]))
 
     # by the invariance property of the MLE,
@@ -46,51 +46,3 @@ rmap.mle <- function(x,g,n=1000L,...)
              obs=data,
              sample_size=nobs(x))
 }
-
-
-
-
-#' \code{rmap_delta_method.mle} computes the distribution of \code{f(x)} where
-#' \code{x} is an \code{mle} object.
-#'
-#' By the invariance property of the MLE, if \code{x} is an \code{mle} object,
-#' then under the right conditions, asymptotically, \code{g(x)} is normally
-#' distributed with an approximation given by
-#' \code{g(x) ~ normal(g(point(x)),sigma)} where \code{sigma} is
-#' the variance-covariance of \code{g(x)}
-#'
-#' @param x an \code{mle} object.
-#' @param g a function that accepts objects like \code{point(x)}.
-#' @param n number of samples to take to estimate distribution
-#'        of \code{f(x)}.
-#' @param ... additional arguments to pass to the \code{mle} sampler.
-#' @importFrom stats var
-#' @importFrom stats cov
-#' @importFrom MASS ginv
-#' @export
-rmap.mle <- function(x,g,n=1000,...)
-{
-    stopifnot(is.integer(n) && n >= 1L)
-    stopifnot(is_mle(x))
-    stopifnot(is.function(g))
-
-    # by the invariance property of the MLE,
-    # the MLE of g(theta) is g(theta.hat)
-    g.theta.hat <- g(point(x))
-    g.theta.hat <- as.matrix(g.theta.hat,ncol=p)
-    g.mle.samp <- matrix(nrow=n,ncol=p)
-    for (i in 1:n)
-        g.mle.samp[i,] <- g(mle.samp[i,])
-    sigma <- stats::cov(g.mle.samp)
-    info <- MASS::ginv(sigma)
-    data <- obs(x)
-    #loglik <- ifelse(is.null(data),NULL,loglike(x)-sum(log(grad(g,data))))
-    make_mle(theta.hat=g.theta.hat,
-             loglike=NULL,
-             score=NULL,
-             sigma=sigma,
-             info=info,
-             obs=data,
-             sample_size=nobs(x))
-}
-

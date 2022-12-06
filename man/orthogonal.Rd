@@ -4,10 +4,14 @@
 \alias{orthogonal}
 \title{Method for determining the orthogonal parameters of an estimator.}
 \usage{
-orthogonal(x)
+orthogonal(x, tol, ...)
 }
 \arguments{
 \item{x}{the estimator}
+
+\item{tol}{the tolerance for determining if a number is close enough to zero}
+
+\item{...}{additional arguments to pass}
 }
 \description{
 Method for determining the orthogonal parameters of an estimator.

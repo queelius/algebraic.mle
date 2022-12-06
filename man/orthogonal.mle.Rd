@@ -5,12 +5,14 @@
 \title{Method for determining the orthogonal components of an \code{mle} object
 \code{x}.}
 \usage{
-\method{orthogonal}{mle}(x, tol = sqrt(.Machine$double.eps))
+\method{orthogonal}{mle}(x, tol = sqrt(.Machine$double.eps), ...)
 }
 \arguments{
 \item{x}{the \code{mle} object}
 
 \item{tol}{the tolerance for determining if a number is close enough to zero}
+
+\item{...}{pass additional arguments}
 }
 \description{
 Method for determining the orthogonal components of an \code{mle} object

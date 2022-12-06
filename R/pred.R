@@ -10,6 +10,7 @@
 #' @param p the value that defines the confidence region
 #' @param f the function to predict the value of with respect to input \code{x}
 #' @param D the distance measure, defaults to identity function
+#'
 #' @export
 pred <- function(x,f,N,p=.95,D=function(x) x)
 {
@@ -52,6 +53,9 @@ pred <- function(x,f,N,p=.95,D=function(x) x)
 #' @param n the sample size
 #' @param x the \code{mle} object
 #' @param g the function to predict the value of with respect to input \code{x}
+#' @param alpha confidence-level, (1-alpha)
+#' @param ... pass additional arguments
+#'
 #' @export
 pred.interval <- function(x,g,n=1000,alpha=.05,...)
 {
@@ -65,7 +69,7 @@ pred.interval <- function(x,g,n=1000,alpha=.05,...)
     k <- ncol(g.samp)
     intervals <- matrix(nrow=k,ncol=3)
     for (j in 1:k)
-        intervals[j,] <- c(g.hat[j],quantile(sort(g.samp[,j]),c(alpha,1-alpha)))
+        intervals[j,] <- c(g.hat[j],quantile(sort(g.samp[,j]),c(alpha/2,1-alpha/2)))
     colnames(intervals) <- c("mle","lower","upper")
     intervals
 }

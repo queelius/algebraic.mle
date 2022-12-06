@@ -3,18 +3,16 @@
 \name{mse}
 \alias{mse}
 \title{Generic function for obtaining the mean squared error (MSE) of an estimator,
-\code{mse(x) = E[(x-mu)^2]} where \code{mu} is the (likely unknown) true
-parameter value.}
+\code{mse(x) = E[(x-mu)^2]} where \code{mu} is the true parameter value.}
 \usage{
-mse(x, ...)
+mse(x, theta)
 }
 \arguments{
 \item{x}{the object to compute the MSE of}
 
-\item{...}{additional arguments to pass}
+\item{theta}{the true parameter value}
 }
 \description{
 Generic function for obtaining the mean squared error (MSE) of an estimator,
-\code{mse(x) = E[(x-mu)^2]} where \code{mu} is the (likely unknown) true
-parameter value.
+\code{mse(x) = E[(x-mu)^2]} where \code{mu} is the true parameter value.
 }

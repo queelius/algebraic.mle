@@ -1,0 +1,248 @@
+---
+title: "Normal distribution MLE"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Normal distribution MLE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{ggplot2}
+  %\VignetteDepends{dplyr}
+  %\VignetteDepends{tibble}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+To demonstrate the R package `algebraic.mle`, we consider the relatively
+simple case of a random sample from i.i.d. normally distributed random
+variables.
+
+First, we load the R package `algebraic.mle`, along with other R packages we
+need, with:
+
+```{r setup}
+library(algebraic.mle)
+library(tibble)
+library(ggplot2)
+library(dplyr)
+```
+
+# Generating a sample
+
+We define the parameters of the i.i.d. random sample with:
+```{r}
+n <- 1000
+theta <- matrix(c(10,2),nrow=2)
+```
+
+We generate a random sample $X_i \sim \operatorname{N}(\theta=`r theta`)$ for
+$i=1,\ldots,n$ with:
+```{r}
+x <- tibble(x=rnorm(n,mean=theta[1],sd=sqrt(theta[2])))
+```
+
+We have observed a sample of size $n=`r n`$.
+We show some observations from this sample (data frame) with:
+```{r}
+print(head(x,n=4))
+```
+
+We show a histogram of the sample with:
+```{r}
+hist(x$x)
+```
+
+We see the characteristic bell shaped curve of the normal distribution.
+If we did not a prior know that the data was normally distributed, this would
+be evidence that the normal distribution is a good fit to the data.
+
+# Maximum likelihood estimation
+If we would like to estimate $\theta=`r theta`$, we can do so using maximum likelihood
+estimation as implemented by the `algebraic.mle` package:
+```{r}
+theta.hat <- mle_normal(x$x)
+summary(theta.hat)
+```
+
+We can show the point estimator with:
+```{r}
+point(theta.hat)
+```
+
+We can show the Fisher information and variance-covariance matrices with:
+```{r}
+fisher_info(theta.hat)
+vcov(theta.hat)
+```
+
+We can show the confidence intervals with:
+```{r}
+confint(theta.hat)
+```
+
+## Bias
+Let $F$ denote the true distribution function such that $X_j \sim F$ for all
+$j$.
+Suppose we have some population parameter $\theta = t(F)$
+and an estimator of $\theta$ given by $\hat\theta = s(\{X_1,\ldots,X_n\})$.
+A reasonable requirement for an estimator $\hat\theta$ is that it converges to
+the true parameter value $\theta$ as we collect more and more data.
+In particular, we say that it is a consistent estimator of $\theta$ if
+$\hat\theta$ converges in probability to $\theta$, denoted by
+$\hat\theta \overset{p}{\mapsto} \theta$.
+
+If the regularity conditions hold for the MLE, then $\hat\theta$ is
+a consistent estimator of $\theta$. However, for finite sample sizes, the
+estimator may be biased.
+The bias of $\hat\theta$ with respect to $\theta$ is defined as
+$$
+    \operatorname{bias}(\hat\theta,\theta) = E(\hat\theta) - \theta,
+$$
+where $\operatorname{bias}(\hat\theta,\theta) = 0$ indicates that $\hat\theta$
+is an *unbiased* estimator of $\theta$.
+
+As a function of the true distribution $F$, the bias is not a statistic.
+In the case of the normal, if we know $\sigma^2$, then analytically,
+the bias of the MLE $\hat\sigma^2$ is $-\frac{1}{n} \sigma^2$, which we may
+compute with:
+```{r}
+bias(theta.hat,theta)
+```
+
+If we wish to *estimate* the bias when $F$ is not known, we may use the
+Bootstrap method.
+We replace $F$ with the observed sample $\hat{F} = \{x_1,\ldots,x_n\}$.
+If we have some population parameter $\theta = t(F)$
+and an estimator of $\theta$ given by $\hat\theta = s(\{X_1,\ldots,X_n\})$, then
+in the Bootstrap method we estimate the bias of $\hat\theta$ with
+$$
+    \hat\operatorname{bias}_{\text{boostrap}}(\hat\theta) = E_{\hat F}(s(X^*)) - t(\hat F)
+$$
+where $X^*$ are boostrap resamples from a sample $\{X_1,\ldots,X_n\}$ each of
+size $n$.
+
+The procedure is relatively straightforward:
+
+1. Sample with replacement from the original data $\hat{F} = \{x_1,\ldots,x_n\}$, obtaining
+$R$ bootstrap resamples, $\{x_{1 j}^*,\ldots,x_{n j}\}$ for $j=1,\ldots,R$.
+
+2. Apply the estimator $s$ to each bootstrap resample, obtaining $B$ estimates of
+$\theta$, denoted by $\{\hat\theta_1^*,\ldots,\hat\theta_R^*\}$.
+
+3. Estimate the bias with
+$$
+    \hat\operatorname{bias}_{\text{bootstrap}}(\hat\theta) =
+    \frac{1}{R} \sum_{i=1}^R \hat\theta_i^* - \hat\theta.
+$$
+
+In the computation of the bias above, we see that we replace the sampling
+distribution $\hat\theta$ with the empirical distribution
+$\hat{F} = \{\hat\theta_1^*,\ldots,\hat\theta_R^*\}$ and we replace $\theta$ with
+$\hat\theta$.
+
+
+```{r}
+n <- 10000
+sigma.est <- algebraic.mle::stat.boot(rnorm(n,0,1),function(xs) sum((xs - mean(xs))^2)/length(xs))
+print(sigma.est$theta.hat)
+print(sigma.est$bias.hat)
+sigma.bias <- (n-1)/n-1
+print(sigma.bias)
+
+sigma.est$theta.hat
+sigma.est$bias.hat+sigma.est$theta.hat
+```
+
+
+## Sampling distribution of the MLE
+A nice property of MLEs is that, asymptotically, they converge to
+a normal distribution with a mean given by the true parameter, in this case
+$\theta = (\mu,\sigma^2)'$, and a variance-covariance given by the inverse of the Fisher
+information matrix evaluated at $\theta$.
+
+We do not know $\theta$, but we may estimate it from a sample, and thus
+we may approximate the sampling distribution of $\hat\theta$ with
+$N(\hat\theta,I^{-1}(\hat\theta))$.
+
+## Invariance property of the MLE
+
+An interesting property of an MLE $\hat\theta$ is that the MLE of $f(\theta)$
+is given by $f(\hat\theta)$.
+
+The method `rmap` applied to an object `x` for which `is_mle(x)` and a
+function `f` compatible with `point(x)` (and optionally a simulation
+sample size) computes the MLE of `f(x)`.
+
+### Example
+We know that the MLE $\hat\theta \sim N(\theta,I^{-1}(\theta))$.
+We seek a transformation $g(\hat\theta)$ such that its expectation is
+$2 \theta$, i.e., $g(\theta) = 2\theta$:
+```{r}
+f <- function(theta) 2*theta
+```
+
+We compute the MLE of $2 \hat\theta$ (using a simulation size $n=1000$) with:
+```{r}
+f.hat <- rmap(theta.hat,f,n=1000L)
+point(f.hat)
+vcov(f.hat)
+```
+
+# Weighted MLE: a weighted sum of maximum likelihood estimators
+
+Since the variance-covariance of an MLE is inversely proportional to the
+Fisher information that the MLE is defined with respect to, we can combine
+multiple MLEs of $\theta$, each of which may be defined with respect to a
+different kind of sample, to arrive at the MLE that incorporates the Fisher
+information in all of those samples.
+
+Consider $k$ mutually independent MLEs of parameter $\theta$,
+$\hat\theta_1,\ldots,\hat\theta_k$, where $\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))$.
+Then, the sampling MLE of $\theta$ that incorporates all of the data in
+$\hat\theta_1,\ldots,\hat\theta_k$ is given by the inverse-variance
+weighted mean,
+$$
+    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
+$$
+which, asymptotically, has an expected value of $\theta$ and a variance-covariance
+of $\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}$.
+
+## Example
+To evaluate the performance of the weighted MLE, we generate a sample of
+$N=1000$ observations from $\operatorname{N}(\theta)$ and compute the MLE
+for the observed sample, denoted by $\hat\theta$.
+
+We then divide the observed sample into $r=5$ sub-samples, each of size
+$N/r=100$, and compute the MLE for each sub-sampled, denoted by
+$\theta^{(1)},\ldots,\theta^{(r)}$.
+
+Finally, we do a weighted combination these MLEs to form the weighted MLE,
+denoted by $\theta_w$:
+```{r}
+N <- 1000
+r <- 5
+samp <- rnorm(N,mean=theta[1],sd=sqrt(theta[2]))
+samp.sub <- matrix(samp,nrow=r)
+mles.sub <- list(length=r)
+for (i in 1:r)
+    mles.sub[[i]] <- mle_normal(samp.sub[i,])
+
+mle.wt <- mle_weighted(mles.sub)
+mle <- mle_normal(samp)
+```
+
+We show the results in the following R code:
+```{r}
+tibble(weighted=point(mle.wt)[,1],
+       total=point(mle)[,1],
+       var.weighted=diag(vcov(mle.wt)),
+       var.total=diag(vcov(mle)))
+```
+
+We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling
+distribution for $\theta$.
