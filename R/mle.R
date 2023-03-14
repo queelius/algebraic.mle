@@ -1,4 +1,4 @@
-#' \code{make_mle} makes an \code{mle} object.
+#' \code{mle} makes an \code{mle} object.
 #'
 #' @param theta.hat the MLE
 #' @param loglike the log-likelihood of \code{theta.hat} given the data
@@ -6,12 +6,17 @@
 #' @param sigma the variance-covariance matrix of \code{theta.hat} given that data
 #' @param info the information matrix of \code{theta.hat} given the data
 #' @param obs observation (sample) data
-#' @param sample_size number of observations in \code{obs}
-#' @param superclasses class hierarchy, with \code{mle} as base
+#' @param nobs number of observations in \code{obs}
+#' @param superclasses class (or classes) with \code{mle} as base
 #' @export
-make_mle <- function(theta.hat,loglike=NULL,score=NULL,
-                     sigma=NULL,info=NULL,obs=NULL,sample_size=NULL,
-                     superclasses=NULL)
+mle <- function(theta.hat,
+                loglike=NULL,
+                score=NULL,
+                sigma=NULL,
+                info=NULL,
+                obs=NULL,
+                nobs=NULL,
+                superclasses=NULL)
 {
     structure(list(
         theta.hat=theta.hat,
@@ -19,10 +24,9 @@ make_mle <- function(theta.hat,loglike=NULL,score=NULL,
         score=score,
         sigma=sigma,
         info=info,
-        sample_size=sample_size),
-        class=unique(c(superclasses,c("mle"))))
-
-
+        obs=obs,
+        nobs=nobs),
+        class=unique(c(superclasses,"mle")))
 }
 
 #' Method for obtaining the number of observations in the sample used by
@@ -33,8 +37,9 @@ make_mle <- function(theta.hat,loglike=NULL,score=NULL,
 #' @export
 print.mle <- function(x,...)
 {
-    x$obs <- NULL
-    print(unclass(x))
+    print(params(x))
+
+    print(confint(x))
 }
 
 #' Method for obtaining the parameters of an \code{mle} object.
@@ -42,7 +47,10 @@ print.mle <- function(x,...)
 #' @param x the \code{mle} object to obtain the parameters of
 #'
 #' @export
-params.mle <- function(x) point(x)
+params.mle <- function(x,...)
+{
+    x$theta
+}
 
 #' Method for obtaining the number of parameters of an \code{mle} object.
 #'
@@ -56,7 +64,7 @@ nparams.mle <- function(x) length(params(x))
 #' @param x the \code{mle} object to obtain the AIC of
 #'
 #' @export
-aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
+aic.mle <- function(x) -2*loglike(x) + 2*nparams(x)
 
 #' Method for obtaining the number of observations in the sample used by
 #' an \code{mle}.
@@ -65,7 +73,7 @@ aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
 #' @param ... additional arguments to pass
 #' @importFrom stats nobs
 #' @export
-nobs.mle <- function(object,...) object$sample_size
+nobs.mle <- function(object,...) object$nobs
 
 #' Method for obtaining the observations used by the \code{mle}.
 #'
@@ -92,9 +100,13 @@ loglike.mle <- function(x,...) x$loglike
 #'
 #' @importFrom stats confint
 #' @export
-confint.mle <- function(object, parm=NULL, level=0.95, ...)
+confint.mle <- function(object, parm=NULL, level=.95, ...)
 {
-    sigma <- diag(vcov(object,...))
+    V <- vcov(object,...)
+    if (is.matrix(V))
+        V <- diag(V)
+    sigma <- V
+
     theta <- point(object,...)
     p <- length(theta)
     q <- stats::qnorm(level)
@@ -103,8 +115,8 @@ confint.mle <- function(object, parm=NULL, level=0.95, ...)
 
     parm <- parm[parm >= 1 & parm <= p]
     ci <- matrix(nrow=length(parm),ncol=2)
-    colnames(ci) <- c(paste((1-level)/2*100,"%"),
-                      paste((1-(1-level)/2)*100,"%"))
+    colnames(ci) <- c(paste0((1-level)/2*100,"%"),
+                      paste0((1-(1-level)/2)*100,"%"))
 
     i <- 1
     for (j in parm)
@@ -113,7 +125,11 @@ confint.mle <- function(object, parm=NULL, level=0.95, ...)
                     theta[j] + q*sqrt(sigma[j]))
         i <- i + 1
     }
-    rownames(ci) <- parm
+
+    if (is.null(names(theta)))
+        rownames(ci) <- paste0("param",parm)
+    else
+        rownames(ci) <- names(theta)[parm]
     ci
 }
 
@@ -129,11 +145,22 @@ confint.mle <- function(object, parm=NULL, level=0.95, ...)
 #' @export
 sampler.mle <- function(x,p=1,...)
 {
-    ifelse(
-        p >= 1,
-        function(n=1) mvtnorm::rmvnorm(n,point(x),vcov(x),...),
-        function(n=1) sample_mle_region(n,x,p,...))
+    if (nparams(x) == 1L)
+    {
+        if (p >= 1)
+            function(n=1) stats::rnorm(n,mean=point(x),sd=sqrt(vcov(x)),...)
+        else
+            function(n=1) sample_mle_region(n,x,p,...)
+    }
+    else
+    {
+        if (p >= 1)
+            function(n=1) mvtnorm::rmvnorm(n,point(x),vcov(x),...)
+        else
+            function(n=1) sample_mle_region(n,x,p,...)
+    }
 }
+
 
 #' Computes the variance-covariance matrix of \code{mle} objects.
 #'
@@ -165,31 +192,7 @@ vcov.mle <- function(object,...)
 #' @export
 mse.mle <- function(x,theta)
 {
-    b <- bias(x,theta)
-    ifelse(is.null(b),NULL,sum(diag(vcov(x))) + sum(b^2))
-}
-
-#' Computes the bias of an \code{mle} object.
-#'
-#' The bias of an estimator is \code{E(point(mle)-theta)} where \code{theta}
-#' is the true parameter value.
-#'
-#' Assuming the regularity conditions, the *asymptotic* bias of the MLE is all
-#' zero (a vector in which each component is zero), but for finite sample sizes,
-#' particular small samples, we are generally interested in the actual bias.
-#'
-#' This method returns \code{NULL}. A particular \code{mle} object, say
-#' \code{mle_normal}, may return an actual bias.
-#'
-#' The bias may be estimated using the Bootstrap method, e.g.,
-#' \code{bias(mle_boot(...))}.
-#'
-#' @param x the \code{mle} object to compute the bias of.
-#' @param ... pass additional arguments
-#' @export
-bias.mle <- function(x,...)
-{
-    NULL
+    sum(diag(vcov(x))) + sum(bias(x,theta)^2)
 }
 
 #' Computes the point estimate of an \code{mle} object.
@@ -207,7 +210,7 @@ point.mle <- function(x,...)
 #' @param x the \code{mle} object to obtain the fisher information of.
 #' @param ... pass additional arguments
 #' @export
-fisher_info.mle <- function(x, ...)
+fim.mle <- function(x, ...)
 {
     x$info
 }
@@ -221,16 +224,30 @@ fisher_info.mle <- function(x, ...)
 #' @export
 summary.mle <- function(object,...)
 {
-    cat("Maximum likelihood estimator, of type",class(object)[1],",\n")
-    cat("is normally distributed with mean\n")
-    print(point(object))
-    cat("and variance-covariance\n")
-    print(vcov(object))
-    cat("---\n")
-    cat("The asymptotic 95% confidence interval is\n")
-    print(confint(object))
-    cat("The log-likelihood is",loglike(object),"\n")
-    cat("The AIC is",aic(object),"\n")
+    structure(list(
+        type=class(object)[1],
+        estimates=params(object,...),
+        conf=confint(object,...),
+        loglik=loglike(object),
+        aic=aic(object)),
+        class=c("summary_mle","summary"))
+}
+
+#' Function for printing a \code{summary} object for an \object{mle} object.
+#'
+#' @param object the \code{summary_mle} object
+#' @param ... pass additional arguments
+#'
+#' @export
+print.summary_mle <- function(object,...)
+{
+    cat("Maximum likelihood estimator of type",object$type,"is normally distributed.\n")
+    cat("The estimates of the parameters are given by:\n")
+    print(object$estimates)
+    cat(paste0("The log-likelihood is ",object$loglik,".\n"))
+    cat(paste0("The AIC is ",object$aic,".\n"))
+    cat("The asymptotic 95% confidence interval of the parameters are given by:\n")
+    print(object$conf)
 }
 
 #' Function for obtaining an estimate of the standard error of the MLE
@@ -266,12 +283,12 @@ is_mle <- function(x)
 sample_mle_region <- function(n,x,p=.95)
 {
     stopifnot(p > 0.0 && p <= 1.0)
-    stopifnot(n >= 0L)
+    stopifnot(n > 1L)
     stopifnot(is_mle(x))
 
     k <- nparams(x)
     crit <- stats::qchisq(p,k)
-    nfo <- fisher_info(x)
+    nfo <- fim(x)
     mu <- point(x)
 
     i <- 0L
@@ -300,7 +317,7 @@ sample_mle_region <- function(n,x,p=.95)
 #' @export
 orthogonal.mle <- function(x,tol=sqrt(.Machine$double.eps),...)
 {
-    abs(fisher_info(x,...)) <= tol
+    abs(fim(x,...)) <= tol
 }
 
 #' Computes the score of an \code{mle} object.
@@ -317,23 +334,13 @@ score.mle <- function(x,...)
     x$score
 }
 
-#' Method for determining the sample size of an \code{mle} object.
+#' Computes the bias of an \code{mle} object.
 #'
-#' @param x the \code{mle} object
-#' @export
-sample_size.mle <- function(x)
-{
-    x$sample_size
-}
-
-#' Function for retrieving an unbiased point estimate from an MLE object
-#'
-#' @param x the \code{mle} object
+#' @param x the \code{mle} object to compute the bias of.
 #' @param ... additional arguments to pass
+#'
 #' @export
-unbiased_point <- function(x,...)
+bias.mle <- function(x,...)
 {
-    stopifnot(is_mle(x))
-
-    point(x) - bias(x,...)
+    rep(0,nparams(x,...))
 }

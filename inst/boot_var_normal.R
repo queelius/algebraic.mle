@@ -11,7 +11,7 @@ sigma <- 3
 theta <- c(mu,sigma)
 
 i <- 1L
-ns <- seq(1000,100000,1000)
+ns <- c(25,50,100,250,500,seq(1000,100000,1000))
 dat <- matrix(ncol=15,nrow=length(ns))
 colnames(dat) <- c("err(mu)","err(var)",
                    "bias(mu)","bias(var)",
@@ -24,16 +24,16 @@ colnames(dat) <- c("err(mu)","err(var)",
 for (n in ns)
 {
     xs <- rnorm(n,mu,sqrt(sigma))
-    theta.hat <- mle_normal(xs)
 
-    theta.b <- raply(25000,
+    theta.hat <- mle_normal(xs)
+    theta.b <- raply(20000,
     {
         point(mle_normal(sample(xs,n,replace=T)))
     })
 
     err <- point(theta.hat) - theta
     bias.actual <- c(0,-sigma/n)
-    bias.hat <- mean(theta.b) - point(theta.hat)
+    bias.hat <- colMeans(theta.b) - point(theta.hat)
     pe.obs <- pe(point(theta.hat),theta)
     pe.expected <- bias.actual/theta
     var.theta.boot <- diag(cov(theta.b))
@@ -53,23 +53,28 @@ for (n in ns)
 
 df <- as_tibble(dat)
 
-ggplot(df) +
-    geom_line(aes(x=n,y=`var(mu).boot`,color="`var(mu).boot`")) +
+ggplot(df[3:10,]) +
     geom_line(aes(x=n,y=`var(var).boot`,color="`var(var).boot`")) +
-    geom_line(aes(x=n,y=`var(mu).fim`,color="`var(mu).fim`")) +
     geom_line(aes(x=n,y=`var(var).fim`,color="`var(var).fim`")) +
     xlab("sample size") +
     ylab("estimate") +
-    labs(title="Estimate of variance of MLE for normal",
+    labs(title="Estimate of variance of variance of MLE for normal",
          subtitle="using Bootstrap and Fisher information methods")
 
-ggplot(df) +
-    geom_line(aes(x=n,y=`expected(pe(var))`,color="expected")) +
-    geom_line(aes(x=n,y=`pe(var)`,color="var")) +
+ggplot(df[3:10,]) +
+    geom_line(aes(x=n,y=`var(mu).boot`,color="`var(mu).boot`")) +
+    geom_line(aes(x=n,y=`var(mu).fim`,color="`var(mu).fim`")) +
+    xlab("sample size") +
+    ylab("estimate") +
+    labs(title="Estimate of variance of mean of MLE for normal",
+         subtitle="using Bootstrap and Fisher information methods")
+
+ggplot(df[3:10,]) +
+    geom_line(aes(x=n,y=`E{pe(var)}`,color="E{pe(var)}")) +
+    #geom_line(aes(x=n,y=`pe(var)`,color="pe(var)")) +
     xlab("sample size") +
     ylab("percent error") +
     labs(title="Percent error of MLE estimator for normal distribution")
-
 
 ggplot(df) +
     geom_line(aes(x=n,y=`bias(mu)`,color="`bias(mu)`")) +
@@ -78,17 +83,28 @@ ggplot(df) +
     ylab("bias") +
     labs(title="Bias of MLE estimator of mean for normal distribution")
 
-ggplot(df) +
+ggplot(df[10:105,]) +
     geom_line(aes(x=n,y=`bias(var)`,color="`bias(var)")) +
     geom_line(aes(x=n,y=`bias(var).boot`,color="`bias(var).boot`")) +
     xlab("sample size") +
     ylab("bias") +
     labs(title="Bias of MLE estimator of variance for normal distribution")
 
-
-
 ggplot(df) +
-    geom_line(aes(x=n,y=`bias.var`,color="`bias.var`")) +
+    geom_line(aes(x=n,y=`err(mu)`,color="err(mu)")) +
+    geom_line(aes(x=n,y=`err(var)`,color="err(var)")) +
+    xlab("sample size") +
+    ylab("error") +
+    labs(title="Error of MLE estimator for normal distribution")
+
+
+
+ggplot(df[10:105,]) +
+    geom_line(aes(x=n,y=`bias(var)`,color="`bias(var)")) +
+    #geom_line(aes(x=n,y=`bias(var).boot`,color="`bias(var).boot`")) +
+    geom_ma(aes(x=n,y=`bias(var).boot`,color="`ma(bias(var).boot)`")) +
+    #geom_smooth(aes(x=n,y=`bias(var).boot`,color="`smooth(bias(var).boot)`")) +
     xlab("sample size") +
     ylab("bias") +
     labs(title="Bias of MLE estimator of variance for normal distribution")
+

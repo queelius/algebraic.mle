@@ -2,7 +2,7 @@
 #' respect to an \code{mle} object \code{x}.
 #'
 #' We use Monte-Carlo simulation to get \code{N} sample points within the
-#' \code{p}-confidence region and taking the maximum value with respect to
+#' \code{p}-confidence region and taking the min/max value with respect to
 #' some distance measure.
 #'
 #' @param N the sample size

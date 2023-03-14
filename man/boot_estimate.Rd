@@ -4,7 +4,7 @@
 \alias{boot_estimate}
 \title{Bootstrap method}
 \usage{
-boot_estimate(xs, stat, B = 10000, keep_boots = F)
+boot_estimate(xs, stat, B = 1000, ...)
 }
 \arguments{
 \item{xs}{data}

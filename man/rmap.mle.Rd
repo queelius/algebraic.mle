@@ -15,7 +15,8 @@ is an \code{mle} object.}
 \item{n}{number of samples to take to estimate distribution
 of \code{f(x)}.}
 
-\item{method}{method to use, defaults to "mc" for monte carlo, but "delta" for delta method is another option}
+\item{method}{method to use, defaults to "mc" for monte carlo, but "delta"
+for delta method and "bootstrap" for bootstrap are other options}
 
 \item{...}{additional arguments to pass to the \code{mle} sampler.}
 }
@@ -27,4 +28,9 @@ distributed with an approximation given by
 the variance-covariance of \code{f(x)}, e.g., the sample
 covariance of \code{f(x1),...f(xn)} where \code{xj} is sampled from
 \code{sampler(x)}.
+}
+\details{
+delta method
+bootstrap method
+monte carlo method
 }

@@ -33,7 +33,7 @@ library(ggplot2)
 # Generating a sample
 
 We define the parameters of the i.i.d. random sample with:
-```{r}
+```{r sim_param_setup}
 n <- 1000
 rate <- 1
 ```
@@ -62,7 +62,7 @@ ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
 If we would like to estimate $\lambda=`r rate`$, we can do so using maximum likelihood
 estimation as implemented by the `algebraic.mle` package:
 ```{r}
-rate.hat <- mle_exp(x$x)
+rate.hat <- mle_exp_rate(x$x)
 summary(rate.hat)
 ```
 
@@ -73,7 +73,7 @@ point(rate.hat)
 
 We can show the Fisher information and variance-covariance matrices with:
 ```{r}
-fisher_info(rate.hat)
+fim(rate.hat)
 vcov(rate.hat)
 ```
 
@@ -108,10 +108,10 @@ data0 <- numeric(length=B)
 for (i in 1:B)
 {
     x <- stats::rexp(n,rate)
-    data0[i] <- point(mle_exp(x))
+    data0[i] <- point(mle_exp_rate(x))
 }
 ggplot(tibble(rate.hat=data0), aes(x=rate.hat)) +
-    geom_histogram(aes(y=..density..),alpha=.3,bins=50) +
+    geom_histogram(aes(y=after_stat(density)),alpha=.3,bins=50) +
     geom_function(fun=function(x) { dnorm(x,mean=rate,sd=rate/sqrt(n)) })
 ```
 
@@ -123,7 +123,7 @@ Since we are only giving one sample, we cannot do as we did before to provide
 $B$ estimates of $\lambda$.
 However, we can sample from the approximation of the asymptotic distribution of
 $\hat\lambda$ with:
-```{r}
+```{r exp.sampler}
 data1 <- sampler(rate.hat)(B)
 ```
 
@@ -223,22 +223,29 @@ samp <- rexp(N)
 samp.sub <- matrix(samp,nrow=r)
 mles.sub <- list(length=r)
 for (i in 1:r)
-    mles.sub[[i]] <- mle_exp(samp.sub[i,])
+    mles.sub[[i]] <- mle_exp_rate(samp.sub[i,])
 
 mle.wt <- mle_weighted(mles.sub)
-
-mle <- mle_exp(samp)
+mle2.wt <- mle_weighted_2(mles.sub)
+mle <- mle_exp_rate(samp)
 ```
 
 We show the results in the following table:
 ```{r}
 df <- data.frame(
     c(point(mle.wt),point(mle)),
-    c(vcov(mle.wt),vcov(mle)))
+    c(vcov(mle.wt),vcov(mle)),
+    c(loglike(mle.wt),loglike(mle)))
 
-colnames(df) <- c("point estimate","variance")
+colnames(df) <- c("point estimate","variance","loglike")
 rownames(df) <- c("weighted MLE", "MLE")
 print(df)
+
+
+vcov(mle2.wt)
+fim(mle2.wt)
+point(mle2.wt)
+loglike(mle2.wt)
 ```
 
 We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling

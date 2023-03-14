@@ -20,6 +20,6 @@ pred(x, f, N, p = 0.95, D = function(x) x)
 }
 \description{
 We use Monte-Carlo simulation to get \code{N} sample points within the
-\code{p}-confidence region and taking the maximum value with respect to
+\code{p}-confidence region and taking the min/max value with respect to
 some distance measure.
 }

@@ -19,8 +19,16 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+```
+
+
+```{r setup}
+library(algebraic.mle)
 library(ggplot2)
 library(tibble)
+library(numDeriv)
+library(mvtnorm)
+library(stats)
 ```
 
 We are interested in the generative process that gave rise to the censored data
@@ -148,57 +156,96 @@ l.wei <- function(theta) sum(dweibull(sim.df$lifetime,
                                       shape=theta[1],
                                       scale=theta[2],
                                       log=T))
-score.wei <- function(theta) numDeriv::grad(l.wei,theta)
-info.wei <- function(theta) -numDeriv::hessian(l.wei,theta)
 ```
 
-An MLE is a point $(\hat\lambda,\hat k)'$ that is a maximum of `l.wei` over the
-parameter's domain. We find the MLE with the following R code:
-```{r}
-mle.wei <- algebraic.mle::mle_newton_raphson(
-    l=l.wei,
-    max_iter=100,
-    theta0=sim.theta,
-    score=score.wei,
-    info=info.wei)
+An MLE is a point $(\hat\lambda,\hat k)'$ that is a maximum of the loglikelihood
+function, `l.wei`, over the parameter's domain. We may use the root-finding
+algorithm known as the Newton-Raphson method to find where the gradient of the
+log-likelihood function `l.wei` is zero.
 
+Here is the Newton-raphson code:
+```{r}
+newton_raphson <- function(f, df, x0, tol=1e-4, maxiter=100L)
+{
+  fx <- f(x0)
+  for (i in 1:maxiter)
+  {
+    if (max(abs(fx)) < tol) break
+    J <- df(x0)
+    d <- solve(J,fx)
+    x0 <- x0 - d
+    fx <- f(x0)
+  }
+  x0
+}
+```
+
+The Newton-Raphson function is conventionally used to minimize a function.
+We're trying to maximize the log-likelihood function `l.wei`, and so we're
+trying to minimize the negative of the log-likelihood. Thus, the gradient and
+Hessian is given by the negative of each.
+
+Here's the code:
+```{r}
+newton_raphson(
+    f=function(theta) -grad(l.wei,theta),
+    df=function(theta) -hessian(l.wei,theta),
+    x0=sim.theta)
+```
+
+This looks fine.
+
+The gradient should be approximately zero at the MLE. The Hessian is also
+useful, since asymptotically the MLE follows a normal distribution with
+a mean given by the true parameter and a variance-covariance given by the
+negative inverse of the Hessian.
+
+We have implemented more precise and
+more efficient algorithms for computing the MLE of the Weibull
+distribution. This function also returns an `mle` object, which implements
+a number of generic methods as its interface.
+
+We perform the same computation as above with the following R code:
+
+```{r}
+mle.wei <- mle_weibull(sim.df$lifetime)
+
+loglike(mle.wei)
+score(mle.wei)
+params(mle.wei)
+fim(mle.wei)
+vcov(mle.wei)
+confint(mle.wei)
 summary(mle.wei)
 ```
 
-Let's do the same for the normal distribution.
-```{r eval=F}
+Let's do the same for the normal distribution
+```{r}
 l.norm <- function(theta) sum(dnorm(sim.df$lifetime,
                                     mean=theta[1],
-                                    sd=theta[2],
+                                    sd=sqrt(theta[2]),
                                     log=T))
 mu <- mean(sim.df$lifetime)
-stddev <- sd(sim.df$lifetime)
+var <- var(sim.df$lifetime)
+norm.theta <- c(mu,var)
+print(norm.theta)
 
-print(mu)
-print(stddev)
-
-print(l.norm(c(mu,stddev)))
-
-mle.norm <- algebraic.mle::mle_gradient_ascent(
-    l.norm,
-    max_iter=100,
-    sup=function(x) x[2] > 0,
-    theta0=c(2,5),
-    debug=T)
-
-
-mle.norm2 <- algebraic.mle::mle_newton_raphson(
-    l.norm,
-    theta0=algebraic.mle::point(mle.norm),
+mle.norm <- mle_newton_raphson(
+    l=l.norm,
+    theta0=norm.theta,
+    info=function(x) -hessian(l.norm,x),
+    score=function(x) grad(l.norm,x),
     max_iter=100,
     sup=function(x) x[2] > 0,
     debug=T)
 
-
-print(l.norm(algebraic.mle::point(mle.norm)))
 summary(mle.norm)
+```
 
-mle_normal(sim.df$lifetime)
+```{r}
+mle.norm2 <- mle_normal_mu_var(sim.df$lifetime)
+summary(mle.norm2)
+bias(mle.norm2)
 ```
 
 
@@ -206,8 +253,8 @@ mle_normal(sim.df$lifetime)
 The MLE has a *sampling distribution*.
 We provide a contour plot of the density of the sampling distribution with
 the following R code:
-```{r}
-mle.theta <- algebraic.mle::point(mle.wei)
+```{r,eval=F}
+mle.theta <- params(mle.wei)
 mle.shape <- mle.theta[1]
 mle.scale <- mle.theta[2]
 
@@ -221,7 +268,7 @@ shapes <- seq(mle.shape-2*mle.shape.sd,
 scales <- seq(mle.scale-2*mle.scale.sd,
               mle.scale+2*mle.scale.sd,.001)
 densities <- outer(shapes,scales,
-                   \(x,y) mvtnorm::dmvnorm(cbind(x,y),mle.theta,vcov(mle.wei)))
+                   \(x,y) dmvnorm(cbind(x,y),mle.theta,vcov(mle.wei)))
 
 # create contour plot
 contour(shapes,scales,densities,nlevels=5)
@@ -252,7 +299,7 @@ make_plot <- function(mle,low=0,high=10,N=1000,by=.1)
 ```
 
 
-```{r}
+```{r,eval=F}
 #set.seed(123)
 #thetas <- mvtnorm::rmvnorm(1000,mean=mle.theta,sigma=vcov(mle))
 
@@ -274,7 +321,7 @@ We will conduct a goodness of fit test,
   H_A &: \text{the data is not compatible with the Weibull distribution}.
 \end{align}
 
-```{r}
+```{r,eval=F}
 chisqr.test <- function(obs.dat,
                         cdf,
                         nbreaks=ceiling(sqrt(length(obs.dat))),
@@ -299,7 +346,7 @@ chisqr.test(sim.df$lifetime,pweibull,shape=mle.shape,scale=mle.scale)
 ```
 
 
-```{r}
+```{r,eval=F}
 cramer.test <- function(obs.dat,ref.dat)
 {
   stat <- CDFt::CramerVonMisesTwoSamples(obs.dat,ref.dat)
@@ -314,10 +361,10 @@ cramer.test(sim.df$lifetime,ref.dat)
 ```
 
 
-```{r}
+```{r,eval=F}
 ks.test(sim.df$lifetime,ref.dat)
 ```
 
-```{r}
+```{r,eval=F}
 CDFt::KolmogorovSmirnov(sim.df$lifetime,ref.dat)
 ```

@@ -3,14 +3,21 @@
 \name{weibull_loglike}
 \alias{weibull_loglike}
 \title{log-likelihood function generator given data \code{x} for the weibull
-distribution}
+distribution.}
 \usage{
-weibull_loglike(x)
+weibull_loglike(x, colname = NULL)
 }
 \arguments{
 \item{x}{data}
+
+\item{colname}{if \code{x} is a data frame, use column `colname`}
 }
 \description{
-log-likelihood function generator given data \code{x} for the weibull
-distribution
+The returned log-likelihood function takes a single vector \code{theta} of
+size \code{2} (at least) where the first component is the shape parameter
+\code{k} and the second component is the scale parameter \code{lambda}.
+}
+\details{
+It can be used in statistical models or optimization algorithms to estimate
+the parameters of the Weibull distribution.
 }

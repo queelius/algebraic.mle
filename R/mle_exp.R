@@ -10,25 +10,21 @@
 #' @param keep_obs store the observations with the \code{mle} object, default is \code{F}
 #' @return an \code{mle} object.
 #' @export
-mle_exp <- function(x,keep_obs=F)
+mle_exp_rate <- function(x,keep_obs=F)
 {
     n <- length(x)
     stopifnot(n > 0)
-    rate.hat <- mle_exp_rate(x)
-    mle <- make_mle(
-        theta.hat=rate.hat,
-        loglike=n*log(rate.hat)-n,
-        score=matrix(0), # n/rate.hat-sum(x)) == 0
-        sigma=matrix(rate.hat^2/n),
-        info=matrix(n/rate.hat^2),
-        obs=ifelse(keep_obs,x,NULL),
-        sample_size=n,
-        superclasses=c("mle_exp"))
-}
-
-mle_exp_rate <- function(x)
-{
-    matrix(1/mean(x))
+    rate.hat <- 1/mean(x)
+    l <- n*log(rate.hat)-n
+    names(rate.hat) <- c("rate")
+    mle(theta.hat=rate.hat,
+        loglike=l,
+        score=0, # n/rate.hat-sum(x)) == 0
+        sigma=rate.hat^2/n,
+        info=n/rate.hat^2,
+        obs=if(keep_obs) x else NULL,
+        nobs=n,
+        superclasses=c("mle_exp_rate"))
 }
 
 #' log-likelihood function generator given data \code{x} for the exponential

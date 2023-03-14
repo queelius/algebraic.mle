@@ -9,20 +9,8 @@
 \arguments{
 \item{x}{the \code{mle} object to compute the bias of.}
 
-\item{...}{pass additional arguments}
+\item{...}{additional arguments to pass}
 }
 \description{
-The bias of an estimator is \code{E(point(mle)-theta)} where \code{theta}
-is the true parameter value.
-}
-\details{
-Assuming the regularity conditions, the *asymptotic* bias of the MLE is all
-zero (a vector in which each component is zero), but for finite sample sizes,
-particular small samples, we are generally interested in the actual bias.
-
-This method returns \code{NULL}. A particular \code{mle} object, say
-\code{mle_normal}, may return an actual bias.
-
-The bias may be estimated using the Bootstrap method, e.g.,
-\code{bias(mle_boot(...))}.
+Computes the bias of an \code{mle} object.
 }

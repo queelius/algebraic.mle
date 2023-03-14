@@ -84,9 +84,9 @@ sampler <- function(x, ...)
 #' @param ... additional arguments to pass
 #'
 #' @export
-fisher_info <- function(x, ...)
+fim <- function(x, ...)
 {
-    UseMethod("fisher_info",x)
+    UseMethod("fim",x)
 }
 
 #' Generic function for obtaining the mean squared error (MSE) of an estimator,
@@ -103,9 +103,9 @@ mse <- function(x,theta)
 #' Computes the bias of an estimator object.
 #'
 #' @param x the object to compute the bias of.
-#' @param theta the true parameter value
+#' @param ... pass additional arguments
 #' @export
-bias <- function(x,theta)
+bias <- function(x,...)
 {
     UseMethod("bias",x)
 }
@@ -167,11 +167,14 @@ orthogonal <- function(x,tol,...)
     UseMethod("orthogonal",x)
 }
 
-#' Method for determining the sample size of an estimator object.
+
+#' Compute the unbiased point estimate given an estimator object \code{x}.
 #'
-#' @param x the estimator
+#' @param x the object from which to compute an unbiased estimate
+#' @param ... additional arguments to pass
 #' @export
-sample_size <- function(x)
+unbias <- function(x,...)
 {
-    UseMethod("sample_size",x)
+    UseMethod("unbias",x)
 }
+

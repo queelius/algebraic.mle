@@ -4,7 +4,7 @@
 \alias{params.mle}
 \title{Method for obtaining the parameters of an \code{mle} object.}
 \usage{
-\method{params}{mle}(x)
+\method{params}{mle}(x, ...)
 }
 \arguments{
 \item{x}{the \code{mle} object to obtain the parameters of}

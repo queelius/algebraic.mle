@@ -36,11 +36,11 @@ library(dplyr)
 
 We define the parameters of the i.i.d. random sample with:
 ```{r}
-n <- 1000
+n <- 200
 theta <- matrix(c(10,2),nrow=2)
 ```
 
-We generate a random sample $X_i \sim \operatorname{N}(\theta=`r theta`)$ for
+We generate a random sample $X_i \sim \operatorname{N}(\mu=`r theta[1]`,\sigma^2=`r theta[2]`)$ for
 $i=1,\ldots,n$ with:
 ```{r}
 x <- tibble(x=rnorm(n,mean=theta[1],sd=sqrt(theta[2])))
@@ -62,21 +62,22 @@ If we did not a prior know that the data was normally distributed, this would
 be evidence that the normal distribution is a good fit to the data.
 
 # Maximum likelihood estimation
-If we would like to estimate $\theta=`r theta`$, we can do so using maximum likelihood
+If we would like to estimate $\theta=(`r theta`)'$, we can do so using maximum likelihood
 estimation as implemented by the `algebraic.mle` package:
 ```{r}
-theta.hat <- mle_normal(x$x)
+theta.hat <- mle_normal(x,"x")
 summary(theta.hat)
 ```
 
-We can show the point estimator with:
+We can show the point estimate given data `x` with:
 ```{r}
 point(theta.hat)
 ```
 
-We can show the Fisher information and variance-covariance matrices with:
+We can show the Fisher information matrix (FIM) and variance-covariance matrix
+with:
 ```{r}
-fisher_info(theta.hat)
+fim(theta.hat)
 vcov(theta.hat)
 ```
 
@@ -106,24 +107,27 @@ $$
 where $\operatorname{bias}(\hat\theta,\theta) = 0$ indicates that $\hat\theta$
 is an *unbiased* estimator of $\theta$.
 
-As a function of the true distribution $F$, the bias is not a statistic.
-In the case of the normal, if we know $\sigma^2$, then analytically,
-the bias of the MLE $\hat\sigma^2$ is $-\frac{1}{n} \sigma^2$, which we may
-compute with:
+As a function of the true distribution $F$, the bias is unknown and is not a
+statistic.
+However, in the case of the normal, $\hat\mu$ is unbiased and, analytically, the
+bias of $\hat\sigma^2$ is given by $-\frac{1}{n} \sigma^2$:
 ```{r}
 bias(theta.hat,theta)
 ```
 
-If we wish to *estimate* the bias when $F$ is not known, we may use the
-Bootstrap method.
+## Bootstrap method
+If we wish to *estimate* the bias when $F$ is not known (e.g., $\sigma^2$ is not
+know), we may use the Bootstrap method.
 We replace $F$ with the observed sample $\hat{F} = \{x_1,\ldots,x_n\}$.
 If we have some population parameter $\theta = t(F)$
 and an estimator of $\theta$ given by $\hat\theta = s(\{X_1,\ldots,X_n\})$, then
 in the Bootstrap method we estimate the bias of $\hat\theta$ with
+
 $$
-    \hat\operatorname{bias}_{\text{boostrap}}(\hat\theta) = E_{\hat F}(s(X^*)) - t(\hat F)
+\widehat{\operatorname{bias}}(\hat\theta) = E_{\hat F}\bigl\{s(X^*)\bigr\} - t(\hat F)
 $$
-where $X^*$ are boostrap resamples from a sample $\{X_1,\ldots,X_n\}$ each of
+
+where $X^*$ are bootstrap resamples from $\{X_1,\ldots,X_n\}$ each of
 size $n$.
 
 The procedure is relatively straightforward:
@@ -131,12 +135,12 @@ The procedure is relatively straightforward:
 1. Sample with replacement from the original data $\hat{F} = \{x_1,\ldots,x_n\}$, obtaining
 $R$ bootstrap resamples, $\{x_{1 j}^*,\ldots,x_{n j}\}$ for $j=1,\ldots,R$.
 
-2. Apply the estimator $s$ to each bootstrap resample, obtaining $B$ estimates of
+2. Apply the estimator $s$ to each bootstrap resample, obtaining $R$ estimates of
 $\theta$, denoted by $\{\hat\theta_1^*,\ldots,\hat\theta_R^*\}$.
 
 3. Estimate the bias with
 $$
-    \hat\operatorname{bias}_{\text{bootstrap}}(\hat\theta) =
+\widehat{\operatorname{bias}}(\hat\theta) =
     \frac{1}{R} \sum_{i=1}^R \hat\theta_i^* - \hat\theta.
 $$
 
@@ -146,16 +150,8 @@ $\hat{F} = \{\hat\theta_1^*,\ldots,\hat\theta_R^*\}$ and we replace $\theta$ wit
 $\hat\theta$.
 
 
-```{r}
-n <- 10000
-sigma.est <- algebraic.mle::stat.boot(rnorm(n,0,1),function(xs) sum((xs - mean(xs))^2)/length(xs))
-print(sigma.est$theta.hat)
-print(sigma.est$bias.hat)
-sigma.bias <- (n-1)/n-1
-print(sigma.bias)
-
-sigma.est$theta.hat
-sigma.est$bias.hat+sigma.est$theta.hat
+```{r,eval=F}
+algebraic.mle::boot_estimate(x$x,algebraic.mle::mle_normal)
 ```
 
 
@@ -167,7 +163,7 @@ information matrix evaluated at $\theta$.
 
 We do not know $\theta$, but we may estimate it from a sample, and thus
 we may approximate the sampling distribution of $\hat\theta$ with
-$N(\hat\theta,I^{-1}(\hat\theta))$.
+$\mathcal{N}(\hat\theta,I^{-1}(\hat\theta))$.
 
 ## Invariance property of the MLE
 
@@ -179,7 +175,7 @@ function `f` compatible with `point(x)` (and optionally a simulation
 sample size) computes the MLE of `f(x)`.
 
 ### Example
-We know that the MLE $\hat\theta \sim N(\theta,I^{-1}(\theta))$.
+We know that the MLE $\hat\theta \sim \mathcal{N}(\theta,I^{-1}(\theta))$.
 We seek a transformation $g(\hat\theta)$ such that its expectation is
 $2 \theta$, i.e., $g(\theta) = 2\theta$:
 ```{r}
@@ -214,7 +210,7 @@ of $\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}$.
 
 ## Example
 To evaluate the performance of the weighted MLE, we generate a sample of
-$N=1000$ observations from $\operatorname{N}(\theta)$ and compute the MLE
+$N=1000$ observations from $\mathcal{N}(\theta)$ and compute the MLE
 for the observed sample, denoted by $\hat\theta$.
 
 We then divide the observed sample into $r=5$ sub-samples, each of size

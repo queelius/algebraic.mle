@@ -5,16 +5,16 @@
 \title{MLE of the rate parameter when we assume the sample is i.i.d. and drawn
 from the weibull distribution.}
 \usage{
-mle_weibull(x, k = 1, eps = 1e-05, keep_obs = F)
+mle_weibull(x, k0 = 1, eps = 1e-07, keep_obs = F)
 }
 \arguments{
 \item{x}{a sample of observations}
 
-\item{k}{initial estimate of shape parameter k}
-
 \item{eps}{we numerically solve the MLE equation, \code{|old-new| <= eps} is stopping condition}
 
 \item{keep_obs}{Boolean, specifies whether to keep observations}
+
+\item{k}{initial estimate of shape parameter k}
 }
 \value{
 an \code{mle} object.

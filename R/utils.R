@@ -22,3 +22,20 @@ confidence_intervals <- function(V, theta, parm=NULL, level=0.95, ...)
     ci
 }
 
+extract_column <- function(x,colname=NULL)
+{
+    if (is.data.frame(x))
+    {
+        stopifnot(ncol(x) > 0)
+        if (is.null(colname))
+            x <- unlist(x[,1])
+        else
+        {
+            stopifnot(colname %in% colnames(x))
+            x <- unlist(x[colname])
+        }
+    }
+
+    as.vector(x)
+}
+
