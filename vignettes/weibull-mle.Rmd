@@ -2,16 +2,15 @@
 title: "Analysis of simple time series data"
 author: "Alex Towell"
 date: "2022-10-14"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Analysis of simple time series data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\VignetteDepends{ggplot2}
   %\VignetteDepends{tibble}
-  %\VignetteDepends{zoo}
-  %\VignetteDepends{CDFt}
-  %\VignetteDepends{gt}
 ---
 
 ```{r, include=F}
@@ -21,44 +20,39 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Introduction
+We are interested in the generative process that gave rise to the data we observed.
+In the real world, systems are quite complex, but we settle for simpler models
+for analytical tractability. So, we usually assume:
 
-```{r setup}
-library(algebraic.mle)
-library(ggplot2)
-library(tibble)
-library(numDeriv)
-library(mvtnorm)
-library(stats)
-```
+1. The sample is i.i.d.
 
-We are interested in the generative process that gave rise to the censored data
-we observed.
-In particular, we are interested in the censored component lifetimes, where we
-are only able to observe the lifetime of the component that failed and a subset
-of the components which in some way provide information about which component
-failed.
-We discuss the particular way we assume this occurs later.
+2. The observations may be reasonably modeled by some relatively simple process.
 
-In the real world, systems are quite complex:
+3. Other factors, like ambient temperature, are either negligible or are more or
+   less constant in the sample.
 
-1. They are not series systems.
+Since this is a simulation, we know the underlying DGP (data generating process).
+It's just
+$$
+    T_i = W_i + \epsilon_i
+$$
+where
+$$
+    W_i \sim \operatorname{weibull}(k,\lambda)
+$$
+and
+$$
+    \epsilon_i \sim \operatorname{normal}(0,\sigma).
+$$
 
-2. The components are not independent.
+In the real world, we do not know the DGP. In this study, we will assume that
+either $T_1,\ldots,T_n$ comes from Weibull or Normal. Clearly, the true
+DGF is a bit more complicated but still very simple compared to a more realistic
+DGP.
 
-3. The lifetimes of the systems (in the population) is not precisely modeled by
-   any known probability distribution.
-   
-4. It may not be easy to characterize a system as either in a failed state or a
-   non-failed state, and failure may only be transient.
-   
-5. The components may depend on many other unobserved factors.
-
-With all of these caveats in mind, we model the data as coming from a series
-system as described previously, and other factors, like ambient temperature, are
-either negligible (on the distribution of component lifetimes) or are more or
-less constant and so we model the component lifetimes under those conditions.
-Then, the process of parametrically modeling the observed data takes the
-following form:
+Then, the process of parametrically modeling the observed data may take the
+following steps:
 
 1. Visualize the data, e.g., plot a histogram of the data.
 
@@ -69,31 +63,24 @@ following form:
 
 4. Repeat steps 2 and 3 if the measure of goodness of fit is not satisfactory.
 
-Steps 1 and 3 are trivial to do, but step 2 may be very difficult, particularly
-in our case since a histogram of the data is probably not that informative. Why?
-There are two reasons:
-
-1. The distribution of the system is a function of the distribution of the
-   components. The system distribution probably does not even have a name.
-   
-2. The histogram is of the system lifetime data, but the distributions we guess
-   are for the components.
-
-
-## Simulation
-
+## Simulation parameters and generation
 The simulation parameters are given by:
+```{r setup}
+library(ggplot2)
+library(tibble)
+library(numDeriv)
+library(stats)
 
-```{r}
-sim.n <- 1000
-sim.err.sd <- 0.01
+sim.n <- 58
+sim.err.sd <- 0.05
 sim.shape <- 5
 sim.scale <- 3
 sim.theta = c(sim.shape,sim.scale)
+set.seed(1234)
 ```
 
 We generate the data with the following R code:
-```{r}
+```{r cache=TRUE}
 sim.df <- tibble(lifetime=
                      rweibull(n=sim.n,
                                    shape=sim.shape,
@@ -101,14 +88,40 @@ sim.df <- tibble(lifetime=
                      rnorm(n=sim.n,
                            mean=0,
                            sd=sim.err.sd))
+
+dgp.density <- density(
+  rweibull(n=10000000,
+           shape=sim.shape,
+           scale=sim.scale) +
+  rnorm(n=10000000,
+        mean=0,
+        sd=sim.err.sd))
 ```
 
-A few elements from the sample is given by:
+A density plot of the DGP is given by:
+```{r, fig.align='center'}
+
+print(class(dgp.density))
+plot(dgp.density,
+     main="Density of the DGP",
+     xlab="System Lifetime",
+     ylab="Density",
+     col="light blue",
+     lwd=2)
+```
+
+A few elements from the sample are given by:
 ```{r, echo=F}
 sim.df
 ```
 
-Next, we show a histogram of the simulated data:
+## Visualizing the data
+Visualizing the data is a good first step in the analysis of the data.
+If the data is univariate or bivariate, we can plot a histogram of the data
+pretty easily (if it's multivariate, we can plot the marginal distributions
+of the data).
+
+We show a histogram of the simulated data below:
 ```{r histo, fig.align='center',echo=F}
 ggplot(sim.df,aes(x=lifetime)) +
     geom_histogram(color="dark blue",
@@ -118,29 +131,31 @@ ggplot(sim.df,aes(x=lifetime)) +
          subtitle="Histogram")
 ```
 
-Here's an empirical estimate of the CDF for the data:
-```{r}
-sim.cdf <- ecdf(sim.df$lifetime)
-plot(sim.cdf,ylab="Fn(x)")
-```
-
+## Parametrically modeling the data
 If we only had this sample, what might we conclude?
 This can be a very difficult problem.
 In our case, we know that the simulated data is drawn from the distribution
-$W = X+Y$ where
+$T_i = W_i + \epsilon_i$ where
 $$
-  X \sim \operatorname{weibull}(\lambda = `r sim.shape`,
+  W_i \sim \operatorname{weibull}(\lambda = `r sim.shape`,
                                 k = `r sim.scale`)
 $$
 and
 $$
-  Y \sim \operatorname{normal}(\mu=0,\sigma=`r sim.err.sd`).
+  \epsilon_i \sim \operatorname{normal}(\mu=0,\sigma=`r sim.err.sd`).
 $$
 However, in real-world data sets, we do not know the distribution. So, let us
 suppose that we do not know the true distribution of the data.
 
-There are many well-known, named parametric distributions, e.g., pareto,
-weibull, and normal, to name a few.
+If we were only interested in, say, *prediction*, and we had a sufficiently
+large sample, we could use a non-parametric methods and "let the data speak for
+itself." However, if we are interested in inference (e.g., explaining the
+data) or the sample was small, then we need to make some assumptions about the
+data.
+
+In this case, we will assume that the data is drawn from a parametric
+distribution. There are many well-known, named parametric distributions, e.g.,
+Pareto, Weibull, and Normal, to name a few.
 From experience, it seems like the Weibull and the normal might be good fits
 to the data. However, note that since the normal distribution permits negative
 values to be realized, it may not be an appropriate choice. Still, since these
@@ -193,8 +208,6 @@ newton_raphson(
     x0=sim.theta)
 ```
 
-This looks fine.
-
 The gradient should be approximately zero at the MLE. The Hessian is also
 useful, since asymptotically the MLE follows a normal distribution with
 a mean given by the true parameter and a variance-covariance given by the
@@ -202,116 +215,47 @@ negative inverse of the Hessian.
 
 We have implemented more precise and
 more efficient algorithms for computing the MLE of the Weibull
-distribution. This function also returns an `mle` object, which implements
-a number of generic methods as its interface.
+distribution in the `algebraic.mle` R package.
 
-We perform the same computation as above with the following R code:
-
+This function, `mle_weibull_shape_scale`, returns an `mle` object, which has an
+API that provides a number of conventient methods, such as estimating the
+variance-covariance matrix, confidence intervals, bias, and so on.
+Here's the code:
 ```{r}
-mle.wei <- mle_weibull(sim.df$lifetime)
-
-loglike(mle.wei)
-score(mle.wei)
-params(mle.wei)
-fim(mle.wei)
-vcov(mle.wei)
-confint(mle.wei)
+library(algebraic.mle)
+mle.wei <- mle_weibull_shape_scale(sim.df$lifetime)
 summary(mle.wei)
 ```
 
-Let's do the same for the normal distribution
+Let's do the same for the normal distribution. We will simply use the
+`mle_normal_mu_var` function from the `algebraic.mle` package:
 ```{r}
-l.norm <- function(theta) sum(dnorm(sim.df$lifetime,
-                                    mean=theta[1],
-                                    sd=sqrt(theta[2]),
-                                    log=T))
-mu <- mean(sim.df$lifetime)
-var <- var(sim.df$lifetime)
-norm.theta <- c(mu,var)
-print(norm.theta)
-
-mle.norm <- mle_newton_raphson(
-    l=l.norm,
-    theta0=norm.theta,
-    info=function(x) -hessian(l.norm,x),
-    score=function(x) grad(l.norm,x),
-    max_iter=100,
-    sup=function(x) x[2] > 0,
-    debug=T)
-
+mle.norm <- mle_normal_mu_var(sim.df$lifetime)
 summary(mle.norm)
 ```
 
+Let's plot the pdfs of the Weibull and normal distributions:
 ```{r}
-mle.norm2 <- mle_normal_mu_var(sim.df$lifetime)
-summary(mle.norm2)
-bias(mle.norm2)
+plot(function(x) dweibull(x,shape=point(mle.wei)[1],scale=point(mle.wei)[2]),
+     xlim=c(1,4.5),ylim=c(0,.82),
+     main="Densities", col="green",
+     xlab="t", ylab="density")
+
+# overlay the normal distribution pdf on the Weibull pdf plot
+curve(dnorm(x,mean=point(mle.norm)[1],sd=sqrt(point(mle.norm)[2])),
+      add=T,col="red")
+
+lines(dgp.density, col="black")
 ```
 
+In black, we have the true density. In green, we have the Weibull density.
+In red, we have the normal density. From the plot, it's hard to tell which
+distribution is a better fit to the DGP.
 
+How do we choose between the Weibull and the normal distribution? We will
+discuss this in the next section.
 
-The MLE has a *sampling distribution*.
-We provide a contour plot of the density of the sampling distribution with
-the following R code:
-```{r,eval=F}
-mle.theta <- params(mle.wei)
-mle.shape <- mle.theta[1]
-mle.scale <- mle.theta[2]
-
-# make this example reproducible
-mle.shape.sd <- sqrt(vcov(mle.wei)[1])
-mle.scale.sd <- sqrt(vcov(mle.wei)[2])
-
-# create bivariate normal distribution
-shapes <- seq(mle.shape-2*mle.shape.sd,
-              mle.shape+2*mle.shape.sd,.001) 
-scales <- seq(mle.scale-2*mle.scale.sd,
-              mle.scale+2*mle.scale.sd,.001)
-densities <- outer(shapes,scales,
-                   \(x,y) dmvnorm(cbind(x,y),mle.theta,vcov(mle.wei)))
-
-# create contour plot
-contour(shapes,scales,densities,nlevels=5)
-```
-
-```{r eval=F}
-make_data <- function(mle,low,high,N=1000,by=.1)
-{
-    #g <- function(t) { function(theta) dweibull(t,shape=theta[1],scale=theta[2]) }
-    g <- function(p) { function(theta) stats::qweibull(p,shape=theta[1],scale=theta[2]) }
-    ts <- seq(from=low,to=high,by=by)
-    data <- matrix(nrow=length(ts),ncol=2+nparams(mle))
-
-    for (i in 1:length(ts))
-    {
-        data[i,] <- c(ts[i],g(ts[i])(point(mle)),pred(mle,g(ts[i]),N))
-    }
-    data
-}
-
-make_plot <- function(mle,low=0,high=10,N=1000,by=.1)
-{
-    dat <- make_data(mle,low,high,N,by)
-    plot(dat[,c(1,4)],type="l",col="grey")
-    lines(dat[,c(1,3)],col="grey")
-    lines(dat[,c(1,2)],col="green")
-}
-```
-
-
-```{r,eval=F}
-#set.seed(123)
-#thetas <- mvtnorm::rmvnorm(1000,mean=mle.theta,sigma=vcov(mle))
-
-samp.df <- expand.grid(shapes,scales)
-colnames(samp.df) <- c("shape","scale")
-samp.df$density=mvtnorm::dmvnorm(
-    cbind(samp.df$shape,samp.df$scale),
-    mean=mle.theta,
-    sigma=vcov(mle.wei))
-v <- ggplot(samp.df,aes(shape,scale,z=density)) + geom_contour()
-```
-
+## Goodness of fit
 We are fitting a model to the data that does not precisely capture the
 generative model $W$. So, how good of a fit is it?
 
@@ -321,32 +265,17 @@ We will conduct a goodness of fit test,
   H_A &: \text{the data is not compatible with the Weibull distribution}.
 \end{align}
 
-```{r,eval=F}
-chisqr.test <- function(obs.dat,
-                        cdf,
-                        nbreaks=ceiling(sqrt(length(obs.dat))),
-                        ...)
-{
-  h <- hist(obs.dat,right=F,breaks=nbreaks)
-  t <- chisq.test(
-      h$counts,
-      p=zoo::rollapply(cdf(h$breaks,...),
-                       2,
-                       \(x) x[2]-x[1]),
-      rescale.p=T,
-      simulate.p.value=T)
-  
-  t$data.name=deparse(substitute(obs.dat))
-  t$obs.size=length(obs.dat)
-  t$nbreaks=nbreaks
-  
-  t
-}
-chisqr.test(sim.df$lifetime,pweibull,shape=mle.shape,scale=mle.scale)
-```
+To perform this test, we will use the Cramer-von Mises test. This test is
+based on the Cramer-von Mises statistic, which is a measure of the distance
+between the empirical distribution function of the data and the distribution
+function of the model. The Cramer-von Mises statistic is given by
+$$
+  \hat D_n^2 = \frac{1}{n}\sum_{i=1}^n \left(\hat F_n(x_i) - F(x_i)\right)^2
+$$
+where $\hat F_n$ is the empirical distribution function of the data and
+$F$ is the distribution function of the model.
 
-
-```{r,eval=F}
+```{r}
 cramer.test <- function(obs.dat,ref.dat)
 {
   stat <- CDFt::CramerVonMisesTwoSamples(obs.dat,ref.dat)
@@ -356,15 +285,48 @@ cramer.test <- function(obs.dat,ref.dat)
        ref.size=length(ref.dat))
 }
 
-ref.dat <- rweibull(1000000,shape=mle.shape,scale=mle.scale)
+wei.shape <- point(mle.wei)[1]
+wei.scale <- point(mle.wei)[2]
+ref.dat <- rweibull(1000000,shape=wei.shape,scale=wei.scale)
 cramer.test(sim.df$lifetime,ref.dat)
 ```
 
-
-```{r,eval=F}
-ks.test(sim.df$lifetime,ref.dat)
+Looking at the $p$-value, we see that the data is compatible with the
+Weibull distribution.
+Now, let's do the same for the normal distribution:
+```{r}
+norm.mu <- point(mle.norm)[1]
+norm.var <- point(mle.norm)[2]
+ref.dat <- rnorm(1000000,mean=norm.mu,sd=sqrt(norm.var))
+cramer.test(sim.df$lifetime,ref.dat)
 ```
 
-```{r,eval=F}
-CDFt::KolmogorovSmirnov(sim.df$lifetime,ref.dat)
+They are both compatible with the data. However, the Weibull distribution
+has a larger $p$-value, which may suggest it is a better fit.
+We also have the AIC measure of goodness of fit. The AIC is given by
+$$
+  \text{AIC} = -2\log L + 2k,
+$$
+where $L$ is the likelihood of the model and $k$ is the number of parameters
+in the model. The AIC is a measure of the tradeoff between the goodness of
+fit and the complexity of the model.
+```{r}
+aic(mle.wei)
+aic(mle.norm)
 ```
+A lower AIC value indicates a better fit. Thus, according to this measure,
+the Weibull distribution is the better fit.
+
+## Conclusion
+In this post, we have shown how to fit a Weibull distribution to data.
+We have also shown how to fit a normal distribution to the same data.
+We have shown how to compare the two models using the Cramer-von Mises
+test and the AIC measure of goodness of fit.
+
+We came to no definitive conclusion about which model is better, but
+the Weibull distribution has a larger $p$-value from the Cramer-von Mises
+test, and a lower AIC value. Thus, it may be the better fit, but we see that
+the true DGP is visually different from both the Weibull and the normal
+distributions. Notably, the DGP has longer tails than both, suggesting that
+an even better fit may be a long-tail distribution like the log-normal or
+the Pareto distribution.

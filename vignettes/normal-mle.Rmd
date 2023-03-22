@@ -1,6 +1,8 @@
 ---
 title: "Normal distribution MLE"
-output: rmarkdown::html_vignette
+output:
+    rmarkdown::html_vignette:
+        toc: true
 vignette: >
   %\VignetteIndexEntry{Normal distribution MLE}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,44 +19,37 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction
+## Introduction
 To demonstrate the R package `algebraic.mle`, we consider the relatively
 simple case of a random sample from i.i.d. normally distributed random
-variables.
-
-First, we load the R package `algebraic.mle`, along with other R packages we
-need, with:
-
-```{r setup}
+variables. First, we load the R package `algebraic.mle` with:
+```{r setup, warning=F, message=F}
 library(algebraic.mle)
-library(tibble)
-library(ggplot2)
-library(dplyr)
 ```
 
-# Generating a sample
+## Generating a sample
 
 We define the parameters of the i.i.d. random sample with:
 ```{r}
 n <- 200
-theta <- matrix(c(10,2),nrow=2)
+theta <- c(10,2)
 ```
 
 We generate a random sample $X_i \sim \operatorname{N}(\mu=`r theta[1]`,\sigma^2=`r theta[2]`)$ for
 $i=1,\ldots,n$ with:
 ```{r}
-x <- tibble(x=rnorm(n,mean=theta[1],sd=sqrt(theta[2])))
+x <- rnorm(n,mean=theta[1],sd=sqrt(theta[2]))
 ```
 
 We have observed a sample of size $n=`r n`$.
 We show some observations from this sample (data frame) with:
 ```{r}
-print(head(x,n=4))
+head(x,n=4)
 ```
 
 We show a histogram of the sample with:
 ```{r}
-hist(x$x)
+hist(x)
 ```
 
 We see the characteristic bell shaped curve of the normal distribution.
@@ -65,7 +60,7 @@ be evidence that the normal distribution is a good fit to the data.
 If we would like to estimate $\theta=(`r theta`)'$, we can do so using maximum likelihood
 estimation as implemented by the `algebraic.mle` package:
 ```{r}
-theta.hat <- mle_normal(x,"x")
+theta.hat <- mle_normal_mu_var(x)
 summary(theta.hat)
 ```
 
@@ -86,7 +81,8 @@ We can show the confidence intervals with:
 confint(theta.hat)
 ```
 
-## Bias
+### Performance measures of the MLE
+
 Let $F$ denote the true distribution function such that $X_j \sim F$ for all
 $j$.
 Suppose we have some population parameter $\theta = t(F)$
@@ -114,48 +110,32 @@ bias of $\hat\sigma^2$ is given by $-\frac{1}{n} \sigma^2$:
 ```{r}
 bias(theta.hat,theta)
 ```
-
-## Bootstrap method
-If we wish to *estimate* the bias when $F$ is not known (e.g., $\sigma^2$ is not
-know), we may use the Bootstrap method.
-We replace $F$ with the observed sample $\hat{F} = \{x_1,\ldots,x_n\}$.
-If we have some population parameter $\theta = t(F)$
-and an estimator of $\theta$ given by $\hat\theta = s(\{X_1,\ldots,X_n\})$, then
-in the Bootstrap method we estimate the bias of $\hat\theta$ with
-
-$$
-\widehat{\operatorname{bias}}(\hat\theta) = E_{\hat F}\bigl\{s(X^*)\bigr\} - t(\hat F)
-$$
-
-where $X^*$ are bootstrap resamples from $\{X_1,\ldots,X_n\}$ each of
-size $n$.
-
-The procedure is relatively straightforward:
-
-1. Sample with replacement from the original data $\hat{F} = \{x_1,\ldots,x_n\}$, obtaining
-$R$ bootstrap resamples, $\{x_{1 j}^*,\ldots,x_{n j}\}$ for $j=1,\ldots,R$.
-
-2. Apply the estimator $s$ to each bootstrap resample, obtaining $R$ estimates of
-$\theta$, denoted by $\{\hat\theta_1^*,\ldots,\hat\theta_R^*\}$.
-
-3. Estimate the bias with
-$$
-\widehat{\operatorname{bias}}(\hat\theta) =
-    \frac{1}{R} \sum_{i=1}^R \hat\theta_i^* - \hat\theta.
-$$
-
-In the computation of the bias above, we see that we replace the sampling
-distribution $\hat\theta$ with the empirical distribution
-$\hat{F} = \{\hat\theta_1^*,\ldots,\hat\theta_R^*\}$ and we replace $\theta$ with
-$\hat\theta$.
-
-
-```{r,eval=F}
-algebraic.mle::boot_estimate(x$x,algebraic.mle::mle_normal)
+If $\sigma^2$ is not known, we may estimate it by using replacing $\hat\sigma^2$
+instead:
+```{r}
+bias(theta.hat)
 ```
 
+The mean squared error (MSE) is another performance measure of an estimator.
+It is given by
+$$
+    \operatorname{mse}(\hat\theta) = E\bigl\{(\hat\theta - \theta)^T(\hat\theta - \theta)\bigr\},
+$$
+Another way to compute the MSE is given by
+$$
+    \operatorname{mse}(\hat\theta) = \operatorname{trace}(\operatorname{cov}(\hat\theta) +
+        \operatorname{bias}(\hat\lambda,\lambda)^T \operatorname{bias}(\hat\lambda,\lambda).
+$$
+We may, of course, have to estimate the MSE if the $\theta$ is not known by
+replacing the bias with an estimate of the bias, as discussed previously.
 
-## Sampling distribution of the MLE
+Here's R code to compute the MSE of $\hat\theta$:
+```{r}
+mse(theta.hat)
+mse(theta.hat,theta)
+```
+
+### Sampling distribution of the MLE
 A nice property of MLEs is that, asymptotically, they converge to
 a normal distribution with a mean given by the true parameter, in this case
 $\theta = (\mu,\sigma^2)'$, and a variance-covariance given by the inverse of the Fisher
@@ -174,7 +154,7 @@ The method `rmap` applied to an object `x` for which `is_mle(x)` and a
 function `f` compatible with `point(x)` (and optionally a simulation
 sample size) computes the MLE of `f(x)`.
 
-### Example
+#### Example
 We know that the MLE $\hat\theta \sim \mathcal{N}(\theta,I^{-1}(\theta))$.
 We seek a transformation $g(\hat\theta)$ such that its expectation is
 $2 \theta$, i.e., $g(\theta) = 2\theta$:
@@ -226,19 +206,23 @@ samp <- rnorm(N,mean=theta[1],sd=sqrt(theta[2]))
 samp.sub <- matrix(samp,nrow=r)
 mles.sub <- list(length=r)
 for (i in 1:r)
-    mles.sub[[i]] <- mle_normal(samp.sub[i,])
+    mles.sub[[i]] <- mle_normal_mu_var(samp.sub[i,])
 
 mle.wt <- mle_weighted(mles.sub)
-mle <- mle_normal(samp)
+mle <- mle_normal_mu_var(samp)
 ```
 
-We show the results in the following R code:
+We show the results in the following R code.
+First, we show the weighted MLE and its MSE:
 ```{r}
-tibble(weighted=point(mle.wt)[,1],
-       total=point(mle)[,1],
-       var.weighted=diag(vcov(mle.wt)),
-       var.total=diag(vcov(mle)))
+point(mle.wt)
+mse(mle.wt)
+```
+The MLE for the total sample and its MSE is:
+```{r}
+point(mle)
+mse(mle)
 ```
 
 We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling
-distribution for $\theta$.
+distribution when estimating $\theta$ given i.i.d. samples.

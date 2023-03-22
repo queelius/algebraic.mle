@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle.R
 \name{print.summary_mle}
 \alias{print.summary_mle}
-\title{Function for printing a \code{summary} object for an \object{mle} object.}
+\title{Function for printing a \code{summary} object for an \code{mle} object.}
 \usage{
 \method{print}{summary_mle}(object, ...)
 }
@@ -12,5 +12,5 @@
 \item{...}{pass additional arguments}
 }
 \description{
-Function for printing a \code{summary} object for an \object{mle} object.
+Function for printing a \code{summary} object for an \code{mle} object.
 }

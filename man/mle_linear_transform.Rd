@@ -12,6 +12,9 @@ mle_linear_transform(A, x)
 
 \item{x}{an \code{mle} object to linearly transform}
 }
+\value{
+a \code{mle_linear_transform} object
+}
 \description{
 Linearly transform an \code{mle} object \code{x} by multiplying it
 on the LHS by a matrix \code{A}.

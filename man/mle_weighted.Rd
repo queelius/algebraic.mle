@@ -11,11 +11,22 @@ mle_weighted(mles)
 \item{mles}{A list of \code{mle} objects, all for the same parameter.}
 }
 \value{
-an object of type \code{mle_weighted} which inherits from \code{mle}.
+An object of type \code{mle_weighted} (which inherits from
+        \code{mle}, which is the weighted sum of the \code{mle} objects.
+        The \code{mle_weighted} object has the following attributes:
 }
 \description{
 It combines the \code{mle} objects by adding them together, weighted by
-the inverse of their respective variance-covariance matrix. Intuitively,
-the higher the variance, the less weight an \code{mle} is given in the
-summation.
+the inverse of their respective variance-covariance matrix (information
+matrix). Intuitively, the higher the variance, the less weight an \code{mle}
+is given in the summation, or alternatively, the more information it
+has about the parameter, the more weight it is given in the summation.
+}
+\details{
+Each \code{mle} object should have a \code{fim} method, which returns
+the information matrix (inverse of the variance-covariance matrix).
+
+We assume that the observations used to estimate the MLE objects are
+independent, which might not always be the case. If this is not the case,
+then the computation of the log-likelihood is necessarily meaningful.
 }

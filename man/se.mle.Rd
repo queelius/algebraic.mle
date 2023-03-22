@@ -5,7 +5,7 @@
 \title{Function for obtaining an estimate of the standard error of the MLE
 \code{object}.}
 \usage{
-\method{se}{mle}(object)
+\method{se}{mle}(object, ...)
 }
 \arguments{
 \item{object}{the MLE object}

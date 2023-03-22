@@ -1,27 +1,3 @@
-#' Bootstrap method
-#'
-#' @param xs data
-#' @param stat statistic of data
-#' @param B bootstrap replicates
-#' @param ... additional arguments to pass.
-#' @importFrom plyr raply
-#' @export
-boot_estimate <- function(xs,stat,B=1000,...)
-{
-    n <- length(xs)
-    theta.b <- raply(B,
-    {
-        stat(sample(xs,n,replace=T),...)
-    })
-    theta.hat <- stat(xs,...)
-    structure(
-        list(theta.hat=theta.hat,
-             theta.b=theta.b,
-             stat=stat,
-             bias.hat=mean(theta.b)-theta.hat),
-        class="boot_estimate")
-}
-
 #' A function for estimating the empirical sampling distribution the
 #' MLE given a MLE solver and a sample using the Bootstrap method.
 #'

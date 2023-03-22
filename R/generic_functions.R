@@ -103,9 +103,11 @@ mse <- function(x,theta)
 #' Computes the bias of an estimator object.
 #'
 #' @param x the object to compute the bias of.
+#' @param theta true parameter value. usually, this is unknown (NULL), in which
+#'              case we estimate the bias
 #' @param ... pass additional arguments
 #' @export
-bias <- function(x,...)
+bias <- function(x,theta,...)
 {
     UseMethod("bias",x)
 }
@@ -167,14 +169,16 @@ orthogonal <- function(x,tol,...)
     UseMethod("orthogonal",x)
 }
 
-
-#' Compute the unbiased point estimate given an estimator object \code{x}.
+#' Compute the predictive confidence interval given an estimator object \code{x}.
 #'
-#' @param x the object from which to compute an unbiased estimate
+#' @param x the estimator object
+#' @param alpha (1-alpha)/2 confidence interval
+#' @param samp a sampler for random variable that is parameterized by mle \code{x}
 #' @param ... additional arguments to pass
 #' @export
-unbias <- function(x,...)
+pred <- function(x,samp=NULL,alpha=.05,...)
 {
-    UseMethod("unbias",x)
+    UseMethod("pred",x)
 }
+
 

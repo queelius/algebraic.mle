@@ -4,7 +4,7 @@
 \alias{bias.mle_normal_mu_var}
 \title{Computes the bias of an \code{mle_normal} object.}
 \usage{
-\method{bias}{mle_normal_mu_var}(x, theta, ...)
+\method{bias}{mle_normal_mu_var}(x, theta = NULL, ...)
 }
 \arguments{
 \item{x}{the \code{mle} object to compute the bias of.}

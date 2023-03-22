@@ -4,7 +4,7 @@
 \alias{mse.mle}
 \title{Computes the MSE of an \code{mle} object.}
 \usage{
-\method{mse}{mle}(x, theta)
+\method{mse}{mle}(x, theta = NULL)
 }
 \arguments{
 \item{x}{the \code{mle} object to compute the MSE of.}
@@ -18,9 +18,13 @@ then the MSE is
 \code{mse(x.hat) = E[(x.hat-x)^2] = trace(vcov(x.hat)) + (bias(x.hat))^2}.
 }
 \details{
-Since \code{x} is not typically known, the bias is not a statistic, and thus the
-MSE for biased estimators is not typically a statistic that can be computed.
-However, assuming the regularity conditions, the MLE is asymptotically
-unbiased, and thus for sufficiently large samples,
-\code{mse(x.hat) = trace(vcov(theta.hat))}.
+Since \code{x} is not typically known, we normally must estimate the bias.
+For sufficiently large samples, for the MLE assuming the regularity conditions,
+the bias is given by
+\code{mse(x.hat) = trace(vcov(x.hat)) + bias(x.hat)^2}, where
+\code{bias(x.hat)} is an estimate of \code{bias(x.hat,x)}. Sometimes, we
+can estimate the bias in closed form, but other times simulations must be
+done, such as bootstrapping the bias. And, for really large samples, since
+the MLE is asymptotically unbiased, \code{trace(vcov(x.hat))} may be a
+reasonable estimate of the MSE.
 }

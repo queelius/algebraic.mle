@@ -4,10 +4,13 @@
 \alias{bias.mle}
 \title{Computes the bias of an \code{mle} object.}
 \usage{
-\method{bias}{mle}(x, ...)
+\method{bias}{mle}(x, theta = NULL, ...)
 }
 \arguments{
 \item{x}{the \code{mle} object to compute the bias of.}
+
+\item{theta}{true parameter value. normally, unknown (NULL), in which case
+we estimate the bias (say, using bootstrap)}
 
 \item{...}{additional arguments to pass}
 }
