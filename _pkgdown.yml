@@ -1,34 +1,4 @@
 url: https://queelius.github.io/algebraic.mle/
-#template:
-#  bootstrap: 5
-#  #bootswatch: materia
-#  bootswatch: lux
-#  bslib:
-#    pkgdown-nav-height: 100px
-
-
 template:
   bootstrap: 5
-  #bootswatch: cyborg
-  #theme: arrow-dark
-  #bslib:
-  #  code-bg: "#2b2b2b"
-navbar:
-  structure:
-    right: [twitter, github, blog]
-  components:
-    twitter:
-      icon: fa-twitter
-      href: http://twitter.com/queelius
-      aria-label: Twitter
-    blog:
-      icon: fa-blog
-      href: http://blog.metafunctor.com/
-      aria-label: Blog
 
-home:
-  links:
-  - text: blog.metafunctor.com
-    href: http://blog.metafunctor.com/
-  - text: Roadmap
-    href: /roadmap.html

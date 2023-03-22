@@ -1,0 +1,13 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  algebraic-mle: algebraic-mle.html
+  exponential-mle: exponential-mle.html
+  normal-mle: normal-mle.html
+  weibull-mle: weibull-mle.html
+last_built: 2023-03-22T13:15Z
+urls:
+  reference: https://queelius.github.io/algebraic.mle/reference
+  article: https://queelius.github.io/algebraic.mle/articles
+
