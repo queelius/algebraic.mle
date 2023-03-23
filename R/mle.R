@@ -254,6 +254,7 @@ print.summary_mle <- function(object, ...) {
 #' \code{object}.
 #'
 #' @param object the MLE object
+#' @param ... pass additional arguments
 #' @export
 se.mle <- function(object, ...) {
     sqrt(diag(as.matrix(vcov(object, ...))))
@@ -327,15 +328,17 @@ score.mle <- function(x, ...) {
     x$score
 }
 
-#' Computes the bias of an \code{mle} object.
+#' Computes the bias of an \code{mle} object assuming the large sample
+#' approximation is valid and the MLE regularity conditions are satisfied.
+#' In this case, the bias is zero (or zero vector).
 #'
 #' @param x the \code{mle} object to compute the bias of.
-#' @param theta true parameter value. normally, unknown (NULL), in which case
+#' @param par true parameter value. normally, unknown (NULL), in which case
 #'              we estimate the bias (say, using bootstrap)
 #' @param ... additional arguments to pass
 #'
 #' @export
-bias.mle <- function(x, theta = NULL, ...) {
+bias.mle <- function(x, par = NULL, ...) {
     rep(0, nparams(x, ...))
 }
 

@@ -5,9 +5,8 @@
 #' @param ... additional arguments to pass
 #'
 #' @export
-loglike <- function(x,...)
-{
-    UseMethod("loglike",x)
+loglike <- function(x, ...) {
+    UseMethod("loglike", x)
 }
 
 #' Generic method for obtaining the AIC of a fitted distribution object fit.
@@ -15,9 +14,8 @@ loglike <- function(x,...)
 #' @param x the object to obtain the AIC of
 #'
 #' @export
-aic <- function(x)
-{
-    UseMethod("aic",x)
+aic <- function(x) {
+    UseMethod("aic", x)
 }
 
 #' Method for obtaining the parameters of a fitted distribution object.
@@ -25,9 +23,8 @@ aic <- function(x)
 #' @param x the fitted object to obtain the parameters of
 #'
 #' @export
-params <- function(x)
-{
-    UseMethod("params",x)
+params <- function(x) {
+    UseMethod("params", x)
 }
 
 
@@ -37,9 +34,8 @@ params <- function(x)
 #' @param x the fitted object to obtain the number of parameters for
 #'
 #' @export
-nparams <- function(x)
-{
-    UseMethod("nparams",x)
+nparams <- function(x) {
+    UseMethod("nparams", x)
 }
 
 #' Generic method for obtaining the best point estimate from an estimator.
@@ -48,9 +44,8 @@ nparams <- function(x)
 #' @param ... additional arguments to pass
 #'
 #' @export
-point <- function(x, ...)
-{
-    UseMethod("point",x)
+point <- function(x, ...) {
+    UseMethod("point", x)
 }
 
 #' Generic function for sampling from distribution objects.
@@ -63,9 +58,8 @@ point <- function(x, ...)
 #' @param ... additional arguments to pass
 #'
 #' @export
-sampler <- function(x, ...)
-{
-    UseMethod("sampler",x)
+sampler <- function(x, ...) {
+    UseMethod("sampler", x)
 }
 
 #' Generic method for obtaining the fisher information
@@ -84,9 +78,8 @@ sampler <- function(x, ...)
 #' @param ... additional arguments to pass
 #'
 #' @export
-fim <- function(x, ...)
-{
-    UseMethod("fim",x)
+fim <- function(x, ...) {
+    UseMethod("fim", x)
 }
 
 #' Generic function for obtaining the mean squared error (MSE) of an estimator,
@@ -95,9 +88,8 @@ fim <- function(x, ...)
 #' @param x the object to compute the MSE of
 #' @param theta the true parameter value
 #' @export
-mse <- function(x,theta)
-{
-    UseMethod("mse",x)
+mse <- function(x, theta) {
+    UseMethod("mse", x)
 }
 
 #' Computes the bias of an estimator object.
@@ -107,9 +99,8 @@ mse <- function(x,theta)
 #'              case we estimate the bias
 #' @param ... pass additional arguments
 #' @export
-bias <- function(x,theta,...)
-{
-    UseMethod("bias",x)
+bias <- function(x, theta, ...) {
+    UseMethod("bias", x)
 }
 
 #' Computes the score of an estimator object with respect to its log-likelihood.
@@ -118,9 +109,8 @@ bias <- function(x,theta,...)
 #' @param ... pass additional arguments
 #'
 #' @export
-score <- function(x,...)
-{
-    UseMethod("score",x)
+score <- function(x, ...) {
+    UseMethod("score", x)
 }
 
 #' Generic function for computing the distribution of \code{f(x)} where \code{x}
@@ -134,9 +124,8 @@ score <- function(x,...)
 #'          objects in \code{x}.
 #' @param ... additional arguments to pass.
 #' @export
-rmap <- function(x,g,...)
-{
-    UseMethod("rmap",x)
+rmap <- function(x, g, ...) {
+    UseMethod("rmap", x)
 }
 
 #' Method for obtaining the observations used by a fitted model \code{object}.
@@ -144,18 +133,16 @@ rmap <- function(x,g,...)
 #' @param object the fitted object to obtain the number of observations used by the fit
 #' @param ... additional arguments to pass
 #' @export
-obs <- function(object,...)
-{
-    UseMethod("obs",object)
+obs <- function(object, ...) {
+    UseMethod("obs", object)
 }
 
 #' Method for obtaining the standard error of an estimator.
 #'
 #' @param object the estimator
 #' @export
-se <- function(object)
-{
-    UseMethod("se",object)
+se <- function(object) {
+    UseMethod("se", object)
 }
 
 #' Method for determining the orthogonal parameters of an estimator.
@@ -164,9 +151,8 @@ se <- function(object)
 #' @param tol the tolerance for determining if a number is close enough to zero
 #' @param ... additional arguments to pass
 #' @export
-orthogonal <- function(x,tol,...)
-{
-    UseMethod("orthogonal",x)
+orthogonal <- function(x, tol, ...) {
+    UseMethod("orthogonal", x)
 }
 
 #' Compute the predictive confidence interval given an estimator object \code{x}.
@@ -176,9 +162,6 @@ orthogonal <- function(x,tol,...)
 #' @param samp a sampler for random variable that is parameterized by mle \code{x}
 #' @param ... additional arguments to pass
 #' @export
-pred <- function(x,samp=NULL,alpha=.05,...)
-{
-    UseMethod("pred",x)
+pred <- function(x, samp = NULL, alpha = .05, ...) {
+    UseMethod("pred", x)
 }
-
-

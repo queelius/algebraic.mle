@@ -1,7 +1,5 @@
 ---
-output:
-  github_document:
-    toc: true
+output: github_document
 #always_allow_html: true
 ---
 
@@ -28,17 +26,11 @@ We define an algebra over MLEs.
 
 ## Installation
 
-You can install the development version of `algebraic.mle` from [GitHub](https://github.com/) with:
-
-```{r,eval=F}
+You can install `algebraic.mle` from [GitHub](https://github.com/queelius/algebraic.mle) with:
+```r
 install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
-
-## TODO
-
-- Use generics and standard notation for operations on MLEs, like addition.
-  May need to look into multiple dispatch.
 
 ## API
 
@@ -50,4 +42,14 @@ The API mostly consists of generic methods with implementations for various
 For a full list of functions, see the [function reference](https://queelius.github.io/algebraic.mle/reference/index.html)
 for `algebraic.mle`.
 
+Here is a simple minimum working example (MWE) of fitting an exponential model
+to exponential data.
+```{r}
+library(algebraic.mle)
+# Fit an exponential model to exponential DGP (data generating process)
+rate.hat <- mle_exp_rate(rexp(100, 1))
+summary(rate.hat)
+```
 
+You can see tutorials for more examples of using the package in the
+[vignettes](https://queelius.github.io/algebraic.mle/articles/index.html).

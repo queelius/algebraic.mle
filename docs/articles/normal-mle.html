@@ -36,9 +36,6 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
-  <a class="nav-link" href="../articles/algebraic-mle.html">Get started</a>
-</li>
-<li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="active nav-item dropdown">
@@ -46,11 +43,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
-    <a class="dropdown-item" href="../articles/weibull-mle.html">Analysis of simple time series data</a>
+    <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -73,8 +67,7 @@
 
 
 
-
-<div class="row">
+<script src="normal-mle_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Normal distribution MLE</h1>
             
@@ -88,12 +81,12 @@
 <div class="section level3">
 <h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h3>
-<p>To demonstrate the R package <code>algebraic.mle</code>, we consider
-the relatively simple case of a random sample from i.i.d. normally
-distributed random variables. First, we load the R package
-<code>algebraic.mle</code> with:</p>
+<p>To demonstrate the R package <code>algebraic.mle</code>, we consider the relatively simple case of a random sample from i.i.d. normally distributed random variables. First, we load the R package <code>algebraic.mle</code> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># make it so that i only show 3 digits after the decimal point</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="generating-a-sample">Generating a sample<a class="anchor" aria-label="anchor" href="#generating-a-sample"></a>
@@ -102,206 +95,143 @@ distributed random variables. First, we load the R package
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">200</span></span>
 <span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p>We generate a random sample <span class="math inline">\(X_i \sim
-\operatorname{N}(\mu=10,\sigma^2=2)\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span> with:</p>
+<p>We generate a random sample <span class="math inline">\(X_i \sim \operatorname{N}(\mu=10,\sigma^2=2)\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span> with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>,mean<span class="op">=</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,sd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We have observed a sample of size <span class="math inline">\(n=200\)</span>. We show some observations from
-this sample (data frame) with:</p>
+<p>We have observed a sample of size <span class="math inline">\(n=200\)</span>. We show some observations from this sample (data frame) with:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">x</span>,n<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1]  9.415173 10.618499  7.326722  9.670237</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 13.89 11.86 11.10  9.46</span></span></code></pre></div>
 <p>We show a histogram of the sample with:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
 <p><img src="normal-mle_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<p>We see the characteristic bell shaped curve of the normal
-distribution. If we did not a prior know that the data was normally
-distributed, this would be evidence that the normal distribution is a
-good fit to the data.</p>
+<p>We see the characteristic bell shaped curve of the normal distribution. If we did not a prior know that the data was normally distributed, this would be evidence that the normal distribution is a good fit to the data.</p>
 </div>
 <div class="section level2">
 <h2 id="maximum-likelihood-estimation">Maximum likelihood estimation<a class="anchor" aria-label="anchor" href="#maximum-likelihood-estimation"></a>
 </h2>
-<p>If we would like to estimate <span class="math inline">\(\theta=(10,
-2)'\)</span>, we can do so using maximum likelihood estimation as
-implemented by the <code>algebraic.mle</code> package:</p>
+<p>If we would like to estimate <span class="math inline">\(\theta=(10, 2)'\)</span>, we can do so using maximum likelihood estimation as implemented by the <code>algebraic.mle</code> package:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_normal_mu_var.html">mle_normal_mu_var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_normal_mu_var is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
-<span><span class="co">#&gt;       mu      var </span></span>
-<span><span class="co">#&gt; 9.967735 2.104042 </span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 10.05  2.42 </span></span>
 <span><span class="co">#&gt; The fisher information matrix (FIM) is given by:</span></span>
-<span><span class="co">#&gt;          [,1]     [,2]</span></span>
-<span><span class="co">#&gt; [1,] 95.05515  0.00000</span></span>
-<span><span class="co">#&gt; [2,]  0.00000 22.58871</span></span>
+<span><span class="co">#&gt;      [,1] [,2]</span></span>
+<span><span class="co">#&gt; [1,] 82.6    0</span></span>
+<span><span class="co">#&gt; [2,]  0.0   17</span></span>
 <span><span class="co">#&gt; The variance-covariance matrix of the estimator is given by:</span></span>
-<span><span class="co">#&gt;            [,1]       [,2]</span></span>
-<span><span class="co">#&gt; [1,] 0.01052021 0.00000000</span></span>
-<span><span class="co">#&gt; [2,] 0.00000000 0.04426991</span></span>
+<span><span class="co">#&gt;        [,1]   [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.0121 0.0000</span></span>
+<span><span class="co">#&gt; [2,] 0.0000 0.0587</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
-<span><span class="co">#&gt;         2.5%     97.5%</span></span>
-<span><span class="co">#&gt; mu  9.799026 10.136445</span></span>
-<span><span class="co">#&gt; var 1.757958  2.450126</span></span>
+<span><span class="co">#&gt;     2.5% 97.5%</span></span>
+<span><span class="co">#&gt; mu  9.87 10.23</span></span>
+<span><span class="co">#&gt; var 2.02  2.82</span></span>
 <span><span class="co">#&gt; The bias of the estimator is given by:</span></span>
-<span><span class="co">#&gt;                     var </span></span>
-<span><span class="co">#&gt;  0.00000000 -0.01052021 </span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.0549008 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  -358.1737 .</span></span>
-<span><span class="co">#&gt; The AIC is  720.3474 .</span></span>
-<span><span class="co">#&gt; The standard error is  0.1025681 0.2104042 .</span></span></code></pre></div>
+<span><span class="co">#&gt;             var </span></span>
+<span><span class="co">#&gt;  0.0000 -0.0121 </span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.071 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  -372 .</span></span>
+<span><span class="co">#&gt; The AIC is  749 .</span></span>
+<span><span class="co">#&gt; The standard error is  0.11 0.242 .</span></span></code></pre></div>
 <p>We can show the point estimate given data <code>x</code> with:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       mu      var </span></span>
-<span><span class="co">#&gt; 9.967735 2.104042</span></span></code></pre></div>
-<p>We can show the Fisher information matrix (FIM) and
-variance-covariance matrix with:</p>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 10.05  2.42</span></span></code></pre></div>
+<p>We can show the Fisher information matrix (FIM) and variance-covariance matrix with:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fim.html">fim</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          [,1]     [,2]</span></span>
-<span><span class="co">#&gt; [1,] 95.05515  0.00000</span></span>
-<span><span class="co">#&gt; [2,]  0.00000 22.58871</span></span>
+<span><span class="co">#&gt;      [,1] [,2]</span></span>
+<span><span class="co">#&gt; [1,] 82.6    0</span></span>
+<span><span class="co">#&gt; [2,]  0.0   17</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            [,1]       [,2]</span></span>
-<span><span class="co">#&gt; [1,] 0.01052021 0.00000000</span></span>
-<span><span class="co">#&gt; [2,] 0.00000000 0.04426991</span></span></code></pre></div>
+<span><span class="co">#&gt;        [,1]   [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.0121 0.0000</span></span>
+<span><span class="co">#&gt; [2,] 0.0000 0.0587</span></span></code></pre></div>
 <p>We can show the confidence intervals with:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         2.5%     97.5%</span></span>
-<span><span class="co">#&gt; mu  9.799026 10.136445</span></span>
-<span><span class="co">#&gt; var 1.757958  2.450126</span></span></code></pre></div>
+<span><span class="co">#&gt;     2.5% 97.5%</span></span>
+<span><span class="co">#&gt; mu  9.87 10.23</span></span>
+<span><span class="co">#&gt; var 2.02  2.82</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="performance-measures-of-the-mle">Performance measures of the MLE<a class="anchor" aria-label="anchor" href="#performance-measures-of-the-mle"></a>
 </h4>
-<p>Let <span class="math inline">\(F\)</span> denote the true
-distribution function such that <span class="math inline">\(X_j \sim
-F\)</span> for all <span class="math inline">\(j\)</span>. Suppose we
-have some population parameter <span class="math inline">\(\theta =
-t(F)\)</span> and an estimator of <span class="math inline">\(\theta\)</span> given by <span class="math inline">\(\hat\theta = s(\{X_1,\ldots,X_n\})\)</span>. A
-reasonable requirement for an estimator <span class="math inline">\(\hat\theta\)</span> is that it converges to the
-true parameter value <span class="math inline">\(\theta\)</span> as we
-collect more and more data. In particular, we say that it is a
-consistent estimator of <span class="math inline">\(\theta\)</span> if
-<span class="math inline">\(\hat\theta\)</span> converges in probability
-to <span class="math inline">\(\theta\)</span>, denoted by <span class="math inline">\(\hat\theta \overset{p}{\mapsto}
-\theta\)</span>.</p>
-<p>If the regularity conditions hold for the MLE, then <span class="math inline">\(\hat\theta\)</span> is a consistent estimator of
-<span class="math inline">\(\theta\)</span>. However, for finite sample
-sizes, the estimator may be biased. The bias of <span class="math inline">\(\hat\theta\)</span> with respect to <span class="math inline">\(\theta\)</span> is defined as <span class="math display">\[
+<p>Let <span class="math inline">\(F\)</span> denote the true distribution function such that <span class="math inline">\(X_j \sim F\)</span> for all <span class="math inline">\(j\)</span>. Suppose we have some population parameter <span class="math inline">\(\theta = t(F)\)</span> and an estimator of <span class="math inline">\(\theta\)</span> given by <span class="math inline">\(\hat\theta = s(\{X_1,\ldots,X_n\})\)</span>. A reasonable requirement for an estimator <span class="math inline">\(\hat\theta\)</span> is that it converges to the true parameter value <span class="math inline">\(\theta\)</span> as we collect more and more data. In particular, we say that it is a consistent estimator of <span class="math inline">\(\theta\)</span> if <span class="math inline">\(\hat\theta\)</span> converges in probability to <span class="math inline">\(\theta\)</span>, denoted by <span class="math inline">\(\hat\theta \overset{p}{\mapsto} \theta\)</span>.</p>
+<p>If the regularity conditions hold for the MLE, then <span class="math inline">\(\hat\theta\)</span> is a consistent estimator of <span class="math inline">\(\theta\)</span>. However, for finite sample sizes, the estimator may be biased. The bias of <span class="math inline">\(\hat\theta\)</span> with respect to <span class="math inline">\(\theta\)</span> is defined as <span class="math display">\[
     \operatorname{bias}(\hat\theta,\theta) = E(\hat\theta) - \theta,
-\]</span> where <span class="math inline">\(\operatorname{bias}(\hat\theta,\theta) =
-0\)</span> indicates that <span class="math inline">\(\hat\theta\)</span> is an <em>unbiased</em>
-estimator of <span class="math inline">\(\theta\)</span>.</p>
-<p>As a function of the true distribution <span class="math inline">\(F\)</span>, the bias is unknown and is not a
-statistic. However, in the case of the normal, <span class="math inline">\(\hat\mu\)</span> is unbiased and, analytically,
-the bias of <span class="math inline">\(\hat\sigma^2\)</span> is given
-by <span class="math inline">\(-\frac{1}{n} \sigma^2\)</span>:</p>
+\]</span> where <span class="math inline">\(\operatorname{bias}(\hat\theta,\theta) = 0\)</span> indicates that <span class="math inline">\(\hat\theta\)</span> is an <em>unbiased</em> estimator of <span class="math inline">\(\theta\)</span>.</p>
+<p>As a function of the true distribution <span class="math inline">\(F\)</span>, the bias is unknown and is not a statistic. However, in the case of the normal, <span class="math inline">\(\hat\mu\)</span> is unbiased and, analytically, the bias of <span class="math inline">\(\hat\sigma^2\)</span> is given by <span class="math inline">\(-\frac{1}{n} \sigma^2\)</span>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.hat</span>,<span class="va">theta</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1]  0.00 -0.01</span></span></code></pre></div>
-<p>If <span class="math inline">\(\sigma^2\)</span> is not known, we may
-estimate it by using replacing <span class="math inline">\(\hat\sigma^2\)</span> instead:</p>
+<p>If <span class="math inline">\(\sigma^2\)</span> is not known, we may estimate it by using replacing <span class="math inline">\(\hat\sigma^2\)</span> instead:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                     var </span></span>
-<span><span class="co">#&gt;  0.00000000 -0.01052021</span></span></code></pre></div>
-<p>The mean squared error (MSE) is another performance measure of an
-estimator. It is given by <span class="math display">\[
-    \operatorname{mse}(\hat\theta) = E\bigl\{(\hat\theta -
-\theta)^T(\hat\theta - \theta)\bigr\},
+<span><span class="co">#&gt;             var </span></span>
+<span><span class="co">#&gt;  0.0000 -0.0121</span></span></code></pre></div>
+<p>The mean squared error (MSE) is another performance measure of an estimator. It is given by <span class="math display">\[
+    \operatorname{mse}(\hat\theta) = E\bigl\{(\hat\theta - \theta)^T(\hat\theta - \theta)\bigr\},
 \]</span> Another way to compute the MSE is given by <span class="math display">\[
-    \operatorname{mse}(\hat\theta) =
-\operatorname{trace}(\operatorname{cov}(\hat\theta) +
-        \operatorname{bias}(\hat\lambda,\lambda)^T
-\operatorname{bias}(\hat\lambda,\lambda).
-\]</span> We may, of course, have to estimate the MSE if the <span class="math inline">\(\theta\)</span> is not known by replacing the bias
-with an estimate of the bias, as discussed previously.</p>
+    \operatorname{mse}(\hat\theta) = \operatorname{trace}(\operatorname{cov}(\hat\theta) +
+        \operatorname{bias}(\hat\lambda,\lambda)^T \operatorname{bias}(\hat\lambda,\lambda).
+\]</span> We may, of course, have to estimate the MSE if the <span class="math inline">\(\theta\)</span> is not known by replacing the bias with an estimate of the bias, as discussed previously.</p>
 <p>Here’s R code to compute the MSE of <span class="math inline">\(\hat\theta\)</span>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.0549008</span></span>
+<span><span class="co">#&gt; [1] 0.071</span></span>
 <span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">theta.hat</span>,<span class="va">theta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.05489012</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.0709</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="sampling-distribution-of-the-mle">Sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#sampling-distribution-of-the-mle"></a>
 </h4>
-<p>A nice property of MLEs is that, asymptotically, they converge to a
-normal distribution with a mean given by the true parameter, in this
-case <span class="math inline">\(\theta = (\mu,\sigma^2)'\)</span>,
-and a variance-covariance given by the inverse of the Fisher information
-matrix evaluated at <span class="math inline">\(\theta\)</span>.</p>
-<p>We do not know <span class="math inline">\(\theta\)</span>, but we
-may estimate it from a sample, and thus we may approximate the sampling
-distribution of <span class="math inline">\(\hat\theta\)</span> with
-<span class="math inline">\(\mathcal{N}(\hat\theta,I^{-1}(\hat\theta))\)</span>.</p>
+<p>A nice property of MLEs is that, asymptotically, they converge to a normal distribution with a mean given by the true parameter, in this case <span class="math inline">\(\theta = (\mu,\sigma^2)'\)</span>, and a variance-covariance given by the inverse of the Fisher information matrix evaluated at <span class="math inline">\(\theta\)</span>.</p>
+<p>We do not know <span class="math inline">\(\theta\)</span>, but we may estimate it from a sample, and thus we may approximate the sampling distribution of <span class="math inline">\(\hat\theta\)</span> with <span class="math inline">\(\mathcal{N}(\hat\theta,I^{-1}(\hat\theta))\)</span>.</p>
 </div>
 <div class="section level3">
 <h3 id="invariance-property-of-the-mle">Invariance property of the MLE<a class="anchor" aria-label="anchor" href="#invariance-property-of-the-mle"></a>
 </h3>
 <p>An interesting property of an MLE <span class="math inline">\(\hat\theta\)</span> is that the MLE of <span class="math inline">\(f(\theta)\)</span> is given by <span class="math inline">\(f(\hat\theta)\)</span>.</p>
-<p>The method <code>rmap</code> applied to an object <code>x</code> for
-which <code>is_mle(x)</code> and a function <code>f</code> compatible
-with <code>point(x)</code> (and optionally a simulation sample size)
-computes the MLE of <code>f(x)</code>.</p>
+<p>The method <code>rmap</code> applied to an object <code>x</code> for which <code>is_mle(x)</code> and a function <code>f</code> compatible with <code>point(x)</code> (and optionally a simulation sample size) computes the MLE of <code>f(x)</code>.</p>
 <div class="section level5">
 <h5 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h5>
-<p>We know that the MLE <span class="math inline">\(\hat\theta \sim
-\mathcal{N}(\theta,I^{-1}(\theta))\)</span>. We seek a transformation
-<span class="math inline">\(g(\hat\theta)\)</span> such that its
-expectation is <span class="math inline">\(2 \theta\)</span>, i.e.,
-<span class="math inline">\(g(\theta) = 2\theta\)</span>:</p>
+<p>We know that the MLE <span class="math inline">\(\hat\theta \sim \mathcal{N}(\theta,I^{-1}(\theta))\)</span>. We seek a transformation <span class="math inline">\(g(\hat\theta)\)</span> such that its expectation is <span class="math inline">\(2 \theta\)</span>, i.e., <span class="math inline">\(g(\theta) = 2\theta\)</span>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fl">2</span><span class="op">*</span><span class="va">theta</span></span></code></pre></div>
-<p>We compute the MLE of <span class="math inline">\(2
-\hat\theta\)</span> (using a simulation size <span class="math inline">\(n=1000\)</span>) with:</p>
+<p>We compute the MLE of <span class="math inline">\(2 \hat\theta\)</span> (using a simulation size <span class="math inline">\(n=1000\)</span>) with:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rmap.html">rmap</a></span><span class="op">(</span><span class="va">theta.hat</span>,<span class="va">f</span>,n<span class="op">=</span><span class="fl">1000L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">f.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          [,1]</span></span>
-<span><span class="co">#&gt; mu  19.935471</span></span>
-<span><span class="co">#&gt; var  4.208083</span></span>
+<span><span class="co">#&gt;      [,1]</span></span>
+<span><span class="co">#&gt; mu  20.09</span></span>
+<span><span class="co">#&gt; var  4.85</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">f.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;              [,1]         [,2]</span></span>
-<span><span class="co">#&gt; [1,]  0.044097758 -0.003867963</span></span>
-<span><span class="co">#&gt; [2,] -0.003867963  0.183417056</span></span></code></pre></div>
+<span><span class="co">#&gt;         [,1]    [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.04867 0.00412</span></span>
+<span><span class="co">#&gt; [2,] 0.00412 0.22721</span></span></code></pre></div>
 </div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators">Weighted MLE: a weighted sum of maximum likelihood estimators<a class="anchor" aria-label="anchor" href="#weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators"></a>
 </h2>
-<p>Since the variance-covariance of an MLE is inversely proportional to
-the Fisher information that the MLE is defined with respect to, we can
-combine multiple MLEs of <span class="math inline">\(\theta\)</span>,
-each of which may be defined with respect to a different kind of sample,
-to arrive at the MLE that incorporates the Fisher information in all of
-those samples.</p>
-<p>Consider <span class="math inline">\(k\)</span> mutually independent
-MLEs of parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span>, where
-<span class="math inline">\(\hat\theta_j \sim
-N(\theta,I_j^{-1}(\theta))\)</span>. Then, the sampling MLE of <span class="math inline">\(\theta\)</span> that incorporates all of the data
-in <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span>
-is given by the inverse-variance weighted mean, <span class="math display">\[
-    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1}
-\left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
-\]</span> which, asymptotically, has an expected value of <span class="math inline">\(\theta\)</span> and a variance-covariance of <span class="math inline">\(\left(\sum_{j=1}^k
-I_j(\theta)\right)^{-1}\)</span>.</p>
+<p>Since the variance-covariance of an MLE is inversely proportional to the Fisher information that the MLE is defined with respect to, we can combine multiple MLEs of <span class="math inline">\(\theta\)</span>, each of which may be defined with respect to a different kind of sample, to arrive at the MLE that incorporates the Fisher information in all of those samples.</p>
+<p>Consider <span class="math inline">\(k\)</span> mutually independent MLEs of parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span>, where <span class="math inline">\(\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))\)</span>. Then, the sampling MLE of <span class="math inline">\(\theta\)</span> that incorporates all of the data in <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span> is given by the inverse-variance weighted mean, <span class="math display">\[
+    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
+\]</span> which, asymptotically, has an expected value of <span class="math inline">\(\theta\)</span> and a variance-covariance of <span class="math inline">\(\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}\)</span>.</p>
 <div class="section level3">
 <h3 id="example-1">Example<a class="anchor" aria-label="anchor" href="#example-1"></a>
 </h3>
-<p>To evaluate the performance of the weighted MLE, we generate a sample
-of <span class="math inline">\(N=1000\)</span> observations from <span class="math inline">\(\mathcal{N}(\theta)\)</span> and compute the MLE
-for the observed sample, denoted by <span class="math inline">\(\hat\theta\)</span>.</p>
-<p>We then divide the observed sample into <span class="math inline">\(r=5\)</span> sub-samples, each of size <span class="math inline">\(N/r=100\)</span>, and compute the MLE for each
-sub-sampled, denoted by <span class="math inline">\(\theta^{(1)},\ldots,\theta^{(r)}\)</span>.</p>
-<p>Finally, we do a weighted combination these MLEs to form the weighted
-MLE, denoted by <span class="math inline">\(\theta_w\)</span>:</p>
+<p>To evaluate the performance of the weighted MLE, we generate a sample of <span class="math inline">\(N=1000\)</span> observations from <span class="math inline">\(\mathcal{N}(\theta)\)</span> and compute the MLE for the observed sample, denoted by <span class="math inline">\(\hat\theta\)</span>.</p>
+<p>We then divide the observed sample into <span class="math inline">\(r=5\)</span> sub-samples, each of size <span class="math inline">\(N/r=100\)</span>, and compute the MLE for each sub-sampled, denoted by <span class="math inline">\(\theta^{(1)},\ldots,\theta^{(r)}\)</span>.</p>
+<p>Finally, we do a weighted combination these MLEs to form the weighted MLE, denoted by <span class="math inline">\(\theta_w\)</span>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
@@ -313,24 +243,82 @@ MLE, denoted by <span class="math inline">\(\theta_w\)</span>:</p>
 <span></span>
 <span><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_weighted.html">mle_weighted</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span></span>
 <span><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_normal_mu_var.html">mle_normal_mu_var</a></span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></span></code></pre></div>
-<p>We show the results in the following R code. First, we show the
-weighted MLE and its MSE:</p>
+<p>We show the results in the following R code. First, we show the weighted MLE and its MSE:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       mu      var </span></span>
-<span><span class="co">#&gt; 9.925919 1.959020</span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 10.02  1.82</span></span>
 <span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.009750753</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.00847</span></span></code></pre></div>
 <p>The MLE for the total sample and its MSE is:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       mu      var </span></span>
-<span><span class="co">#&gt; 9.918830 2.017792</span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 10.02  1.84</span></span>
 <span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.01016484</span></span></code></pre></div>
-<p>We see that <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\hat\theta_w\)</span> model approximately the same
-sampling distribution when estimating <span class="math inline">\(\theta\)</span> given i.i.d. samples.</p>
+<span><span class="co">#&gt; [1] 0.00863</span></span></code></pre></div>
+<p>We see that <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\hat\theta_w\)</span> model approximately the same sampling distribution when estimating <span class="math inline">\(\theta\)</span> given i.i.d. samples.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="bootstrapping-the-mles">Bootstrapping the MLEs<a class="anchor" aria-label="anchor" href="#bootstrapping-the-mles"></a>
+</h2>
+<p>Let’s compare the earlier results that relied on the large sampling assumption with the bootstrapped MLE using <code>mle_boot</code>. First, <code>mle_boot</code> needs an MLE solver for the normal distribution. We have one with <code>mle_normal_mu_var</code>: we just need to wrap it in a function that takes the data as input and returns the MLE of the parameters and then pass it to <code>mle_boot</code> constructor:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mle_solver</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">ind</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fu"><a href="../reference/mle_normal_mu_var.html">mle_normal_mu_var</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">R</span> <span class="op">&lt;-</span> <span class="fl">1000</span> <span class="co"># number of bootstrap replicates</span></span>
+<span><span class="co"># recall the data is `x`</span></span>
+<span><span class="op">(</span><span class="va">theta.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="va">mle_solver</span>, <span class="va">x</span>, <span class="va">R</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Maximum likelihood estimator of type mle_boot is normally distributed.</span></span>
+<span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 10.05  2.42 </span></span>
+<span><span class="co">#&gt; The fisher information matrix (FIM) is given by:</span></span>
+<span><span class="co">#&gt;        [,1]   [,2]</span></span>
+<span><span class="co">#&gt; [1,] 75.991  0.975</span></span>
+<span><span class="co">#&gt; [2,]  0.975 22.651</span></span>
+<span><span class="co">#&gt; The variance-covariance matrix of the estimator is given by:</span></span>
+<span><span class="co">#&gt;           [,1]      [,2]</span></span>
+<span><span class="co">#&gt; [1,]  0.013167 -0.000567</span></span>
+<span><span class="co">#&gt; [2,] -0.000567  0.044172</span></span>
+<span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
+<span><span class="co">#&gt;     2.5% 97.5%</span></span>
+<span><span class="co">#&gt; mu  9.86 10.24</span></span>
+<span><span class="co">#&gt; var 2.08  2.77</span></span>
+<span><span class="co">#&gt; The bias of the estimator is given by:</span></span>
+<span><span class="co">#&gt;        mu       var </span></span>
+<span><span class="co">#&gt; -0.000595 -0.012772 </span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.0574 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  .</span></span>
+<span><span class="co">#&gt; The AIC is   .</span></span>
+<span><span class="co">#&gt; The standard error is  0.115 0.21 .</span></span></code></pre></div>
+<p>We already printed out the <code>theta.boot</code> object, which provided a lot of information about it, but we can obtain specified statistics from the Bootstrap MLE using the standard interface in <code>algorithmic.mle</code>, e.g.:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># point estimate</span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 10.05  2.42</span></span>
+<span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># variance-covariance matrix</span></span>
+<span><span class="co">#&gt;           [,1]      [,2]</span></span>
+<span><span class="co">#&gt; [1,]  0.013167 -0.000567</span></span>
+<span><span class="co">#&gt; [2,] -0.000567  0.044172</span></span>
+<span><span class="op">(</span><span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># standard error</span></span>
+<span><span class="co">#&gt; [1] 0.115 0.210</span></span>
+<span><span class="op">(</span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># bias</span></span>
+<span><span class="co">#&gt;        mu       var </span></span>
+<span><span class="co">#&gt; -0.000595 -0.012772</span></span>
+<span><span class="op">(</span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># mean squared error</span></span>
+<span><span class="co">#&gt; [1] 0.0574</span></span></code></pre></div>
+<p>We see that, for the most part, the results are similar to those obtained using the large sampling assumption.</p>
+<p>There are many additional arguments you can pass to the <code>mle_boot</code> function. For instance, parallel computing may be used to speed up the bootstrap process. For this, you need to load the <code>parallel</code> package and set the parallel arguments for the <code>mle_boot</code> function. For example, to use 4 cores, you would do the following (note that we do not evaluate this code in the vignette to reduce the number of dependencies):</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="va">mle_solver</span>, <span class="va">x</span>, <span class="va">R</span>, parallel <span class="op">=</span> <span class="st">"multicore"</span>, ncpus <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p>In this vignette, we demonstrated how to use the <code>algebraic.mle</code> package to estimate the sampling distribution of the MLE using the large sampling assumption and the Bootstrap method. The package provides various functions for obtaining statistics of the MLE, allowing for a deeper understanding of the properties of your estimator.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

@@ -107,13 +107,13 @@ normal_fisher_info_mu_var <- function(x, observed = T) {
 #' Computes the bias of an \code{mle_normal} object.
 #'
 #' @param x the \code{mle} object to compute the bias of.
-#' @param theta the true parameter value
+#' @param par the true parameter value, defaults to unknown (NULL)
 #' @param ... unused additional arguments
 #' @export
-bias.mle_normal_mu_var <- function(x, theta = NULL, ...) {
-    if (is.null(theta)) {
+bias.mle_normal_mu_var <- function(x, par = NULL, ...) {
+    if (is.null(par)) {
         c(0, -1 / nobs(x) * point(x)[2])
     } else {
-        c(0, -1 / nobs(x) * theta[2])
+        c(0, -1 / nobs(x) * par[2])
     }
 }

@@ -46,11 +46,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
-    <a class="dropdown-item" href="../articles/weibull-mle.html">Analysis of simple time series data</a>
+    <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -73,8 +70,7 @@
 
 
 
-
-<div class="row">
+<script src="algebraic-mle_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>algebraic.mle</h1>
             
@@ -92,13 +88,11 @@
 <!-- badges: start -->
 <!-- badges: end -->
 <p>An algebra over maximum likelihood estimators (MLE).</p>
-<p>MLEs have many desirable, well-defined statistical properties. We
-define an algebra over MLEs.</p>
+<p>MLEs have many desirable, well-defined statistical properties. We define an algebra over MLEs.</p>
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<p>You can install the development version of <code>algebraic.mle</code>
-from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the development version of <code>algebraic.mle</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"queelius/algebraic.mle"</span><span class="op">)</span></span></code></pre></div>
@@ -107,20 +101,14 @@ from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <h3 id="todo">TODO<a class="anchor" aria-label="anchor" href="#todo"></a>
 </h3>
 <ul>
-<li>Use generics and standard notation for operations on MLEs, like
-addition. May need to look into multiple dispatch.</li>
+<li>Use generics and standard notation for operations on MLEs, like addition. May need to look into multiple dispatch.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="api">API<a class="anchor" aria-label="anchor" href="#api"></a>
 </h3>
-<p>The object representing a fitted model is a type of <code>mle</code>
-object, the maximum likelihood estimator of the model with respect to
-observed data.</p>
-<p>The API mostly consists of generic methods with implementations for
-various <code>mle</code> type objects. For a full list of functions, see
-the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function
-reference</a> for <code>algebraic.mle</code>.</p>
+<p>The object representing a fitted model is a type of <code>mle</code> object, the maximum likelihood estimator of the model with respect to observed data.</p>
+<p>The API mostly consists of generic methods with implementations for various <code>mle</code> type objects. For a full list of functions, see the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function reference</a> for <code>algebraic.mle</code>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -49,9 +49,6 @@
     <a class="dropdown-item" href="../articles/weibull-mle.html">Analysis of simple time series data</a>
   </div>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -73,12 +70,10 @@
 
 
 
-
-<div class="row">
+<script src="weibull-mle_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Analysis of simple time series data</h1>
-                        <h4 data-toc-skip class="author">Alex
-Towell</h4>
+                        <h4 data-toc-skip class="author">Alex Towell</h4>
             
             <h4 data-toc-skip class="date">2022-10-14</h4>
       
@@ -91,38 +86,26 @@ Towell</h4>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>We are interested in the generative process that gave rise to the
-data we observed. In the real world, systems are quite complex, but we
-settle for simpler models for analytical tractability. So, we usually
-assume:</p>
+<p>We are interested in the generative process that gave rise to the data we observed. In the real world, systems are quite complex, but we settle for simpler models for analytical tractability. So, we usually assume:</p>
 <ol style="list-style-type: decimal">
 <li><p>The sample is i.i.d.</p></li>
-<li><p>The observations may be reasonably modeled by some relatively
-simple process.</p></li>
-<li><p>Other factors, like ambient temperature, are either negligible or
-are more or less constant in the sample.</p></li>
+<li><p>The observations may be reasonably modeled by some relatively simple process.</p></li>
+<li><p>Other factors, like ambient temperature, are either negligible or are more or less constant in the sample.</p></li>
 </ol>
-<p>Since this is a simulation, we know the underlying DGP (data
-generating process). It’s just <span class="math display">\[
+<p>Since this is a simulation, we know the underlying DGP (data generating process). It’s just <span class="math display">\[
     T_i = W_i + \epsilon_i
 \]</span> where <span class="math display">\[
     W_i \sim \operatorname{weibull}(k,\lambda)
 \]</span> and <span class="math display">\[
     \epsilon_i \sim \operatorname{normal}(0,\sigma).
 \]</span></p>
-<p>In the real world, we do not know the DGP. In this study, we will
-assume that either <span class="math inline">\(T_1,\ldots,T_n\)</span>
-comes from Weibull or Normal. Clearly, the true DGF is a bit more
-complicated but still very simple compared to a more realistic DGP.</p>
-<p>Then, the process of parametrically modeling the observed data may
-take the following steps:</p>
+<p>In the real world, we do not know the DGP. In this study, we will assume that either <span class="math inline">\(T_1,\ldots,T_n\)</span> comes from Weibull or Normal. Clearly, the true DGF is a bit more complicated but still very simple compared to a more realistic DGP.</p>
+<p>Then, the process of parametrically modeling the observed data may take the following steps:</p>
 <ol style="list-style-type: decimal">
 <li><p>Visualize the data, e.g., plot a histogram of the data.</p></li>
-<li><p>Guess which parametric distribution (for the components) might
-fit the observed data for the system lifetime.</p></li>
+<li><p>Guess which parametric distribution (for the components) might fit the observed data for the system lifetime.</p></li>
 <li><p>Use a statistical test for goodness-of-fit.</p></li>
-<li><p>Repeat steps 2 and 3 if the measure of goodness of fit is not
-satisfactory.</p></li>
+<li><p>Repeat steps 2 and 3 if the measure of goodness of fit is not satisfactory.</p></li>
 </ol>
 </div>
 <div class="section level2">
@@ -184,61 +167,33 @@ satisfactory.</p></li>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     3.13</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     2.44</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>     2.75</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 48 more rows</span></span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 48 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="visualizing-the-data">Visualizing the data<a class="anchor" aria-label="anchor" href="#visualizing-the-data"></a>
 </h2>
-<p>Visualizing the data is a good first step in the analysis of the
-data. If the data is univariate or bivariate, we can plot a histogram of
-the data pretty easily (if it’s multivariate, we can plot the marginal
-distributions of the data).</p>
-<p>We show a histogram of the simulated data below:
-<img src="weibull-mle_files/figure-html/histo-1.png" width="700" style="display: block; margin: auto;"></p>
+<p>Visualizing the data is a good first step in the analysis of the data. If the data is univariate or bivariate, we can plot a histogram of the data pretty easily (if it’s multivariate, we can plot the marginal distributions of the data).</p>
+<p>We show a histogram of the simulated data below: <img src="weibull-mle_files/figure-html/histo-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="parametrically-modeling-the-data">Parametrically modeling the data<a class="anchor" aria-label="anchor" href="#parametrically-modeling-the-data"></a>
 </h2>
-<p>If we only had this sample, what might we conclude? This can be a
-very difficult problem. In our case, we know that the simulated data is
-drawn from the distribution <span class="math inline">\(T_i = W_i +
-\epsilon_i\)</span> where <span class="math display">\[
+<p>If we only had this sample, what might we conclude? This can be a very difficult problem. In our case, we know that the simulated data is drawn from the distribution <span class="math inline">\(T_i = W_i + \epsilon_i\)</span> where <span class="math display">\[
   W_i \sim \operatorname{weibull}(\lambda = 5,
                                 k = 3)
 \]</span> and <span class="math display">\[
   \epsilon_i \sim \operatorname{normal}(\mu=0,\sigma=0.05).
-\]</span> However, in real-world data sets, we do not know the
-distribution. So, let us suppose that we do not know the true
-distribution of the data.</p>
-<p>If we were only interested in, say, <em>prediction</em>, and we had a
-sufficiently large sample, we could use a non-parametric methods and
-“let the data speak for itself.” However, if we are interested in
-inference (e.g., explaining the data) or the sample was small, then we
-need to make some assumptions about the data.</p>
-<p>In this case, we will assume that the data is drawn from a parametric
-distribution. There are many well-known, named parametric distributions,
-e.g., Pareto, Weibull, and Normal, to name a few. From experience, it
-seems like the Weibull and the normal might be good fits to the data.
-However, note that since the normal distribution permits negative values
-to be realized, it may not be an appropriate choice. Still, since these
-are only approximations anyway, this may not be a big deal.</p>
-<p>First, let us fit the Weibull distribution by choosing appropriate
-shape <span class="math inline">\(\lambda\)</span> and scale <span class="math inline">\(k\)</span> parameters using the maximum likelihood
-estimator.</p>
-<p>To find the MLE of <span class="math inline">\(\theta =
-(\lambda,k)'\)</span>, we need the log-likelihood function
-<code>l.wei</code>, which is given by the following R code:</p>
+\]</span> However, in real-world data sets, we do not know the distribution. So, let us suppose that we do not know the true distribution of the data.</p>
+<p>If we were only interested in, say, <em>prediction</em>, and we had a sufficiently large sample, we could use a non-parametric methods and “let the data speak for itself.” However, if we are interested in inference (e.g., explaining the data) or the sample was small, then we need to make some assumptions about the data.</p>
+<p>In this case, we will assume that the data is drawn from a parametric distribution. There are many well-known, named parametric distributions, e.g., Pareto, Weibull, and Normal, to name a few. From experience, it seems like the Weibull and the normal might be good fits to the data. However, note that since the normal distribution permits negative values to be realized, it may not be an appropriate choice. Still, since these are only approximations anyway, this may not be a big deal.</p>
+<p>First, let us fit the Weibull distribution by choosing appropriate shape <span class="math inline">\(\lambda\)</span> and scale <span class="math inline">\(k\)</span> parameters using the maximum likelihood estimator.</p>
+<p>To find the MLE of <span class="math inline">\(\theta = (\lambda,k)'\)</span>, we need the log-likelihood function <code>l.wei</code>, which is given by the following R code:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">l.wei</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Weibull.html" class="external-link">dweibull</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span>,</span>
 <span>                                      shape<span class="op">=</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>                                      scale<span class="op">=</span><span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span>
 <span>                                      log<span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>An MLE is a point <span class="math inline">\((\hat\lambda,\hat
-k)'\)</span> that is a maximum of the loglikelihood function,
-<code>l.wei</code>, over the parameter’s domain. We may use the
-root-finding algorithm known as the Newton-Raphson method to find where
-the gradient of the log-likelihood function <code>l.wei</code> is
-zero.</p>
+<p>An MLE is a point <span class="math inline">\((\hat\lambda,\hat k)'\)</span> that is a maximum of the loglikelihood function, <code>l.wei</code>, over the parameter’s domain. We may use the root-finding algorithm known as the Newton-Raphson method to find where the gradient of the log-likelihood function <code>l.wei</code> is zero.</p>
 <p>Here is the Newton-raphson code:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newton_raphson</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">f</span>, <span class="va">df</span>, <span class="va">x0</span>, <span class="va">tol</span><span class="op">=</span><span class="fl">1e-4</span>, <span class="va">maxiter</span><span class="op">=</span><span class="fl">100L</span><span class="op">)</span></span>
@@ -254,11 +209,7 @@ zero.</p>
 <span>  <span class="op">}</span></span>
 <span>  <span class="va">x0</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>The Newton-Raphson function is conventionally used to minimize a
-function. We’re trying to maximize the log-likelihood function
-<code>l.wei</code>, and so we’re trying to minimize the negative of the
-log-likelihood. Thus, the gradient and Hessian is given by the negative
-of each.</p>
+<p>The Newton-Raphson function is conventionally used to minimize a function. We’re trying to maximize the log-likelihood function <code>l.wei</code>, and so we’re trying to minimize the negative of the log-likelihood. Thus, the gradient and Hessian is given by the negative of each.</p>
 <p>Here’s the code:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">newton_raphson</span><span class="op">(</span></span>
@@ -266,17 +217,9 @@ of each.</p>
 <span>    df<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/pkg/numDeriv/man/hessian.html" class="external-link">hessian</a></span><span class="op">(</span><span class="va">l.wei</span>,<span class="va">theta</span><span class="op">)</span>,</span>
 <span>    x0<span class="op">=</span><span class="va">sim.theta</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 6.140381 3.034467</span></span></code></pre></div>
-<p>The gradient should be approximately zero at the MLE. The Hessian is
-also useful, since asymptotically the MLE follows a normal distribution
-with a mean given by the true parameter and a variance-covariance given
-by the negative inverse of the Hessian.</p>
-<p>We have implemented more precise and more efficient algorithms for
-computing the MLE of the Weibull distribution in the
-<code>algebraic.mle</code> R package.</p>
-<p>This function, <code>mle_weibull_shape_scale</code>, returns an
-<code>mle</code> object, which has an API that provides a number of
-conventient methods, such as estimating the variance-covariance matrix,
-confidence intervals, bias, and so on. Here’s the code:</p>
+<p>The gradient should be approximately zero at the MLE. The Hessian is also useful, since asymptotically the MLE follows a normal distribution with a mean given by the true parameter and a variance-covariance given by the negative inverse of the Hessian.</p>
+<p>We have implemented more precise and more efficient algorithms for computing the MLE of the Weibull distribution in the <code>algebraic.mle</code> R package.</p>
+<p>This function, <code>mle_weibull_shape_scale</code>, returns an <code>mle</code> object, which has an API that provides a number of conventient methods, such as estimating the variance-covariance matrix, confidence intervals, bias, and so on. Here’s the code:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
 <span><span class="va">mle.wei</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_weibull_shape_scale.html">mle_weibull_shape_scale</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span><span class="op">)</span></span>
@@ -303,9 +246,7 @@ confidence intervals, bias, and so on. Here’s the code:</p>
 <span><span class="co">#&gt; The log-likelihood is  -44.58054 .</span></span>
 <span><span class="co">#&gt; The AIC is  93.16108 .</span></span>
 <span><span class="co">#&gt; The standard error is  0.7429533 0.07151775 .</span></span></code></pre></div>
-<p>Let’s do the same for the normal distribution. We will simply use the
-<code>mle_normal_mu_var</code> function from the
-<code>algebraic.mle</code> package:</p>
+<p>Let’s do the same for the normal distribution. We will simply use the <code>mle_normal_mu_var</code> function from the <code>algebraic.mle</code> package:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mle.norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_normal_mu_var.html">mle_normal_mu_var</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span></span>
@@ -345,34 +286,20 @@ confidence intervals, bias, and so on. Here’s the code:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">dgp.density</span>, col<span class="op">=</span><span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="weibull-mle_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-<p>In black, we have the true density. In green, we have the Weibull
-density. In red, we have the normal density. From the plot, it’s hard to
-tell which distribution is a better fit to the DGP.</p>
-<p>How do we choose between the Weibull and the normal distribution? We
-will discuss this in the next section.</p>
+<p>In black, we have the true density. In green, we have the Weibull density. In red, we have the normal density. From the plot, it’s hard to tell which distribution is a better fit to the DGP.</p>
+<p>How do we choose between the Weibull and the normal distribution? We will discuss this in the next section.</p>
 </div>
 <div class="section level2">
 <h2 id="goodness-of-fit">Goodness of fit<a class="anchor" aria-label="anchor" href="#goodness-of-fit"></a>
 </h2>
-<p>We are fitting a model to the data that does not precisely capture
-the generative model <span class="math inline">\(W\)</span>. So, how
-good of a fit is it?</p>
+<p>We are fitting a model to the data that does not precisely capture the generative model <span class="math inline">\(W\)</span>. So, how good of a fit is it?</p>
 <p>We will conduct a goodness of fit test, <span class="math display">\[\begin{align}
-  H_0 &amp;: \text{the data is compatible with the Weibull
-distribution}\\
-  H_A &amp;: \text{the data is not compatible with the Weibull
-distribution}.
+  H_0 &amp;: \text{the data is compatible with the Weibull distribution}\\
+  H_A &amp;: \text{the data is not compatible with the Weibull distribution}.
 \end{align}\]</span></p>
-<p>To perform this test, we will use the Cramer-von Mises test. This
-test is based on the Cramer-von Mises statistic, which is a measure of
-the distance between the empirical distribution function of the data and
-the distribution function of the model. The Cramer-von Mises statistic
-is given by <span class="math display">\[
-  \hat D_n^2 = \frac{1}{n}\sum_{i=1}^n \left(\hat F_n(x_i) -
-F(x_i)\right)^2
-\]</span> where <span class="math inline">\(\hat F_n\)</span> is the
-empirical distribution function of the data and <span class="math inline">\(F\)</span> is the distribution function of the
-model.</p>
+<p>To perform this test, we will use the Cramer-von Mises test. This test is based on the Cramer-von Mises statistic, which is a measure of the distance between the empirical distribution function of the data and the distribution function of the model. The Cramer-von Mises statistic is given by <span class="math display">\[
+  \hat D_n^2 = \frac{1}{n}\sum_{i=1}^n \left(\hat F_n(x_i) - F(x_i)\right)^2
+\]</span> where <span class="math inline">\(\hat F_n\)</span> is the empirical distribution function of the data and <span class="math inline">\(F\)</span> is the distribution function of the model.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cramer.test</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">obs.dat</span>,<span class="va">ref.dat</span><span class="op">)</span></span>
 <span><span class="op">{</span></span>
@@ -398,9 +325,7 @@ model.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ref.size</span></span>
 <span><span class="co">#&gt; [1] 1000000</span></span></code></pre></div>
-<p>Looking at the <span class="math inline">\(p\)</span>-value, we see
-that the data is compatible with the Weibull distribution. Now, let’s do
-the same for the normal distribution:</p>
+<p>Looking at the <span class="math inline">\(p\)</span>-value, we see that the data is compatible with the Weibull distribution. Now, let’s do the same for the normal distribution:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">norm.mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">norm.var</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
@@ -417,38 +342,22 @@ the same for the normal distribution:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ref.size</span></span>
 <span><span class="co">#&gt; [1] 1000000</span></span></code></pre></div>
-<p>They are both compatible with the data. However, the Weibull
-distribution has a larger <span class="math inline">\(p\)</span>-value,
-which may suggest it is a better fit. We also have the AIC measure of
-goodness of fit. The AIC is given by <span class="math display">\[
+<p>They are both compatible with the data. However, the Weibull distribution has a larger <span class="math inline">\(p\)</span>-value, which may suggest it is a better fit. We also have the AIC measure of goodness of fit. The AIC is given by <span class="math display">\[
   \text{AIC} = -2\log L + 2k,
-\]</span> where <span class="math inline">\(L\)</span> is the likelihood
-of the model and <span class="math inline">\(k\)</span> is the number of
-parameters in the model. The AIC is a measure of the tradeoff between
-the goodness of fit and the complexity of the model.</p>
+\]</span> where <span class="math inline">\(L\)</span> is the likelihood of the model and <span class="math inline">\(k\)</span> is the number of parameters in the model. The AIC is a measure of the tradeoff between the goodness of fit and the complexity of the model.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">mle.wei</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 93.16108</span></span>
 <span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      var </span></span>
 <span><span class="co">#&gt; 93.85698</span></span></code></pre></div>
-<p>A lower AIC value indicates a better fit. Thus, according to this
-measure, the Weibull distribution is the better fit.</p>
+<p>A lower AIC value indicates a better fit. Thus, according to this measure, the Weibull distribution is the better fit.</p>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
-<p>In this post, we have shown how to fit a Weibull distribution to
-data. We have also shown how to fit a normal distribution to the same
-data. We have shown how to compare the two models using the Cramer-von
-Mises test and the AIC measure of goodness of fit.</p>
-<p>We came to no definitive conclusion about which model is better, but
-the Weibull distribution has a larger <span class="math inline">\(p\)</span>-value from the Cramer-von Mises test,
-and a lower AIC value. Thus, it may be the better fit, but we see that
-the true DGP is visually different from both the Weibull and the normal
-distributions. Notably, the DGP has longer tails than both, suggesting
-that an even better fit may be a long-tail distribution like the
-log-normal or the Pareto distribution.</p>
+<p>In this post, we have shown how to fit a Weibull distribution to data. We have also shown how to fit a normal distribution to the same data. We have shown how to compare the two models using the Cramer-von Mises test and the AIC measure of goodness of fit.</p>
+<p>We came to no definitive conclusion about which model is better, but the Weibull distribution has a larger <span class="math inline">\(p\)</span>-value from the Cramer-von Mises test, and a lower AIC value. Thus, it may be the better fit, but we see that the true DGP is visually different from both the Weibull and the normal distributions. Notably, the DGP has longer tails than both, suggesting that an even better fit may be a long-tail distribution like the log-normal or the Pareto distribution.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

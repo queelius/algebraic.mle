@@ -25,6 +25,9 @@ simple case of a random sample from i.i.d. normally distributed random
 variables. First, we load the R package `algebraic.mle` with:
 ```{r setup, warning=F, message=F}
 library(algebraic.mle)
+
+# make it so that i only show 3 digits after the decimal point
+options(digits=3)
 ```
 
 ## Generating a sample
@@ -226,3 +229,50 @@ mse(mle)
 
 We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling
 distribution when estimating $\theta$ given i.i.d. samples.
+
+# Bootstrapping the MLEs
+Let's compare the earlier results that relied on the large sampling assumption
+with the bootstrapped MLE using `mle_boot`.
+First, `mle_boot` needs an MLE solver for the normal distribution. We have
+one with `mle_normal_mu_var`: we just need to wrap it in a function that
+takes the data as input and returns the MLE of the parameters and then
+pass it to `mle_boot` constructor:
+```{r}
+mle_solver <- function(data, ind)
+    point(mle_normal_mu_var(data[ind]))
+R <- 1000 # number of bootstrap replicates
+# recall the data is `x`
+(theta.boot <- mle_boot(mle_solver, x, R))
+```
+
+We already printed out the `theta.boot` object, which provided a lot of
+information about it, but we can obtain specified  statistics from the Bootstrap
+MLE using the standard interface in `algorithmic.mle`, e.g.:
+```{r}
+(point(theta.boot)) # point estimate
+(vcov(theta.boot)) # variance-covariance matrix
+(se(theta.boot)) # standard error
+(bias(theta.boot)) # bias
+(mse(theta.boot)) # mean squared error
+```
+
+We see that, for the most part, the results are similar to those obtained
+using the large sampling assumption.
+
+There are many additional arguments you can pass to the `mle_boot` function.
+For instance, parallel computing may be used to speed up the bootstrap process.
+For this, you need to load the `parallel` package and set the parallel arguments
+for the `mle_boot` function. For example, to use 4 cores, you would do
+the following (note that we do not evaluate this code in the vignette to
+reduce the number of dependencies):
+```r
+library(parallel)
+mle_boot(mle_solver, x, R, parallel = "multicore", ncpus = 4)
+```
+
+# Conclusion
+In this vignette, we demonstrated how to use the `algebraic.mle` package to
+estimate the sampling distribution of the MLE using the large sampling assumption
+and the Bootstrap method. The package provides various functions for obtaining
+statistics of the MLE, allowing for a deeper understanding of the properties of
+your estimator.

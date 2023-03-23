@@ -18,10 +18,7 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../articles/algebraic-mle.html">Get started</a>
-</li>
-<li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
@@ -29,11 +26,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
-    <a class="dropdown-item" href="../articles/weibull-mle.html">Analysis of simple time series data</a>
+    <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -88,14 +82,16 @@ maximum likelihood estimators from existing maximum likelihood estimators.</dd>
         <dd>Computes the bias of an estimator object.</dd>
       </dl><dl><dt>
           
-          <code><a href="bias.boot.html">bias(<i>&lt;boot&gt;</i>)</a></code> 
-        </dt>
-        <dd>Computes the estimate of the bias of a <code>boot</code> object.</dd>
-      </dl><dl><dt>
-          
           <code><a href="bias.mle.html">bias(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the bias of an <code>mle</code> object.</dd>
+        <dd>Computes the bias of an <code>mle</code> object assuming the large sample
+approximation is valid and the MLE regularity conditions are satisfied.
+In this case, the bias is zero (or zero vector).</dd>
+      </dl><dl><dt>
+          
+          <code><a href="bias.mle_boot.html">bias(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the estimate of the bias of a <code>boot</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="bias.mle_exp_rate.html">bias(<i>&lt;mle_exp_rate&gt;</i>)</a></code> 
@@ -152,6 +148,11 @@ matrix of an <code>mle</code> object.</dd>
         <dd>Function for obtaining the fisher information matrix of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
+          <code><a href="fim.mle_boot.html">fim(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the variance-covariance matrix of <code>boot</code> object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="is_mle.html">is_mle()</a></code> 
         </dt>
         <dd>Determine if an object <code>x</code> is an <code>mle</code> object.</dd>
@@ -181,8 +182,7 @@ is an <code>mle</code> object.</dd>
           
           <code><a href="mle_boot.html">mle_boot()</a></code> 
         </dt>
-        <dd>A function for estimating the empirical sampling distribution the
-MLE given a MLE solver and a sample using the Bootstrap method.</dd>
+        <dd>Bootstrap MLE</dd>
       </dl><dl><dt>
           
           <code><a href="mle_exp_rate.html">mle_exp_rate()</a></code> 
@@ -221,23 +221,23 @@ and combines them into a single estimator <code>mle_weighted</code>.</dd>
 <code>mse(x) = E[(x-mu)^2]</code> where <code>mu</code> is the true parameter value.</dd>
       </dl><dl><dt>
           
-          <code><a href="mse.boot.html">mse(<i>&lt;boot&gt;</i>)</a></code> 
-        </dt>
-        <dd>Computes the estimate of the MSE of a <code>boot</code> object.</dd>
-      </dl><dl><dt>
-          
           <code><a href="mse.mle.html">mse(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Computes the MSE of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
-          <code><a href="nobs.boot.html">nobs(<i>&lt;boot&gt;</i>)</a></code> 
+          <code><a href="mse.mle_boot.html">mse(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the estimate of the MSE of a <code>boot</code> object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="nobs.mle.html">nobs(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of observations in the sample used by
 an <code>mle</code>.</dd>
       </dl><dl><dt>
           
-          <code><a href="nobs.mle.html">nobs(<i>&lt;mle&gt;</i>)</a></code> 
+          <code><a href="nobs.mle_boot.html">nobs(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of observations in the sample used by
 an <code>mle</code>.</dd>
@@ -267,14 +267,14 @@ distribution</dd>
 distribution object.</dd>
       </dl><dl><dt>
           
-          <code><a href="nparams.boot.html">nparams(<i>&lt;boot&gt;</i>)</a></code> 
-        </dt>
-        <dd>Method for obtaining the number of parameters of an <code>boot</code> object.</dd>
-      </dl><dl><dt>
-          
           <code><a href="nparams.mle.html">nparams(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of parameters of an <code>mle</code> object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="nparams.mle_boot.html">nparams(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the number of parameters of an <code>boot</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="obs.html">obs()</a></code> 
@@ -282,12 +282,12 @@ distribution object.</dd>
         <dd>Method for obtaining the observations used by a fitted model <code>object</code>.</dd>
       </dl><dl><dt>
           
-          <code><a href="obs.boot.html">obs(<i>&lt;boot&gt;</i>)</a></code> 
+          <code><a href="obs.mle.html">obs(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the observations used by the <code>mle</code>.</dd>
       </dl><dl><dt>
           
-          <code><a href="obs.mle.html">obs(<i>&lt;mle&gt;</i>)</a></code> 
+          <code><a href="obs.mle_boot.html">obs(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the observations used by the <code>mle</code>.</dd>
       </dl><dl><dt>
@@ -308,14 +308,14 @@ distribution object.</dd>
         <dd>Method for obtaining the parameters of a fitted distribution object.</dd>
       </dl><dl><dt>
           
-          <code><a href="params.boot.html">params(<i>&lt;boot&gt;</i>)</a></code> 
-        </dt>
-        <dd>Method for obtaining the parameters of an <code>boot</code> object.</dd>
-      </dl><dl><dt>
-          
           <code><a href="params.mle.html">params(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the parameters of an <code>mle</code> object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="params.mle_boot.html">params(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtaining the parameters of an <code>boot</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="point.html">point()</a></code> 
@@ -323,12 +323,12 @@ distribution object.</dd>
         <dd>Generic method for obtaining the best point estimate from an estimator.</dd>
       </dl><dl><dt>
           
-          <code><a href="point.boot.html">point(<i>&lt;boot&gt;</i>)</a></code> 
+          <code><a href="point.mle.html">point(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Computes the point estimate of an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
-          <code><a href="point.mle.html">point(<i>&lt;mle&gt;</i>)</a></code> 
+          <code><a href="point.mle_boot.html">point(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
         <dd>Computes the point estimate of an <code>mle</code> object.</dd>
       </dl><dl><dt>
@@ -383,6 +383,11 @@ an MLE object <code>x</code>.</dd>
         <dd>Method for sampling from an <code>mle</code> object.</dd>
       </dl><dl><dt>
           
+          <code><a href="sampler.mle_boot.html">sampler(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for sampling from an <code>mle_boot</code> object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="score.html">score()</a></code> 
         </dt>
         <dd>Computes the score of an estimator object with respect to its log-likelihood.</dd>
@@ -398,16 +403,16 @@ an MLE object <code>x</code>.</dd>
         <dd>Method for obtaining the standard error of an estimator.</dd>
       </dl><dl><dt>
           
-          <code><a href="se.boot.html">se(<i>&lt;boot&gt;</i>)</a></code> 
-        </dt>
-        <dd>Function for obtaining an estimate of the standard error of the bootstrap of
-the MLE <code>object</code>.</dd>
-      </dl><dl><dt>
-          
           <code><a href="se.mle.html">se(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Function for obtaining an estimate of the standard error of the MLE
 <code>object</code>.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="se.mle_boot.html">se(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Function for obtaining an estimate of the standard error of the bootstrap of
+the MLE <code>object</code>.</dd>
       </dl><dl><dt>
           
           <code><a href="summary.mle.html">summary(<i>&lt;mle&gt;</i>)</a></code> 
@@ -421,14 +426,14 @@ the MLE <code>object</code>.</dd>
         <dd>General two sample hypothesis test.</dd>
       </dl><dl><dt>
           
-          <code><a href="vcov.boot.html">vcov(<i>&lt;boot&gt;</i>)</a></code> 
-        </dt>
-        <dd>Computes the variance-covariance matrix of <code>boot</code> object.</dd>
-      </dl><dl><dt>
-          
           <code><a href="vcov.mle.html">vcov(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Computes the variance-covariance matrix of <code>mle</code> objects.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="vcov.mle_boot.html">vcov(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Computes the variance-covariance matrix of <code>boot</code> object.</dd>
       </dl><dl><dt>
           
           <code><a href="weibull_shape_scale_fim.html">weibull_shape_scale_fim()</a></code> 

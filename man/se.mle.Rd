@@ -9,6 +9,8 @@
 }
 \arguments{
 \item{object}{the MLE object}
+
+\item{...}{pass additional arguments}
 }
 \description{
 Function for obtaining an estimate of the standard error of the MLE

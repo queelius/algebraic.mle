@@ -119,7 +119,7 @@ We can compute the MLE of the rate parameter $\lambda$ of the exponential
 distribution with:
 ```{r}
 rate.hat <- mle_exp_rate(x$x)
-summary(rate.hat)
+#summary(rate.hat)
 ```
 The ML  point estimate of the rate parameter $\lambda$ of the exponential
 distribution is $\hat\lambda=`r point(rate.hat)`$, which may be computed with

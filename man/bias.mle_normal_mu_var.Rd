@@ -4,12 +4,12 @@
 \alias{bias.mle_normal_mu_var}
 \title{Computes the bias of an \code{mle_normal} object.}
 \usage{
-\method{bias}{mle_normal_mu_var}(x, theta = NULL, ...)
+\method{bias}{mle_normal_mu_var}(x, par = NULL, ...)
 }
 \arguments{
 \item{x}{the \code{mle} object to compute the bias of.}
 
-\item{theta}{the true parameter value}
+\item{par}{the true parameter value, defaults to unknown (NULL)}
 
 \item{...}{unused additional arguments}
 }

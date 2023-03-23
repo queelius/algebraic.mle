@@ -18,10 +18,7 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../articles/algebraic-mle.html">Get started</a>
-</li>
-<li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
@@ -29,11 +26,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
-    <a class="dropdown-item" href="../articles/weibull-mle.html">Analysis of simple time series data</a>
+    <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -63,7 +57,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for mle_normal_mu_var</span></span>
-<span><span class="fu"><a href="bias.html">bias</a></span><span class="op">(</span><span class="va">x</span>, theta <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="bias.html">bias</a></span><span class="op">(</span><span class="va">x</span>, par <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,8 +66,8 @@
 <dd><p>the <code>mle</code> object to compute the bias of.</p></dd>
 
 
-<dt>theta</dt>
-<dd><p>the true parameter value</p></dd>
+<dt>par</dt>
+<dd><p>the true parameter value, defaults to unknown (NULL)</p></dd>
 
 
 <dt>...</dt>

@@ -4,13 +4,15 @@
 \alias{bias.mle_exp_rate}
 \title{Computes the bias of an \code{exp_mle} object (exponential mle).}
 \usage{
-\method{bias}{mle_exp_rate}(x, theta = NULL)
+\method{bias}{mle_exp_rate}(x, par = NULL, ...)
 }
 \arguments{
 \item{x}{the \code{mle_exp_rate} object to compute the bias of.}
 
-\item{theta}{the true rate parameter value. Usually, rate is not known,
+\item{par}{the true rate parameter value. Usually, rate is not known,
 and so we estimate the bias}
+
+\item{...}{pass additional arguments}
 }
 \description{
 An unbiased estimator of the rate parameter of the exponential distribution
