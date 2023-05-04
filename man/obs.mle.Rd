@@ -2,15 +2,15 @@
 % Please edit documentation in R/mle.R
 \name{obs.mle}
 \alias{obs.mle}
-\title{Method for obtaining the observations used by the \code{mle}.}
+\title{Method for obtaining the observations used by the `mle`.}
 \usage{
 \method{obs}{mle}(object, ...)
 }
 \arguments{
-\item{object}{the \code{mle} object to obtain the number of observations for}
+\item{object}{the `mle` object to obtain the number of observations for}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-Method for obtaining the observations used by the \code{mle}.
+Method for obtaining the observations used by the `mle`.
 }

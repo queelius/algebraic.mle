@@ -2,15 +2,15 @@
 % Please edit documentation in R/mle.R
 \name{loglike.mle}
 \alias{loglike.mle}
-\title{Method for obtaining the log-likelihood of an \code{mle} object.}
+\title{Method for obtaining the log-likelihood of an `mle` object.}
 \usage{
 \method{loglike}{mle}(x, ...)
 }
 \arguments{
-\item{x}{the log-likelihood \code{l} evaluated at \code{x}, \code{l(x)}.}
+\item{x}{the log-likelihood `l` evaluated at `x`, `l(x)`.}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-Method for obtaining the log-likelihood of an \code{mle} object.
+Method for obtaining the log-likelihood of an `mle` object.
 }

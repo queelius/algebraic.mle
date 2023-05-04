@@ -2,7 +2,7 @@
 % Please edit documentation in R/generic_functions.R
 \name{rmap}
 \alias{rmap}
-\title{Generic function for computing the distribution of \code{f(x)} where \code{x}
+\title{Generic function for computing the distribution of `f(x)` where `x`
 models a distribution (random element) object.}
 \usage{
 rmap(x, g, ...)
@@ -11,11 +11,11 @@ rmap(x, g, ...)
 \item{x}{a list of distribution (random element) objects.}
 
 \item{g}{a function that accepts arguments sampled from the distribution
-objects in \code{x}.}
+objects in `x`.}
 
 \item{...}{additional arguments to pass.}
 }
 \description{
-When we apply a function \code{f} to a distribution \code{x}, the result
-is a distribution object \code{f(x)}.
+When we apply a function `f` to a distribution `x`, the result
+is a distribution object `f(x)`.
 }

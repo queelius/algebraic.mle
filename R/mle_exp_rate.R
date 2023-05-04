@@ -7,8 +7,8 @@
 #' model to the data.
 #'
 #' @param x a sample of observations
-#' @param keep_obs store the observations with the \code{mle} object, default is \code{F}
-#' @return an \code{mle} object.
+#' @param keep_obs store the observations with the `mle` object, default is `F`
+#' @return an `mle` object.
 #' @export
 mle_exp_rate <- function(x, keep_obs = F) {
     n <- length(x)
@@ -28,7 +28,7 @@ mle_exp_rate <- function(x, keep_obs = F) {
     )
 }
 
-#' log-likelihood function generator given data \code{x} for the exponential
+#' log-likelihood function generator given data `x` for the exponential
 #' distribution
 #'
 #' @param x data
@@ -39,7 +39,7 @@ exp_rate_loglike <- function(x) {
     function(rate) matrix(n * log(rate) - rate * s)
 }
 
-#' score (derivative of log-likelihood) function generator given data \code{x}
+#' score (derivative of log-likelihood) function generator given data `x`
 #' for the exponential distribution
 #'
 #' @param x data
@@ -62,13 +62,13 @@ exp_rate_fisher_info <- function(x) {
     function(rate) matrix(n / rate^2)
 }
 
-#' Computes the bias of an \code{exp_mle} object (exponential mle).
+#' Computes the bias of an `exp_mle` object (exponential mle).
 #'
 #' An unbiased estimator of the rate parameter of the exponential distribution
-#' is given by: \code{1/(nobs(x)-1)*bias(x)}, where \code{x} is an
-#' \code{mle_exp_rate} object.
+#' is given by: `1/(nobs(x)-1)*bias(x)`, where `x` is an
+#' `mle_exp_rate` object.
 #'
-#' @param x the \code{mle_exp_rate} object to compute the bias of.
+#' @param x the `mle_exp_rate` object to compute the bias of.
 #' @param par the true rate parameter value. Usually, rate is not known,
 #'             and so we estimate the bias
 #' @param ... pass additional arguments

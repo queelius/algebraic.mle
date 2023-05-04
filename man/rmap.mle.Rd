@@ -2,35 +2,37 @@
 % Please edit documentation in R/mle_rmap.R
 \name{rmap.mle}
 \alias{rmap.mle}
-\title{\code{rmap.mle} computes the distribution of \code{f(x)} where \code{x}
-is an \code{mle} object.}
+\title{rmap.mle}
 \usage{
 \method{rmap}{mle}(x, g, n = 1000L, method = "mc", ...)
 }
 \arguments{
-\item{x}{an \code{mle} object.}
+\item{x}{a list of distribution (random element) objects.}
 
-\item{g}{a function that accepts objects like \code{point(x)}.}
+\item{g}{a function that accepts arguments sampled from the distribution
+objects in `x`.}
 
-\item{n}{number of samples to take to estimate distribution
-of \code{f(x)}.}
+\item{n}{number of samples to take to estimate distribution of `g(x)` if
+`method=="mc"`.}
 
-\item{method}{method to use, defaults to "mc" for monte carlo, but "delta"
-for delta method and "bootstrap" for bootstrap are other options}
+\item{method}{method to use to estimate distribution of `g(x)`,
+"delta" or "mc".}
 
-\item{...}{additional arguments to pass to the \code{mle} sampler.}
+\item{...}{additional arguments to pass to the `mle` sampler if
+`method=="mc"` or to the `grad` function if `method=="delta"`.}
 }
 \description{
-By the invariance property of the MLE, if \code{x} is an \code{mle} object,
-then under the right conditions, asymptotically, \code{f(x)} is normally
-distributed with an approximation given by
-\code{f(x) ~ normal(f(point(x)),sigma)} where \code{sigma} is
-the variance-covariance of \code{f(x)}, e.g., the sample
-covariance of \code{f(x1),...f(xn)} where \code{xj} is sampled from
-\code{sampler(x)}.
+Computes the distribution of `g(x)` where `x` is an `mle` object.
 }
 \details{
-delta method
-bootstrap method
-monte carlo method
+By the invariance property of the MLE, if `x` is an `mle` object,
+then under the right conditions, asymptotically, `g(x)` is normally
+distributed,
+    g(x) ~ normal(g(point(x)),sigma)
+where `sigma` is the variance-covariance of `f(x)`
+
+We provide two different methods for estimating the
+variance-covariance of `f(x)`:
+    method = "delta" -> delta method
+    method = "mc" -> monte carlo method
 }

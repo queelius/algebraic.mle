@@ -46,7 +46,7 @@ We have control of the rate parameter $\lambda$ in the DGP (data generating
 process). In the following R code, we specity the DGP parameters for the
 exponential distribution:
 ```{r sim_param_setup}
-n <- 50
+n <- 25
 rate <- 3
 ```
 This denotes that we have a sample of size $n=`r n`$ from an exponential
@@ -246,100 +246,6 @@ and the true MSE:
 ```
 They are quite similar in this case.
 
-## Invariance property of the MLE
-
-An interesting property of an MLE $\hat\lambda$ is that the MLE of $f(\lambda)$
-is given by $f(\hat\lambda)$.
-
-### Linear transformations
-
-If $\hat\theta$ is a MLE vector and the large sample approximation holds, then
-$\hat\theta$ can be treated as an asymptotically multivariate normal with mean
-vector equal $\theta$ and variance-covariance given by the inverse of the Fisher
-Information Matrix $I(\theta)^{-1}$, i.e.,
-$$
-    \theta \sim \operatorname{MVN}(\theta, I(\theta)^{-1}).
-$$
-
-Now, let $W = A \hat\theta$. Since $\hat\theta$ is asymptotically MVN, $W$ will
-also be an asymptotically MVN random variable. The mean and variance-covariance
-of $W$ is given by
-$$
-    \mu_W = A \theta
-$$
-and
-$$
-    \Sigma_W = A I(\theta)^{-1} A^T.
-$$
-
-In this context, $W = A \theta$ is an MLE of the linear transformation of the
-true parameter value, $A \theta$. The large sample approximation implies that
-the distribution of $W$ converges to
-$$
-    W \sim \operatorname{MVN}(\mu_W,\Sigma_W).
-$$
-
-The interpretation of $W$ depends on the meaning of the transformation $A$ in
-the context of the problem being studied.
-
-#### Example 1
-Let $\hat\lambda$ be the MLE of $\lambda$ as previously defined.
-Let $W = a \hat\lambda$. Then, $W \sim \operatorname{normal}(a \lambda, a^2 \lambda)$.
-
-```{r}
-point(rate.hat)
-vcov(rate.hat)
-point(mle_linear_transform(2,rate.hat))
-vcov(mle_linear_transform(2,rate.hat))
-```
-
-
-#### Example 2
-Let $a$ be the column vector $(a_1 a_2)^T$. Then, $W = a \hat\lambda$
-is bivariate normally distributed with a mean given by
-$$
-\mu_W = a \lambda = \lambda \begin{bmatrix} a_1 \\ a_2 \end{bmatrix}
-$$
-and variance-covariance given by
-$$
-\Sigma_W = a \lambda a^T = \lambda
-\begin{bmatrix} a_1 \\ a_2 \end{bmatrix}
-\begin{bmatrix} a_1 & a_2 \end{bmatrix} =
-\lambda \begin{bmatrix} a_1^2 & a_1 a_2 \\ a_1 a_2 & a_2^2 \end{bmatrix}.
-$$
-
-In the next section, we consider non-linear transformations.
-
-### Non-linear transformations
-
-Suppose that $f$ is any function (even non-linear) of the parameter vector $\theta$.
-What is the distribution of $f(\hat\theta)$? If $f$ is differentiable, it is
-asymptotically normal with mean $f(\theta)$ and variance-covariance given by
-$$
-    \operatorname{var}(f(\hat\theta)) = \operatorname{E}\bigl\{
-        \bigl(f(\hat\theta) - f(\theta)\bigr)^2\bigr\} =
-    \operatorname{E}\bigl\{J_f(\hat\theta) I(\hat\theta)^{-1} J_f(\hat\theta)^T\bigr\}.
-$$
-Here, $J_f(\hat\theta)$ is the Jacobian of $f$ evaluated at $\hat\theta$.
-
-Since we seek to handle any function, including non-differentiable functions,
-we instead use Monte Carlo simulation and estimate the variance-covariance
-from the sample. The method `rmap` applied to an object `x` for which `is_mle(x)` is true
-and a function `f` compatible with `point(x)` (and optionally a simulation
-sample size) computes the MLE of `f(x)`.
-
-#### Example
-We use the same transformation as before, $W = 2 \lambda$.
-```{r}
-W <- function(lambda) 2*lambda
-```
-
-We compute the MLE of $W$ with:
-```{r}
-(W.hat <- rmap(rate.hat,W,n=1000L))
-```
-This agrees with the earlier calculation using the linear transformation.
-
 ## Prediction intervals
 
 Frequently, we are actually interested in predicting the outcome of the
@@ -395,81 +301,12 @@ pred(x=rate.hat,samp=rexp)
 
 How does this compare to $T_{n+1}|\hat\lambda \sim \operatorname{EXP}(\hat\lambda = `r point(rate.hat)`)$?
 ```{r}
-q.95 <- c(1/point(rate.hat),qexp(c(.05,.95),point(rate.hat)))
+q.95 <- c(1/point(rate.hat),qexp(c(.025,.975),point(rate.hat)))
 names(q.95) <- c("mean","lower", "upper")
 print(q.95)
 ```
 
-We see that the 95% quantile interval for $T_{n+1}|\hat\lambda$ is significantly
-smaller than $\hat{T}_{n+1}$, which is what we expected. After all, there is
-uncertainty about the parameter value $\lambda$.
-
-## Weighted average of MLEs
-
-Since the variance-covariance of an MLE is inversely proportional to the
-Fisher information that the MLE is defined with respect to, we can combine
-multiple MLEs of $\theta$, each of which may be defined with respect to a
-different kind of sample, to arrive at the MLE that incorporates the Fisher
-information in all of those samples.
-
-Consider $k$ mutually independent MLE estimators of parameter $\theta$,
-$\hat\theta_1,\ldots,\hat\theta_k$, where $\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))$.
-
-Then, the maximum likelihood estimator of $\theta$ that incorporates all of
-the data in $\hat\theta_1,\ldots,\hat\theta_k$ is given by the inverse-variance
-weighted mean,
-$$
-    \hat\theta = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
-$$
-which, asymptotically, has an expected value of $\theta$ and a variance-covariance
-of $\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}$.
-
-The Fisher information, which is the inverse of the variance-covariance,
-is $\sum_{j=1}^k I_j(\theta)$, which is just the sum of the
-Fisher information from each sample that generated the MLEs $\hat\theta_1,\ldots,\hat\theta_k$,
-which is the maximum amount of information about $\theta$ that the samples
-contain.
-Thus, $\hat\theta_w$ asymptotically obtains the uniformly minimum-variance
-unbiased estimator (UMVUE).
-
-### Example
-To evaluate the performance of the weighted MLE, we generate a sample of
-$N=1000$ observations from $\operatorname{EXP}(\lambda=1)$ and compute the MLE
-for the observed sample, denoted by $\theta$.
-
-We then divide the observed sample into $r=5$ sub-samples, each of size
-$N/r=100$, and compute the MLE for each sub-sampled, denoted by
-$\theta^{(1)},\ldots,\theta^{(r)}$.
-
-Finally, we do a weighted combination these MLEs to form the weighted MLE,
-denoted by $\theta_w$:
-```{r}
-N <- 1000
-r <- 5
-samp <- rexp(N)
-samp.sub <- matrix(samp,nrow=r)
-mles.sub <- list(length=r)
-for (i in 1:r)
-    mles.sub[[i]] <- mle_exp_rate(samp.sub[i,])
-
-mle.wt <- mle_weighted(mles.sub)
-#mle2.wt <- mle_weighted_2(mles.sub)
-mle <- mle_exp_rate(samp)
-```
-
-We show the results in the following table:
-```{r}
-df <- data.frame(
-    c(point(mle.wt),point(mle)),
-    c(vcov(mle.wt),vcov(mle)),
-    c(loglike(mle.wt),loglike(mle)))
-
-colnames(df) <- c("point estimate","variance","loglike")
-rownames(df) <- c("weighted MLE", "MLE")
-print(df)
-```
-
-We see that $\hat\theta$ and $\hat\theta_w$ model approximately the same sampling
-distribution for $\theta$.
-
+We see that the 95% quantile interval for $T_{n+1}|\hat\lambda$ is a bit
+smaller than $\hat{T}_{n+1}$, which is what we expected. Of course, for
+sufficiently large sample sizes, they will converge to the same quantiles.
 

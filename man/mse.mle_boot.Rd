@@ -2,18 +2,18 @@
 % Please edit documentation in R/mle_boot.R
 \name{mse.mle_boot}
 \alias{mse.mle_boot}
-\title{Computes the estimate of the MSE of a \code{boot} object.}
+\title{Computes the estimate of the MSE of a `boot` object.}
 \usage{
 \method{mse}{mle_boot}(x, par = NULL, ...)
 }
 \arguments{
-\item{x}{the \code{boot} object to compute the MSE of.}
+\item{x}{the `boot` object to compute the MSE of.}
 
 \item{par}{if the true parameter value is known, you may provide it;
-otherwise we use the MLE of \code{par}.}
+otherwise we use the MLE of `par`.}
 
 \item{...}{pass additional arguments}
 }
 \description{
-Computes the estimate of the MSE of a \code{boot} object.
+Computes the estimate of the MSE of a `boot` object.
 }

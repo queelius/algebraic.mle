@@ -3,16 +3,16 @@
 \name{nobs.mle}
 \alias{nobs.mle}
 \title{Method for obtaining the number of observations in the sample used by
-an \code{mle}.}
+an `mle`.}
 \usage{
 \method{nobs}{mle}(object, ...)
 }
 \arguments{
-\item{object}{the \code{mle} object to obtain the number of observations for}
+\item{object}{the `mle` object to obtain the number of observations for}
 
 \item{...}{additional arguments to pass}
 }
 \description{
 Method for obtaining the number of observations in the sample used by
-an \code{mle}.
+an `mle`.
 }

@@ -7,12 +7,12 @@
 sampler(x, ...)
 }
 \arguments{
-\item{x}{the \code{x} object to create a sampler for}
+\item{x}{the `x` object to create a sampler for}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-It creates a sampler for the \code{x} object. It returns a function
-that accepts a single parameter \code{n} denoting the number of samples
-to draw from the \code{x} object.
+It creates a sampler for the `x` object. It returns a function
+that accepts a single parameter `n` denoting the number of samples
+to draw from the `x` object.
 }

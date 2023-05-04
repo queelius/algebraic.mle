@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle.R
 \name{mle}
 \alias{mle}
-\title{\code{mle} makes an \code{mle} object.}
+\title{`mle` makes an `mle` object.}
 \usage{
 mle(
   theta.hat,
@@ -18,20 +18,20 @@ mle(
 \arguments{
 \item{theta.hat}{the MLE}
 
-\item{loglike}{the log-likelihood of \code{theta.hat} given the data}
+\item{loglike}{the log-likelihood of `theta.hat` given the data}
 
-\item{score}{the score function evaluated at \code{theta.hat}}
+\item{score}{the score function evaluated at `theta.hat`}
 
-\item{sigma}{the variance-covariance matrix of \code{theta.hat} given that data}
+\item{sigma}{the variance-covariance matrix of `theta.hat` given that data}
 
-\item{info}{the information matrix of \code{theta.hat} given the data}
+\item{info}{the information matrix of `theta.hat` given the data}
 
 \item{obs}{observation (sample) data}
 
-\item{nobs}{number of observations in \code{obs}}
+\item{nobs}{number of observations in `obs`}
 
-\item{superclasses}{class (or classes) with \code{mle} as base}
+\item{superclasses}{class (or classes) with `mle` as base}
 }
 \description{
-\code{mle} makes an \code{mle} object.
+`mle` makes an `mle` object.
 }

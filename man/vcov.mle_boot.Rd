@@ -2,15 +2,15 @@
 % Please edit documentation in R/mle_boot.R
 \name{vcov.mle_boot}
 \alias{vcov.mle_boot}
-\title{Computes the variance-covariance matrix of \code{boot} object.}
+\title{Computes the variance-covariance matrix of `boot` object.}
 \usage{
 \method{vcov}{mle_boot}(object, ...)
 }
 \arguments{
-\item{object}{the \code{boot} object to obtain the variance-covariance of}
+\item{object}{the `boot` object to obtain the variance-covariance of}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-Computes the variance-covariance matrix of \code{boot} object.
+Computes the variance-covariance matrix of `boot` object.
 }

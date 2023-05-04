@@ -2,25 +2,19 @@
 % Please edit documentation in R/mle_boot.R
 \name{bias.mle_boot}
 \alias{bias.mle_boot}
-\title{Computes the estimate of the bias of a \code{boot} object.}
+\title{Computes the estimate of the bias of a `mle_boot` object.}
 \usage{
 \method{bias}{mle_boot}(x, par = NULL, ...)
 }
 \arguments{
-\item{x}{the \code{boot} object to compute the bias of.}
+\item{x}{the `mle_boot` object to compute the bias of.}
 
 \item{par}{if the true parameter value is known, you may provide it;
-otherwise we use the MLE of \code{par}.}
+otherwise we use the MLE of `par`.}
 
 \item{...}{pass additional arguments}
 }
 \description{
-Normally, the bias is defined as \eqn{\mathbb{E}(\hat{\theta} - \theta)}.
-However, in this case, we have a bootstrap sample, so we compute the
-bias as \eqn{\mathbb{E}(\hat{\theta} - \hat{\theta}_0)}. This is
-equivalent to the bias of the MLE estimator.
-}
-\details{
 Generally, we do not trust this to be a good estimate of the bias
 of the MLE estimator, but it is still useful for comparing different
 estimators.

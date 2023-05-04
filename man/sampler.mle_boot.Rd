@@ -2,23 +2,23 @@
 % Please edit documentation in R/mle_boot.R
 \name{sampler.mle_boot}
 \alias{sampler.mle_boot}
-\title{Method for sampling from an \code{mle_boot} object.}
+\title{Method for sampling from an `mle_boot` object.}
 \usage{
 \method{sampler}{mle_boot}(x, ...)
 }
 \arguments{
-\item{x}{the \code{mle_boot} object to create sampler for}
+\item{x}{the `mle_boot` object to create sampler for}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-It creates a sampler for the \code{mle_boot} object. It returns a function
-that accepts a single parameter \code{n} denoting the number of samples
-to draw from the \code{mle_boot} object.
+It creates a sampler for the `mle_boot` object. It returns a function
+that accepts a single parameter `n` denoting the number of samples
+to draw from the `mle_boot` object.
 }
 \details{
-Unlike the \code{sampler} method for the more general \code{mle} objects,
-for \code{mle_boot} objects, we sample from the bootstrap replicates, which
+Unlike the `sampler` method for the more general `mle` objects,
+for `mle_boot` objects, we sample from the bootstrap replicates, which
 are more representative of the sampling distribution, particularly for
 small samples.
 }

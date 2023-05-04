@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle_exp_rate.R
 \name{exp_rate_loglike}
 \alias{exp_rate_loglike}
-\title{log-likelihood function generator given data \code{x} for the exponential
+\title{log-likelihood function generator given data `x` for the exponential
 distribution}
 \usage{
 exp_rate_loglike(x)
@@ -11,6 +11,6 @@ exp_rate_loglike(x)
 \item{x}{data}
 }
 \description{
-log-likelihood function generator given data \code{x} for the exponential
+log-likelihood function generator given data `x` for the exponential
 distribution
 }

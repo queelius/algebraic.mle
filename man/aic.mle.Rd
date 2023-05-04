@@ -2,13 +2,13 @@
 % Please edit documentation in R/mle.R
 \name{aic.mle}
 \alias{aic.mle}
-\title{Method for obtaining the AIC of an \code{mle} object.}
+\title{Method for obtaining the AIC of an `mle` object.}
 \usage{
 \method{aic}{mle}(x)
 }
 \arguments{
-\item{x}{the \code{mle} object to obtain the AIC of}
+\item{x}{the `mle` object to obtain the AIC of}
 }
 \description{
-Method for obtaining the AIC of an \code{mle} object.
+Method for obtaining the AIC of an `mle` object.
 }

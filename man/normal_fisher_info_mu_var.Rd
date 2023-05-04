@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle_normal_mu_var.R
 \name{normal_fisher_info_mu_var}
 \alias{normal_fisher_info_mu_var}
-\title{Fisher information matrix generator given data \code{x} for the normal
+\title{Fisher information matrix generator given data `x` for the normal
 distribution}
 \usage{
 normal_fisher_info_mu_var(x, observed = T)
@@ -13,6 +13,6 @@ normal_fisher_info_mu_var(x, observed = T)
 \item{observed}{whether to return the observed fisher information, default is TRUE}
 }
 \description{
-Fisher information matrix generator given data \code{x} for the normal
+Fisher information matrix generator given data `x` for the normal
 distribution
 }

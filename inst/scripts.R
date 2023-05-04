@@ -167,3 +167,48 @@ ggplot(df.tmp) +
     xlab("sample size") +
     ylab("bias") +
     labs(title="title",subtitle="subtitle",caption="caption")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##
+
+
+
+n <- 100
+theta <- c(4,2)
+x <- rnorm(n,mean=theta[1],sd=sqrt(theta[2]))
+head(x,n=4)
+hist(x)
+theta.hat <- mle_normal_mu_var(x)
+summary(theta.hat)
+point(theta.hat)
+fim(theta.hat)
+vcov(theta.hat)
+confint(theta.hat)
+bias(theta.hat,theta)
+bias(theta.hat)
+mse(theta.hat)        # estimate of MSE
+mse(theta.hat,theta)  # true MSE
+
+mle_solver <- function(data, ind)
+    point(mle_normal_mu_var(data[ind]))
+R <- 100000 # number of bootstrap replicates
+
+theta.boot <- mle_boot(mle_solver, x, R, parallel="multicore", ncpus=4)
+bias(theta.boot)
+bias(theta.hat)
+
+samplr <- function(n=1,theta) rnorm(n,theta[1],theta[2])
+pred(x=theta.hat, samp=samplr)

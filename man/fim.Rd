@@ -3,7 +3,7 @@
 \name{fim}
 \alias{fim}
 \title{Generic method for obtaining the fisher information
-matrix of an \code{mle} object.}
+matrix of an `mle` object.}
 \usage{
 fim(x, ...)
 }
@@ -15,11 +15,11 @@ fim(x, ...)
 \description{
 Fisher information is a way of measuring the amount of
 information that an observable random variable `X`
-carries about an unknown parameter \code{theta}
+carries about an unknown parameter `theta`
 upon which the probability of `X` depends.
 }
 \details{
 The inverse of the Fisher information matrix
 is the variance-covariance of the MLE for
-\code{theta}.
+`theta`.
 }

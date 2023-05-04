@@ -2,28 +2,27 @@
 % Please edit documentation in R/mle_weighted.R
 \name{mle_weighted}
 \alias{mle_weighted}
-\title{Accepts a list of \code{mle} objects for some parameter, say \code{theta},
-and combines them into a single estimator \code{mle_weighted}.}
+\title{Accepts a list of `mle` objects for some parameter, say `theta`,
+and combines them into a single estimator `mle_weighted`.}
 \usage{
 mle_weighted(mles)
 }
 \arguments{
-\item{mles}{A list of \code{mle} objects, all for the same parameter.}
+\item{mles}{A list of `mle` objects, all for the same parameter.}
 }
 \value{
-An object of type \code{mle_weighted} (which inherits from
-        \code{mle}, which is the weighted sum of the \code{mle} objects.
-        The \code{mle_weighted} object has the following attributes:
+An object of type `mle_weighted` (which inherits from
+        `mle`) that is the weighted sum of the `mle` objects.
 }
 \description{
-It combines the \code{mle} objects by adding them together, weighted by
+It combines the `mle` objects by adding them together, weighted by
 the inverse of their respective variance-covariance matrix (information
-matrix). Intuitively, the higher the variance, the less weight an \code{mle}
+matrix). Intuitively, the higher the variance, the less weight an `mle`
 is given in the summation, or alternatively, the more information it
 has about the parameter, the more weight it is given in the summation.
 }
 \details{
-Each \code{mle} object should have a \code{fim} method, which returns
+Each `mle` object should have a `fim` method, which returns
 the information matrix (inverse of the variance-covariance matrix).
 
 We assume that the observations used to estimate the MLE objects are

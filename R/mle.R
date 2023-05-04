@@ -1,13 +1,13 @@
-#' \code{mle} makes an \code{mle} object.
+#' `mle` makes an `mle` object.
 #'
 #' @param theta.hat the MLE
-#' @param loglike the log-likelihood of \code{theta.hat} given the data
-#' @param score the score function evaluated at \code{theta.hat}
-#' @param sigma the variance-covariance matrix of \code{theta.hat} given that data
-#' @param info the information matrix of \code{theta.hat} given the data
+#' @param loglike the log-likelihood of `theta.hat` given the data
+#' @param score the score function evaluated at `theta.hat`
+#' @param sigma the variance-covariance matrix of `theta.hat` given that data
+#' @param info the information matrix of `theta.hat` given the data
 #' @param obs observation (sample) data
-#' @param nobs number of observations in \code{obs}
-#' @param superclasses class (or classes) with \code{mle} as base
+#' @param nobs number of observations in `obs`
+#' @param superclasses class (or classes) with `mle` as base
 #' @export
 mle <- function(theta.hat,
                 loglike = NULL,
@@ -32,65 +32,65 @@ mle <- function(theta.hat,
 }
 
 #' Method for obtaining the number of observations in the sample used by
-#' an \code{mle} object \code{x}.
+#' an `mle` object `x`.
 #'
-#' @param x the \code{mle} object to print
+#' @param x the `mle` object to print
 #' @param ... additional arguments to pass
 #' @export
 print.mle <- function(x, ...) {
     print(summary(x, ...))
 }
 
-#' Method for obtaining the parameters of an \code{mle} object.
+#' Method for obtaining the parameters of an `mle` object.
 #'
-#' @param x the \code{mle} object to obtain the parameters of
+#' @param x the `mle` object to obtain the parameters of
 #'
 #' @export
 params.mle <- function(x, ...) {
     x$theta
 }
 
-#' Method for obtaining the number of parameters of an \code{mle} object.
+#' Method for obtaining the number of parameters of an `mle` object.
 #'
-#' @param x the \code{mle} object to obtain the number of parameters of
+#' @param x the `mle` object to obtain the number of parameters of
 #'
 #' @export
 nparams.mle <- function(x) length(params(x))
 
-#' Method for obtaining the AIC of an \code{mle} object.
+#' Method for obtaining the AIC of an `mle` object.
 #'
-#' @param x the \code{mle} object to obtain the AIC of
+#' @param x the `mle` object to obtain the AIC of
 #'
 #' @export
 aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
 
 #' Method for obtaining the number of observations in the sample used by
-#' an \code{mle}.
+#' an `mle`.
 #'
-#' @param object the \code{mle} object to obtain the number of observations for
+#' @param object the `mle` object to obtain the number of observations for
 #' @param ... additional arguments to pass
 #' @importFrom stats nobs
 #' @export
 nobs.mle <- function(object, ...) object$nobs
 
-#' Method for obtaining the observations used by the \code{mle}.
+#' Method for obtaining the observations used by the `mle`.
 #'
-#' @param object the \code{mle} object to obtain the number of observations for
+#' @param object the `mle` object to obtain the number of observations for
 #' @param ... additional arguments to pass
 #' @export
 obs.mle <- function(object, ...) object$obs
 
-#' Method for obtaining the log-likelihood of an \code{mle} object.
+#' Method for obtaining the log-likelihood of an `mle` object.
 #'
-#' @param x the log-likelihood \code{l} evaluated at \code{x}, \code{l(x)}.
+#' @param x the log-likelihood `l` evaluated at `x`, `l(x)`.
 #' @param ... additional arguments to pass
 #'
 #' @export
 loglike.mle <- function(x, ...) x$loglike
 
-#' Function to compute the confidence intervals of \code{mle} objects.
+#' Function to compute the confidence intervals of `mle` objects.
 #'
-#' @param object the \code{mle} object to compute the confidence intervals for
+#' @param object the `mle` object to compute the confidence intervals for
 #' @param parm parameter indexes to compute the confidence intervals for,
 #'             defaults to all
 #' @param level confidence level, defaults to 0.95 (alpha=.05)
@@ -137,13 +137,13 @@ confint.mle <- function(object, parm = NULL, level = .95, ...) {
     ci
 }
 
-#' Method for sampling from an \code{mle} object.
+#' Method for sampling from an `mle` object.
 #'
-#' It creates a sampler for the \code{mle} object. It returns a function
-#' that accepts a single parameter \code{n} denoting the number of samples
-#' to draw from the \code{mle} object.
+#' It creates a sampler for the `mle` object. It returns a function
+#' that accepts a single parameter `n` denoting the number of samples
+#' to draw from the `mle` object.
 #'
-#' @param x the \code{mle} object to create sampler for
+#' @param x the `mle` object to create sampler for
 #' @param ... additional arguments to pass
 #' @export
 sampler.mle <- function(x, ...) {
@@ -159,9 +159,9 @@ sampler.mle <- function(x, ...) {
 }
 
 
-#' Computes the variance-covariance matrix of \code{mle} objects.
+#' Computes the variance-covariance matrix of `mle` objects.
 #'
-#' @param object the \code{mle} object to obtain the variance-covariance of
+#' @param object the `mle` object to obtain the variance-covariance of
 #' @param ... additional arguments to pass
 #'
 #' @importFrom stats vcov
@@ -171,52 +171,52 @@ vcov.mle <- function(object, ...) {
 }
 
 
-#' Computes the MSE of an \code{mle} object.
+#' Computes the MSE of an `mle` object.
 #'
 #' The MSE of an estimator is just the expected sum of squared differences,
-#' e.g., if the true parameter value is \code{x} and we have an estimator \code{x.hat},
+#' e.g., if the true parameter value is `x` and we have an estimator `x.hat`,
 #' then the MSE is
-#' \code{mse(x.hat) = E[(x.hat-x)^2] = trace(vcov(x.hat)) + (bias(x.hat))^2}.
+#' `mse(x.hat) = E[(x.hat-x)^2] = trace(vcov(x.hat)) + (bias(x.hat))^2`.
 #'
-#' Since \code{x} is not typically known, we normally must estimate the bias.
+#' Since `x` is not typically known, we normally must estimate the bias.
 #' For sufficiently large samples, for the MLE assuming the regularity conditions,
 #' the bias is given by
-#' \code{mse(x.hat) = trace(vcov(x.hat)) + bias(x.hat)^2}, where
-#' \code{bias(x.hat)} is an estimate of \code{bias(x.hat,x)}. Sometimes, we
+#' `mse(x.hat) = trace(vcov(x.hat)) + bias(x.hat)^2`, where
+#' `bias(x.hat)` is an estimate of `bias(x.hat,x)`. Sometimes, we
 #' can estimate the bias in closed form, but other times simulations must be
 #' done, such as bootstrapping the bias. And, for really large samples, since
-#' the MLE is asymptotically unbiased, \code{trace(vcov(x.hat))} may be a
+#' the MLE is asymptotically unbiased, `trace(vcov(x.hat))` may be a
 #' reasonable estimate of the MSE.
 #'
-#' @param x the \code{mle} object to compute the MSE of.
+#' @param x the `mle` object to compute the MSE of.
 #' @param theta true parameter value
 #' @export
 mse.mle <- function(x, theta = NULL) {
     sum(diag(vcov(x))) + sum(bias(x, theta)^2)
 }
 
-#' Computes the point estimate of an \code{mle} object.
+#' Computes the point estimate of an `mle` object.
 #'
-#' @param x the \code{mle} object.
+#' @param x the `mle` object.
 #' @param ... pass additional arguments
 #' @export
 point.mle <- function(x, ...) {
     x$theta.hat
 }
 
-#' Function for obtaining the fisher information matrix of an \code{mle} object.
+#' Function for obtaining the fisher information matrix of an `mle` object.
 #'
-#' @param x the \code{mle} object to obtain the fisher information of.
+#' @param x the `mle` object to obtain the fisher information of.
 #' @param ... pass additional arguments
 #' @export
 fim.mle <- function(x, ...) {
     x$info
 }
 
-#' Function for obtaining a summary of \code{object}, which is a fitted
-#' \code{mle} object.
+#' Function for obtaining a summary of `object`, which is a fitted
+#' `mle` object.
 #'
-#' @param object the \code{mle} object
+#' @param object the `mle` object
 #' @param ... pass additional arguments
 #'
 #' @export
@@ -226,9 +226,9 @@ summary.mle <- function(object, ...) {
     )
 }
 
-#' Function for printing a \code{summary} object for an \code{mle} object.
+#' Function for printing a `summary` object for an `mle` object.
 #'
-#' @param object the \code{summary_mle} object
+#' @param object the `summary_mle` object
 #' @param ... pass additional arguments
 #'
 #' @export
@@ -251,7 +251,7 @@ print.summary_mle <- function(object, ...) {
 }
 
 #' Function for obtaining an estimate of the standard error of the MLE
-#' \code{object}.
+#' `object`.
 #'
 #' @param object the MLE object
 #' @param ... pass additional arguments
@@ -260,7 +260,7 @@ se.mle <- function(object, ...) {
     sqrt(diag(as.matrix(vcov(object, ...))))
 }
 
-#' Determine if an object \code{x} is an \code{mle} object.
+#' Determine if an object `x` is an `mle` object.
 #'
 #' @param x the object to test
 #' @export
@@ -268,12 +268,12 @@ is_mle <- function(x) {
     inherits(x, "mle")
 }
 
-#' Function for obtaining sample points for an \code{mle} object that is within
-#' the \code{p}-probability region.the number of observations in the sample used by
-#' an MLE object \code{x}.
+#' Function for obtaining sample points for an `mle` object that is within
+#' the `p`-probability region.the number of observations in the sample used by
+#' an MLE object `x`.
 #'
 #' @param n the sample size
-#' @param x the \code{mle} object
+#' @param x the `mle` object
 #' @param p the probability region
 #'
 #' @importFrom stats qchisq
@@ -303,10 +303,10 @@ sample_mle_region <- function(n, x, p = .95) {
     data
 }
 
-#' Method for determining the orthogonal components of an \code{mle} object
-#' \code{x}.
+#' Method for determining the orthogonal components of an `mle` object
+#' `x`.
 #'
-#' @param x the \code{mle} object
+#' @param x the `mle` object
 #' @param tol the tolerance for determining if a number is close enough to zero
 #' @param ... pass additional arguments
 #'
@@ -315,24 +315,25 @@ orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
     abs(fim(x, ...)) <= tol
 }
 
-#' Computes the score of an \code{mle} object.
+#' score
+#' 
+#' Computes the score of an `mle` object.
 #'
 #' If reguarlity conditions are satisfied, it should be zero (or approximately,
 #' if rounding errors occur).
 #'
-#' @param x the \code{mle} object to compute the score of.
-#' @param ... additional arguments to pass
-#'
+#' @inheritParams score
+#' @method score mle
 #' @export
 score.mle <- function(x, ...) {
     x$score
 }
 
-#' Computes the bias of an \code{mle} object assuming the large sample
+#' Computes the bias of an `mle` object assuming the large sample
 #' approximation is valid and the MLE regularity conditions are satisfied.
 #' In this case, the bias is zero (or zero vector).
 #'
-#' @param x the \code{mle} object to compute the bias of.
+#' @param x the `mle` object to compute the bias of.
 #' @param par true parameter value. normally, unknown (NULL), in which case
 #'              we estimate the bias (say, using bootstrap)
 #' @param ... additional arguments to pass
@@ -342,42 +343,57 @@ bias.mle <- function(x, par = NULL, ...) {
     rep(0, nparams(x, ...))
 }
 
-#' Predictive pdf of T given mle.hat estimate for the parameters of T
+#' Estimate of predictive interval of `T|x` where `T` is a statistic and `x`
+#' is an `mle` object that it is conditioned on. Generally, what this means
+#' is that we want to find the distribution of `T` when we marginalize over
+#' the distribution of `x`, since `x` is an uncertain estimate of the true
+#' parameter value.
 #'
 #' Let
-#'   T|theta.hat ~ f(theta.hat)
-#' be the pdf of T given parameter value theta.hat and
-#'   theta.hat ~ normal(mean(theta.hat),vcov(theta.hat))
-#' be the mvn of the MLE for theta.hat.
+#'   `T|x ~ f(t|x)``
+#' be the pdf of vector `T` given MLE `x` and
+#'   `x ~ MVN(point(x),vcov(x))``
+#' be the multivariate normal of the MLE `x`. Then,
+#'   `(T,x) ~ f(t,x) = f(t|x) f(x)
+#' is the joint distribution of `(T,x)`. To find `f(t)`,
+#' we integrate `f(t,theta.hat)` over `x`.
 #'
-#' Then,
-#'   (T,theta.hat) ~ f(t,theta.hat) = f(t|theta.hat) f(theta.hat)
-#' is the joint distribution of (T,theta.hat). To find f(t), we integrate
-#' f(t,theta.hat) over theta.hat.
-#'
-#' @param x \code{mle} object
-#' @param samp \code{mle} sampler for parametric distribution for the mle \code{x}
-#' @param alpha (1-alpha)-predictive interval for T|x
+#' @param x `mle` object
+#' @param samp `mle` sampler for parametric distribution that is a function
+#'             of `x`
+#' @param alpha (1-alpha)-predictive interval for `T|x`
 #' @importFrom mvtnorm rmvnorm
 #' @export
 pred.mle <- function(x, samp, alpha = 0.05) {
-    N <- 10000
+    N <- 50000
     theta <- point(x)
+    names(theta) <- NULL # maybe more efficient? benchmark this
     sigma <- vcov(x)
-
     thetas <- NULL
     if (length(theta) == 1) {
-        thetas <- rnorm(N, theta, sd = sqrt(sigma))
+        thetas <- matrix(rnorm(N, theta, sd = sqrt(sigma)),nrow=N)
     } else {
         thetas <- rmvnorm(N, theta, sigma)
     }
 
-    ts <- sort(sapply(thetas, function(theta) samp(1, theta)))
-    # predictive interval for T
-    pi <- matrix(c(
-        mean(ts),
-        quantile(ts, c(alpha / 2, 1 - alpha / 2))
-    ), nrow = 1)
+    ob <- samp(1, theta)
+    p <- length(ob)
+
+    data <- matrix(nrow = N, ncol = p)
+    data[1,] <- ob
+    for (i in 2:N) {
+        data[i,] <- samp(1, thetas[i,])
+    }
+
+    pi <- matrix(nrow=p, ncol=3)
+    for (j in 1:p)
+    {
+        ## predictive interval for T_j|x
+        dj <- sort(data[,j])
+        pi[j,] <- c(mean(dj),quantile(dj, c(alpha / 2, 1 - alpha / 2)))
+    }
     colnames(pi) <- c("mean", "lower", "upper")
     pi
 }
+
+

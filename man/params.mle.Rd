@@ -2,13 +2,13 @@
 % Please edit documentation in R/mle.R
 \name{params.mle}
 \alias{params.mle}
-\title{Method for obtaining the parameters of an \code{mle} object.}
+\title{Method for obtaining the parameters of an `mle` object.}
 \usage{
 \method{params}{mle}(x, ...)
 }
 \arguments{
-\item{x}{the \code{mle} object to obtain the parameters of}
+\item{x}{the `mle` object to obtain the parameters of}
 }
 \description{
-Method for obtaining the parameters of an \code{mle} object.
+Method for obtaining the parameters of an `mle` object.
 }

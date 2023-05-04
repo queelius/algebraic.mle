@@ -3,7 +3,7 @@
 \name{se.mle}
 \alias{se.mle}
 \title{Function for obtaining an estimate of the standard error of the MLE
-\code{object}.}
+`object`.}
 \usage{
 \method{se}{mle}(object, ...)
 }
@@ -14,5 +14,5 @@
 }
 \description{
 Function for obtaining an estimate of the standard error of the MLE
-\code{object}.
+`object`.
 }

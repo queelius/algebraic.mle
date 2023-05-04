@@ -3,9 +3,9 @@
 #'
 #' @param x a sample of observations
 #' @param k initial estimate of shape parameter k
-#' @param eps we numerically solve the MLE equation, \code{|old-new| <= eps} is stopping condition
+#' @param eps we numerically solve the MLE equation, `|old-new| <= eps` is stopping condition
 #' @param keep_obs Boolean, specifies whether to keep observations
-#' @return an \code{mle} object.
+#' @return an `mle` object.
 #' @importFrom MASS ginv
 #' @export
 mle_weibull_shape_scale <- function(x, k0 = 1, eps = 1e-7, keep_obs = F) {
@@ -44,12 +44,12 @@ mle_weibull_shape_scale <- function(x, k0 = 1, eps = 1e-7, keep_obs = F) {
     )
 }
 
-#' log-likelihood function generator given data \code{x} for the weibull
+#' log-likelihood function generator given data `x` for the weibull
 #' distribution.
 #'
-#' The returned log-likelihood function takes a single vector \code{theta} of
-#' size \code{2} (at least) where the first component is the shape parameter
-#' \code{k} and the second component is the scale parameter \code{lambda}.
+#' The returned log-likelihood function takes a single vector `theta` of
+#' size `2` (at least) where the first component is the shape parameter
+#' `k` and the second component is the scale parameter `lambda`.
 #'
 #' It can be used in statistical models or optimization algorithms to estimate
 #' the parameters of the Weibull distribution.
@@ -60,7 +60,7 @@ weibull_shape_scale_loglike <- function(x) {
     n <- length(x)
     stopifnot(n > 0) # we need at least one observation
 
-    stopifnot(all(x >= 0)) # if any values in \code{x} negative, the two
+    stopifnot(all(x >= 0)) # if any values in `x` negative, the two
     # parameter weibull distribution is not a good fit to
     # the data. we stop if so to avoid taking its log,
     # which is undefined for negative values.
@@ -71,7 +71,7 @@ weibull_shape_scale_loglike <- function(x) {
     }
 }
 
-#' score function generator given data \code{x} for the weibull
+#' score function generator given data `x` for the weibull
 #' distribution given a simple random sample.
 #'
 #' @param x data
@@ -86,7 +86,7 @@ weibull_shape_scale_score <- function(x) {
     }
 }
 
-#' log-likelihood function generator given data \code{x} for the weibull
+#' log-likelihood function generator given data `x` for the weibull
 #' distribution
 #'
 #' @param x data

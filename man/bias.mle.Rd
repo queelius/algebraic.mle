@@ -2,14 +2,14 @@
 % Please edit documentation in R/mle.R
 \name{bias.mle}
 \alias{bias.mle}
-\title{Computes the bias of an \code{mle} object assuming the large sample
+\title{Computes the bias of an `mle` object assuming the large sample
 approximation is valid and the MLE regularity conditions are satisfied.
 In this case, the bias is zero (or zero vector).}
 \usage{
 \method{bias}{mle}(x, par = NULL, ...)
 }
 \arguments{
-\item{x}{the \code{mle} object to compute the bias of.}
+\item{x}{the `mle` object to compute the bias of.}
 
 \item{par}{true parameter value. normally, unknown (NULL), in which case
 we estimate the bias (say, using bootstrap)}
@@ -17,7 +17,7 @@ we estimate the bias (say, using bootstrap)}
 \item{...}{additional arguments to pass}
 }
 \description{
-Computes the bias of an \code{mle} object assuming the large sample
+Computes the bias of an `mle` object assuming the large sample
 approximation is valid and the MLE regularity conditions are satisfied.
 In this case, the bias is zero (or zero vector).
 }

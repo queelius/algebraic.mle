@@ -10,10 +10,10 @@ mle_normal_mu_var(x, keep_obs = T)
 \arguments{
 \item{x}{a sample of observations}
 
-\item{keep_obs}{whether to store observations in \code{mle_normal} object}
+\item{keep_obs}{whether to store observations in `mle_normal_mu_var` object}
 }
 \value{
-an \code{mle} object.
+an `mle` object.
 }
 \description{
 Of course, the draws are unlikely to be normal, but the normal distribution

@@ -3,7 +3,7 @@
 \name{mse}
 \alias{mse}
 \title{Generic function for obtaining the mean squared error (MSE) of an estimator,
-\code{mse(x) = E[(x-mu)^2]} where \code{mu} is the true parameter value.}
+`mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.}
 \usage{
 mse(x, theta)
 }
@@ -14,5 +14,5 @@ mse(x, theta)
 }
 \description{
 Generic function for obtaining the mean squared error (MSE) of an estimator,
-\code{mse(x) = E[(x-mu)^2]} where \code{mu} is the true parameter value.
+`mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.
 }

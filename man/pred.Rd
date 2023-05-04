@@ -2,19 +2,19 @@
 % Please edit documentation in R/generic_functions.R
 \name{pred}
 \alias{pred}
-\title{Compute the predictive confidence interval given an estimator object \code{x}.}
+\title{Compute the predictive confidence interval given an estimator object `x`.}
 \usage{
 pred(x, samp = NULL, alpha = 0.05, ...)
 }
 \arguments{
 \item{x}{the estimator object}
 
-\item{samp}{a sampler for random variable that is parameterized by mle \code{x}}
+\item{samp}{a sampler for random variable that is parameterized by mle `x`}
 
 \item{alpha}{(1-alpha)/2 confidence interval}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-Compute the predictive confidence interval given an estimator object \code{x}.
+Compute the predictive confidence interval given an estimator object `x`.
 }

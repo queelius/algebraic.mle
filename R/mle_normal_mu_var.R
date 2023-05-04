@@ -7,8 +7,8 @@
 #' model to the data.
 #'
 #' @param x a sample of observations
-#' @param keep_obs whether to store observations in \code{mle_normal} object
-#' @return an \code{mle} object.
+#' @param keep_obs whether to store observations in `mle_normal_mu_var` object
+#' @return an `mle` object.
 #' @export
 mle_normal_mu_var <- function(x, keep_obs = T) {
     n <- length(x)
@@ -30,7 +30,7 @@ mle_normal_mu_var <- function(x, keep_obs = T) {
     )
 }
 
-#' log-likelihood function generator given data \code{x} for the normal
+#' log-likelihood function generator given data `x` for the normal
 #' distribution
 #'
 #' @param x data
@@ -47,7 +47,7 @@ normal_loglike_mu_var <- function(x) {
     }
 }
 
-#' Score function generator given data \code{x} for the normal
+#' Score function generator given data `x` for the normal
 #' distribution
 #'
 #' @param x data (simple random sample)
@@ -67,7 +67,7 @@ normal_score_mu_var <- function(x) {
     }
 }
 
-#' Fisher information matrix generator given data \code{x} for the normal
+#' Fisher information matrix generator given data `x` for the normal
 #' distribution
 #'
 #' @param x data (simple random sample)
@@ -104,9 +104,9 @@ normal_fisher_info_mu_var <- function(x, observed = T) {
     }
 }
 
-#' Computes the bias of an \code{mle_normal} object.
+#' Computes the bias of an `mle_normal_mu_var` object.
 #'
-#' @param x the \code{mle} object to compute the bias of.
+#' @param x the `mle` object to compute the bias of.
 #' @param par the true parameter value, defaults to unknown (NULL)
 #' @param ... unused additional arguments
 #' @export

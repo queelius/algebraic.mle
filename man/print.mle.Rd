@@ -3,16 +3,16 @@
 \name{print.mle}
 \alias{print.mle}
 \title{Method for obtaining the number of observations in the sample used by
-an \code{mle} object \code{x}.}
+an `mle` object `x`.}
 \usage{
 \method{print}{mle}(x, ...)
 }
 \arguments{
-\item{x}{the \code{mle} object to print}
+\item{x}{the `mle` object to print}
 
 \item{...}{additional arguments to pass}
 }
 \description{
 Method for obtaining the number of observations in the sample used by
-an \code{mle} object \code{x}.
+an `mle` object `x`.
 }

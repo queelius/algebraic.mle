@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle_normal_mu_var.R
 \name{normal_loglike_mu_var}
 \alias{normal_loglike_mu_var}
-\title{log-likelihood function generator given data \code{x} for the normal
+\title{log-likelihood function generator given data `x` for the normal
 distribution}
 \usage{
 normal_loglike_mu_var(x)
@@ -11,6 +11,6 @@ normal_loglike_mu_var(x)
 \item{x}{data}
 }
 \description{
-log-likelihood function generator given data \code{x} for the normal
+log-likelihood function generator given data `x` for the normal
 distribution
 }

@@ -2,21 +2,21 @@
 % Please edit documentation in R/mle.R
 \name{sample_mle_region}
 \alias{sample_mle_region}
-\title{Function for obtaining sample points for an \code{mle} object that is within
-the \code{p}-probability region.the number of observations in the sample used by
-an MLE object \code{x}.}
+\title{Function for obtaining sample points for an `mle` object that is within
+the `p`-probability region.the number of observations in the sample used by
+an MLE object `x`.}
 \usage{
 sample_mle_region(n, x, p = 0.95)
 }
 \arguments{
 \item{n}{the sample size}
 
-\item{x}{the \code{mle} object}
+\item{x}{the `mle` object}
 
 \item{p}{the probability region}
 }
 \description{
-Function for obtaining sample points for an \code{mle} object that is within
-the \code{p}-probability region.the number of observations in the sample used by
-an MLE object \code{x}.
+Function for obtaining sample points for an `mle` object that is within
+the `p`-probability region.the number of observations in the sample used by
+an MLE object `x`.
 }

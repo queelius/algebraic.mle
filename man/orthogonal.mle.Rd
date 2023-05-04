@@ -2,19 +2,19 @@
 % Please edit documentation in R/mle.R
 \name{orthogonal.mle}
 \alias{orthogonal.mle}
-\title{Method for determining the orthogonal components of an \code{mle} object
-\code{x}.}
+\title{Method for determining the orthogonal components of an `mle` object
+`x`.}
 \usage{
 \method{orthogonal}{mle}(x, tol = sqrt(.Machine$double.eps), ...)
 }
 \arguments{
-\item{x}{the \code{mle} object}
+\item{x}{the `mle` object}
 
 \item{tol}{the tolerance for determining if a number is close enough to zero}
 
 \item{...}{pass additional arguments}
 }
 \description{
-Method for determining the orthogonal components of an \code{mle} object
-\code{x}.
+Method for determining the orthogonal components of an `mle` object
+`x`.
 }

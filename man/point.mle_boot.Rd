@@ -2,15 +2,15 @@
 % Please edit documentation in R/mle_boot.R
 \name{point.mle_boot}
 \alias{point.mle_boot}
-\title{Computes the point estimate of an \code{mle} object.}
+\title{Computes the point estimate of an `mle` object.}
 \usage{
 \method{point}{mle_boot}(x, ...)
 }
 \arguments{
-\item{x}{the \code{boot} object.}
+\item{x}{the `boot` object.}
 
 \item{...}{pass additional arguments}
 }
 \description{
-Computes the point estimate of an \code{mle} object.
+Computes the point estimate of an `mle` object.
 }

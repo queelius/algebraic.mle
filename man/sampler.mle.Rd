@@ -2,17 +2,17 @@
 % Please edit documentation in R/mle.R
 \name{sampler.mle}
 \alias{sampler.mle}
-\title{Method for sampling from an \code{mle} object.}
+\title{Method for sampling from an `mle` object.}
 \usage{
 \method{sampler}{mle}(x, ...)
 }
 \arguments{
-\item{x}{the \code{mle} object to create sampler for}
+\item{x}{the `mle` object to create sampler for}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-It creates a sampler for the \code{mle} object. It returns a function
-that accepts a single parameter \code{n} denoting the number of samples
-to draw from the \code{mle} object.
+It creates a sampler for the `mle` object. It returns a function
+that accepts a single parameter `n` denoting the number of samples
+to draw from the `mle` object.
 }

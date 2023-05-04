@@ -80,13 +80,17 @@ set.seed(1234)
 We generate the data with the following R code:
 ```{r cache=TRUE}
 sim.df <- tibble(lifetime=
-                     rweibull(n=sim.n,
-                                   shape=sim.shape,
-                                   scale=sim.scale) +
-                     rnorm(n=sim.n,
-                           mean=0,
-                           sd=sim.err.sd))
+  rweibull(n=sim.n, shape=sim.shape, scale=sim.scale) +
+  rnorm(n=sim.n, mean=0, sd=sim.err.sd))
+```
 
+A few elements from the sample are given by:
+```{r, echo=F}
+head(sim.df)
+```
+
+A density plot of the DGP is given by:
+```{r, fig.align='center', echo=F, cache=T}
 dgp.density <- density(
   rweibull(n=10000000,
            shape=sim.shape,
@@ -94,10 +98,7 @@ dgp.density <- density(
   rnorm(n=10000000,
         mean=0,
         sd=sim.err.sd))
-```
 
-A density plot of the DGP is given by:
-```{r, fig.align='center'}
 plot(dgp.density,
      main="Density of the DGP",
      xlab="System Lifetime",
@@ -106,10 +107,6 @@ plot(dgp.density,
      lwd=2)
 ```
 
-A few elements from the sample are given by:
-```{r, echo=F}
-sim.df
-```
 
 ## Visualizing the data
 Visualizing the data is a good first step in the analysis of the data.
@@ -177,10 +174,10 @@ log-likelihood function `l.wei` is zero.
 
 Here is the Newton-raphson code:
 ```{r}
-newton_raphson <- function(f, df, x0, tol=1e-4, maxiter=100L)
+newton_raphson <- function(f, df, x0, tol=1e-4, max_iter=100L)
 {
   fx <- f(x0)
-  for (i in 1:maxiter)
+  for (i in 1:max_iter)
   {
     if (max(abs(fx)) < tol) break
     J <- df(x0)

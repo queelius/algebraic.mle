@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle_normal_mu_var.R
 \name{normal_score_mu_var}
 \alias{normal_score_mu_var}
-\title{Score function generator given data \code{x} for the normal
+\title{Score function generator given data `x` for the normal
 distribution}
 \usage{
 normal_score_mu_var(x)
@@ -11,6 +11,6 @@ normal_score_mu_var(x)
 \item{x}{data (simple random sample)}
 }
 \description{
-Score function generator given data \code{x} for the normal
+Score function generator given data `x` for the normal
 distribution
 }

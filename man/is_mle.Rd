@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle.R
 \name{is_mle}
 \alias{is_mle}
-\title{Determine if an object \code{x} is an \code{mle} object.}
+\title{Determine if an object `x` is an `mle` object.}
 \usage{
 is_mle(x)
 }
@@ -10,5 +10,5 @@ is_mle(x)
 \item{x}{the object to test}
 }
 \description{
-Determine if an object \code{x} is an \code{mle} object.
+Determine if an object `x` is an `mle` object.
 }

@@ -115,6 +115,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/is_converged.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/is_mle.html</loc>
   </url>
   <url>
@@ -154,6 +157,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_linear_transform.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_local_search.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_newton_raphson.html</loc>
   </url>
   <url>
@@ -161,6 +167,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_normal_mu_var.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_optim.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_solver_random_restarts.html</loc>
@@ -326,6 +335,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/se.mle_boot.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/sim_anneal.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/stat.boot.html</loc>

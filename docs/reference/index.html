@@ -68,12 +68,12 @@
           
           <code><a href="aic.mle.html">aic(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtaining the AIC of an <code>mle</code> object.</dd>
+        <dd>Method for obtaining the AIC of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="algebraic.mle.html">algebraic.mle</a></code> 
         </dt>
-        <dd><code>algebraic.mle</code>: A package for algebraically operating on and generating
+        <dd>`algebraic.mle`: A package for algebraically operating on and generating
 maximum likelihood estimators from existing maximum likelihood estimators.</dd>
       </dl><dl><dt>
           
@@ -84,24 +84,24 @@ maximum likelihood estimators from existing maximum likelihood estimators.</dd>
           
           <code><a href="bias.mle.html">bias(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the bias of an <code>mle</code> object assuming the large sample
+        <dd>Computes the bias of an `mle` object assuming the large sample
 approximation is valid and the MLE regularity conditions are satisfied.
 In this case, the bias is zero (or zero vector).</dd>
       </dl><dl><dt>
           
           <code><a href="bias.mle_boot.html">bias(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the estimate of the bias of a <code>boot</code> object.</dd>
+        <dd>Computes the estimate of the bias of a `mle_boot` object.</dd>
       </dl><dl><dt>
           
           <code><a href="bias.mle_exp_rate.html">bias(<i>&lt;mle_exp_rate&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the bias of an <code>exp_mle</code> object (exponential mle).</dd>
+        <dd>Computes the bias of an `exp_mle` object (exponential mle).</dd>
       </dl><dl><dt>
           
           <code><a href="bias.mle_normal_mu_var.html">bias(<i>&lt;mle_normal_mu_var&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the bias of an <code>mle_normal</code> object.</dd>
+        <dd>Computes the bias of an `mle_normal_mu_var` object.</dd>
       </dl><dl><dt>
           
           <code><a href="chisqr.test.html">chisqr.test()</a></code> 
@@ -111,7 +111,7 @@ In this case, the bias is zero (or zero vector).</dd>
           
           <code><a href="confint.mle.html">confint(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Function to compute the confidence intervals of <code>mle</code> objects.</dd>
+        <dd>Function to compute the confidence intervals of `mle` objects.</dd>
       </dl><dl><dt>
           
           <code><a href="cramer.test.html">cramer.test()</a></code> 
@@ -127,35 +127,40 @@ distribution</dd>
           
           <code><a href="exp_rate_loglike.html">exp_rate_loglike()</a></code> 
         </dt>
-        <dd>log-likelihood function generator given data <code>x</code> for the exponential
+        <dd>log-likelihood function generator given data `x` for the exponential
 distribution</dd>
       </dl><dl><dt>
           
           <code><a href="exp_rate_score.html">exp_rate_score()</a></code> 
         </dt>
-        <dd>score (derivative of log-likelihood) function generator given data <code>x</code>
+        <dd>score (derivative of log-likelihood) function generator given data `x`
 for the exponential distribution</dd>
       </dl><dl><dt>
           
           <code><a href="fim.html">fim()</a></code> 
         </dt>
         <dd>Generic method for obtaining the fisher information
-matrix of an <code>mle</code> object.</dd>
+matrix of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="fim.mle.html">fim(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Function for obtaining the fisher information matrix of an <code>mle</code> object.</dd>
+        <dd>Function for obtaining the fisher information matrix of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="fim.mle_boot.html">fim(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the variance-covariance matrix of <code>boot</code> object.</dd>
+        <dd>Computes the variance-covariance matrix of `boot` object.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="is_converged.html">is_converged()</a></code> 
+        </dt>
+        <dd>Function to determine whether an `mle` object has converged.</dd>
       </dl><dl><dt>
           
           <code><a href="is_mle.html">is_mle()</a></code> 
         </dt>
-        <dd>Determine if an object <code>x</code> is an <code>mle</code> object.</dd>
+        <dd>Determine if an object `x` is an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="loglike.html">loglike()</a></code> 
@@ -166,18 +171,12 @@ object, assuming it has a likelihood function, e.g., a fitted `mle` object.</dd>
           
           <code><a href="loglike.mle.html">loglike(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtaining the log-likelihood of an <code>mle</code> object.</dd>
+        <dd>Method for obtaining the log-likelihood of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="mle.html">mle()</a></code> 
         </dt>
-        <dd><code>mle</code> makes an <code>mle</code> object.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mle_apply.html">mle_apply()</a></code> 
-        </dt>
-        <dd><code>rmap.mle</code> computes the distribution of <code>f(x)</code> where <code>x</code>
-is an <code>mle</code> object.</dd>
+        <dd>`mle` makes an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="mle_boot.html">mle_boot()</a></code> 
@@ -191,16 +190,30 @@ is an <code>mle</code> object.</dd>
 from the exponential distribution.</dd>
       </dl><dl><dt>
           
-          <code><a href="mle_linear_transform.html">mle_linear_transform()</a></code> 
+          <code><a href="mle_gradient_ascent.html">mle_gradient_ascent()</a></code> 
         </dt>
-        <dd>Linearly transform an <code>mle</code> object <code>x</code> by multiplying it
-on the LHS by a matrix <code>A</code>.</dd>
+        <dd>MLE method using gradient ascent</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mle_local_search.html">mle_local_search()</a></code> 
+        </dt>
+        <dd>mle_local_search</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mle_newton_raphson.html">mle_newton_raphson()</a></code> 
+        </dt>
+        <dd>MLE method using the Newton-Raphson method</dd>
       </dl><dl><dt>
           
           <code><a href="mle_normal_mu_var.html">mle_normal_mu_var()</a></code> 
         </dt>
         <dd>MLE of the (mu,var) parameter vector when we assume the sample is i.i.d. and
 drawn from the normal distribution.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mle_optim.html">mle_optim()</a></code> 
+        </dt>
+        <dd>mle_optim</dd>
       </dl><dl><dt>
           
           <code><a href="mle_weibull_shape_scale.html">mle_weibull_shape_scale()</a></code> 
@@ -211,53 +224,53 @@ from the weibull distribution.</dd>
           
           <code><a href="mle_weighted.html">mle_weighted()</a></code> 
         </dt>
-        <dd>Accepts a list of <code>mle</code> objects for some parameter, say <code>theta</code>,
-and combines them into a single estimator <code>mle_weighted</code>.</dd>
+        <dd>Accepts a list of `mle` objects for some parameter, say `theta`,
+and combines them into a single estimator `mle_weighted`.</dd>
       </dl><dl><dt>
           
           <code><a href="mse.html">mse()</a></code> 
         </dt>
         <dd>Generic function for obtaining the mean squared error (MSE) of an estimator,
-<code>mse(x) = E[(x-mu)^2]</code> where <code>mu</code> is the true parameter value.</dd>
+`mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.</dd>
       </dl><dl><dt>
           
           <code><a href="mse.mle.html">mse(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the MSE of an <code>mle</code> object.</dd>
+        <dd>Computes the MSE of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="mse.mle_boot.html">mse(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the estimate of the MSE of a <code>boot</code> object.</dd>
+        <dd>Computes the estimate of the MSE of a `boot` object.</dd>
       </dl><dl><dt>
           
           <code><a href="nobs.mle.html">nobs(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of observations in the sample used by
-an <code>mle</code>.</dd>
+an `mle`.</dd>
       </dl><dl><dt>
           
           <code><a href="nobs.mle_boot.html">nobs(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of observations in the sample used by
-an <code>mle</code>.</dd>
+an `mle`.</dd>
       </dl><dl><dt>
           
           <code><a href="normal_fisher_info_mu_var.html">normal_fisher_info_mu_var()</a></code> 
         </dt>
-        <dd>Fisher information matrix generator given data <code>x</code> for the normal
+        <dd>Fisher information matrix generator given data `x` for the normal
 distribution</dd>
       </dl><dl><dt>
           
           <code><a href="normal_loglike_mu_var.html">normal_loglike_mu_var()</a></code> 
         </dt>
-        <dd>log-likelihood function generator given data <code>x</code> for the normal
+        <dd>log-likelihood function generator given data `x` for the normal
 distribution</dd>
       </dl><dl><dt>
           
           <code><a href="normal_score_mu_var.html">normal_score_mu_var()</a></code> 
         </dt>
-        <dd>Score function generator given data <code>x</code> for the normal
+        <dd>Score function generator given data `x` for the normal
 distribution</dd>
       </dl><dl><dt>
           
@@ -269,27 +282,27 @@ distribution object.</dd>
           
           <code><a href="nparams.mle.html">nparams(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtaining the number of parameters of an <code>mle</code> object.</dd>
+        <dd>Method for obtaining the number of parameters of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="nparams.mle_boot.html">nparams(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtaining the number of parameters of an <code>boot</code> object.</dd>
+        <dd>Method for obtaining the number of parameters of an `boot` object.</dd>
       </dl><dl><dt>
           
           <code><a href="obs.html">obs()</a></code> 
         </dt>
-        <dd>Method for obtaining the observations used by a fitted model <code>object</code>.</dd>
+        <dd>Generic function for obtaining the observations used by a fitted model `object`.</dd>
       </dl><dl><dt>
           
           <code><a href="obs.mle.html">obs(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtaining the observations used by the <code>mle</code>.</dd>
+        <dd>Method for obtaining the observations used by the `mle`.</dd>
       </dl><dl><dt>
           
           <code><a href="obs.mle_boot.html">obs(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtaining the observations used by the <code>mle</code>.</dd>
+        <dd>Method for obtaining the observations used by the `mle`.</dd>
       </dl><dl><dt>
           
           <code><a href="orthogonal.html">orthogonal()</a></code> 
@@ -299,8 +312,8 @@ distribution object.</dd>
           
           <code><a href="orthogonal.mle.html">orthogonal(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for determining the orthogonal components of an <code>mle</code> object
-<code>x</code>.</dd>
+        <dd>Method for determining the orthogonal components of an `mle` object
+`x`.</dd>
       </dl><dl><dt>
           
           <code><a href="params.html">params()</a></code> 
@@ -310,12 +323,12 @@ distribution object.</dd>
           
           <code><a href="params.mle.html">params(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtaining the parameters of an <code>mle</code> object.</dd>
+        <dd>Method for obtaining the parameters of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="params.mle_boot.html">params(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtaining the parameters of an <code>boot</code> object.</dd>
+        <dd>Method for obtaining the parameters of an `boot` object.</dd>
       </dl><dl><dt>
           
           <code><a href="point.html">point()</a></code> 
@@ -325,52 +338,55 @@ distribution object.</dd>
           
           <code><a href="point.mle.html">point(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the point estimate of an <code>mle</code> object.</dd>
+        <dd>Computes the point estimate of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="point.mle_boot.html">point(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the point estimate of an <code>mle</code> object.</dd>
+        <dd>Computes the point estimate of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="pred.html">pred()</a></code> 
         </dt>
-        <dd>Compute the predictive confidence interval given an estimator object <code>x</code>.</dd>
+        <dd>Compute the predictive confidence interval given an estimator object `x`.</dd>
       </dl><dl><dt>
           
           <code><a href="pred.mle.html">pred(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Predictive pdf of T given mle.hat estimate for the parameters of T</dd>
+        <dd>Estimate of predictive interval of `T|x` where `T` is a statistic and `x`
+is an `mle` object that it is conditioned on. Generally, what this means
+is that we want to find the distribution of `T` when we marginalize over
+the distribution of `x`, since `x` is an uncertain estimate of the true
+parameter value.</dd>
       </dl><dl><dt>
           
           <code><a href="print.mle.html">print(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of observations in the sample used by
-an <code>mle</code> object <code>x</code>.</dd>
+an `mle` object `x`.</dd>
       </dl><dl><dt>
           
           <code><a href="print.summary_mle.html">print(<i>&lt;summary_mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Function for printing a <code>summary</code> object for an <code>mle</code> object.</dd>
+        <dd>Function for printing a `summary` object for an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="rmap.html">rmap()</a></code> 
         </dt>
-        <dd>Generic function for computing the distribution of <code>f(x)</code> where <code>x</code>
+        <dd>Generic function for computing the distribution of `f(x)` where `x`
 models a distribution (random element) object.</dd>
       </dl><dl><dt>
           
           <code><a href="rmap.mle.html">rmap(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd><code>rmap.mle</code> computes the distribution of <code>f(x)</code> where <code>x</code>
-is an <code>mle</code> object.</dd>
+        <dd>rmap.mle</dd>
       </dl><dl><dt>
           
           <code><a href="sample_mle_region.html">sample_mle_region()</a></code> 
         </dt>
-        <dd>Function for obtaining sample points for an <code>mle</code> object that is within
-the <code>p</code>-probability region.the number of observations in the sample used by
-an MLE object <code>x</code>.</dd>
+        <dd>Function for obtaining sample points for an `mle` object that is within
+the `p`-probability region.the number of observations in the sample used by
+an MLE object `x`.</dd>
       </dl><dl><dt>
           
           <code><a href="sampler.html">sampler()</a></code> 
@@ -380,22 +396,22 @@ an MLE object <code>x</code>.</dd>
           
           <code><a href="sampler.mle.html">sampler(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for sampling from an <code>mle</code> object.</dd>
+        <dd>Method for sampling from an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="sampler.mle_boot.html">sampler(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for sampling from an <code>mle_boot</code> object.</dd>
+        <dd>Method for sampling from an `mle_boot` object.</dd>
       </dl><dl><dt>
           
           <code><a href="score.html">score()</a></code> 
         </dt>
-        <dd>Computes the score of an estimator object with respect to its log-likelihood.</dd>
+        <dd>score</dd>
       </dl><dl><dt>
           
           <code><a href="score.mle.html">score(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the score of an <code>mle</code> object.</dd>
+        <dd>score</dd>
       </dl><dl><dt>
           
           <code><a href="se.html">se()</a></code> 
@@ -406,19 +422,24 @@ an MLE object <code>x</code>.</dd>
           <code><a href="se.mle.html">se(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Function for obtaining an estimate of the standard error of the MLE
-<code>object</code>.</dd>
+`object`.</dd>
       </dl><dl><dt>
           
           <code><a href="se.mle_boot.html">se(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
         <dd>Function for obtaining an estimate of the standard error of the bootstrap of
-the MLE <code>object</code>.</dd>
+the MLE `object`.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sim_anneal.html">sim_anneal()</a></code> 
+        </dt>
+        <dd>Simulated Annealing</dd>
       </dl><dl><dt>
           
           <code><a href="summary.mle.html">summary(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Function for obtaining a summary of <code>object</code>, which is a fitted
-<code>mle</code> object.</dd>
+        <dd>Function for obtaining a summary of `object`, which is a fitted
+`mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="two.sample.test.html">two.sample.test()</a></code> 
@@ -428,29 +449,29 @@ the MLE <code>object</code>.</dd>
           
           <code><a href="vcov.mle.html">vcov(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the variance-covariance matrix of <code>mle</code> objects.</dd>
+        <dd>Computes the variance-covariance matrix of `mle` objects.</dd>
       </dl><dl><dt>
           
           <code><a href="vcov.mle_boot.html">vcov(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the variance-covariance matrix of <code>boot</code> object.</dd>
+        <dd>Computes the variance-covariance matrix of `boot` object.</dd>
       </dl><dl><dt>
           
           <code><a href="weibull_shape_scale_fim.html">weibull_shape_scale_fim()</a></code> 
         </dt>
-        <dd>log-likelihood function generator given data <code>x</code> for the weibull
+        <dd>log-likelihood function generator given data `x` for the weibull
 distribution</dd>
       </dl><dl><dt>
           
           <code><a href="weibull_shape_scale_loglike.html">weibull_shape_scale_loglike()</a></code> 
         </dt>
-        <dd>log-likelihood function generator given data <code>x</code> for the weibull
+        <dd>log-likelihood function generator given data `x` for the weibull
 distribution.</dd>
       </dl><dl><dt>
           
           <code><a href="weibull_shape_scale_score.html">weibull_shape_scale_score()</a></code> 
         </dt>
-        <dd>score function generator given data <code>x</code> for the weibull
+        <dd>score function generator given data `x` for the weibull
 distribution given a simple random sample.</dd>
       </dl></div>
   </main></div>

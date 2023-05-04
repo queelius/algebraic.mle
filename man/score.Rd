@@ -2,7 +2,7 @@
 % Please edit documentation in R/generic_functions.R
 \name{score}
 \alias{score}
-\title{Computes the score of an estimator object with respect to its log-likelihood.}
+\title{score}
 \usage{
 score(x, ...)
 }
@@ -12,5 +12,6 @@ score(x, ...)
 \item{...}{pass additional arguments}
 }
 \description{
-Computes the score of an estimator object with respect to its log-likelihood.
+Generic function for computing the score of an estimator
+object with respect to its log-likelihood.
 }

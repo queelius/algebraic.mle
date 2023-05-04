@@ -50,11 +50,11 @@ point <- function(x, ...) {
 
 #' Generic function for sampling from distribution objects.
 #'
-#' It creates a sampler for the \code{x} object. It returns a function
-#' that accepts a single parameter \code{n} denoting the number of samples
-#' to draw from the \code{x} object.
+#' It creates a sampler for the `x` object. It returns a function
+#' that accepts a single parameter `n` denoting the number of samples
+#' to draw from the `x` object.
 #'
-#' @param x the \code{x} object to create a sampler for
+#' @param x the `x` object to create a sampler for
 #' @param ... additional arguments to pass
 #'
 #' @export
@@ -63,16 +63,16 @@ sampler <- function(x, ...) {
 }
 
 #' Generic method for obtaining the fisher information
-#' matrix of an \code{mle} object.
+#' matrix of an `mle` object.
 #'
 #' Fisher information is a way of measuring the amount of
 #' information that an observable random variable `X`
-#' carries about an unknown parameter \code{theta}
+#' carries about an unknown parameter `theta`
 #' upon which the probability of `X` depends.
 #'
 #' The inverse of the Fisher information matrix
 #' is the variance-covariance of the MLE for
-#' \code{theta}.
+#' `theta`.
 #'
 #' @param x the object to obtain the fisher information of
 #' @param ... additional arguments to pass
@@ -83,7 +83,7 @@ fim <- function(x, ...) {
 }
 
 #' Generic function for obtaining the mean squared error (MSE) of an estimator,
-#' \code{mse(x) = E[(x-mu)^2]} where \code{mu} is the true parameter value.
+#' `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.
 #'
 #' @param x the object to compute the MSE of
 #' @param theta the true parameter value
@@ -103,7 +103,10 @@ bias <- function(x, theta, ...) {
     UseMethod("bias", x)
 }
 
-#' Computes the score of an estimator object with respect to its log-likelihood.
+#' score
+#' 
+#' Generic function for computing the score of an estimator
+#' object with respect to its log-likelihood.
 #'
 #' @param x the object to compute the score of.
 #' @param ... pass additional arguments
@@ -113,22 +116,22 @@ score <- function(x, ...) {
     UseMethod("score", x)
 }
 
-#' Generic function for computing the distribution of \code{f(x)} where \code{x}
+#' Generic function for computing the distribution of `f(x)` where `x`
 #' models a distribution (random element) object.
 #'
-#' When we apply a function \code{f} to a distribution \code{x}, the result
-#' is a distribution object \code{f(x)}.
+#' When we apply a function `f` to a distribution `x`, the result
+#' is a distribution object `f(x)`.
 #'
 #' @param x a list of distribution (random element) objects.
 #' @param g a function that accepts arguments sampled from the distribution
-#'          objects in \code{x}.
+#'          objects in `x`.
 #' @param ... additional arguments to pass.
 #' @export
 rmap <- function(x, g, ...) {
     UseMethod("rmap", x)
 }
 
-#' Method for obtaining the observations used by a fitted model \code{object}.
+#' Generic function for obtaining the observations used by a fitted model `object`.
 #'
 #' @param object the fitted object to obtain the number of observations used by the fit
 #' @param ... additional arguments to pass
@@ -155,13 +158,14 @@ orthogonal <- function(x, tol, ...) {
     UseMethod("orthogonal", x)
 }
 
-#' Compute the predictive confidence interval given an estimator object \code{x}.
+#' Compute the predictive confidence interval given an estimator object `x`.
 #'
 #' @param x the estimator object
 #' @param alpha (1-alpha)/2 confidence interval
-#' @param samp a sampler for random variable that is parameterized by mle \code{x}
+#' @param samp a sampler for random variable that is parameterized by mle `x`
 #' @param ... additional arguments to pass
 #' @export
 pred <- function(x, samp = NULL, alpha = .05, ...) {
     UseMethod("pred", x)
 }
+

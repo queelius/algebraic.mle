@@ -2,29 +2,29 @@
 % Please edit documentation in R/mle.R
 \name{mse.mle}
 \alias{mse.mle}
-\title{Computes the MSE of an \code{mle} object.}
+\title{Computes the MSE of an `mle` object.}
 \usage{
 \method{mse}{mle}(x, theta = NULL)
 }
 \arguments{
-\item{x}{the \code{mle} object to compute the MSE of.}
+\item{x}{the `mle` object to compute the MSE of.}
 
 \item{theta}{true parameter value}
 }
 \description{
 The MSE of an estimator is just the expected sum of squared differences,
-e.g., if the true parameter value is \code{x} and we have an estimator \code{x.hat},
+e.g., if the true parameter value is `x` and we have an estimator `x.hat`,
 then the MSE is
-\code{mse(x.hat) = E[(x.hat-x)^2] = trace(vcov(x.hat)) + (bias(x.hat))^2}.
+`mse(x.hat) = E[(x.hat-x)^2] = trace(vcov(x.hat)) + (bias(x.hat))^2`.
 }
 \details{
-Since \code{x} is not typically known, we normally must estimate the bias.
+Since `x` is not typically known, we normally must estimate the bias.
 For sufficiently large samples, for the MLE assuming the regularity conditions,
 the bias is given by
-\code{mse(x.hat) = trace(vcov(x.hat)) + bias(x.hat)^2}, where
-\code{bias(x.hat)} is an estimate of \code{bias(x.hat,x)}. Sometimes, we
+`mse(x.hat) = trace(vcov(x.hat)) + bias(x.hat)^2`, where
+`bias(x.hat)` is an estimate of `bias(x.hat,x)`. Sometimes, we
 can estimate the bias in closed form, but other times simulations must be
 done, such as bootstrapping the bias. And, for really large samples, since
-the MLE is asymptotically unbiased, \code{trace(vcov(x.hat))} may be a
+the MLE is asymptotically unbiased, `trace(vcov(x.hat))` may be a
 reasonable estimate of the MSE.
 }

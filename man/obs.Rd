@@ -2,7 +2,7 @@
 % Please edit documentation in R/generic_functions.R
 \name{obs}
 \alias{obs}
-\title{Method for obtaining the observations used by a fitted model \code{object}.}
+\title{Generic function for obtaining the observations used by a fitted model `object`.}
 \usage{
 obs(object, ...)
 }
@@ -12,5 +12,5 @@ obs(object, ...)
 \item{...}{additional arguments to pass}
 }
 \description{
-Method for obtaining the observations used by a fitted model \code{object}.
+Generic function for obtaining the observations used by a fitted model `object`.
 }

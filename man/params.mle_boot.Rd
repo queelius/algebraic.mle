@@ -2,13 +2,13 @@
 % Please edit documentation in R/mle_boot.R
 \name{params.mle_boot}
 \alias{params.mle_boot}
-\title{Method for obtaining the parameters of an \code{boot} object.}
+\title{Method for obtaining the parameters of an `boot` object.}
 \usage{
 \method{params}{mle_boot}(x)
 }
 \arguments{
-\item{x}{the \code{boot} object to obtain the parameters of.}
+\item{x}{the `boot` object to obtain the parameters of.}
 }
 \description{
-Method for obtaining the parameters of an \code{boot} object.
+Method for obtaining the parameters of an `boot` object.
 }

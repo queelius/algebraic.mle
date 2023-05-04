@@ -3,7 +3,7 @@
 \name{se.mle_boot}
 \alias{se.mle_boot}
 \title{Function for obtaining an estimate of the standard error of the bootstrap of
-the MLE \code{object}.}
+the MLE `object`.}
 \usage{
 \method{se}{mle_boot}(object)
 }
@@ -12,5 +12,5 @@ the MLE \code{object}.}
 }
 \description{
 Function for obtaining an estimate of the standard error of the bootstrap of
-the MLE \code{object}.
+the MLE `object`.
 }

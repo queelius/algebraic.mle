@@ -3,54 +3,13 @@
 \docType{package}
 \name{algebraic.mle}
 \alias{algebraic.mle}
-\title{\code{algebraic.mle}: A package for algebraically operating on and generating
+\title{`algebraic.mle`: A package for algebraically operating on and generating
 maximum likelihood estimators from existing maximum likelihood estimators.}
 \description{
-The object representing a fitted model is a type of \code{mle} object, the maximum
+The object representing a fitted model is a type of `mle` object, the maximum
 likelihood estimator of the model with respect to observed data.
 }
 \details{
-In what follows, we briefly define the API (generic functions, mostly) with
-default implementations for objects that inherit from \code{mle}.
-
-\code{vcov(mle)} returns the variance-covariance matrix of the model
-parameter estimates.
-
-\code{point(mle)} returns the point that maximizes the likelihood
-of the model.
-
-\code{confint(mle)} returns confidence intervals of the true parameter value
-estimated by the \code{mle} object.
-
-\code{sampler(mle)} maps to a function that may be used to sample from the
-sampling distribution of the \code{mle} object.
-
-\code{mse(mle)} computes the asymptotic mean squared error of the \code{mle} object.
-
-\code{mle_weighted(mles)} computes the weighted maximum likelihood estimate
-from independent \code{mle} objects in the list argument \code{mles}.
-
-\code{fisher_info(mle)} returns the Fisher information matrix of the model's
-parameters.
-
-\code{rmap(mle,g)} provides \code{numerical_mle} the maximum
-likelihood estimator of \code{g(mle)}. (Note that \code{numerical_mle}
-inherits from \code{mle}.)
-
-\code{mle_linear_transform(A,mle)} provides a closed-form solution
-of the linear
-Finally, since normal distributions are closed under linear transformations,
-then letting \code{A} be a \code{p}-by-\code{q} matrix and \code{x} be a
-\code{q} dimensional \code{mle} object, then \code{prod(A,x)} is a \code{p}
-dimensional multivariate normal with a mean \code{prod(A,x)} and a
-variance-covariance \code{prod(tr(A),vcov(x),A}.
-Furthermore, by the invariance property of the MLE, \code{prod(A,x)} is the
-MLE of \code{prod(A,true(x))} where \code{true(x)} is the (usually unknown)
-parameter being estimated by \code{x}.
-
-We define a set of generic functions for multiplying \code{mle} objects by
-(non-random) matrices and vectors to permit these sort of operations, with
-the asymptotic distributions of the operators applied to the \code{mle} objects
-exactly known if the asymptotic distribution of the \code{mle} objects are
-exactly known.
+It has a relatively rich API for working with these objects to help you
+understand your MLE estimator.#'
 }

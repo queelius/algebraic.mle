@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle_exp_rate.R
 \name{exp_rate_score}
 \alias{exp_rate_score}
-\title{score (derivative of log-likelihood) function generator given data \code{x}
+\title{score (derivative of log-likelihood) function generator given data `x`
 for the exponential distribution}
 \usage{
 exp_rate_score(x)
@@ -11,6 +11,6 @@ exp_rate_score(x)
 \item{x}{data}
 }
 \description{
-score (derivative of log-likelihood) function generator given data \code{x}
+score (derivative of log-likelihood) function generator given data `x`
 for the exponential distribution
 }

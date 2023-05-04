@@ -2,15 +2,15 @@
 % Please edit documentation in R/mle.R
 \name{fim.mle}
 \alias{fim.mle}
-\title{Function for obtaining the fisher information matrix of an \code{mle} object.}
+\title{Function for obtaining the fisher information matrix of an `mle` object.}
 \usage{
 \method{fim}{mle}(x, ...)
 }
 \arguments{
-\item{x}{the \code{mle} object to obtain the fisher information of.}
+\item{x}{the `mle` object to obtain the fisher information of.}
 
 \item{...}{pass additional arguments}
 }
 \description{
-Function for obtaining the fisher information matrix of an \code{mle} object.
+Function for obtaining the fisher information matrix of an `mle` object.
 }

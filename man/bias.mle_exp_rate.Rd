@@ -2,12 +2,12 @@
 % Please edit documentation in R/mle_exp_rate.R
 \name{bias.mle_exp_rate}
 \alias{bias.mle_exp_rate}
-\title{Computes the bias of an \code{exp_mle} object (exponential mle).}
+\title{Computes the bias of an `exp_mle` object (exponential mle).}
 \usage{
 \method{bias}{mle_exp_rate}(x, par = NULL, ...)
 }
 \arguments{
-\item{x}{the \code{mle_exp_rate} object to compute the bias of.}
+\item{x}{the `mle_exp_rate` object to compute the bias of.}
 
 \item{par}{the true rate parameter value. Usually, rate is not known,
 and so we estimate the bias}
@@ -16,6 +16,6 @@ and so we estimate the bias}
 }
 \description{
 An unbiased estimator of the rate parameter of the exponential distribution
-is given by: \code{1/(nobs(x)-1)*bias(x)}, where \code{x} is an
-\code{mle_exp_rate} object.
+is given by: `1/(nobs(x)-1)*bias(x)`, where `x` is an
+`mle_exp_rate` object.
 }

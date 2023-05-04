@@ -10,10 +10,10 @@ mle_exp_rate(x, keep_obs = F)
 \arguments{
 \item{x}{a sample of observations}
 
-\item{keep_obs}{store the observations with the \code{mle} object, default is \code{F}}
+\item{keep_obs}{store the observations with the `mle` object, default is `F`}
 }
 \value{
-an \code{mle} object.
+an `mle` object.
 }
 \description{
 Of course, the draws are unlikely to be exponential, but the exponential may

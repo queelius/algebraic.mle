@@ -2,27 +2,29 @@
 % Please edit documentation in R/mle.R
 \name{pred.mle}
 \alias{pred.mle}
-\title{Predictive pdf of T given mle.hat estimate for the parameters of T}
+\title{Estimate of predictive interval of `T|x` where `T` is a statistic and `x`
+is an `mle` object that it is conditioned on. Generally, what this means
+is that we want to find the distribution of `T` when we marginalize over
+the distribution of `x`, since `x` is an uncertain estimate of the true
+parameter value.}
 \usage{
 \method{pred}{mle}(x, samp, alpha = 0.05)
 }
 \arguments{
-\item{x}{\code{mle} object}
+\item{x}{`mle` object}
 
-\item{samp}{\code{mle} sampler for parametric distribution for the mle \code{x}}
+\item{samp}{`mle` sampler for parametric distribution that is a function
+of `x`}
 
-\item{alpha}{(1-alpha)-predictive interval for T|x}
+\item{alpha}{(1-alpha)-predictive interval for `T|x`}
 }
 \description{
 Let
-  T|theta.hat ~ f(theta.hat)
-be the pdf of T given parameter value theta.hat and
-  theta.hat ~ normal(mean(theta.hat),vcov(theta.hat))
-be the mvn of the MLE for theta.hat.
-}
-\details{
-Then,
-  (T,theta.hat) ~ f(t,theta.hat) = f(t|theta.hat) f(theta.hat)
-is the joint distribution of (T,theta.hat). To find f(t), we integrate
-f(t,theta.hat) over theta.hat.
+  `T|x ~ f(t|x)``
+be the pdf of vector `T` given MLE `x` and
+  `x ~ MVN(point(x),vcov(x))``
+be the multivariate normal of the MLE `x`. Then,
+  `(T,x) ~ f(t,x) = f(t|x) f(x)
+is the joint distribution of `(T,x)`. To find `f(t)`,
+we integrate `f(t,theta.hat)` over `x`.
 }

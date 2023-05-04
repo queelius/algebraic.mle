@@ -2,13 +2,13 @@
 % Please edit documentation in R/mle.R
 \name{nparams.mle}
 \alias{nparams.mle}
-\title{Method for obtaining the number of parameters of an \code{mle} object.}
+\title{Method for obtaining the number of parameters of an `mle` object.}
 \usage{
 \method{nparams}{mle}(x)
 }
 \arguments{
-\item{x}{the \code{mle} object to obtain the number of parameters of}
+\item{x}{the `mle` object to obtain the number of parameters of}
 }
 \description{
-Method for obtaining the number of parameters of an \code{mle} object.
+Method for obtaining the number of parameters of an `mle` object.
 }
