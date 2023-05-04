@@ -67,12 +67,12 @@ sim_anneal <- function(f, x0, t_init = 100, t_end = 1e-3,
 mle_optim <- function(res) {
     sigma <- NULL
     if (!is.null(res$hessian))
-        sigma <- ginv(res$hessian)
+        sigma <- ginv(-res$hessian)
     theta.hat <- mle(theta.hat=res$par,
         loglike=res$value,
         score=NULL,
         sigma=sigma,
-        info=res$hessian,
+        info=-res$hessian,
         obs=NULL,
         nobs=NULL,
         superclasses=c("mle_optim","numerical_mle"))
