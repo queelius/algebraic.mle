@@ -1,9 +1,7 @@
-#' @export
 entropy <- function(p) {
     -sum(p * log2(p))
 }
 
-#' @export
 get_first_attr <- function(xs, g, props) {
     for (x in xs)
     {
@@ -18,7 +16,6 @@ get_first_attr <- function(xs, g, props) {
     NULL
 }
 
-#' @export
 welford_stats <- function() {
     n <- 0
     mean <- 0
@@ -41,7 +38,6 @@ welford_stats <- function() {
     )
 }
 
-#' @export
 confidence_intervals <- function(V, theta, parm = NULL, level = 0.95, ...) {
     sigma <- diag(V)
     p <- length(theta)
@@ -70,7 +66,6 @@ confidence_intervals <- function(V, theta, parm = NULL, level = 0.95, ...) {
     ci
 }
 
-#' @export
 clip_step <- function(step, max_norm=1) {
     step_norm <- sqrt(sum(step^2))
     if (step_norm > max_norm)
@@ -78,7 +73,6 @@ clip_step <- function(step, max_norm=1) {
     step
 }
 
-#' @export
 newton_raphson_l_bfgs_b <- function(
         f, gr, x0, eps = 1e-5,
         lower = -Inf, upper = Inf,
@@ -92,7 +86,6 @@ newton_raphson_l_bfgs_b <- function(
         ...)
 }
 
-#' @export
 backtracking_line_search <- function(
     f,
     dir,
@@ -154,3 +147,131 @@ backtracking_line_search <- function(
     list(argmax = sol.argmax, max = sol.max, found_better = eta > 1e-10)
 }
 
+local_minimize_ls <- function(
+    f, step, x0, sup = function(x) all(x > 0),
+    max_iter = 1000L, eta = 1, eps = 1e-5)
+{
+    x <- x0
+    f1 <- f(x)
+    iter <- 0L
+    convergence = F
+    repeat {
+        r <- eta
+        d <- step(x0)
+        f0 <- f(x0)
+        repeat
+        {
+            if (iter > max_iter)
+                break
+            iter <- iter + 1L
+            x <- x0 - r * d
+            if (sup(x))
+            {
+                f1 <- f(theta)
+                if (f1 <= f0) break
+            }
+            r <- r / 2
+        }
+
+        if (max(abs(x0-x)) < eps)
+        {
+            convergence = T
+            break
+        }
+        if (iter > max_iter)
+            break
+
+        x0 <- x
+    }
+
+    list(iter = iter, value = f1, par = x,
+         convergence = convergence)
+}
+
+maximize_loglike_ls <- function(loglik, theta0, info, scr, eta = 1, clip = 1, max_iter = 10000L, eps = 1e-4)
+{
+    theta <- theta0
+    l1 <- NULL
+    iter <- 0L
+    repeat {
+        r <- eta
+        I <- info(theta0)
+
+        # we start off with a max step size of ||d|| = eta
+        d <- clip_step(ginv(I) %*% scr(theta0), clip/eta)
+        l0 <- loglik(theta0)
+        repeat
+        {
+            if (iter > max_iter)
+                break
+            iter <- iter + 1L
+            theta <- theta0 + r * d
+            if (all(theta > 0))
+            {
+                l1 <- loglik(theta)
+                if (l0 <= l1)
+                    break
+            }
+            r <- r / 2
+        }
+
+        if (max(abs(theta0-theta)) < eps)
+        {
+            convergence = TRUE
+            break
+        }
+        if (iter > max_iter)
+            break
+
+        theta0 <- theta
+    }
+
+    list(par = theta, value = l1, iter = iter, convergence = convergence)
+}
+
+grad_descent <- function(f, x0, df = NULL,
+                         sup = function(theta) TRUE,
+                         eps = 1e-10, lr = 1, debug = FALSE,
+                         max_iter = 10000L)
+{
+    if (is.null(df))
+        df <- function(x) numDeriv::grad(f,x)
+
+    iter <- 1L
+    x1 <- NULL
+    converged <- FALSE
+    while (iter != max_iter)
+    {
+        f0 <- f(x0)
+        g0 <- df(x0)
+        if (debug)
+            cat("iter = ", iter, ", x0 = ", x0, ", f(x0) = ", f0, "\n")
+        eta <- lr
+        good <- FALSE
+
+        x1 <- x0
+        while (iter != max_iter)
+        {
+            iter <- iter + 1L
+            x <- x0 - eta * g0
+            if (sup(x) && f(x) <= f0)
+            {
+                x1 <- x
+                good <- TRUE
+                break
+            }
+            eta <- eta / 2
+        }
+
+        if (!good)
+            break
+
+        if (max(abs(x1-x0)) < eps)
+        {
+            converged <- TRUE
+            break
+        }
+        x0 <- x1
+    }
+    return(list(param=x1,iter=iter,converged=converged))
+}
