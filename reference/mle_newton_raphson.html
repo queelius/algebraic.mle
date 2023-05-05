@@ -56,70 +56,41 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mle_newton_raphson</span><span class="op">(</span></span>
-<span>  <span class="va">ll</span>,</span>
-<span>  <span class="va">theta0</span>,</span>
-<span>  <span class="va">info</span>,</span>
-<span>  <span class="va">score</span>,</span>
-<span>  eps <span class="op">=</span> <span class="fl">1e-05</span>,</span>
-<span>  sup <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  eta <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  max_iter <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>  r <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  proj <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  inverted <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  trace <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mle_newton_raphson</span><span class="op">(</span><span class="va">ll</span>, <span class="va">theta0</span>, <span class="va">info</span>, <span class="va">score</span>, inverted <span class="op">=</span> <span class="cn">FALSE</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>ll</dt>
-<dd><p>log-likelihood function of type `R^p -&gt; R`</p></dd>
+<dd><p>log-likelihood function</p></dd>
 
 
 <dt>theta0</dt>
-<dd><p>initial guess of theta with `p` components</p></dd>
+<dd><p>initial guess</p></dd>
 
 
 <dt>info</dt>
-<dd><p>FIM function of type `R^p -&gt; R^p-by-q`.</p></dd>
+<dd><p>FIM function</p></dd>
 
 
 <dt>score</dt>
-<dd><p>score Function of type `R^p -&gt; R^p`, the gradient of `ll``</p></dd>
-
-
-<dt>eps</dt>
-<dd><p>numeric, stopping criterion</p></dd>
-
-
-<dt>sup</dt>
-<dd><p>domain of support function of type `R^p -&gt; T,F` for `ll`</p></dd>
-
-
-<dt>eta</dt>
-<dd><p>numeric, learning rate, defaults to 1</p></dd>
-
-
-<dt>max_iter</dt>
-<dd><p>maximum number of iterations</p></dd>
-
-
-<dt>r</dt>
-<dd><p>backing tracking parameter</p></dd>
-
-
-<dt>debug</dt>
-<dd><p>logical, output debugging info if `TRUE`; defaults to `FALSE`</p></dd>
+<dd><p>score Function, the gradient of log-likelihood</p></dd>
 
 
 <dt>inverted</dt>
-<dd><p>if `TRUE` `info` is covariance instead of FIM</p></dd>
+<dd><p>logical, if TRUE `info` is covariance instead of FIM</p></dd>
+
+
+<dt>options</dt>
+<dd><p>list, options for the local search, see `mle_local_search`</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>an object of class `mle_newton_raphson`, which is an `mle` object</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

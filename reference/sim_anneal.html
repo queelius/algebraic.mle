@@ -80,20 +80,7 @@ the gradient of `f` and instead only seeks to maximize `f`.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_anneal</span><span class="op">(</span></span>
-<span>  <span class="va">f</span>,</span>
-<span>  <span class="va">x0</span>,</span>
-<span>  t_init <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  t_end <span class="op">=</span> <span class="fl">0.001</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">0.99</span>,</span>
-<span>  iter_per_temp <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  sup <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="cn">TRUE</span>,</span>
-<span>  neigh <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  max_iter <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  trace <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_anneal</span><span class="op">(</span><span class="va">f</span>, <span class="va">x0</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -106,45 +93,19 @@ the gradient of `f` and instead only seeks to maximize `f`.</p>
 <dd><p>Initial guess</p></dd>
 
 
-<dt>t_init</dt>
-<dd><p>Initial temperature</p></dd>
-
-
-<dt>t_end</dt>
-<dd><p>Final temperature</p></dd>
-
-
-<dt>alpha</dt>
-<dd><p>Cooling factor</p></dd>
-
-
-<dt>iter_per_temp</dt>
-<dd><p>Number of iterations per temperature</p></dd>
-
-
-<dt>sup</dt>
-<dd><p>Support function, returns TRUE if x is in the domain of f</p></dd>
-
-
-<dt>neigh</dt>
-<dd><p>Neighborhood function, returns a random neighbor of x</p></dd>
-
-
-<dt>max_iter</dt>
-<dd><p>Maximum number of iterations, used instead of t_end
-if not NULL, defaults to NULL</p></dd>
-
-
-<dt>debug</dt>
-<dd><p>If TRUE, print debugging information to the console</p></dd>
-
-
-<dt>trace</dt>
-<dd><p>If TRUE, track the history of positions and values</p></dd>
-
-
-<dt>...</dt>
-<dd><p>Additional arguments to neigh</p></dd>
+<dt>options</dt>
+<dd><p>List of options
+* `t_init` Initial temperature
+* `t_end` Final temperature
+* `alpha` Cooling factor
+* `iter_per_temp` Number of iterations per temperature
+* `max_iter` Maximum number of iterations, used instead of t_end
+            if not NULL, defaults to NULL
+* `debug` If TRUE, print debugging information to the console
+* `trace` If TRUE, track the history of positions and values
+* `sup` Support function, returns TRUE if x is in the domain of f
+* `neigh` Neighborhood function, returns a random neighbor of x
+* `...` Additional arguments to neigh</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -152,7 +113,7 @@ if not NULL, defaults to NULL</p></dd>
     
 
 <p>list with best solution (argmax) and its corresponding
-        objective function value (max), and optionally trace_x and trace_fx</p>
+        objective function value (max), and optionally path</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
