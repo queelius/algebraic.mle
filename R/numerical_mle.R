@@ -11,22 +11,22 @@
 #' is not guided by gradient information, it is not sensitive to
 #' the gradient of `f` and instead only seeks to maximize `f`.
 #' 
-#' This also works for discrete optimization problems.
-#' 
-#' @param f Objective function to maximize, `f : R^d -> R`
+#' @param f Objective function to maximize
 #' @param x0 Initial guess
-#' @param options List of options
-#' * `t_init` Initial temperature
-#' * `t_end` Final temperature
-#' * `alpha` Cooling factor
-#' * `iter_per_temp` Number of iterations per temperature
-#' * `max_iter` Maximum number of iterations, used instead of t_end
-#'             if not NULL, defaults to NULL
-#' * `debug` If TRUE, print debugging information to the console
-#' * `trace` If TRUE, track the history of positions and values
-#' * `sup` Support function, returns TRUE if x is in the domain of f
-#' * `neigh` Neighborhood function, returns a random neighbor of x
-#' * `...` Additional arguments to neigh
+#' @param options List of optional arguments
+#' @param ... Additional arguments that may be passed to `neigh`
+#' @describeIn sim_anneal options
+#' @field t_init Initial temperature
+#' @field t_end Final temperature
+#' @field alpha Cooling factor
+#' @field iter_per_temp Number of iterations per temperature
+#' @field max_iter Maximum number of iterations, used instead of t_end
+#'        if not NULL, defaults to NULL
+#' @field debug If TRUE, print debugging information to the console
+#' @field trace If TRUE, track the history of positions and values
+#' @field sup Support function, returns TRUE if x is in the domain of f
+#' @field neigh Neighborhood function, returns a random neighbor of x
+
 #' @return list with best solution (argmax) and its corresponding
 #'         objective function value (max), and optionally path
 #' @importFrom stats runif
@@ -153,27 +153,26 @@ mle_optim <- function(sol) {
 #' @param ll function, log-likelihood function
 #' @param theta0 numeric, initial guess
 #' @param dir function, promising direction function
-#' @param options list, options for the local search:
-#' * `sup` predicate function, domain of support for log-likelihood
-#' * `eta` numeric, learning rate, defaults to 1
-#' * `max_iter` integer, maximum number of iterations, defaults to 1000
-#' * `max_iter_ls` integer, maximum number of iterations for the line search,
-#' defaults to 1000
-#' * `abs_tol` numeric, tolerance for convergence, defaults to NULL
-#' (use `rel_tol`)
-#' * `rel_tol` numeric, relative tolerance for convergence, defaults to 1e-5
-#' * `r` numeric, backtracking line search parameter, defaults to 0.8
-#' * `proj` function, projection function to enforce domain of support
-#' * `norm` function, we pass the difference of successive theta updates
-#' to the norm to check for convergence, defaults to the infinity norm.
-#' * `debug` logical, output debugging information if TRUE; default FALSE
-#' * `trace` logical, if TRUE store the path of the search in the `path`
-#' attribute of the output
-#' @return an `mle` object with the following additional attributes:
-#' * `iter` integer, the number of iterations
-#' * `converged` logical, whether the algorithm converged
-#' * `options` list, the options used for the search
-#' * `path` matrix, the path of the search if `trace` is TRUE
+#' @param options list, options for the local search, see function description.
+#' @describeIn options Optional Arguments
+#' @field sup function, domain of support for log-likelihood
+#' @field eta numeric, learning rate, defaults to 1
+#' @field max_iter integer, maximum number of iterations, defaults to 1000
+#' @field max_iter_ls integer, maximum number of iterations for the
+#'        line search, defaults to 1000
+#' @field abs_tol numeric, tolerance for convergence, defaults to NULL
+#'       (use rel_tol instead)
+#' @field rel_tol numeric, relative tolerance for convergence, defaults to 1e-5
+#' @field r numeric, backtracking line search parameter, defaults to 0.8
+#' @field proj function, projection function to enforce domain of support
+#' @field norm function, we pass the difference of successive theta updates
+#'       to the norm to check for convergence, defaults to the infinity norm.
+#' @field debug logical, output debugging information if TRUE; default FALSE
+#' @field trace logical, if TRUE store the path of the search in the `path`
+#'       attribute of the output; default FALSE
+#' 
+#' @return an `mle` object with additional attributes `iter` and `converged`
+#'         and optionally `path` if `trace` is TRUE.
 #' @export
 mle_local_search <- function(
     ll,
@@ -291,12 +290,14 @@ mle_local_search <- function(
     sol
 }
 
+#' mle_newton_raphson
+#' 
 #' MLE method using the Newton-Raphson method
 #'
 #' @param ll log-likelihood function
-#' @param theta0 initial guess
-#' @param info FIM function
 #' @param score score Function, the gradient of log-likelihood
+#' @param info FIM function
+#' @param theta0 initial guess
 #' @param inverted logical, if TRUE `info` is covariance instead of FIM
 #' @param options list, options for the local search, see `mle_local_search`
 #' @return an object of class `mle_newton_raphson`, which is an `mle` object
@@ -359,6 +360,8 @@ mle_gradient_ascent <- function(ll, theta0, score, options) {
     sol
 }
 
+#' is_converged
+#' 
 #' Function to determine whether an `mle` object has converged.
 #'
 #' @param x the `mle` object

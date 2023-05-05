@@ -51,7 +51,7 @@ like `sim_anneal` to find a good initial guess."><!-- mathjax --><script src="ht
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>mle_local_search</h1>
       <small class="dont-index">Source: <a href="https://github.com/queelius/algebraic.mle/blob/HEAD/R/numerical_mle.R" class="external-link"><code>R/numerical_mle.R</code></a></small>
-      <div class="d-none name"><code>mle_local_search.Rd</code></div>
+      <div class="d-none name"><code>options.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
@@ -80,34 +80,74 @@ like `sim_anneal` to find a good initial guess.</p>
 
 
 <dt>options</dt>
-<dd><p>list, options for the local search, described below:
-* sup: predicate function, domain of support for log-likelihood
-* eta: numeric, learning rate, defaults to 1
-* max_iter: integer, maximum number of iterations, defaults to 1000
-* max_iter_ls: integer, maximum number of iterations for the
-  line search, defaults to 1000
-* abs_tol: numeric, tolerance for convergence, defaults to NULL
-  (use rel_tol instead)
-* rel_tol: numeric, relative tolerance for convergence, defaults to 1e-5
-* r: numeric, backtracking line search parameter, defaults to 0.8
-* proj: function, projection function to enforce domain of support
-* norm: function, we pass the difference of successive theta updates
-  to the norm to check for convergence, defaults to the infinity norm.
-* debug: logical, output debugging information if TRUE; default FALSE
-* trace: logical, if TRUE store the path of the search in the `path`
-  attribute of the output</p></dd>
+<dd><p>list, options for the local search, see function description.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>an `mle` object with the following additional attributes:
-    * iter: integer, the number of iterations
-    * converged: logical, whether the algorithm converged
-    * options: list, the options used for the search
-    * path: matrix, the path of the search if `trace` is TRUE</p>
+<p>an `mle` object with additional attributes `iter` and `converged`
+        and optionally `path` if `trace` is TRUE.</p>
     </div>
+    <div class="section level2">
+    <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
+    
+<ul><li><p><code>mle_local_search()</code>: Optional Arguments</p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="fields">Fields<a class="anchor" aria-label="anchor" href="#fields"></a></h2>
+    
+
+<dl><dt><code>sup</code></dt>
+<dd><p>function, domain of support for log-likelihood</p></dd>
+
+
+<dt><code>eta</code></dt>
+<dd><p>numeric, learning rate, defaults to 1</p></dd>
+
+
+<dt><code>max_iter</code></dt>
+<dd><p>integer, maximum number of iterations, defaults to 1000</p></dd>
+
+
+<dt><code>max_iter_ls</code></dt>
+<dd><p>integer, maximum number of iterations for the
+line search, defaults to 1000</p></dd>
+
+
+<dt><code>abs_tol</code></dt>
+<dd><p>numeric, tolerance for convergence, defaults to NULL
+(use rel_tol instead)</p></dd>
+
+
+<dt><code>rel_tol</code></dt>
+<dd><p>numeric, relative tolerance for convergence, defaults to 1e-5</p></dd>
+
+
+<dt><code>r</code></dt>
+<dd><p>numeric, backtracking line search parameter, defaults to 0.8</p></dd>
+
+
+<dt><code>proj</code></dt>
+<dd><p>function, projection function to enforce domain of support</p></dd>
+
+
+<dt><code>norm</code></dt>
+<dd><p>function, we pass the difference of successive theta updates
+to the norm to check for convergence, defaults to the infinity norm.</p></dd>
+
+
+<dt><code>debug</code></dt>
+<dd><p>logical, output debugging information if TRUE; default FALSE</p></dd>
+
+
+<dt><code>trace</code></dt>
+<dd><p>logical, if TRUE store the path of the search in the `path`
+attribute of the output; default FALSE</p></dd>
+
+
+</dl></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

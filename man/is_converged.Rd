@@ -2,7 +2,7 @@
 % Please edit documentation in R/numerical_mle.R
 \name{is_converged}
 \alias{is_converged}
-\title{Function to determine whether an `mle` object has converged.}
+\title{is_converged}
 \usage{
 is_converged(x)
 }

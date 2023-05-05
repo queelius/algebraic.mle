@@ -73,8 +73,8 @@ $$
 $$
 for $x \geq 0$ and $f(x;\lambda) = 0$ otherwise.
 We show a histogram of the sample overlaid with a plot of the exponential
-function's pdf, with the following R code:
-```{r,message=F,warning=F}
+function's pdf:
+```{r,message=F,warning=F,echo=F,fig.align='center',fig.width=6,fig.height=4}
 ggplot(x, aes(x=x)) + geom_histogram(aes(y=..density..),alpha=.2) +
     xlim(0,6) + 
     geom_function(fun=dexp)
@@ -119,9 +119,14 @@ We can compute the MLE of the rate parameter $\lambda$ of the exponential
 distribution with:
 ```{r}
 rate.hat <- mle_exp_rate(x$x)
-#summary(rate.hat)
 ```
-The ML  point estimate of the rate parameter $\lambda$ of the exponential
+
+Here is how to get a summary of the MLE:
+```{r}
+summary(rate.hat)
+```
+
+The MLE of the rate parameter $\lambda$ of the exponential
 distribution is $\hat\lambda=`r point(rate.hat)`$, which may be computed with
 the `point` function:
 ```{r}
@@ -149,7 +154,7 @@ $\hat\lambda \sim N(\lambda,I^{-1}(\lambda))$.
 
 We observe the empirical sampling distribution of $\hat\theta$ overlaid with
 the theoretical asymptotic distribution with:
-```{r}
+```{r fig.align='center',fig.width=6,fig.height=4,echo=F,message=F,warning=F}
 B <- 1000
 data0 <- numeric(length=B)
 for (i in 1:B)
@@ -185,8 +190,8 @@ data1 <- sampler(rate.hat)(B)
 
 We visually compare the two MLE samples, `data0` and `data1`, with:
 ```{r,message=F,warning=F}
-data <- data.frame(values=c(data0,data1), group=c(rep("empirical",B),rep("approximation",B)))
-
+data <- data.frame(values=c(data0,data1),
+    group=c(rep("empirical",B),rep("approximation",B)))
 ggplot(data,aes(x=values,fill=group)) +
     geom_histogram(aes(y=..density..),position="identity", alpha=0.2, bins=50)
 ```
@@ -197,7 +202,6 @@ shifted to the left of the sample from the true distribution, but they appear to
 be quite similar otherwise.
 
 ### Performance measures of the MLE
-
 We can show the confidence interval with:
 ```{r}
 confint(rate.hat)

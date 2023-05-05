@@ -56,20 +56,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mle_gradient_ascent</span><span class="op">(</span></span>
-<span>  <span class="va">ll</span>,</span>
-<span>  <span class="va">theta0</span>,</span>
-<span>  <span class="va">score</span>,</span>
-<span>  eps <span class="op">=</span> <span class="fl">1e-05</span>,</span>
-<span>  sup <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  eta <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  r <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  proj <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_iter <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  trace <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mle_gradient_ascent</span><span class="op">(</span><span class="va">ll</span>, <span class="va">theta0</span>, <span class="va">score</span>, <span class="va">options</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -84,38 +71,6 @@
 
 <dt>score</dt>
 <dd><p>score function of type `R^p -&gt; R^p`, the gradient of `ll`</p></dd>
-
-
-<dt>eps</dt>
-<dd><p>numeric, stopping criterion</p></dd>
-
-
-<dt>sup</dt>
-<dd><p>domain of support function of type `R^p -&gt; TRUE,FALSE` for `ll`</p></dd>
-
-
-<dt>eta</dt>
-<dd><p>numeric, learning rate, defaults to 1</p></dd>
-
-
-<dt>r</dt>
-<dd><p>numeric, backing tracking parameter</p></dd>
-
-
-<dt>tol</dt>
-<dd><p>tolerance function of type `R^p -&gt; R`</p></dd>
-
-
-<dt>proj</dt>
-<dd><p>projection function of type `R^p -&gt; R^p`</p></dd>
-
-
-<dt>max_iter</dt>
-<dd><p>integer, maximum iterations</p></dd>
-
-
-<dt>debug</dt>
-<dd><p>logical, output debugging info if `TRUE`; defaults to `FALSE'</p></dd>
 
 </dl></div>
 

@@ -7,22 +7,13 @@
 sim_anneal(f, x0, options = list(), ...)
 }
 \arguments{
-\item{f}{Objective function to maximize, `f : R^d -> R`}
+\item{f}{Objective function to maximize}
 
 \item{x0}{Initial guess}
 
-\item{options}{List of options
-* `t_init` Initial temperature
-* `t_end` Final temperature
-* `alpha` Cooling factor
-* `iter_per_temp` Number of iterations per temperature
-* `max_iter` Maximum number of iterations, used instead of t_end
-            if not NULL, defaults to NULL
-* `debug` If TRUE, print debugging information to the console
-* `trace` If TRUE, track the history of positions and values
-* `sup` Support function, returns TRUE if x is in the domain of f
-* `neigh` Neighborhood function, returns a random neighbor of x
-* `...` Additional arguments to neigh}
+\item{options}{List of optional arguments}
+
+\item{...}{Additional arguments that may be passed to `neigh`}
 }
 \value{
 list with best solution (argmax) and its corresponding
@@ -39,6 +30,31 @@ is interior to the domain of `f`. However, since this algorithm
 is not guided by gradient information, it is not sensitive to
 the gradient of `f` and instead only seeks to maximize `f`.
 }
-\details{
-This also works for discrete optimization problems.
-}
+\section{Functions}{
+\itemize{
+\item \code{sim_anneal()}: options
+
+}}
+\section{Fields}{
+
+\describe{
+\item{\code{t_init}}{Initial temperature}
+
+\item{\code{t_end}}{Final temperature}
+
+\item{\code{alpha}}{Cooling factor}
+
+\item{\code{iter_per_temp}}{Number of iterations per temperature}
+
+\item{\code{max_iter}}{Maximum number of iterations, used instead of t_end
+if not NULL, defaults to NULL}
+
+\item{\code{debug}}{If TRUE, print debugging information to the console}
+
+\item{\code{trace}}{If TRUE, track the history of positions and values}
+
+\item{\code{sup}}{Support function, returns TRUE if x is in the domain of f}
+
+\item{\code{neigh}}{Neighborhood function, returns a random neighbor of x}
+}}
+

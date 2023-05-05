@@ -74,7 +74,7 @@ sim.err.sd <- 0.05
 sim.shape <- 20
 sim.scale <- 3
 sim.theta = c(sim.shape,sim.scale)
-#set.seed(14234)
+set.seed(142334)
 ```
 
 We generate the data with the following R code:
@@ -96,7 +96,7 @@ pretty easily (if it's multivariate, we can plot the marginal distributions
 of the data).
 
 We show a histogram of the simulated data below:
-```{r histo, fig.align='center'}
+```{r histo, fig.align='center', echo=F}
 library(ggplot2)
 ggplot(sim.df,aes(x=lifetime)) +
     geom_histogram(color="dark blue",
@@ -185,24 +185,55 @@ library(algebraic.mle)
 ll.wei <- weibull_shape_scale_loglike(sim.df$lifetime)
 ```
 
+### Numerical considerations
 In the `algebraic.mle` package, we provide a precise
 and efficient local iterative algorithm, `mle_weibull_shape_scale`,
 for finding the MLE for the Weibull distribution.
+
 As a local search method, it needs a good starting point for the shape
 parameter $k$ close to the MLE, otherwise it may fail to converge
-to the MLE. To find a good starting point, we use a global search
-method, Simulated Annealing, which is implemented in the `optim` function
-in R. Here is the code for finding a good starting point:
+to the MLE.
+
+To find a good starting point, we use a global search
+method, Simulated Annealing, implemented by `sim_anneal` function.
+Here is the code for finding a good starting point:
 ```{r}
 # find a good starting position
-k0 <- optim(
-  par=sim.theta,
-  fn=ll.wei,
-  method="SANN",
-  control=list(maxit=100000,fnscale=-1,temp=100))$par[1]
-
+start <- sim_anneal(
+  f=ll.wei,
+  x0=sim.theta,
+  options=list(
+    t_init=100,
+    t_end=1e-4,
+    alpha=0.99,
+    iter_per_temp=200,
+    sup=function(theta) all(theta > 0),
+    trace=TRUE))
+k0 <- start$argmax[1]
 cat("initial guess for k0 =",k0,"\n")
 ```
+
+Let's take a look at some plots for the simulated annealing algorithm:
+```{r, fig.align='center', fig.height=4, fig.width=6, echo=F}
+loglikes <- apply(start$path,1,ll.wei)
+par(mfrow=c(1,3))
+plot(loglikes, type="l",
+  main="log-likelihood vs iteration",
+  xlab="iteration", ylab="log-likelihood")
+plot(start$path[,1], start$path[,2],
+  type="p", main="exploration of support",
+  xlab="shape (k)", ylab="scale (lambda)")
+plot(start$path[,1],
+  main="shape (k) vs iteration",
+  xlab="iteration", ylab="shape (k)")
+abline(h=sim.shape, col="red")
+```
+
+In the first plot, we see the history of log-likelihood values as the
+algorithm progresses. The second plot shows the path of the algorithm
+as it explores the support of the parameters. The third plot shows the
+shape parameter, $k$, as the algorithm progresses. The red line is the
+true value of $k$.
 
 With this starting point in hand, we find an MLE with:
 ```{r}
@@ -226,7 +257,7 @@ summary(mle.norm)
 ```
 
 Let's plot the pdfs of the Weibull and normal distributions:
-```{r}
+```{r fig.align='center', fig.height=4, fig.width=4, echo=F}
 df1 <- data.frame(Value=rweibull(n=100000,
     shape=point(mle.wei)[1],
     scale=point(mle.wei)[2]), Group = "Weibull")

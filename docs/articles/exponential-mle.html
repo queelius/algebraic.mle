@@ -114,12 +114,7 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 0.012<span style="text-decoration: underline;">7</span></span></span></code></pre></div>
 <p>The pdf of the exponential distribution is given by <span class="math display">\[
     f(x;\lambda) = \lambda \exp(-\lambda x)
-\]</span> for <span class="math inline">\(x \geq 0\)</span> and <span class="math inline">\(f(x;\lambda) = 0\)</span> otherwise. We show a histogram of the sample overlaid with a plot of the exponential function’s pdf, with the following R code:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">..density..</span><span class="op">)</span>,alpha<span class="op">=</span><span class="fl">.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">6</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html" class="external-link">geom_function</a></span><span class="op">(</span>fun<span class="op">=</span><span class="va">dexp</span><span class="op">)</span></span></code></pre></div>
-<p><img src="exponential-mle_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+\]</span> for <span class="math inline">\(x \geq 0\)</span> and <span class="math inline">\(f(x;\lambda) = 0\)</span> otherwise. We show a histogram of the sample overlaid with a plot of the exponential function’s pdf: <img src="exponential-mle_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Next, we show how to estimate the rate parameter <span class="math inline">\(\lambda\)</span> of the exponential distribution.</p>
 </div>
 <div class="section level2">
@@ -138,10 +133,23 @@
 \]</span></p>
 <p>The <code>algebraic.mle</code> package provides a function <code>mle_exp_rate</code> that computes the MLE of the rate parameter <span class="math inline">\(\lambda\)</span> of the exponential distribution. Since <code>mle_exp_rate</code> returns an <code>mle</code> object, we can use various methods and functions on it, like the <code>summary</code> function, to help us understand the MLE point estimate and its sampling distribution.</p>
 <p>We can compute the MLE of the rate parameter <span class="math inline">\(\lambda\)</span> of the exponential distribution with:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rate.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_exp_rate.html">mle_exp_rate</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<p>Here is how to get a summary of the MLE:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rate.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_exp_rate.html">mle_exp_rate</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="co">#summary(rate.hat)</span></span></code></pre></div>
-<p>The ML point estimate of the rate parameter <span class="math inline">\(\lambda\)</span> of the exponential distribution is <span class="math inline">\(\hat\lambda=2.8967006\)</span>, which may be computed with the <code>point</code> function:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Maximum likelihood estimator of type mle_exp_rate is normally distributed.</span></span>
+<span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
+<span><span class="co">#&gt;     rate </span></span>
+<span><span class="co">#&gt; 2.896701 </span></span>
+<span><span class="co">#&gt; The standard error is  0.5793401 .</span></span>
+<span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
+<span><span class="co">#&gt;          2.5%   97.5%</span></span>
+<span><span class="co">#&gt; rate 1.943771 3.84963</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.01456749 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  1.589309 .</span></span>
+<span><span class="co">#&gt; The AIC is  -1.178618 .</span></span></code></pre></div>
+<p>The MLE of the rate parameter <span class="math inline">\(\lambda\)</span> of the exponential distribution is <span class="math inline">\(\hat\lambda=2.8967006\)</span>, which may be computed with the <code>point</code> function:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     rate </span></span>
@@ -153,22 +161,10 @@
 <p>In general, to estimate the sampling distribution, we generate <span class="math inline">\(B=10000\)</span> samples (of size <span class="math inline">\(25\)</span>) and their corresponding estimators, <span class="math inline">\(\hat\theta^{(1)},\ldots,\hat\theta^{(B)}\)</span>.</p>
 <p>Normally, we do not have <span class="math inline">\(B\)</span> samples, and if we did, we would gather all <span class="math inline">\(B\)</span> samples into one sample (or used a weighted MLE), which would contain more (Fisher) information about <span class="math inline">\(\theta\)</span>.</p>
 <p>However, a nice property of MLEs is that, asymptotically, they converge to a normal distribution with a mean given by the true parameter, in this case <span class="math inline">\(\lambda\)</span>, and a variance-covariance given by the inverse of the Fisher information matrix <span class="math inline">\(I\)</span>, in this case <span class="math inline">\(I(\lambda) = n/\lambda^2\)</span>, i.e., <span class="math inline">\(\hat\lambda \sim N(\lambda,I^{-1}(\lambda))\)</span>.</p>
-<p>We observe the empirical sampling distribution of <span class="math inline">\(\hat\theta\)</span> overlaid with the theoretical asymptotic distribution with:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span><span class="va">data0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span>length<span class="op">=</span><span class="va">B</span><span class="op">)</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">B</span><span class="op">)</span></span>
-<span><span class="op">{</span></span>
-<span>    <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">n</span>,<span class="va">rate</span><span class="op">)</span></span>
-<span>    <span class="va">data0</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fu"><a href="../reference/mle_exp_rate.html">mle_exp_rate</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>rate.hat<span class="op">=</span><span class="va">data0</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">rate.hat</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">density</span><span class="op">)</span><span class="op">)</span>,alpha<span class="op">=</span><span class="fl">.3</span>,bins<span class="op">=</span><span class="fl">50</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html" class="external-link">geom_function</a></span><span class="op">(</span>fun<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">x</span>,mean<span class="op">=</span><span class="va">rate</span>,sd<span class="op">=</span><span class="va">rate</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p><img src="exponential-mle_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p>We observe the empirical sampling distribution of <span class="math inline">\(\hat\theta\)</span> overlaid with the theoretical asymptotic distribution with: <img src="exponential-mle_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>We do not know <span class="math inline">\(\lambda\)</span>, but we may estimate it from a sample, and thus we may approximate the sampling distribution of <span class="math inline">\(\hat\lambda\)</span> with <span class="math inline">\(N(\hat\lambda,I^{-1}(\hat\lambda))\)</span>.</p>
 <p>We can compute the Fisher information and variance-covariance matrices with:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fim.html">fim</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     rate </span></span>
 <span><span class="co">#&gt; 2.979427</span></span>
@@ -179,29 +175,29 @@
 <p>NOTE: If <code>rate.hat</code> had been a vector, <code>vcov</code> would have returned a matrix of variances and covariances, with the variances on the diagonal. (We may consider the above <span class="math inline">\(1 \times 1\)</span> matrices.)</p>
 </blockquote>
 <p>Since we are only giving one sample, we cannot do as we did before to provide <span class="math inline">\(B\)</span> estimates of <span class="math inline">\(\lambda\)</span>. However, we can sample from the approximation of the asymptotic distribution of <span class="math inline">\(\hat\lambda\)</span> with:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler.html">sampler</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span><span class="op">(</span><span class="va">B</span><span class="op">)</span></span></code></pre></div>
 <p>We visually compare the two MLE samples, <code>data0</code> and <code>data1</code>, with:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">data0</span>,<span class="va">data1</span><span class="op">)</span>, group<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"empirical"</span>,<span class="va">B</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"approximation"</span>,<span class="va">B</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">data0</span>,<span class="va">data1</span><span class="op">)</span>,</span>
+<span>    group<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"empirical"</span>,<span class="va">B</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"approximation"</span>,<span class="va">B</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">values</span>,fill<span class="op">=</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">..density..</span><span class="op">)</span>,position<span class="op">=</span><span class="st">"identity"</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, bins<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span></code></pre></div>
-<p><img src="exponential-mle_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="exponential-mle_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>Due to sampling error, we see that the approximation, the estimate of the asymptotic sampling distribution <span class="math inline">\(N(\hat\lambda,\hat\lambda/n^{1/2})\)</span>, is shifted to the left of the sample from the true distribution, but they appear to be quite similar otherwise.</p>
 </div>
 <div class="section level3">
 <h3 id="performance-measures-of-the-mle">Performance measures of the MLE<a class="anchor" aria-label="anchor" href="#performance-measures-of-the-mle"></a>
 </h3>
 <p>We can show the confidence interval with:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          2.5%   97.5%</span></span>
 <span><span class="co">#&gt; rate 1.943771 3.84963</span></span></code></pre></div>
 <p>The smaller the confidence interval, the better the estimator.</p>
 <p>The bias <span class="math inline">\(b(\hat\lambda,\lambda) = E(\hat\lambda) - \lambda\)</span> is another way of measuring the performance of an estimator. Ideally, the bias is zero for all components being estimated. In the MLE, the bias is asymptotically zero, but for small samples may be quite biased.</p>
 <p>For the exponential distribution’s rate parameter, the MLE is biased. Here’s R code to compute an estimate of the bias of <span class="math inline">\(\hat\lambda\)</span> and and the true bias of <span class="math inline">\(\hat\lambda\)</span>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; bias(rate) </span></span>
 <span><span class="co">#&gt;  0.1206959</span></span>
@@ -218,7 +214,7 @@
         \operatorname{bias}(\hat\lambda,\lambda)^2.
 \]</span> We may, of course, have to estimate the MSE if the <span class="math inline">\(\lambda\)</span> is not known by replacing the bias with an estimate of the bias, as discussed previously.</p>
 <p>Here’s R code to compute the MSE of <span class="math inline">\(\hat\lambda\)</span>, an estimate of the MSE and the true MSE:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">mse.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.01456749</span></span>
 <span><span class="op">(</span><span class="va">mse.true</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">rate.hat</span>,<span class="va">rate</span><span class="op">)</span><span class="op">)</span></span>
@@ -244,13 +240,13 @@
 <p>It has greater variance than <span class="math inline">\(T_{n+1}|\hat\lambda \sim \operatorname{EXP}(\hat\lambda)\)</span> because, as stated earlier, we do not know <span class="math inline">\(\lambda\)</span>, we only have an uncertain estimate <span class="math inline">\(\hat\lambda\)</span>.</p>
 <p>In <code>pred</code>, we compute the predictive interval (PI) of the distribution of <span class="math inline">\(\hat{T}_{n+1}\)</span> using Monte Carlo simulation, where we replace the integral with a sum over a large number of draws from the joint distribution of <span class="math inline">\(\hat{T}_{n+1}\)</span> and <span class="math inline">\(\hat\lambda\)</span> and then compute the empirical quantiles.</p>
 <p>The function <code>pred</code> takes as arguments <code>x</code>, in this case an <code>mle</code> object, and a sampler for the distribution of the random variable of interest, in this case <code>rexp</code> (the sampler for the exponential distribution). The sampler must be compatible with the parameter value of <code>x</code> (i.e., <code>point(x)</code>). Here is how we compute the PI for <span class="math inline">\(\hat{T}_{n+1}\)</span>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rate.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_exp_rate.html">mle_exp_rate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">n</span>,<span class="va">rate</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pred.html">pred</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">rate.hat</span>,samp<span class="op">=</span><span class="va">rexp</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           mean       lower    upper</span></span>
 <span><span class="co">#&gt; [1,] 0.3544321 0.008480229 1.370407</span></span></code></pre></div>
 <p>How does this compare to <span class="math inline">\(T_{n+1}|\hat\lambda \sim \operatorname{EXP}(\hat\lambda = 2.9628807)\)</span>?</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">q.95</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">qexp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.025</span>,<span class="fl">.975</span><span class="op">)</span>,<span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">q.95</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>,<span class="st">"lower"</span>, <span class="st">"upper"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">q.95</span><span class="op">)</span></span>

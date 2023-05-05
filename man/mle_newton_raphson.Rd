@@ -2,18 +2,18 @@
 % Please edit documentation in R/numerical_mle.R
 \name{mle_newton_raphson}
 \alias{mle_newton_raphson}
-\title{MLE method using the Newton-Raphson method}
+\title{mle_newton_raphson}
 \usage{
-mle_newton_raphson(ll, theta0, info, score, inverted = FALSE, options = list())
+mle_newton_raphson(ll, score, info, theta0, inverted = FALSE, options = list())
 }
 \arguments{
 \item{ll}{log-likelihood function}
 
-\item{theta0}{initial guess}
+\item{score}{score Function, the gradient of log-likelihood}
 
 \item{info}{FIM function}
 
-\item{score}{score Function, the gradient of log-likelihood}
+\item{theta0}{initial guess}
 
 \item{inverted}{logical, if TRUE `info` is covariance instead of FIM}
 
