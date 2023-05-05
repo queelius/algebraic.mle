@@ -132,7 +132,7 @@ satisfactory.</p></li>
 <span><span class="va">sim.shape</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">sim.scale</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">sim.theta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">sim.shape</span>,<span class="va">sim.scale</span><span class="op">)</span></span>
-<span><span class="co">#set.seed(14234)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">142334</span><span class="op">)</span></span></code></pre></div>
 <p>We generate the data with the following R code:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sim.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>lifetime<span class="op">=</span></span>
@@ -142,12 +142,12 @@ satisfactory.</p></li>
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 1</span></span></span>
 <span><span class="co">#&gt;   lifetime</span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     2.93</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2.91</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     2.71</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     3.10</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     2.74</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     2.84</span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     2.91</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2.73</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3.09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     2.91</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     3.20</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     2.94</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="visualizing-the-data">Visualizing the data<a class="anchor" aria-label="anchor" href="#visualizing-the-data"></a>
@@ -156,16 +156,8 @@ satisfactory.</p></li>
 data. If the data is univariate or bivariate, we can plot a histogram of
 the data pretty easily (if it’s multivariate, we can plot the marginal
 distributions of the data).</p>
-<p>We show a histogram of the simulated data below:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">sim.df</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">lifetime</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"dark blue"</span>,</span>
-<span>                   fill<span class="op">=</span><span class="st">"light blue"</span>,</span>
-<span>                   bins<span class="op">=</span><span class="fl">25</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">"Simulated Lifetime Data"</span>,</span>
-<span>         subtitle<span class="op">=</span><span class="st">"Histogram"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="unknow_dgp_files/figure-html/histo-1.png" width="700" style="display: block; margin: auto;"></p>
+<p>We show a histogram of the simulated data below:
+<img src="unknow_dgp_files/figure-html/histo-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="parametrically-modeling-the-data">Parametrically modeling the data<a class="anchor" aria-label="anchor" href="#parametrically-modeling-the-data"></a>
@@ -203,7 +195,7 @@ estimator.</p>
 <p>To find the MLE of <span class="math inline">\(\theta =
 (\lambda,k)'\)</span>, we need the log-likelihood function, which is
 given by the following R code:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">loglike</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Weibull.html" class="external-link">dweibull</a></span><span class="op">(</span></span>
 <span>  <span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span>, shape<span class="op">=</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, scale<span class="op">=</span><span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, log<span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>An MLE is a point <span class="math inline">\((\hat
@@ -217,7 +209,7 @@ used. However, these local methods – being local – need a good starting
 point.</p>
 <p>Here is an example of Newton-raphson code, which we will not use
 since it is not very efficient but is easy to understand:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># f is the function we want to find the root of</span></span>
 <span><span class="co"># Jf is the jocabian of f</span></span>
 <span><span class="co"># x0 is the starting point</span></span>
@@ -238,7 +230,7 @@ since it is not very efficient but is easy to understand:</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>We use a more efficient algorithm to compute the log-likelihood
 function for the Weibull distribution. The code is given below:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'algebraic.mle'</span></span>
@@ -246,27 +238,44 @@ function for the Weibull distribution. The code is given below:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     loglike</span></span>
 <span><span class="va">ll.wei</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/weibull_shape_scale_loglike.html">weibull_shape_scale_loglike</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="numerical-considerations">Numerical considerations<a class="anchor" aria-label="anchor" href="#numerical-considerations"></a>
+</h3>
 <p>In the <code>algebraic.mle</code> package, we provide a precise and
 efficient local iterative algorithm,
 <code>mle_weibull_shape_scale</code>, for finding the MLE for the
-Weibull distribution. As a local search method, it needs a good starting
-point for the shape parameter <span class="math inline">\(k\)</span>
-close to the MLE, otherwise it may fail to converge to the MLE. To find
-a good starting point, we use a global search method, Simulated
-Annealing, which is implemented in the <code>optim</code> function in R.
+Weibull distribution.</p>
+<p>As a local search method, it needs a good starting point for the
+shape parameter <span class="math inline">\(k\)</span> close to the MLE,
+otherwise it may fail to converge to the MLE.</p>
+<p>To find a good starting point, we use a global search method,
+Simulated Annealing, implemented by <code>sim_anneal</code> function.
 Here is the code for finding a good starting point:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># find a good starting position</span></span>
-<span><span class="va">k0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span></span>
-<span>  par<span class="op">=</span><span class="va">sim.theta</span>,</span>
-<span>  fn<span class="op">=</span><span class="va">ll.wei</span>,</span>
-<span>  method<span class="op">=</span><span class="st">"SANN"</span>,</span>
-<span>  control<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>maxit<span class="op">=</span><span class="fl">100000</span>,fnscale<span class="op">=</span><span class="op">-</span><span class="fl">1</span>,temp<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span></span>
+<span><span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_anneal.html">sim_anneal</a></span><span class="op">(</span></span>
+<span>  f<span class="op">=</span><span class="va">ll.wei</span>,</span>
+<span>  x0<span class="op">=</span><span class="va">sim.theta</span>,</span>
+<span>  options<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    t_init<span class="op">=</span><span class="fl">100</span>,</span>
+<span>    t_end<span class="op">=</span><span class="fl">1e-4</span>,</span>
+<span>    alpha<span class="op">=</span><span class="fl">0.99</span>,</span>
+<span>    iter_per_temp<span class="op">=</span><span class="fl">200</span>,</span>
+<span>    sup<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    trace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">k0</span> <span class="op">&lt;-</span> <span class="va">start</span><span class="op">$</span><span class="va">argmax</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"initial guess for k0 ="</span>,<span class="va">k0</span>,<span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; initial guess for k0 = 22.2878</span></span></code></pre></div>
+<span><span class="co">#&gt; initial guess for k0 = 20.06285</span></span></code></pre></div>
+<p>Let’s take a look at some plots for the simulated annealing
+algorithm:
+<img src="unknow_dgp_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;"></p>
+<p>In the first plot, we see the history of log-likelihood values as the
+algorithm progresses. The second plot shows the path of the algorithm as
+it explores the support of the parameters. The third plot shows the
+shape parameter, <span class="math inline">\(k\)</span>, as the
+algorithm progresses. The red line is the true value of <span class="math inline">\(k\)</span>.</p>
 <p>With this starting point in hand, we find an MLE with:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
 <span><span class="va">mle.wei</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_weibull_shape_scale.html">mle_weibull_shape_scale</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span>, k0<span class="op">=</span><span class="va">k0</span><span class="op">)</span></span></code></pre></div>
 <p>The function, <code>mle_weibull_shape_scale</code>, returns an
@@ -274,60 +283,40 @@ Here is the code for finding a good starting point:</p>
 conventient methods, such as estimating the variance-covariance matrix,
 confidence intervals, bias, and so on. Here’s the code to print a
 summary of the MLE:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mle.wei</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_weibull_shape_scale is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
 <span><span class="co">#&gt;     shape     scale </span></span>
-<span><span class="co">#&gt; 22.283536  2.936563 </span></span>
-<span><span class="co">#&gt; The standard error is  4.576127 0.03471269 .</span></span>
+<span><span class="co">#&gt; 20.090236  2.941726 </span></span>
+<span><span class="co">#&gt; The standard error is  3.719537 0.03642942 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
-<span><span class="co">#&gt;            2.5%    97.5%</span></span>
-<span><span class="co">#&gt; shape 14.756476 29.81060</span></span>
-<span><span class="co">#&gt; scale  2.879465  2.99366</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  20.94215 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  13.02081 .</span></span>
-<span><span class="co">#&gt; The AIC is  -22.04162 .</span></span></code></pre></div>
+<span><span class="co">#&gt;            2.5%     97.5%</span></span>
+<span><span class="co">#&gt; shape 13.972143 26.208329</span></span>
+<span><span class="co">#&gt; scale  2.881805  3.001647</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  13.83628 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  10.99502 .</span></span>
+<span><span class="co">#&gt; The AIC is  -17.99005 .</span></span></code></pre></div>
 <p>Let’s do the same for the normal distribution. We will use the
 <code>mle_normal_mu_var</code> function from the
 <code>algebraic.mle</code> package:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mle.norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_normal_mu_var.html">mle_normal_mu_var</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_normal_mu_var is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
 <span><span class="co">#&gt;         mu        var </span></span>
-<span><span class="co">#&gt; 2.86645164 0.02289029 </span></span>
-<span><span class="co">#&gt; The standard error is  0.02911681 0.006229948 .</span></span>
+<span><span class="co">#&gt; 2.86797534 0.02500757 </span></span>
+<span><span class="co">#&gt; The standard error is  0.03043364 0.006806199 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
 <span><span class="co">#&gt;           2.5%      97.5%</span></span>
-<span><span class="co">#&gt; mu  2.81855875 2.91434453</span></span>
-<span><span class="co">#&gt; var 0.01264294 0.03313764</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.0008873195 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  12.67873 .</span></span>
-<span><span class="co">#&gt; The AIC is  -21.35747 .</span></span></code></pre></div>
-<p>Let’s plot the pdfs of the Weibull and normal distributions:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Value<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Weibull.html" class="external-link">rweibull</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">100000</span>,</span>
-<span>    shape<span class="op">=</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.wei</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
-<span>    scale<span class="op">=</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.wei</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>, Group <span class="op">=</span> <span class="st">"Weibull"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Value<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">100000</span>,</span>
-<span>    mean<span class="op">=</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
-<span>    sd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, Group <span class="op">=</span> <span class="st">"Normal"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Value<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Weibull.html" class="external-link">rweibull</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">100000</span>,shape<span class="op">=</span><span class="va">sim.shape</span>,scale<span class="op">=</span><span class="va">sim.scale</span><span class="op">)</span> <span class="op">+</span></span>
-<span>                        <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">100000</span>,mean<span class="op">=</span><span class="fl">0</span>,sd<span class="op">=</span><span class="va">sim.err.sd</span><span class="op">)</span>, Group <span class="op">=</span> <span class="st">"True"</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, <span class="va">df3</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span>, fill <span class="op">=</span> <span class="va">Group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span>, adjust <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    Weibull<span class="op">=</span><span class="st">"red"</span>,</span>
-<span>    Normal<span class="op">=</span><span class="st">"green"</span>,</span>
-<span>    True<span class="op">=</span><span class="st">"purple"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Density plot"</span>, x <span class="op">=</span> <span class="st">"Value"</span>, y <span class="op">=</span> <span class="st">"Density"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="unknow_dgp_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<span><span class="co">#&gt; mu  2.81791646 2.91803422</span></span>
+<span><span class="co">#&gt; var 0.01381237 0.03620277</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.0009733886 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  11.48444 .</span></span>
+<span><span class="co">#&gt; The AIC is  -18.96889 .</span></span></code></pre></div>
+<p>Let’s plot the pdfs of the Weibull and normal distributions:
+<img src="unknow_dgp_files/figure-html/unnamed-chunk-12-1.png" width="384" style="display: block; margin: auto;"></p>
 <p>In purple, we have the true density (DGP). In red, we have the
 Weibull density. In green, we have the normal density. From the plot,
 it’s hard to tell which distribution is a better fit to the DGP.</p>
@@ -337,6 +326,7 @@ heavier-tailed model may be a better fit, such as the lognormal
 distribution, but we will not pursue this.</p>
 <p>How do we choose between the Weibull and Normal distributions? We
 will discuss this in the next section.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="goodness-of-fit">Goodness of fit<a class="anchor" aria-label="anchor" href="#goodness-of-fit"></a>
@@ -360,7 +350,7 @@ F(x_i)\right)^2
 \]</span> where <span class="math inline">\(\hat F_n\)</span> is the
 empirical distribution function of the data and <span class="math inline">\(F\)</span> is the distribution function of the
 model.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cramer.test</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">obs.dat</span>,<span class="va">ref.dat</span><span class="op">)</span></span>
 <span><span class="op">{</span></span>
 <span>  <span class="va">stat</span> <span class="op">&lt;-</span> <span class="fu">CDFt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CDFt/man/CramerVonMisesTwoSamples.html" class="external-link">CramerVonMisesTwoSamples</a></span><span class="op">(</span><span class="va">obs.dat</span>,<span class="va">ref.dat</span><span class="op">)</span></span>
@@ -375,10 +365,10 @@ model.</p>
 <span><span class="va">ref.dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Weibull.html" class="external-link">rweibull</a></span><span class="op">(</span><span class="fl">1000000</span>,shape<span class="op">=</span><span class="va">wei.shape</span>,scale<span class="op">=</span><span class="va">wei.scale</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/cramer.test.html">cramer.test</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span>,<span class="va">ref.dat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $p.value</span></span>
-<span><span class="co">#&gt; [1] 0.1606962</span></span>
+<span><span class="co">#&gt; [1] 0.1632591</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $cramer.stat</span></span>
-<span><span class="co">#&gt; [1] 0.03648002</span></span>
+<span><span class="co">#&gt; [1] 0.02065722</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $obs.size</span></span>
 <span><span class="co">#&gt; [1] 27</span></span>
@@ -388,16 +378,16 @@ model.</p>
 <p>Looking at the <span class="math inline">\(p\)</span>-value, we see
 that the data is compatible with the Weibull distribution. Now, let’s do
 the same for the normal distribution:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">norm.mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">norm.var</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">ref.dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000000</span>,mean<span class="op">=</span><span class="va">norm.mu</span>,sd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">norm.var</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/cramer.test.html">cramer.test</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span>,<span class="va">ref.dat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $p.value</span></span>
-<span><span class="co">#&gt; [1] 0.15917</span></span>
+<span><span class="co">#&gt; [1] 0.1602598</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $cramer.stat</span></span>
-<span><span class="co">#&gt; [1] 0.04602318</span></span>
+<span><span class="co">#&gt; [1] 0.03919976</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $obs.size</span></span>
 <span><span class="co">#&gt; [1] 27</span></span>
@@ -413,12 +403,12 @@ goodness of fit. The AIC is given by <span class="math display">\[
 of the model and <span class="math inline">\(k\)</span> is the number of
 parameters in the model. The AIC is a measure of the tradeoff between
 the goodness of fit and the complexity of the model.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">mle.wei</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -22.04162</span></span>
+<span><span class="co">#&gt; [1] -17.99005</span></span>
 <span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       var </span></span>
-<span><span class="co">#&gt; -21.35747</span></span></code></pre></div>
+<span><span class="co">#&gt; -18.96889</span></span></code></pre></div>
 <p>A lower AIC value indicates a better fit. Thus, according to this
 measure, the Weibull distribution is the better fit.</p>
 </div>

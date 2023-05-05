@@ -86,7 +86,7 @@ the gradient of `f` and instead only seeks to maximize `f`.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>f</dt>
-<dd><p>Objective function to maximize, `f : R^d -&gt; R`</p></dd>
+<dd><p>Objective function to maximize</p></dd>
 
 
 <dt>x0</dt>
@@ -94,18 +94,11 @@ the gradient of `f` and instead only seeks to maximize `f`.</p>
 
 
 <dt>options</dt>
-<dd><p>List of options
-* `t_init` Initial temperature
-* `t_end` Final temperature
-* `alpha` Cooling factor
-* `iter_per_temp` Number of iterations per temperature
-* `max_iter` Maximum number of iterations, used instead of t_end
-            if not NULL, defaults to NULL
-* `debug` If TRUE, print debugging information to the console
-* `trace` If TRUE, track the history of positions and values
-* `sup` Support function, returns TRUE if x is in the domain of f
-* `neigh` Neighborhood function, returns a random neighbor of x
-* `...` Additional arguments to neigh</p></dd>
+<dd><p>List of optional arguments</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional arguments that may be passed to `neigh`</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -116,9 +109,52 @@ the gradient of `f` and instead only seeks to maximize `f`.</p>
         objective function value (max), and optionally path</p>
     </div>
     <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This also works for discrete optimization problems.</p>
-    </div>
+    <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
+    
+<ul><li><p><code>sim_anneal()</code>: options</p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="fields">Fields<a class="anchor" aria-label="anchor" href="#fields"></a></h2>
+    
+
+<dl><dt><code>t_init</code></dt>
+<dd><p>Initial temperature</p></dd>
+
+
+<dt><code>t_end</code></dt>
+<dd><p>Final temperature</p></dd>
+
+
+<dt><code>alpha</code></dt>
+<dd><p>Cooling factor</p></dd>
+
+
+<dt><code>iter_per_temp</code></dt>
+<dd><p>Number of iterations per temperature</p></dd>
+
+
+<dt><code>max_iter</code></dt>
+<dd><p>Maximum number of iterations, used instead of t_end
+if not NULL, defaults to NULL</p></dd>
+
+
+<dt><code>debug</code></dt>
+<dd><p>If TRUE, print debugging information to the console</p></dd>
+
+
+<dt><code>trace</code></dt>
+<dd><p>If TRUE, track the history of positions and values</p></dd>
+
+
+<dt><code>sup</code></dt>
+<dd><p>Support function, returns TRUE if x is in the domain of f</p></dd>
+
+
+<dt><code>neigh</code></dt>
+<dd><p>Neighborhood function, returns a random neighbor of x</p></dd>
+
+
+</dl></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
