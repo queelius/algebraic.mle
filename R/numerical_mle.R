@@ -94,8 +94,11 @@ sim_anneal <- function(
             }
             x0 <- x
             fx0 <- fx
-            trace_x <- rbind(trace_x, x)
-            trace_fx <- c(trace_fx, fx)
+            if (trace)
+            {
+                trace_x <- rbind(trace_x, x)
+                trace_fx <- c(trace_fx, fx)
+            }
         }
         if (iter %% iter_per_temp == 0) {
             t <- t * alpha
@@ -191,7 +194,7 @@ mle_local_search <- function(
 
     theta <- theta0
     max <- ll(theta0)
-    trace_out <- list()
+    trace_out <- matrix(nrow=0, ncol=length(theta0))
 
     for (iter in 1:max_iter)
     {
@@ -221,7 +224,7 @@ mle_local_search <- function(
             break
         }
         if (trace) {
-            trace_out <- c(trace_out, list(theta))
+            trace_out <- rbind(trace_out, theta)
         }
         if (tol(theta - theta0) < eps) {
             break
@@ -236,10 +239,7 @@ mle_local_search <- function(
     theta.hat$iter <- iter
     theta.hat$converged <- iter < max_iter
     theta.hat$learning_rate <- eta
-    if (trace) {
-        theta.hat$trace <- trace_out
-    }
-
+    theta.hat$trace <- trace_out
     theta.hat
 }
 

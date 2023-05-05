@@ -128,12 +128,12 @@
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 1</span></span></span>
 <span><span class="co">#&gt;   lifetime</span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     3.01</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     3.01</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3.12</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     2.89</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     2.77</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     3.13</span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     3.10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2.91</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3.23</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     3.07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     2.91</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     3.08</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="visualizing-the-data">Visualizing the data<a class="anchor" aria-label="anchor" href="#visualizing-the-data"></a>
@@ -218,15 +218,15 @@
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_weibull_shape_scale is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
 <span><span class="co">#&gt;     shape     scale </span></span>
-<span><span class="co">#&gt; 23.047044  2.986319 </span></span>
-<span><span class="co">#&gt; The standard error is  5.005331 0.03522649 .</span></span>
+<span><span class="co">#&gt; 28.715983  3.054616 </span></span>
+<span><span class="co">#&gt; The standard error is  5.306985 0.02699526 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
-<span><span class="co">#&gt;            2.5%     97.5%</span></span>
-<span><span class="co">#&gt; shape 14.814007 31.280080</span></span>
-<span><span class="co">#&gt; scale  2.928376  3.044261</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  25.05458 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  13.01313 .</span></span>
-<span><span class="co">#&gt; The AIC is  -22.02627 .</span></span></code></pre></div>
+<span><span class="co">#&gt;            2.5%    97.5%</span></span>
+<span><span class="co">#&gt; shape 19.986769 37.44520</span></span>
+<span><span class="co">#&gt; scale  3.010213  3.09902</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  28.16482 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  19.56711 .</span></span>
+<span><span class="co">#&gt; The AIC is  -35.13423 .</span></span></code></pre></div>
 <p>Let’s do the same for the normal distribution. We will use the <code>mle_normal_mu_var</code> function from the <code>algebraic.mle</code> package:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mle.norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_normal_mu_var.html">mle_normal_mu_var</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span><span class="op">)</span></span>
@@ -234,15 +234,15 @@
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_normal_mu_var is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
 <span><span class="co">#&gt;         mu        var </span></span>
-<span><span class="co">#&gt; 2.91536258 0.02380971 </span></span>
-<span><span class="co">#&gt; The standard error is  0.02969581 0.006480182 .</span></span>
+<span><span class="co">#&gt; 3.00048690 0.01321434 </span></span>
+<span><span class="co">#&gt; The standard error is  0.02212284 0.003596488 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
-<span><span class="co">#&gt;           2.5%      97.5%</span></span>
-<span><span class="co">#&gt; mu  2.86651732 2.96420784</span></span>
-<span><span class="co">#&gt; var 0.01315076 0.03446866</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.0009246115 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  12.14709 .</span></span>
-<span><span class="co">#&gt; The AIC is  -20.29419 .</span></span></code></pre></div>
+<span><span class="co">#&gt;            2.5%      97.5%</span></span>
+<span><span class="co">#&gt; mu  2.964098070 3.03687574</span></span>
+<span><span class="co">#&gt; var 0.007298644 0.01913004</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.0005025943 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  20.09577 .</span></span>
+<span><span class="co">#&gt; The AIC is  -36.19154 .</span></span></code></pre></div>
 <p>Let’s plot the pdfs of the Weibull and normal distributions:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Value<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Weibull.html" class="external-link">rweibull</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">100000</span>,</span>
@@ -292,10 +292,10 @@
 <span><span class="va">ref.dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Weibull.html" class="external-link">rweibull</a></span><span class="op">(</span><span class="fl">1000000</span>,shape<span class="op">=</span><span class="va">wei.shape</span>,scale<span class="op">=</span><span class="va">wei.scale</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/cramer.test.html">cramer.test</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span>,<span class="va">ref.dat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $p.value</span></span>
-<span><span class="co">#&gt; [1] 0.1537675</span></span>
+<span><span class="co">#&gt; [1] 0.1592088</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $cramer.stat</span></span>
-<span><span class="co">#&gt; [1] 0.08055402</span></span>
+<span><span class="co">#&gt; [1] 0.04577905</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $obs.size</span></span>
 <span><span class="co">#&gt; [1] 27</span></span>
@@ -309,10 +309,10 @@
 <span><span class="va">ref.dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000000</span>,mean<span class="op">=</span><span class="va">norm.mu</span>,sd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">norm.var</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/cramer.test.html">cramer.test</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span>,<span class="va">ref.dat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $p.value</span></span>
-<span><span class="co">#&gt; [1] 0.1497238</span></span>
+<span><span class="co">#&gt; [1] 0.1614345</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $cramer.stat</span></span>
-<span><span class="co">#&gt; [1] 0.1072036</span></span>
+<span><span class="co">#&gt; [1] 0.03189641</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $obs.size</span></span>
 <span><span class="co">#&gt; [1] 27</span></span>
@@ -324,10 +324,10 @@
 \]</span> where <span class="math inline">\(L\)</span> is the likelihood of the model and <span class="math inline">\(k\)</span> is the number of parameters in the model. The AIC is a measure of the tradeoff between the goodness of fit and the complexity of the model.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">mle.wei</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -22.02627</span></span>
+<span><span class="co">#&gt; [1] -35.13423</span></span>
 <span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">mle.norm</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       var </span></span>
-<span><span class="co">#&gt; -20.29419</span></span></code></pre></div>
+<span><span class="co">#&gt; -36.19154</span></span></code></pre></div>
 <p>A lower AIC value indicates a better fit. Thus, according to this measure, the Weibull distribution is the better fit.</p>
 </div>
 <div class="section level2">

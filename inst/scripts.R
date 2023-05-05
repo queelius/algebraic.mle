@@ -36,20 +36,22 @@ proj.weibull <- function(theta) {
     c(k,b)
 }
 
-theta.sa <- sim_anneal(
-    f=loglik,
-    x0=theta0,
-    t_init=100,
-    alpha=.99,
-    sup=sup.weibull,
-    iter_per_temp=100,
-    t_end=1e-12,
-    trace=TRUE,
-    debug=FALSE)
+#sim_anneal(
+#    f=loglik,
+#    x0=theta0,
+#    t_init=100,
+#    alpha=.99,
+#    sup=sup.weibull,
+#    iter_per_temp=100,
+#    t_end=1e-12,
+#    trace=TRUE,
+#    debug=FALSE)
 
-sa.optim <- optim(par=theta0,fn=loglik,method="SANN",control=list(maxit=2000000,
-    fnscale=-1,temp=100,trace=0,reltol=1e-12, tol=1e-12, maxeval=20000000, maxtime=Inf))
-
+optim(
+  par=theta0,
+  fn=ll.wei,
+  method="SANN",
+  control=list(maxit=100000,fnscale=-1,temp=100))$par[1]
 z <- theta.sa$trace_fx
 x <- theta.sa$trace_x[,1]
 y <- theta.sa$trace_x[,2]
@@ -101,6 +103,9 @@ theta.nr <- mle_newton_raphson(
     eta=1,
     max_iter=1000L,
     debug=FALSE)
+
+mle_local_search
+
 
 theta.optim <- mle_optim(optim(
     par=theta.sa$argmax,
