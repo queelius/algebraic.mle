@@ -4,62 +4,41 @@
 \alias{mle_local_search}
 \title{mle_local_search}
 \usage{
-mle_local_search(
-  ll,
-  theta0,
-  dir,
-  eps = 1e-05,
-  proj = NULL,
-  sup = NULL,
-  tol = NULL,
-  eta = 1,
-  r = 0.8,
-  max_iter = 1000L,
-  max_iter_ls = 1000L,
-  debug = FALSE,
-  trace = FALSE
-)
+mle_local_search(ll, theta0, dir, options = list())
 }
 \arguments{
-\item{theta0}{numeric, initial guess, a column vector of size `p`}
+\item{ll}{function, log-likelihood function}
 
-\item{dir}{function, promising direction function of type `R^p -> R^p`}
+\item{theta0}{numeric, initial guess}
 
-\item{eps}{numeric, tolerance for convergence}
+\item{dir}{function, promising direction function}
 
-\item{proj}{function, projection function of type `R^p -> R^p`}
-
-\item{sup}{predicate function, domain of support function of type
-`R^p -> {TRUE,FALSE}` for the log-likelihood function `l`}
-
-\item{tol}{function, tolerance function of type `R^p -> R`}
-
-\item{eta}{numeric, learning rate, defaults to 1}
-
-\item{r}{numeric, backtracking line search parameter, defaults to 0.8}
-
-\item{max_iter}{integer, maximum number of iterations}
-
-\item{max_iter_ls}{integer, maximum number of iterations for the line search}
-
-\item{debug}{logical, output debugging information if `TRUE`;
-defaults to `FALSE`}
-
-\item{trace}{logical, if `TRUE` store the path of the search in the
-`trace` attribute of the output}
-
-\item{l}{function, log-likelihood function of type `R^p -> R`}
+\item{options}{list, options for the local search:
+* `sup` predicate function, domain of support for log-likelihood
+* `eta` numeric, learning rate, defaults to 1
+* `max_iter` integer, maximum number of iterations, defaults to 1000
+* `max_iter_ls` integer, maximum number of iterations for the line search,
+defaults to 1000
+* `abs_tol` numeric, tolerance for convergence, defaults to NULL
+(use `rel_tol`)
+* `rel_tol` numeric, relative tolerance for convergence, defaults to 1e-5
+* `r` numeric, backtracking line search parameter, defaults to 0.8
+* `proj` function, projection function to enforce domain of support
+* `norm` function, we pass the difference of successive theta updates
+to the norm to check for convergence, defaults to the infinity norm.
+* `debug` logical, output debugging information if TRUE; default FALSE
+* `trace` logical, if TRUE store the path of the search in the `path`
+attribute of the output}
+}
+\value{
+an `mle` object with the following additional attributes:
+* `iter` integer, the number of iterations
+* `converged` logical, whether the algorithm converged
+* `options` list, the options used for the search
+* `path` matrix, the path of the search if `trace` is TRUE
 }
 \description{
 This assumes the MLE is an interior point and that you have provided
 an initial guess `theta0` that is near it. Use a global search method
 like `sim_anneal` to find a good initial guess.
-}
-\details{
-General local search method. It doesn't do anything fancy, but it is
-more easily tweakable than `optim` in the `stats` package and can be
-made to generate results when `optim` fails.
-I use it for debugging and testing, but I also use it to implement
-in a more transparent way the local search methods for newton-raphson
-and gradient ascent.
 }

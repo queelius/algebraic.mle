@@ -4,50 +4,29 @@
 \alias{sim_anneal}
 \title{sim_anneal}
 \usage{
-sim_anneal(
-  f,
-  x0,
-  t_init = 100,
-  t_end = 0.001,
-  alpha = 0.99,
-  iter_per_temp = 100,
-  sup = function(x) TRUE,
-  neigh = function(x) x + rnorm(length(x)),
-  max_iter = NULL,
-  debug = FALSE,
-  trace = FALSE,
-  ...
-)
+sim_anneal(f, x0, options = list(), ...)
 }
 \arguments{
 \item{f}{Objective function to maximize, `f : R^d -> R`}
 
 \item{x0}{Initial guess}
 
-\item{t_init}{Initial temperature}
-
-\item{t_end}{Final temperature}
-
-\item{alpha}{Cooling factor}
-
-\item{iter_per_temp}{Number of iterations per temperature}
-
-\item{sup}{Support function, returns TRUE if x is in the domain of f}
-
-\item{neigh}{Neighborhood function, returns a random neighbor of x}
-
-\item{max_iter}{Maximum number of iterations, used instead of t_end
-if not NULL, defaults to NULL}
-
-\item{debug}{If TRUE, print debugging information to the console}
-
-\item{trace}{If TRUE, track the history of positions and values}
-
-\item{...}{Additional arguments to neigh}
+\item{options}{List of options
+* `t_init` Initial temperature
+* `t_end` Final temperature
+* `alpha` Cooling factor
+* `iter_per_temp` Number of iterations per temperature
+* `max_iter` Maximum number of iterations, used instead of t_end
+            if not NULL, defaults to NULL
+* `debug` If TRUE, print debugging information to the console
+* `trace` If TRUE, track the history of positions and values
+* `sup` Support function, returns TRUE if x is in the domain of f
+* `neigh` Neighborhood function, returns a random neighbor of x
+* `...` Additional arguments to neigh}
 }
 \value{
 list with best solution (argmax) and its corresponding
-        objective function value (max), and optionally trace_x and trace_fx
+        objective function value (max), and optionally path
 }
 \description{
 This function implements the simulated annealing algorithm,

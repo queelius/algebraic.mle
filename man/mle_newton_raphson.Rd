@@ -4,45 +4,23 @@
 \alias{mle_newton_raphson}
 \title{MLE method using the Newton-Raphson method}
 \usage{
-mle_newton_raphson(
-  ll,
-  theta0,
-  info,
-  score,
-  eps = 1e-05,
-  sup = NULL,
-  eta = 1,
-  max_iter = 0L,
-  r = 0.5,
-  proj = NULL,
-  tol = NULL,
-  debug = FALSE,
-  inverted = FALSE,
-  trace = FALSE
-)
+mle_newton_raphson(ll, theta0, info, score, inverted = FALSE, options = list())
 }
 \arguments{
-\item{ll}{log-likelihood function of type `R^p -> R`}
+\item{ll}{log-likelihood function}
 
-\item{theta0}{initial guess of theta with `p` components}
+\item{theta0}{initial guess}
 
-\item{info}{FIM function of type `R^p -> R^{p-by-q}`.}
+\item{info}{FIM function}
 
-\item{score}{score Function of type `R^p -> R^p`, the gradient of `ll``}
+\item{score}{score Function, the gradient of log-likelihood}
 
-\item{eps}{numeric, stopping criterion}
+\item{inverted}{logical, if TRUE `info` is covariance instead of FIM}
 
-\item{sup}{domain of support function of type `R^p -> {T,F}` for `ll`}
-
-\item{eta}{numeric, learning rate, defaults to 1}
-
-\item{max_iter}{maximum number of iterations}
-
-\item{r}{backing tracking parameter}
-
-\item{debug}{logical, output debugging info if `TRUE`; defaults to `FALSE`}
-
-\item{inverted}{if `TRUE` `info` is covariance instead of FIM}
+\item{options}{list, options for the local search, see `mle_local_search`}
+}
+\value{
+an object of class `mle_newton_raphson`, which is an `mle` object
 }
 \description{
 MLE method using the Newton-Raphson method

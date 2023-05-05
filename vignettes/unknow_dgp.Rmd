@@ -200,6 +200,8 @@ k0 <- optim(
   fn=ll.wei,
   method="SANN",
   control=list(maxit=100000,fnscale=-1,temp=100))$par[1]
+
+cat("initial guess for k0 =",k0,"\n")
 ```
 
 With this starting point in hand, we find an MLE with:
@@ -238,9 +240,12 @@ df3 <- data.frame(Value=rweibull(n=100000,shape=sim.shape,scale=sim.scale) +
 df <- rbind(df1, df2, df3)
 ggplot(df, aes(x = Value, fill = Group)) +
   geom_density(alpha = 0.3, adjust = 1.5) +
-  scale_fill_manual(values = c("Weibull"="red", Normal="green", True="purple")) +
+  scale_fill_manual(values = c(
+    Weibull="red",
+    Normal="green",
+    True="purple")) +
   labs(title = "Density plot", x = "Value", y = "Density") +
-  theme_minimal()      
+  theme_minimal()
 ```
 
 In purple, we have the true density (DGP). In red, we have the Weibull density.

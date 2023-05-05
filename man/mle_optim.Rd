@@ -4,10 +4,14 @@
 \alias{mle_optim}
 \title{mle_optim}
 \usage{
-mle_optim(res)
+mle_optim(sol)
 }
 \arguments{
-\item{res}{the output of `optim`}
+\item{sol}{the output of `optim`}
+}
+\value{
+a `numerical_mle` object, specialized for `optim` (stats package)
+solutions.
 }
 \description{
 This function takes the output of `optim` and turns it into an `mle` object.

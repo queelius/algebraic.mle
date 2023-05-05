@@ -4,20 +4,7 @@
 \alias{mle_gradient_ascent}
 \title{mle_gradient_ascent}
 \usage{
-mle_gradient_ascent(
-  ll,
-  theta0,
-  score,
-  eps = 1e-05,
-  sup = NULL,
-  eta = 1,
-  r = 0.5,
-  tol = NULL,
-  proj = NULL,
-  max_iter = 0L,
-  debug = FALSE,
-  trace = FALSE
-)
+mle_gradient_ascent(ll, theta0, score, options)
 }
 \arguments{
 \item{ll}{log-likelihood function}
@@ -25,22 +12,6 @@ mle_gradient_ascent(
 \item{theta0}{initial guess of theta with `p` components}
 
 \item{score}{score function of type `R^p -> R^p`, the gradient of `ll`}
-
-\item{eps}{numeric, stopping criterion}
-
-\item{sup}{domain of support function of type `R^p -> {TRUE,FALSE}` for `ll`}
-
-\item{eta}{numeric, learning rate, defaults to 1}
-
-\item{r}{numeric, backing tracking parameter}
-
-\item{tol}{tolerance function of type `R^p -> R`}
-
-\item{proj}{projection function of type `R^p -> R^p`}
-
-\item{max_iter}{integer, maximum iterations}
-
-\item{debug}{logical, output debugging info if `TRUE`; defaults to `FALSE'}
 }
 \description{
 MLE method using gradient ascent
