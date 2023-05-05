@@ -107,7 +107,7 @@ distributed random variables. First, we load the R package
 sample (data frame) with:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">x</span>,n<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3.22 3.35 3.56 2.35</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 7.71 2.81 4.06 4.08</span></span></code></pre></div>
 <p>We show a histogram of the sample with:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
@@ -128,38 +128,38 @@ implemented by the <code>algebraic.mle</code> package:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_normal_mu_var is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
-<span><span class="co">#&gt;   mu  var </span></span>
-<span><span class="co">#&gt; 3.91 1.76 </span></span>
-<span><span class="co">#&gt; The standard error is  0.187 0.351 .</span></span>
+<span><span class="co">#&gt;  mu var </span></span>
+<span><span class="co">#&gt; 3.9 2.1 </span></span>
+<span><span class="co">#&gt; The standard error is  0.205 0.42 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
 <span><span class="co">#&gt;     2.5% 97.5%</span></span>
-<span><span class="co">#&gt; mu  3.60  4.21</span></span>
-<span><span class="co">#&gt; var 1.18  2.33</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.16 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  -85 .</span></span>
-<span><span class="co">#&gt; The AIC is  174 .</span></span></code></pre></div>
+<span><span class="co">#&gt; mu  3.56  4.24</span></span>
+<span><span class="co">#&gt; var 1.41  2.79</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.22 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  -89.5 .</span></span>
+<span><span class="co">#&gt; The AIC is  183 .</span></span></code></pre></div>
 <p>We can show the point estimate given data <code>x</code> with:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   mu  var </span></span>
-<span><span class="co">#&gt; 3.91 1.76</span></span></code></pre></div>
+<span><span class="co">#&gt;  mu var </span></span>
+<span><span class="co">#&gt; 3.9 2.1</span></span></code></pre></div>
 <p>We can show the Fisher information matrix (FIM) and
 variance-covariance matrix with:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fim.html">fim</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           [,1]      [,2]</span></span>
-<span><span class="co">#&gt; [1,]  2.85e+01 -4.61e-15</span></span>
-<span><span class="co">#&gt; [2,] -4.61e-15  8.10e+00</span></span>
+<span><span class="co">#&gt;      [,1] [,2]</span></span>
+<span><span class="co">#&gt; [1,] 23.8 0.00</span></span>
+<span><span class="co">#&gt; [2,]  0.0 5.67</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          [,1]      [,2]</span></span>
-<span><span class="co">#&gt; [1,] 3.51e-02 -5.68e-18</span></span>
-<span><span class="co">#&gt; [2,] 2.00e-17  1.23e-01</span></span></code></pre></div>
+<span><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.042 0.000</span></span>
+<span><span class="co">#&gt; [2,] 0.000 0.177</span></span></code></pre></div>
 <p>We can show the confidence intervals with:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     2.5% 97.5%</span></span>
-<span><span class="co">#&gt; mu  3.60  4.21</span></span>
-<span><span class="co">#&gt; var 1.18  2.33</span></span></code></pre></div>
+<span><span class="co">#&gt; mu  3.56  4.24</span></span>
+<span><span class="co">#&gt; var 1.41  2.79</span></span></code></pre></div>
 <p>A nice property of MLEs is that, asymptotically, they converge to a
 normal distribution with a mean given by the true parameter, in this
 case <span class="math inline">\(\theta = (\mu,\sigma^2)'\)</span>,
@@ -204,8 +204,8 @@ by <span class="math inline">\(-\frac{1}{n} \sigma^2\)</span>:</p>
 estimate it by using replacing <span class="math inline">\(\hat\sigma^2\)</span> instead:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;             var </span></span>
-<span><span class="co">#&gt;  0.0000 -0.0351</span></span></code></pre></div>
+<span><span class="co">#&gt;           var </span></span>
+<span><span class="co">#&gt;  0.000 -0.042</span></span></code></pre></div>
 <p>The mean squared error (MSE) is another performance measure of an
 estimator. It is given by <span class="math display">\[
     \operatorname{mse}(\hat\theta) = E\bigl\{(\hat\theta -
@@ -219,9 +219,9 @@ estimator. It is given by <span class="math display">\[
 <p>Here’s R code to compute the MSE of <span class="math inline">\(\hat\theta\)</span>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span>        <span class="co"># estimate of MSE</span></span>
-<span><span class="co">#&gt; [1] 0.16</span></span>
+<span><span class="co">#&gt; [1] 0.22</span></span>
 <span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">theta.hat</span>,<span class="va">theta</span><span class="op">)</span>  <span class="co"># true MSE</span></span>
-<span><span class="co">#&gt; [1] 0.16</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.22</span></span></code></pre></div>
 <p>This looks to be a pretty good estimate of the true MSE.</p>
 </div>
 </div>
@@ -278,16 +278,16 @@ with:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">g.mc</span><span class="op">)</span>,digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        [,1]   [,2]   [,3]   [,4]</span></span>
-<span><span class="co">#&gt; [1,]  0.139  0.209 -0.002 -0.003</span></span>
-<span><span class="co">#&gt; [2,]  0.209  0.313 -0.003 -0.005</span></span>
-<span><span class="co">#&gt; [3,] -0.002 -0.003  0.493  0.740</span></span>
-<span><span class="co">#&gt; [4,] -0.003 -0.005  0.740  1.110</span></span>
+<span><span class="co">#&gt; [1,]  0.167  0.250 -0.001 -0.001</span></span>
+<span><span class="co">#&gt; [2,]  0.250  0.376 -0.001 -0.001</span></span>
+<span><span class="co">#&gt; [3,] -0.001 -0.001  0.705  1.058</span></span>
+<span><span class="co">#&gt; [4,] -0.001 -0.001  1.058  1.587</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">g.delta</span><span class="op">)</span>,digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       [,1]  [,2]  [,3]  [,4]</span></span>
-<span><span class="co">#&gt; [1,] 0.141 0.211 0.000 0.000</span></span>
-<span><span class="co">#&gt; [2,] 0.211 0.316 0.000 0.000</span></span>
-<span><span class="co">#&gt; [3,] 0.000 0.000 0.494 0.741</span></span>
-<span><span class="co">#&gt; [4,] 0.000 0.000 0.741 1.111</span></span></code></pre></div>
+<span><span class="co">#&gt;       [,1]  [,2]  [,3] [,4]</span></span>
+<span><span class="co">#&gt; [1,] 0.168 0.252 0.000 0.00</span></span>
+<span><span class="co">#&gt; [2,] 0.252 0.378 0.000 0.00</span></span>
+<span><span class="co">#&gt; [3,] 0.000 0.000 0.706 1.06</span></span>
+<span><span class="co">#&gt; [4,] 0.000 0.000 1.059 1.59</span></span></code></pre></div>
 <p>They are pretty close.</p>
 </div>
 </div>
@@ -336,16 +336,16 @@ weighted MLE and its MSE:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   mu  var </span></span>
-<span><span class="co">#&gt; 3.97 2.01</span></span>
+<span><span class="co">#&gt; 4.01 1.94</span></span>
 <span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.0102</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.00946</span></span></code></pre></div>
 <p>The MLE for the total sample and its MSE is:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   mu  var </span></span>
-<span><span class="co">#&gt; 3.98 2.05</span></span>
+<span><span class="co">#&gt; 4.00 1.97</span></span>
 <span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.0105</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.00971</span></span></code></pre></div>
 <p>We see that <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\hat\theta_w\)</span> model approximately the same
 sampling distribution when estimating <span class="math inline">\(\theta\)</span> given i.i.d. samples.</p>
 </div>
@@ -367,33 +367,33 @@ parameters and then pass it to <code>mle_boot</code> constructor:</p>
 <span><span class="op">(</span><span class="va">theta.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="va">mle_solver</span>, <span class="va">x</span>, <span class="va">R</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_boot is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
-<span><span class="co">#&gt;   mu  var </span></span>
-<span><span class="co">#&gt; 3.91 1.76 </span></span>
-<span><span class="co">#&gt; The standard error is  0.186 0.383 .</span></span>
+<span><span class="co">#&gt;  mu var </span></span>
+<span><span class="co">#&gt; 3.9 2.1 </span></span>
+<span><span class="co">#&gt; The standard error is  0.203 0.498 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
 <span><span class="co">#&gt;     2.5% 97.5%</span></span>
-<span><span class="co">#&gt; mu  3.60  4.21</span></span>
-<span><span class="co">#&gt; var 1.13  2.39</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.181 .</span></span></code></pre></div>
+<span><span class="co">#&gt; mu  3.57  4.23</span></span>
+<span><span class="co">#&gt; var 1.28  2.92</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.29 .</span></span></code></pre></div>
 <p>We already printed out the <code>theta.boot</code> object, which
 provided a lot of information about it, but we can obtain specified
 statistics from the Bootstrap MLE using the standard interface in
 <code>algorithmic.mle</code>, e.g.:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># point estimate</span></span>
-<span><span class="co">#&gt;   mu  var </span></span>
-<span><span class="co">#&gt; 3.91 1.76</span></span>
+<span><span class="co">#&gt;  mu var </span></span>
+<span><span class="co">#&gt; 3.9 2.1</span></span>
 <span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># variance-covariance matrix</span></span>
-<span><span class="co">#&gt;        [,1]   [,2]</span></span>
-<span><span class="co">#&gt; [1,] 0.0346 0.0175</span></span>
-<span><span class="co">#&gt; [2,] 0.0175 0.1467</span></span>
+<span><span class="co">#&gt;         [,1]    [,2]</span></span>
+<span><span class="co">#&gt; [1,]  0.0411 -0.0168</span></span>
+<span><span class="co">#&gt; [2,] -0.0168  0.2478</span></span>
 <span><span class="op">(</span><span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># standard error</span></span>
-<span><span class="co">#&gt; [1] 0.186 0.383</span></span>
+<span><span class="co">#&gt; [1] 0.203 0.498</span></span>
 <span><span class="op">(</span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># bias</span></span>
 <span><span class="co">#&gt;       mu      var </span></span>
-<span><span class="co">#&gt; -0.00436 -0.00859</span></span>
+<span><span class="co">#&gt; -0.00392 -0.04256</span></span>
 <span><span class="op">(</span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span><span class="op">)</span> <span class="co"># mean squared error</span></span>
-<span><span class="co">#&gt; [1] 0.181</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.29</span></span></code></pre></div>
 <p>We see that, for the most part, the results are similar to those
 obtained using the large sampling assumption.</p>
 <p>There are many additional arguments you can pass to the
@@ -452,8 +452,8 @@ with the output of <code>point(x)</code>, whether that output be a
 scalar or a vector. Here is how we compute the PI for <span class="math inline">\(\hat{T}_{n+1}\)</span>:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pred.html">pred</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">theta.hat</span>, samp<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">=</span><span class="fl">1</span>,<span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>,<span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,<span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      mean lower upper</span></span>
-<span><span class="co">#&gt; [1,]  3.9 0.291  7.54</span></span></code></pre></div>
+<span><span class="co">#&gt;      mean  lower upper</span></span>
+<span><span class="co">#&gt; [1,] 3.89 -0.384  8.13</span></span></code></pre></div>
 <p>In general, it will return a <span class="math inline">\(p\)</span>-by-<span class="math inline">\(3\)</span> matrix, where <span class="math inline">\(p\)</span> is the dimension of <span class="math inline">\(T\)</span> and the columns are the mean, lower
 quantile, and upper quantile of the predictive distribution.</p>
 <p>How does this compare to <span class="math inline">\(T_{n+1}|\hat\theta\)</span>? We can compute the
@@ -464,7 +464,7 @@ quantile, and upper quantile of the predictive distribution.</p>
 <span><span class="va">sd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean<span class="op">=</span><span class="va">mu</span>,lower<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">.025</span>,mean<span class="op">=</span><span class="va">mu</span>, sd<span class="op">=</span><span class="va">sd</span><span class="op">)</span>,upper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">.975</span>,mean<span class="op">=</span><span class="va">mu</span>, sd<span class="op">=</span><span class="va">sd</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; mean.mu   lower   upper </span></span>
-<span><span class="co">#&gt;    3.91    1.31    6.50</span></span></code></pre></div>
+<span><span class="co">#&gt;    3.90    1.06    6.74</span></span></code></pre></div>
 <p>We see that the 95% quantile interval for <span class="math inline">\(T_{n+1}|\hat\theta\)</span> is smaller than <span class="math inline">\(\hat{T}_{n+1}\)</span>, which is what we expected.
 After all, there is uncertainty about the parameter value <span class="math inline">\(\theta\)</span>.</p>
 </div>
