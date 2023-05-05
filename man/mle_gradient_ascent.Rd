@@ -2,7 +2,7 @@
 % Please edit documentation in R/numerical_mle.R
 \name{mle_gradient_ascent}
 \alias{mle_gradient_ascent}
-\title{MLE method using gradient ascent}
+\title{mle_gradient_ascent}
 \usage{
 mle_gradient_ascent(
   ll,
@@ -15,7 +15,8 @@ mle_gradient_ascent(
   tol = NULL,
   proj = NULL,
   max_iter = 0L,
-  debug = FALSE
+  debug = FALSE,
+  trace = FALSE
 )
 }
 \arguments{

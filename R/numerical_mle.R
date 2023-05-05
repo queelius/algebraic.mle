@@ -1,10 +1,19 @@
 #' sim_anneal
 #' 
-#' This function implements the simulated annealing algorithm.
-#' It is mostly used to find a good starting point for a local
-#' optimization algorithm like gradient ascent.
-#'
-#' @param f Objective function to maximize
+#' This function implements the simulated annealing algorithm,
+#' which is a global optimization algorithm that is useful for
+#' finding a good starting point for a local optimization algorithm.
+
+#' We do not return this as an MLE object because, to be a good
+#' estimate of the MLE, the gradient of `f` evaluated
+#' at its solution should be close to zero, assuming the MLE
+#' is interior to the domain of `f`. However, since this algorithm
+#' is not guided by gradient information, it is not sensitive to
+#' the gradient of `f` and instead only seeks to maximize `f`.
+#' 
+#' This also works for discrete optimization problems.
+#' 
+#' @param f Objective function to maximize, `f : R^d -> R`
 #' @param x0 Initial guess
 #' @param t_init Initial temperature
 #' @param t_end Final temperature
@@ -12,18 +21,31 @@
 #' @param neigh Neighborhood function, returns a random neighbor of x
 #' @param max_iter Maximum number of iterations, used instead of t_end
 #'                 if not NULL, defaults to NULL
+#' @param iter_per_temp Number of iterations per temperature
+#' @param ... Additional arguments to neigh
 #' @param alpha Cooling factor
+#' @param debug If TRUE, print debugging information to the console
+#' @param trace If TRUE, track the history of positions and values
 #' @return list with best solution (argmax) and its corresponding
-#'         objective function value (max)
+#'         objective function value (max), and optionally trace_x and trace_fx
 #' @export
-sim_anneal <- function(f, x0, t_init = 100, t_end = 1e-3,
-    alpha = 0.99, sup = function(x) TRUE,
+sim_anneal <- function(
+    f,
+    x0,
+    t_init = 100,
+    t_end = 1e-3,
+    alpha = 0.99,
+    iter_per_temp = 100,
+    sup = function(x) TRUE,
     neigh = function(x) x + rnorm(length(x)),
-    max_iter = NULL) {
+    max_iter = NULL,
+    debug = FALSE,
+    trace = FALSE, ...) {
     stopifnot(is.function(f), is.function(sup), is.function(neigh),
-                t_init > 0, alpha > 0, alpha < 1, sup(x0))
+                t_init > 0, alpha > 0, alpha < 1, iter_per_temp > 0,
+                is.logical(debug), is.logical(trace), sup(x0))
 
-    if (is.null(max_iter)) {
+    if (!is.null(max_iter)) {
         stopifnot(max_iter > 0)
         if (!is.null(t_end)) {
             warning("t_end is ignored when max_iter is not NULL")
@@ -35,27 +57,52 @@ sim_anneal <- function(f, x0, t_init = 100, t_end = 1e-3,
     argmax <- x0
     fmax <- f(argmax)
     fx0 <- fmax
+    t <- t_init
+    iter <- 0L
+    trace_x <- matrix(nrow=0,ncol=length(x0))
+    trace_fx <- c()
 
-    while (t_init > t_end) {
-        x <- neigh(x0)
+    while (t > t_end) {
+        iter <- iter + 1L
+        x <- neigh(x0,...)
         if (!sup(x)) {
+            if (debug) {
+                cat("x = (", x ,") not in support, skipping\n")
+            }
             next
         }
         fx <- f(x)
+        if (is.nan(fx)) {
+            if (debug) {
+                cat("f(x=",x,") is NaN, skipping\n")
+            }
+            next
+        }
 
         if (fx > fmax) {
+            if (debug) {
+                cat("temp:", t, ", max:", fmax, ", argmax:", argmax, "\n")
+            }
+
             argmax <- x
             fmax <- fx
         }
 
         if (exp((fx - fx0) / t) > runif(1)) {
+            if (debug) {
+                cat("temp:", t, ", val:", fx, ", x:", x, "\n")
+            }
             x0 <- x
             fx0 <- fx
+            trace_x <- rbind(trace_x, x)
+            trace_fx <- c(trace_fx, fx)
         }
-        t_init <- t_init * alpha
+        if (iter %% iter_per_temp == 0) {
+            t <- t * alpha
+        }
     }
 
-    list(argmax = argmax, max = fmax)
+    list(argmax = argmax, max = fmax, trace_x = trace_x, trace_fx = trace_fx)
 }
 
 #' mle_optim
@@ -66,13 +113,17 @@ sim_anneal <- function(f, x0, t_init = 100, t_end = 1e-3,
 #' @export
 mle_optim <- function(res) {
     sigma <- NULL
+    info <- NULL
     if (!is.null(res$hessian))
-        sigma <- ginv(-res$hessian)
+    {
+        info <- -res$hessian
+        sigma <- ginv(info)
+    }
     theta.hat <- mle(theta.hat=res$par,
         loglike=res$value,
         score=NULL,
         sigma=sigma,
-        info=-res$hessian,
+        info=info,
         obs=NULL,
         nobs=NULL,
         superclasses=c("mle_optim","numerical_mle"))
@@ -84,8 +135,11 @@ mle_optim <- function(res) {
     theta.hat
 }
 
-
 #' mle_local_search
+#' 
+#' This assumes the MLE is an interior point and that you have provided
+#' an initial guess `theta0` that is near it. Use a global search method
+#' like `sim_anneal` to find a good initial guess.
 #' 
 #' General local search method. It doesn't do anything fancy, but it is
 #' more easily tweakable than `optim` in the `stats` package and can be
@@ -101,18 +155,33 @@ mle_optim <- function(res) {
 #'            `R^p -> {TRUE,FALSE}` for the log-likelihood function `l`
 #' @param eta numeric, learning rate, defaults to 1
 #' @param max_iter integer, maximum number of iterations
+#' @param max_iter_ls integer, maximum number of iterations for the line search
 #' @param eps numeric, tolerance for convergence
+#' @param r numeric, backtracking line search parameter, defaults to 0.8
 #' @param proj function, projection function of type `R^p -> R^p`
 #' @param tol function, tolerance function of type `R^p -> R`
 #' @param debug logical, output debugging information if `TRUE`;
 #'              defaults to `FALSE`
+#' @param trace logical, if `TRUE` store the path of the search in the
+#'             `trace` attribute of the output
 #' @export
-mle_local_search <- function(ll, theta0, dir, eps = 1e-5, proj = NULL,
-    sup = NULL, tol = NULL, eta = 1, max_iter = 0L, debug = FALSE) {
-    stopifnot(eps > 0)
-    stopifnot(eta > 0)
-    stopifnot(is.function(ll))
-    stopifnot(is.function(dir))
+mle_local_search <- function(
+    ll,
+    theta0,
+    dir,
+    eps = 1e-5,
+    proj = NULL,
+    sup = NULL,
+    tol = NULL,
+    eta = 1,
+    r = 0.8,
+    max_iter = 1000L,
+    max_iter_ls = 1000L,
+    debug = FALSE,
+    trace = FALSE) {
+    stopifnot(eps > 0, eps < 1, eta > 0, r > 0, r < 1,
+        max_iter > 0, max_iter_ls > 0,
+        is.function(ll), is.function(dir))
     if (is.null(proj)) proj <- function(theta) theta
     stopifnot(is.function(proj))
     if (is.null(tol)) tol <- function(dtheta) abs(max(dtheta))
@@ -122,32 +191,38 @@ mle_local_search <- function(ll, theta0, dir, eps = 1e-5, proj = NULL,
 
     theta <- theta0
     max <- ll(theta0)
+    trace_out <- list()
 
     for (iter in 1:max_iter)
     {
         d <- dir(theta0)
         if (debug) {
-            cat("dir =", d, "theta0 =", theta0, ", loglike =", ll(theta0), "\n")
+            cat("dir =", d, "theta0 =", theta0, ", loglike =", max, "\n")
         }
 
         # we use backtracking for an approximate line search
-        eta0 <- eta
         res <- backtracking_line_search(
             f = ll,
             dir = d,
             x0 = theta0,
-            max_step = eta0,
+            max_step = eta,
             sup = sup,
             fix = proj,
             debug = debug,
-            r = 0.8
+            r = 0.8,
+            max_iter = max_iter_ls,
         )
 
-        if (res$found_better) {
-            theta <- res$argmax
-            max <- res$max
-        }
+        theta <- res$argmax
+        max <- res$max
 
+        if (!res$found_better) {
+            warning("backtracking line search failed to find a better solution")
+            break
+        }
+        if (trace) {
+            trace_out <- c(trace_out, list(theta))
+        }
         if (tol(theta - theta0) < eps) {
             break
         }
@@ -155,12 +230,15 @@ mle_local_search <- function(ll, theta0, dir, eps = 1e-5, proj = NULL,
     }
 
     theta.hat <- mle(
-        theta.hat = theta1,
+        theta.hat = theta,
         loglike = max,
         superclasses = c("mle_local_search","numerical_mle"))
     theta.hat$iter <- iter
     theta.hat$converged <- iter < max_iter
     theta.hat$learning_rate <- eta
+    if (trace) {
+        theta.hat$trace <- trace_out
+    }
 
     theta.hat
 }
@@ -194,7 +272,8 @@ mle_newton_raphson <- function(ll,
                                proj = NULL,
                                tol = NULL,
                                debug = FALSE,
-                               inverted = FALSE) {
+                               inverted = FALSE,
+                               trace = FALSE) {
     V <- NULL
     if (inverted) {
         V <- info
@@ -214,7 +293,8 @@ mle_newton_raphson <- function(ll,
         proj = proj,
         tol = tol,
         max_iter = max_iter,
-        debug = debug)
+        debug = debug,
+        trace = trace)
     class(res) <- c("mle_newton_raphson", class(res))
     res$score <- score(res$theta.hat)
     res$sigma <- V(res$theta.hat)
@@ -222,6 +302,8 @@ mle_newton_raphson <- function(ll,
     res
 }
 
+#' mle_gradient_ascent
+#' 
 #' MLE method using gradient ascent
 #'
 #' @param theta0 initial guess of theta with `p` components
@@ -248,7 +330,8 @@ mle_gradient_ascent <- function(ll,
                                 tol = NULL,
                                 proj = NULL,
                                 max_iter = 0L,
-                                debug = FALSE) {
+                                debug = FALSE,
+                                trace = FALSE) {
     res <- mle_local_search(
         ll = ll,
         theta0 = theta0,
@@ -260,7 +343,8 @@ mle_gradient_ascent <- function(ll,
         r = r,
         proj = proj,
         max_iter = max_iter,
-        debug = debug)
+        debug = debug,
+        trace = trace)
     class(res) <- c("mle_gradient_ascent", class(res))
     res$info <- -hessian(ll, res$theta.hat)
     res$score <- score(res$theta.hat)

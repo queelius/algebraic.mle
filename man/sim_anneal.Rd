@@ -10,13 +10,17 @@ sim_anneal(
   t_init = 100,
   t_end = 0.001,
   alpha = 0.99,
+  iter_per_temp = 100,
   sup = function(x) TRUE,
   neigh = function(x) x + rnorm(length(x)),
-  max_iter = NULL
+  max_iter = NULL,
+  debug = FALSE,
+  trace = FALSE,
+  ...
 )
 }
 \arguments{
-\item{f}{Objective function to maximize}
+\item{f}{Objective function to maximize, `f : R^d -> R`}
 
 \item{x0}{Initial guess}
 
@@ -26,19 +30,36 @@ sim_anneal(
 
 \item{alpha}{Cooling factor}
 
+\item{iter_per_temp}{Number of iterations per temperature}
+
 \item{sup}{Support function, returns TRUE if x is in the domain of f}
 
 \item{neigh}{Neighborhood function, returns a random neighbor of x}
 
 \item{max_iter}{Maximum number of iterations, used instead of t_end
 if not NULL, defaults to NULL}
+
+\item{debug}{If TRUE, print debugging information to the console}
+
+\item{trace}{If TRUE, track the history of positions and values}
+
+\item{...}{Additional arguments to neigh}
 }
 \value{
 list with best solution (argmax) and its corresponding
-        objective function value (max)
+        objective function value (max), and optionally trace_x and trace_fx
 }
 \description{
-This function implements the simulated annealing algorithm.
-It is mostly used to find a good starting point for a local
-optimization algorithm like gradient ascent.
+This function implements the simulated annealing algorithm,
+which is a global optimization algorithm that is useful for
+finding a good starting point for a local optimization algorithm.
+We do not return this as an MLE object because, to be a good
+estimate of the MLE, the gradient of `f` evaluated
+at its solution should be close to zero, assuming the MLE
+is interior to the domain of `f`. However, since this algorithm
+is not guided by gradient information, it is not sensitive to
+the gradient of `f` and instead only seeks to maximize `f`.
+}
+\details{
+This also works for discrete optimization problems.
 }

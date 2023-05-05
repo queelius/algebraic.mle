@@ -17,7 +17,8 @@ mle_newton_raphson(
   proj = NULL,
   tol = NULL,
   debug = FALSE,
-  inverted = FALSE
+  inverted = FALSE,
+  trace = FALSE
 )
 }
 \arguments{

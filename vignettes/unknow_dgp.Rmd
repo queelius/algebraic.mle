@@ -69,16 +69,16 @@ The simulation parameters are given by:
 library(tibble)
 library(stats)
 
-sim.n <- 58
+sim.n <- 27
 sim.err.sd <- 0.05
-sim.shape <- 5
+sim.shape <- 20
 sim.scale <- 3
 sim.theta = c(sim.shape,sim.scale)
-set.seed(1234)
+#set.seed(14234)
 ```
 
 We generate the data with the following R code:
-```{r cache=TRUE}
+```{r}
 sim.df <- tibble(lifetime=
   rweibull(n=sim.n, shape=sim.shape, scale=sim.scale) +
   rnorm(n=sim.n, mean=0, sd=sim.err.sd))
@@ -88,25 +88,6 @@ A few elements from the sample are given by:
 ```{r, echo=F}
 head(sim.df)
 ```
-
-A density plot of the DGP is given by:
-```{r, fig.align='center', echo=F, cache=T}
-dgp.density <- density(
-  rweibull(n=10000000,
-           shape=sim.shape,
-           scale=sim.scale) +
-  rnorm(n=10000000,
-        mean=0,
-        sd=sim.err.sd))
-
-plot(dgp.density,
-     main="Density of the DGP",
-     xlab="System Lifetime",
-     ylab="Density",
-     col="light blue",
-     lwd=2)
-```
-
 
 ## Visualizing the data
 Visualizing the data is a good first step in the analysis of the data.
@@ -144,8 +125,8 @@ suppose that we do not know the true distribution of the data.
 If we were only interested in, say, *prediction*, and we had a sufficiently
 large sample, we could use a non-parametric methods and "let the data speak for
 itself." However, if we are interested in inference (e.g., explaining the
-data) or the sample was small, then we need to make some assumptions about the
-data.
+data) or the sample was small, then we usually need to make some assumptions
+about the data.
 
 In this case, we will assume that the data is drawn from a parametric
 distribution. There are many well-known, named parametric distributions, e.g.,
@@ -155,74 +136,87 @@ to the data. However, note that since the normal distribution permits negative
 values to be realized, it may not be an appropriate choice. Still, since these
 are only approximations anyway, this may not be a big deal.
 
+## Maximum likelihood estimation
 First, let us fit the Weibull distribution by choosing appropriate shape
 $\lambda$ and scale $k$ parameters using the maximum likelihood estimator.
 
-To find the MLE of $\theta = (\lambda,k)'$, we need the log-likelihood function
-`l.wei`, which is given by the following R code:
+To find the MLE of $\theta = (\lambda,k)'$, we need the log-likelihood function,
+which is given by the following R code:
 ```{r}
-l.wei <- function(theta) sum(dweibull(sim.df$lifetime,
-                                      shape=theta[1],
-                                      scale=theta[2],
-                                      log=T))
+loglike <- function(theta) sum(dweibull(
+  sim.df$lifetime, shape=theta[1], scale=theta[2], log=T))
 ```
 
-An MLE is a point $(\hat\lambda,\hat k)'$ that is a maximum of the loglikelihood
-function, `l.wei`, over the parameter's domain. We may use the root-finding
-algorithm known as the Newton-Raphson method to find where the gradient of the
-log-likelihood function `l.wei` is zero.
+An MLE is a point $(\hat k,\hat\lambda)'$ that is a maximum of the loglikelihood
+function, `loglike`, over the support of the parameters. Typically, closed
+solutions aren't possible, so we normally use some sort of iterative technique.
+We don't go into the details here, but normally a local search method, like
+Newton-Raphson (which finds the value that makes the gradient of the loglikelihood
+function zero) is used. However, these local methods -- being local -- need a good
+starting point. 
 
-Here is the Newton-raphson code:
-```{r}
-newton_raphson <- function(f, df, x0, tol=1e-4, max_iter=100L)
+Here is an example of Newton-raphson code, which we will not use since it is not
+very efficient but is easy to understand:
+```{r eval=F}
+# f is the function we want to find the root of
+# Jf is the jocabian of f
+# x0 is the starting point
+newton_raphson <- function(f, df, x0)
 {
-  fx <- f(x0)
-  for (i in 1:max_iter)
+  eta <- 1 # learning rate, not too large to avoid overshooting
+           # not too small to avoid slow convergence
+  eps <- 1e-3 # close enough to zero to stop  
+  repeat
   {
-    if (max(abs(fx)) < tol) break
-    J <- df(x0)
-    d <- solve(J,fx)
-    x0 <- x0 - d
-    fx <- f(x0)
+    fx <- f(x0)        # new function value
+    if (max(abs(fx)) < eps) break # f(x) is close enough to zero
+    J <- Jf(x0)        # jacobian
+    d <- solve(J,fx)   # newton-raphson direction (pointing uphill)
+    x0 <- x0 + eta * d # newton-raphson update (going uphill)
   }
   x0
 }
 ```
 
-The Newton-Raphson function is conventionally used to minimize a function.
-We're trying to maximize the log-likelihood function `l.wei`, and so we're
-trying to minimize the negative of the log-likelihood. Thus, the gradient and
-Hessian is given by the negative of each.
-
-Here's the code:
-```{r}
-library(numDeriv) # for numerical derivatives/hessians
-newton_raphson(
-    f=function(theta) -grad(l.wei,theta),
-    df=function(theta) -hessian(l.wei,theta),
-    x0=sim.theta)
-```
-
-The gradient should be approximately zero at the MLE. The Hessian is also
-useful, since asymptotically the MLE follows a normal distribution with
-a mean given by the true parameter and a variance-covariance given by the
-negative inverse of the Hessian.
-
-We have implemented more precise and
-more efficient algorithms for computing the MLE of the Weibull
-distribution in the `algebraic.mle` R package.
-
-This function, `mle_weibull_shape_scale`, returns an `mle` object, which has an
-API that provides a number of conventient methods, such as estimating the
-variance-covariance matrix, confidence intervals, bias, and so on.
-Here's the code:
+We use a more efficient algorithm to compute the log-likelihood
+function for the Weibull distribution. The code is given below:
 ```{r}
 library(algebraic.mle)
-mle.wei <- mle_weibull_shape_scale(sim.df$lifetime)
+ll.wei <- weibull_shape_scale_loglike(sim.df$lifetime)
+```
+
+In the `algebraic.mle` package, we provide a precise
+and efficient local iterative algorithm, `mle_weibull_shape_scale`,
+for finding the MLE for the Weibull distribution.
+As a local search method, it needs a good starting point for the shape
+parameter $k$ close to the MLE, otherwise it may fail to converge
+to the MLE. To find a good starting point, we use a global search
+method, Simulated Annealing, which is implemented in the `optim` function
+in R. Here is the code for finding a good starting point:
+```{r}
+# find a good starting position
+k0 <- optim(
+  par=sim.theta,
+  fn=ll.wei,
+  method="SANN",
+  control=list(maxit=100000,fnscale=-1,temp=100))$par[1]
+```
+
+With this starting point in hand, we find an MLE with:
+```{r}
+library(algebraic.mle)
+mle.wei <- mle_weibull_shape_scale(sim.df$lifetime, k0=k0)
+```
+
+The function, `mle_weibull_shape_scale`, returns an `mle` object, which has an
+API that provides a number of conventient methods, such as estimating the
+variance-covariance matrix, confidence intervals, bias, and so on.
+Here's the code to print a summary of the MLE:
+```{r}
 summary(mle.wei)
 ```
 
-Let's do the same for the normal distribution. We will simply use the
+Let's do the same for the normal distribution. We will use the
 `mle_normal_mu_var` function from the `algebraic.mle` package:
 ```{r}
 mle.norm <- mle_normal_mu_var(sim.df$lifetime)
@@ -231,23 +225,34 @@ summary(mle.norm)
 
 Let's plot the pdfs of the Weibull and normal distributions:
 ```{r}
-plot(function(x) dweibull(x,shape=point(mle.wei)[1],scale=point(mle.wei)[2]),
-     xlim=c(1,4.5),ylim=c(0,.82),
-     main="Densities", col="green",
-     xlab="t", ylab="density")
+df1 <- data.frame(Value=rweibull(n=100000,
+    shape=point(mle.wei)[1],
+    scale=point(mle.wei)[2]), Group = "Weibull")
 
-# overlay the normal distribution pdf on the Weibull pdf plot
-curve(dnorm(x,mean=point(mle.norm)[1],sd=sqrt(point(mle.norm)[2])),
-      add=T,col="red")
+df2 <- data.frame(Value=rnorm(n=100000,
+    mean=point(mle.norm)[1],
+    sd=sqrt(point(mle.norm)[2])), Group = "Normal")
 
-lines(dgp.density, col="black")
+df3 <- data.frame(Value=rweibull(n=100000,shape=sim.shape,scale=sim.scale) +
+                        rnorm(n=100000,mean=0,sd=sim.err.sd), Group = "True")
+df <- rbind(df1, df2, df3)
+ggplot(df, aes(x = Value, fill = Group)) +
+  geom_density(alpha = 0.3, adjust = 1.5) +
+  scale_fill_manual(values = c("Weibull"="red", Normal="green", True="purple")) +
+  labs(title = "Density plot", x = "Value", y = "Density") +
+  theme_minimal()      
 ```
 
-In black, we have the true density. In green, we have the Weibull density.
-In red, we have the normal density. From the plot, it's hard to tell which
+In purple, we have the true density (DGP). In red, we have the Weibull density.
+In green, we have the normal density. From the plot, it's hard to tell which
 distribution is a better fit to the DGP.
 
-How do we choose between the Weibull and the normal distribution? We will
+Interestingly, the tails of the true distribution seem a bit heavier than the
+tails of the Weibull and Normal. This may suggest that a heavier-tailed model
+may be a better fit, such as the lognormal distribution, but we will not
+pursue this.
+
+How do we choose between the Weibull and Normal distributions? We will
 discuss this in the next section.
 
 ## Goodness of fit
@@ -313,15 +318,17 @@ A lower AIC value indicates a better fit. Thus, according to this measure,
 the Weibull distribution is the better fit.
 
 ## Conclusion
-In this post, we have shown how to fit a Weibull distribution to data.
-We have also shown how to fit a normal distribution to the same data.
+In this post, we have shown how to fit a Weibull and Normal distributions
+to a simulated dataset whose true distribution, while known, does not have
+a common name.
+
 We have shown how to compare the two models using the Cramer-von Mises
 test and the AIC measure of goodness of fit.
 
 We came to no definitive conclusion about which model is better, but
 the Weibull distribution has a larger $p$-value from the Cramer-von Mises
-test, and a lower AIC value. Thus, it may be the better fit, but we see that
-the true DGP is visually different from both the Weibull and the normal
+test, and a lower AIC value, which serves as some evidence that it is
+a better fit. We saw the true DGP is visually different from both the Weibull and the normal
 distributions. Notably, the DGP has longer tails than both, suggesting that
 an even better fit may be a long-tail distribution like the log-normal or
 the Pareto distribution.

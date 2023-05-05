@@ -17,7 +17,6 @@ we estimate the bias (say, using bootstrap)}
 \item{...}{additional arguments to pass}
 }
 \description{
-Computes the bias of an `mle` object assuming the large sample
-approximation is valid and the MLE regularity conditions are satisfied.
-In this case, the bias is zero (or zero vector).
+This is not a good estimate of the bias in general, but it's
+arguably better than returning `NULL`.
 }

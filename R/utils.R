@@ -66,36 +66,37 @@ confidence_intervals <- function(V, theta, parm = NULL, level = 0.95, ...) {
     ci
 }
 
-clip_step <- function(step, max_norm=1) {
+clip_step <- function(step, max_norm = 1) {
     step_norm <- sqrt(sum(step^2))
-    if (step_norm > max_norm)
+    if (step_norm > max_norm) {
         step <- step * max_norm / step_norm
+    }
     step
 }
 
-newton_raphson_l_bfgs_b <- function(
-        f, gr, x0, eps = 1e-5,
-        lower = -Inf, upper = Inf,
-        max_iter = 1000, ...)
-{
+newton_raphson_l_bfgs_b <- function(f, gr, x0, eps = 1e-5,
+                                    lower = -Inf, upper = Inf,
+                                    max_iter = 1000, ...) {
     optim(
         par = x0, fn = f, gr = gr,
         method = "L-BFGS-B",
         lower = lower, upper = upper,
         control = list(maxit = max_iter, pgtol = eps),
-        ...)
+        ...
+    )
 }
 
 backtracking_line_search <- function(
     f,
     dir,
     x0,
-    max_step = 1,
-    fix = NULL,
-    sup = function(x) TRUE,
-    debug = FALSE,
-    r = 0.5)
-{
+    max_step,
+    fix,
+    sup,
+    debug,
+    max_iter,
+    min_eta = 1e-8,
+    r) {
     norm <- function(x) sqrt(sum(x^2))
     d.norm <- norm(dir)
     stopifnot(d.norm > 0)
@@ -104,8 +105,10 @@ backtracking_line_search <- function(
     sol.max <- f(x0)
     sol.argmax <- x0
     eta <- max_step / d.norm
+    iter <- 0L
+    found_better <- FALSE
 
-    while (eta > 1e-8) {
+    while (eta >= min_eta && iter != max_iter) {
         x <- x0 + eta * dir
         if (debug) {
             cat("x = ", x, ", eta = ", eta, "\n")
@@ -124,7 +127,9 @@ backtracking_line_search <- function(
                 # adjust eta for the fixed x
                 x.fixed <- fix(x)
                 eta <- sqrt(sum((x.fixed - x.orig)^2))
-                stopifnot(norm(x.fixed-x.orig) <= max_step)
+                if (norm(x.fixed - x.orig) > max_step) {
+                    warning("fixed x yields a step size > max_step")
+                }
                 x <- x.fixed
             }
         }
@@ -137,59 +142,62 @@ backtracking_line_search <- function(
             if (!is.nan(fx) && fx > sol.max) {
                 sol.argmax <- x
                 sol.max <- fx
+                found_better <- TRUE
                 break
             }
         }
 
+        iter <- iter + 1L
         eta <- r * eta
     }
 
-    list(argmax = sol.argmax, max = sol.max, found_better = eta > 1e-10)
+    list(argmax = sol.argmax, max = sol.max,
+         found_better = found_better)
 }
 
 local_minimize_ls <- function(
-    f, step, x0, sup = function(x) all(x > 0),
-    max_iter = 1000L, eta = 1, eps = 1e-5)
-{
+    f, step, x0, sup = function(theta) TRUE,
+    max_iter = 1000L, eta = 1, eps = 1e-5) {
     x <- x0
     f1 <- f(x)
     iter <- 0L
-    convergence = F
+    convergence <- FALSE
     repeat {
         r <- eta
         d <- step(x0)
         f0 <- f(x0)
-        repeat
-        {
-            if (iter > max_iter)
+        repeat        {
+            if (iter > max_iter) {
                 break
+            }
             iter <- iter + 1L
             x <- x0 - r * d
-            if (sup(x))
-            {
+            if (sup(x)) {
                 f1 <- f(theta)
                 if (f1 <= f0) break
             }
             r <- r / 2
         }
 
-        if (max(abs(x0-x)) < eps)
-        {
-            convergence = T
+        if (max(abs(x0 - x)) < eps) {
+            convergence <- TRUE
             break
         }
-        if (iter > max_iter)
+        if (iter > max_iter) {
             break
+        }
 
         x0 <- x
     }
 
-    list(iter = iter, value = f1, par = x,
-         convergence = convergence)
+    list(
+        iter = iter, value = f1, par = x,
+        convergence = convergence
+    )
 }
 
-maximize_loglike_ls <- function(loglik, theta0, info, scr, eta = 1, clip = 1, max_iter = 10000L, eps = 1e-4)
-{
+maximize_loglike_ls <- function(loglik, theta0, info, scr, eta = 1,
+    clip = 1, max_iter = 10000L, eps = 1e-4, sup = function(theta) TRUE) {
     theta <- theta0
     l1 <- NULL
     iter <- 0L
@@ -198,30 +206,30 @@ maximize_loglike_ls <- function(loglik, theta0, info, scr, eta = 1, clip = 1, ma
         I <- info(theta0)
 
         # we start off with a max step size of ||d|| = eta
-        d <- clip_step(ginv(I) %*% scr(theta0), clip/eta)
+        d <- clip_step(ginv(I) %*% scr(theta0), clip / eta)
         l0 <- loglik(theta0)
-        repeat
-        {
-            if (iter > max_iter)
+        repeat        {
+            if (iter > max_iter) {
                 break
+            }
             iter <- iter + 1L
             theta <- theta0 + r * d
-            if (all(theta > 0))
-            {
+            if (sup(theta)) {
                 l1 <- loglik(theta)
-                if (l0 <= l1)
+                if (l0 <= l1) {
                     break
+                }
             }
             r <- r / 2
         }
 
-        if (max(abs(theta0-theta)) < eps)
-        {
-            convergence = TRUE
+        if (max(abs(theta0 - theta)) < eps) {
+            convergence <- TRUE
             break
         }
-        if (iter > max_iter)
+        if (iter > max_iter) {
             break
+        }
 
         theta0 <- theta
     }
@@ -229,33 +237,27 @@ maximize_loglike_ls <- function(loglik, theta0, info, scr, eta = 1, clip = 1, ma
     list(par = theta, value = l1, iter = iter, convergence = convergence)
 }
 
-grad_descent <- function(f, x0, df = NULL,
+grad_descent <- function(f, x0, df,
                          sup = function(theta) TRUE,
                          eps = 1e-10, lr = 1, debug = FALSE,
-                         max_iter = 10000L)
-{
-    if (is.null(df))
-        df <- function(x) numDeriv::grad(f,x)
-
+                         max_iter = 10000L) {
     iter <- 1L
     x1 <- NULL
     converged <- FALSE
-    while (iter != max_iter)
-    {
+    while (iter != max_iter) {
         f0 <- f(x0)
         g0 <- df(x0)
-        if (debug)
+        if (debug) {
             cat("iter = ", iter, ", x0 = ", x0, ", f(x0) = ", f0, "\n")
+        }
         eta <- lr
         good <- FALSE
 
         x1 <- x0
-        while (iter != max_iter)
-        {
+        while (iter != max_iter) {
             iter <- iter + 1L
             x <- x0 - eta * g0
-            if (sup(x) && f(x) <= f0)
-            {
+            if (sup(x) && f(x) <= f0) {
                 x1 <- x
                 good <- TRUE
                 break
@@ -263,15 +265,15 @@ grad_descent <- function(f, x0, df = NULL,
             eta <- eta / 2
         }
 
-        if (!good)
+        if (!good) {
             break
+        }
 
-        if (max(abs(x1-x0)) < eps)
-        {
+        if (max(abs(x1 - x0)) < eps) {
             converged <- TRUE
             break
         }
         x0 <- x1
     }
-    return(list(param=x1,iter=iter,converged=converged))
+    return(list(param = x1, iter = iter, converged = converged))
 }

@@ -99,7 +99,9 @@ loglike.mle <- function(x, ...) x$loglike
 #' @importFrom stats confint
 #' @export
 confint.mle <- function(object, parm = NULL, level = .95, ...) {
+    stopifnot(is.numeric(level), level >= 0, level <= 1)
     V <- vcov(object, ...)
+    if (is.null(V)) stop("No variance-covariance matrix available.")
     if (is.matrix(V)) {
         V <- diag(V)
     }
@@ -145,6 +147,8 @@ confint.mle <- function(object, parm = NULL, level = .95, ...) {
 #'
 #' @param x the `mle` object to create sampler for
 #' @param ... additional arguments to pass
+#' @importFrom stats rnorm
+#' @importFrom mvtnorm rmvnorm
 #' @export
 sampler.mle <- function(x, ...) {
     V <- vcov(x)
@@ -236,18 +240,19 @@ print.summary_mle <- function(object, ...) {
     cat("Maximum likelihood estimator of type", class(object$x)[1], "is normally distributed.\n")
     cat("The estimates of the parameters are given by:\n")
     print(point(object$x))
-    cat("The fisher information matrix (FIM) is given by:\n")
-    print(fim(object$x))
-    cat("The variance-covariance matrix of the estimator is given by:\n")
-    print(vcov(object$x))
-    cat("The asymptotic 95% confidence interval of the parameters are given by:\n")
-    print(confint(object$x))
-    cat("The bias of the estimator is given by:\n")
-    print(bias(object$x))
+
+    SE <- se(object$x)
+    if (!is.null(SE))
+    {
+        cat("The standard error is ", SE, ".\n")        
+        cat("The asymptotic 95% confidence interval of the parameters are given by:\n")
+        print(confint(object$x))
+    }
     cat("The MSE of the estimator is ", mse(object$x), ".\n")
-    cat("The log-likelihood is ", loglike(object$x), ".\n")
-    cat("The AIC is ", aic(object$x), ".\n")
-    cat("The standard error is ", se(object$x), ".\n")
+    if (!is.null(loglike(object$x))) {
+        cat("The log-likelihood is ", loglike(object$x), ".\n")
+        cat("The AIC is ", aic(object$x), ".\n")
+    }
 }
 
 #' Function for obtaining an estimate of the standard error of the MLE
@@ -257,7 +262,9 @@ print.summary_mle <- function(object, ...) {
 #' @param ... pass additional arguments
 #' @export
 se.mle <- function(object, ...) {
-    sqrt(diag(as.matrix(vcov(object, ...))))
+    V <- vcov(object, ...)
+    if (is.null(V)) return(NULL)
+    sqrt(diag(as.matrix(V)))
 }
 
 #' Determine if an object `x` is an `mle` object.
@@ -269,23 +276,18 @@ is_mle <- function(x) {
 }
 
 #' Function for obtaining sample points for an `mle` object that is within
-#' the `p`-probability region.the number of observations in the sample used by
-#' an MLE object `x`.
+#' the `p`-probability region.
 #'
 #' @param n the sample size
 #' @param x the `mle` object
 #' @param p the probability region
 #'
-#' @importFrom stats qchisq
-#' @importFrom stats mahalanobis
+#' @importFrom stats qchisq mahalanobis
 #' @export
 sample_mle_region <- function(n, x, p = .95) {
-    stopifnot(p > 0.0 && p <= 1.0)
-    stopifnot(n > 1L)
-    stopifnot(is_mle(x))
-
+    stopifnot(p > 0.0 && p <= 1.0, n > 0, is_mle(x))
     k <- nparams(x)
-    crit <- stats::qchisq(p, k)
+    crit <- qchisq(p, k)
     nfo <- fim(x)
     mu <- point(x)
 
@@ -294,7 +296,7 @@ sample_mle_region <- function(n, x, p = .95) {
     data <- matrix(nrow = n, ncol = k)
     while (i < n) {
         x <- samp(1)
-        d <- stats::mahalanobis(x, center = mu, cov = nfo, inverted = T)
+        d <- mahalanobis(x, center = mu, cov = nfo, inverted = T)
         if (d <= crit) {
             i <- i + 1L
             data[i, ] <- x
@@ -312,6 +314,11 @@ sample_mle_region <- function(n, x, p = .95) {
 #'
 #' @export
 orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
+    I <- fim(x, ...)
+    if(is.null(I)) {
+        return(NULL)
+    }
+
     abs(fim(x, ...)) <= tol
 }
 
@@ -332,6 +339,9 @@ score.mle <- function(x, ...) {
 #' Computes the bias of an `mle` object assuming the large sample
 #' approximation is valid and the MLE regularity conditions are satisfied.
 #' In this case, the bias is zero (or zero vector).
+#' 
+#' This is not a good estimate of the bias in general, but it's
+#' arguably better than returning `NULL`.
 #'
 #' @param x the `mle` object to compute the bias of.
 #' @param par true parameter value. normally, unknown (NULL), in which case

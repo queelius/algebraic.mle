@@ -3,8 +3,7 @@
 \name{sample_mle_region}
 \alias{sample_mle_region}
 \title{Function for obtaining sample points for an `mle` object that is within
-the `p`-probability region.the number of observations in the sample used by
-an MLE object `x`.}
+the `p`-probability region.}
 \usage{
 sample_mle_region(n, x, p = 0.95)
 }
@@ -17,6 +16,5 @@ sample_mle_region(n, x, p = 0.95)
 }
 \description{
 Function for obtaining sample points for an `mle` object that is within
-the `p`-probability region.the number of observations in the sample used by
-an MLE object `x`.
+the `p`-probability region.
 }

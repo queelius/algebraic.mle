@@ -13,8 +13,11 @@ mle_local_search(
   sup = NULL,
   tol = NULL,
   eta = 1,
-  max_iter = 0L,
-  debug = FALSE
+  r = 0.8,
+  max_iter = 1000L,
+  max_iter_ls = 1000L,
+  debug = FALSE,
+  trace = FALSE
 )
 }
 \arguments{
@@ -33,14 +36,26 @@ mle_local_search(
 
 \item{eta}{numeric, learning rate, defaults to 1}
 
+\item{r}{numeric, backtracking line search parameter, defaults to 0.8}
+
 \item{max_iter}{integer, maximum number of iterations}
+
+\item{max_iter_ls}{integer, maximum number of iterations for the line search}
 
 \item{debug}{logical, output debugging information if `TRUE`;
 defaults to `FALSE`}
 
+\item{trace}{logical, if `TRUE` store the path of the search in the
+`trace` attribute of the output}
+
 \item{l}{function, log-likelihood function of type `R^p -> R`}
 }
 \description{
+This assumes the MLE is an interior point and that you have provided
+an initial guess `theta0` that is near it. Use a global search method
+like `sim_anneal` to find a good initial guess.
+}
+\details{
 General local search method. It doesn't do anything fancy, but it is
 more easily tweakable than `optim` in the `stats` package and can be
 made to generate results when `optim` fails.
