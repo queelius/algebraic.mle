@@ -1,5 +1,5 @@
 #' sim_anneal
-#' 
+#'
 #' This function implements the simulated annealing algorithm,
 #' which is a global optimization algorithm that is useful for
 #' finding a good starting point for a local optimization algorithm.
@@ -145,16 +145,16 @@ mle_optim <- function(sol) {
 }
 
 #' mle_local_search
-#' 
+#'
 #' This assumes the MLE is an interior point and that you have provided
 #' an initial guess `theta0` that is near it. Use a global search method
 #' like `sim_anneal` to find a good initial guess.
-#' 
+#'
 #' @param ll function, log-likelihood function
 #' @param theta0 numeric, initial guess
 #' @param dir function, promising direction function
 #' @param options list, options for the local search, see function description.
-#' @describeIn options Optional Arguments
+#' @describeIn mle_local_search options
 #' @field sup function, domain of support for log-likelihood
 #' @field eta numeric, learning rate, defaults to 1
 #' @field max_iter integer, maximum number of iterations, defaults to 1000

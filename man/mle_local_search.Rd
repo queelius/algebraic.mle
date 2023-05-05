@@ -26,7 +26,7 @@ like `sim_anneal` to find a good initial guess.
 }
 \section{Functions}{
 \itemize{
-\item \code{mle_local_search()}: Optional Arguments
+\item \code{mle_local_search()}: options
 
 }}
 \section{Fields}{
