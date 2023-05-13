@@ -8,9 +8,9 @@ library(stats)
 theta <- c(100,2)
 n <- 17
 data <- rweibull(n,shape=theta[1],scale=theta[2])
-loglik <- weibull_shape_scale_loglike(data)
-scr <- weibull_shape_scale_score(data)
-nfo <- weibull_shape_scale_fim(data)
+loglik <- weibull_loglike(data)
+scr <- weibull_score(data)
+nfo <- weibull_fim(data)
 
 theta0 <- c(5,15)
 
@@ -19,48 +19,118 @@ sup.weibull <- function(theta) {
 }
 
 theta.start <- sim_anneal(
-    f=loglik,
-    x0=theta0,
-    options=list(
+    fn=loglik,
+    par=theta0,
+    control=list(
         t_init=100,
-        t_end=1e-4,
-        alpha=0.99,
-        iter_per_temp=200,
+        t_end=1e-6,
+        fnscale=-1,
+        alpha=0.95,
+        it_per_temp=100,
+        REPORT=200L,
+        maxit=100000L,
         sup=sup.weibull,
-        debug=FALSE,
+        debug=1L,
         trace=TRUE))
 
-logliks <- apply(theta.start$path,1,loglik)
+theta.start$par
+# Load required library
+library(ggplot2)
+
+
+m <- 2
+# Convert the matrix to a data frame
+data_df <- as_tibble(theta.start$trace_info)
+data_df$best <- as.factor(data_df$best)
+# Reshape data for ggplot2
+library(reshape2)
+long_data <- melt(data_df,
+    id.vars = c("it", "value", "temp", "best"),
+    variable.name = "parameter",
+    value.name = "value_par")
+
+# Convergence plot (1)
+convergence_plot <- ggplot(data_df, aes(x = it, y = value, color = best)) +
+  geom_line() +
+  labs(title = "Convergence Plot",
+       x = "Iteration",
+       y = "Best Function Value") +
+  scale_color_discrete(name = "Best Value", labels = c("No", "Yes"))
+
+print(convergence_plot)
+
+# Parameter traces plot (3)
+parameter_traces_plot <- ggplot(long_data, aes(x = it, y = value_par, color = best)) +
+  geom_line() +
+  facet_wrap(~parameter, ncol = m, scales = "free_y") +
+  labs(title = "Parameter Traces",
+       x = "Iteration",
+       y = "Parameter Value") +
+  scale_color_discrete(name = "Best Value", labels = c("No", "Yes"))
+
+print(parameter_traces_plot)
+
+
+logliks <- -theta.start$trace_info[,"value"]
+iters <- theta.start$trace_info[,"it"]
 plot(logliks,type="l",xlab="iteration",ylab="log-likelihood")
+
+theta.start$trace_info[theta.start$trace_info[,"best"] == 1,]
 
 theta.mle <- mle_weibull_shape_scale(
     data,
-    k0=theta.start$argmax[1],
-    eps=1e-10)
+    k0=theta.start$par[1],
+    eps=1e-11)
 
-theta.nr <- mle_newton_raphson(
-    ll=loglik,
-    theta0=theta.start$argmax,
-    score=scr,
-    info=nfo,
-    options=list(
-        sup=sup.weibull,
-        rel_tol=1e-12,
-        eta=.1,
-        trace=TRUE))
+theta.nr <- newton_raphson(
+    par=theta.start$par,
+    fn=loglik,
+    gr=scr,
+    hess=function(x) numDeriv::hessian(loglik, x,
+        method.args=list(eps=1e-5, d=0.00001, r=6)),
+    control=list(
+        eta=1,
+        abs_tol=1e-18,
+        rel_tol=1e-18,
+        fnscale=-1,
+        proj=function(x) pmax(x,1e-3),
+        trace=FALSE,
+        fn=loglik,
+        r=.5,
+        debug=1L,
+        REPORT=1000L,
+        trace_info_size_inc=10000L,
+        inverted=FALSE,
+        maxit=100000))
 
-trace.ll <- apply(theta.nr$trace,1,loglik)
-plot(trace.ll,type="l")
+theta.start$par
+-theta.nr$value < theta.optim$value
+point(theta.mle)
+theta.optim
+theta.nr
 
-point(theta.nr)
-mle_local_search
 
-theta.optim <- mle_optim(optim(
-    par=theta.start$argmax,
+l1 <- weibull_loglike(data)
+scr1 <- weibull_score(data)
+par <- c(1,2)
+weibull_fim(data)(par)
+weibull_fim_2(data)(par)
+hessian(l1, par, method.args=list(eps=1e-5, d=0.00001, r=6))
+weibull_score(data)(par)
+grad(l1, par)
+l1(par)
+-sum(dweibull(data,shape=par[1],scale=par[2],log=TRUE))
+
+theta.optim <- optim(
+    par=theta.start$par,
     fn=loglik,
     gr=scr,      
     hessian=TRUE,
-    control=list(fnscale=-1,reltol=1e-16, maxit=2000000)))
+    control=list(fnscale=-1,reltol=1e-16, maxit=2000000))
+par.mle <- theta.optim$par
+-weibull_fim(data)(par.mle)
+
+
 
 
 

@@ -1,3 +1,5 @@
+
+
 entropy <- function(p) {
     -sum(p * log2(p))
 }
@@ -154,6 +156,7 @@ backtracking_line_search <- function(
     list(argmax = sol.argmax, max = sol.max,
          found_better = found_better)
 }
+
 
 local_minimize_ls <- function(
     f, step, x0, sup = function(theta) TRUE,

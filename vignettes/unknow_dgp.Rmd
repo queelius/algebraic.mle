@@ -182,77 +182,126 @@ We use a more efficient algorithm to compute the log-likelihood
 function for the Weibull distribution. The code is given below:
 ```{r}
 library(algebraic.mle)
-ll.wei <- weibull_shape_scale_loglike(sim.df$lifetime)
+ll.wei <- weibull_loglike(sim.df$lifetime)
 ```
 
 ### Numerical considerations
-In the `algebraic.mle` package, we provide a precise
-and efficient local iterative algorithm, `mle_weibull_shape_scale`,
-for finding the MLE for the Weibull distribution.
 
-As a local search method, it needs a good starting point for the shape
-parameter $k$ close to the MLE, otherwise it may fail to converge
-to the MLE.
-
-To find a good starting point, we use a global search
-method, Simulated Annealing, implemented by `sim_anneal` function.
-Here is the code for finding a good starting point:
+Newton-Raphson and other local search methods need a good starting point 
+(that is already close to the MLE) to converge to the MLE. To find a good
+starting point, we use a global search method, Simulated Annealing, implemented
+by `sim_anneal` function. Here is the code for finding a good starting point:
 ```{r}
 # find a good starting position
 start <- sim_anneal(
-  f=ll.wei,
-  x0=sim.theta,
-  options=list(
-    t_init=100,
-    t_end=1e-4,
-    alpha=0.99,
-    iter_per_temp=200,
-    sup=function(theta) all(theta > 0),
-    trace=TRUE))
-k0 <- start$argmax[1]
-cat("initial guess for k0 =",k0,"\n")
+    fn = ll.wei,
+    par = sim.theta,
+    control = list(
+        t_init=100,
+        t_end=.1,
+        fnscale=-1,
+        it_per_temp=20,
+        maxit=10000L,
+        sup=function(theta) all(theta > 0),
+        trace=TRUE))
+cat("initial guess (k0,lambda0)' = (", start$par, ")'.\n")
 ```
 
 Let's take a look at some plots for the simulated annealing algorithm:
 ```{r, fig.align='center', fig.height=4, fig.width=6, echo=F}
-loglikes <- apply(start$path,1,ll.wei)
-par(mfrow=c(1,3))
-plot(loglikes, type="l",
-  main="log-likelihood vs iteration",
-  xlab="iteration", ylab="log-likelihood")
-plot(start$path[,1], start$path[,2],
-  type="p", main="exploration of support",
-  xlab="shape (k)", ylab="scale (lambda)")
-plot(start$path[,1],
-  main="shape (k) vs iteration",
-  xlab="iteration", ylab="shape (k)")
-abline(h=sim.shape, col="red")
+library(ggplot2)
+m <- 2
+# Convert the matrix to a data frame
+data_df <- as_tibble(start$trace_info)
+data_df$best <- as.factor(data_df$best)
+# Reshape data for ggplot2
+library(reshape2)
+long_data <- melt(data_df,
+    id.vars = c("it", "value", "temp", "best"),
+    variable.name = "parameter",
+    value.name = "value_par")
+
+# Convergence plot (1)
+convergence_plot <- ggplot(data_df, aes(x = it, y = value, color = best)) +
+  geom_line() +
+  labs(title = "Convergence Plot",
+       x = "Iteration",
+       y = "Best Function Value") +
+  scale_color_discrete(name = "Best Value", labels = c("No", "Yes"))
+
+print(convergence_plot)
+
+# Parameter traces plot (3)
+parameter_traces_plot <- ggplot(long_data, aes(x = it, y = value_par,
+  color = best)) +
+  geom_line() +
+  facet_wrap(~parameter, ncol = m, scales = "free_y") +
+  labs(title = "Parameter Traces",
+       x = "Iteration",
+       y = "Parameter Value") +
+  scale_color_discrete(name = "Best Value", labels = c("No", "Yes"))
+
+print(parameter_traces_plot)
 ```
 
-In the first plot, we see the history of log-likelihood values as the
-algorithm progresses. The second plot shows the path of the algorithm
-as it explores the support of the parameters. The third plot shows the
-shape parameter, $k$, as the algorithm progresses. The red line is the
-true value of $k$.
+In the convergence plot, we see the history of log-likelihood values as the
+algorithm progresses. The left parameter trace plot shows the best
+value for the shape parameter, $k$, as the algorithm progresses, and the right
+plot does the same for the $\lambda$ parameter.
 
 With this starting point in hand, we find an MLE with:
 ```{r}
 library(algebraic.mle)
-mle.wei <- mle_weibull_shape_scale(sim.df$lifetime, k0=k0)
+score.wei <- weibull_score(sim.df$lifetime)
+info.wei <- weibull_fim(sim.df$lifetime)
+mle.wei.newton <- newton_raphson(
+    par=start$par,
+    fn=ll.wei,
+    gr=score.wei,
+    hess=function(x) -info.wei(x),
+    control=list(
+        fnscale=-1,
+        eta=.1,
+        trace=TRUE,
+        maxit=30L,
+        proj=function(x) pmax(x,1e-3)))
+
+print(mle.wei.newton$par)
+print(mle.wei.newton$value)
 ```
 
-The function, `mle_weibull_shape_scale`, returns an `mle` object, which has an
+The `trace_info` field of the `mle` object contains the history of the
+log-likelihood values as the algorithm progresses. Here is the code to plot
+the log-likelihood values as the algorithm progresses:
+```{r fig.align='center', fig.height=4, fig.width=6, echo=F}
+loglikes <- -mle.wei.newton$trace_info[,"value"]
+plot(loglikes, type="l", xlab="iteration", ylab="log-likelihood")
+```
+We see that it converges quite quickly to the MLE. (We slowed down the algorithm
+by setting the learning rate `eta=.1` to make the plot more readable. Otherwise,
+it only needed 2 iterations to converge.)
+
+In the `algebraic.mle` package, we provide a precise and efficient local
+search method, `mle_weibull`, for finding the MLE. It only needs a starting
+point for the shape parameter $k$. Here is the code:
+```{r}
+k0 <- start$par[1]
+cat("initial guess for k0 =", k0, "\n")
+mle.wei <- mle_weibull(sim.df$lifetime, k0=k0)
+```
+
+The function, `mle_weibull`, returns an `mle` object that has an
 API that provides a number of conventient methods, such as estimating the
 variance-covariance matrix, confidence intervals, bias, and so on.
-Here's the code to print a summary of the MLE:
+Here's the code to print a summary of the MLE object:
 ```{r}
 summary(mle.wei)
 ```
 
 Let's do the same for the normal distribution. We will use the
-`mle_normal_mu_var` function from the `algebraic.mle` package:
+`mle_normal` function from the `algebraic.mle` package:
 ```{r}
-mle.norm <- mle_normal_mu_var(sim.df$lifetime)
+mle.norm <- mle_normal(sim.df$lifetime)
 summary(mle.norm)
 ```
 

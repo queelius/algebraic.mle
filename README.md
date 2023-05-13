@@ -39,28 +39,19 @@ model to exponential data.
 ``` r
 library(algebraic.mle)
 # Fit an exponential model to exponential DGP (data generating process)
-rate.hat <- mle_exp_rate(rexp(100, 1))
+rate.hat <- mle_exp(rexp(100, 1))
 summary(rate.hat)
-#> Maximum likelihood estimator of type mle_exp_rate is normally distributed.
+#> Maximum likelihood estimator of type mle_exp is normally distributed.
 #> The estimates of the parameters are given by:
-#>      rate 
-#> 0.9584637 
-#> The fisher information matrix (FIM) is given by:
 #>     rate 
-#> 108.8551 
-#> The variance-covariance matrix of the estimator is given by:
-#>        rate 
-#> 0.009186526 
+#> 1.006453 
+#> The standard error is  0.1006453 .
 #> The asymptotic 95% confidence interval of the parameters are given by:
 #>           2.5%    97.5%
-#> rate 0.8008104 1.116117
-#> The bias of the estimator is given by:
-#>  bias(rate) 
-#> 0.009681451 
-#> The MSE of the estimator is  9.37305e-05 .
-#> The log-likelihood is  -104.2424 .
-#> The AIC is  210.4847 .
-#> The standard error is  0.09584637 .
+#> rate 0.8409059 1.171999
+#> The MSE of the estimator is  0.0001033514 .
+#> The log-likelihood is  -99.35681 .
+#> The AIC is  200.7136 .
 ```
 
 You can see tutorials for more examples of using the package in the

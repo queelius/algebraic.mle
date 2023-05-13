@@ -47,7 +47,7 @@ to exponential data.
 ```{r}
 library(algebraic.mle)
 # Fit an exponential model to exponential DGP (data generating process)
-rate.hat <- mle_exp_rate(rexp(100, 1))
+rate.hat <- mle_exp(rexp(100, 1))
 summary(rate.hat)
 ```
 

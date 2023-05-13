@@ -14,6 +14,10 @@ case we estimate the bias}
 
 \item{...}{pass additional arguments}
 }
+\value{
+The bias of the estimator. The return type depends on the specific
+        method.
+}
 \description{
 Computes the bias of an estimator object.
 }

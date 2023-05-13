@@ -104,19 +104,10 @@ using the `...` argument to `mle_boot`.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">solver</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">ind</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="fu"><a href="mle_normal_mu_var.html">mle_normal_mu_var</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="fu">mle_normal_mu_var</span><span class="op">(</span><span class="va">data</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="fu">mle_boot</span><span class="op">(</span><span class="va">solver</span>, <span class="va">data</span>, <span class="fl">1000</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maximum likelihood estimator of type mle_boot is normally distributed.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The estimates of the parameters are given by:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mu        var </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.2498193  0.8791850 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The standard error is  0.2413158 0.2888966 .</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The asymptotic 95% confidence interval of the parameters are given by:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           2.5%     97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu  -0.6467485 0.1471099</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> var  0.4039923 1.3543776</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The MSE of the estimator is  0.1452189 .</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in mle_normal_mu_var(data[ind]):</span> could not find function "mle_normal_mu_var"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

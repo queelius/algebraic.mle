@@ -85,6 +85,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/cramer.test.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/exp_fim.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/exp_loglike.html</loc>
   </url>
   <url>
@@ -95,6 +98,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/exp_rate_score.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/exp_score.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/fim.html</loc>
@@ -169,6 +175,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_normal_mu_var.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/mle_numerical.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle_optim.html</loc>
   </url>
   <url>
@@ -196,6 +205,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/mse.mle_boot.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/newton_raphson.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/nobs.boot.html</loc>
   </url>
   <url>
@@ -203,6 +215,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/nobs.mle_boot.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/normal_fim.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/normal_fisher_info.html</loc>
@@ -365,6 +380,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/vcov.mle_boot.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/weibull_fim.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/weibull_fisher_info.html</loc>

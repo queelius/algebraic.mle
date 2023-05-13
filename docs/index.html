@@ -92,28 +92,19 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
 <span><span class="co"># Fit an exponential model to exponential DGP (data generating process)</span></span>
-<span><span class="va">rate.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_exp_rate.html">mle_exp_rate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">rate.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Maximum likelihood estimator of type mle_exp_rate is normally distributed.</span></span>
+<span><span class="co">#&gt; Maximum likelihood estimator of type mle_exp is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
-<span><span class="co">#&gt;      rate </span></span>
-<span><span class="co">#&gt; 0.9584637 </span></span>
-<span><span class="co">#&gt; The fisher information matrix (FIM) is given by:</span></span>
 <span><span class="co">#&gt;     rate </span></span>
-<span><span class="co">#&gt; 108.8551 </span></span>
-<span><span class="co">#&gt; The variance-covariance matrix of the estimator is given by:</span></span>
-<span><span class="co">#&gt;        rate </span></span>
-<span><span class="co">#&gt; 0.009186526 </span></span>
+<span><span class="co">#&gt; 1.006453 </span></span>
+<span><span class="co">#&gt; The standard error is  0.1006453 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
 <span><span class="co">#&gt;           2.5%    97.5%</span></span>
-<span><span class="co">#&gt; rate 0.8008104 1.116117</span></span>
-<span><span class="co">#&gt; The bias of the estimator is given by:</span></span>
-<span><span class="co">#&gt;  bias(rate) </span></span>
-<span><span class="co">#&gt; 0.009681451 </span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  9.37305e-05 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  -104.2424 .</span></span>
-<span><span class="co">#&gt; The AIC is  210.4847 .</span></span>
-<span><span class="co">#&gt; The standard error is  0.09584637 .</span></span></code></pre></div>
+<span><span class="co">#&gt; rate 0.8409059 1.171999</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.0001033514 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  -99.35681 .</span></span>
+<span><span class="co">#&gt; The AIC is  200.7136 .</span></span></code></pre></div>
 <p>You can see tutorials for more examples of using the package in the <a href="https://queelius.github.io/algebraic.mle/articles/index.html">vignettes</a>.</p>
 </div>
 </div>

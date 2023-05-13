@@ -94,14 +94,14 @@ In this case, the bias is zero (or zero vector).</dd>
         <dd>Computes the estimate of the bias of a `mle_boot` object.</dd>
       </dl><dl><dt>
           
-          <code><a href="bias.mle_exp_rate.html">bias(<i>&lt;mle_exp_rate&gt;</i>)</a></code> 
+          <code><a href="bias.mle_exp.html">bias(<i>&lt;mle_exp&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the bias of an `exp_mle` object (exponential mle).</dd>
+        <dd>Computes the Bias of an Exponential MLE</dd>
       </dl><dl><dt>
           
-          <code><a href="bias.mle_normal_mu_var.html">bias(<i>&lt;mle_normal_mu_var&gt;</i>)</a></code> 
+          <code><a href="bias.mle_normal.html">bias(<i>&lt;mle_normal&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the bias of an `mle_normal_mu_var` object.</dd>
+        <dd>Computes the bias of an `mle_normal` object.</dd>
       </dl><dl><dt>
           
           <code><a href="chisqr.test.html">chisqr.test()</a></code> 
@@ -119,22 +119,19 @@ In this case, the bias is zero (or zero vector).</dd>
         <dd>Cramer Von Mises hypothesis test</dd>
       </dl><dl><dt>
           
-          <code><a href="exp_rate_fisher_info.html">exp_rate_fisher_info()</a></code> 
+          <code><a href="exp_fim.html">exp_fim()</a></code> 
         </dt>
-        <dd>Fisher information function generator for the exponential
-distribution</dd>
+        <dd>Fisher Information Function Generator for the Exponential Distribution</dd>
       </dl><dl><dt>
           
-          <code><a href="exp_rate_loglike.html">exp_rate_loglike()</a></code> 
+          <code><a href="exp_loglike.html">exp_loglike()</a></code> 
         </dt>
-        <dd>log-likelihood function generator given data `x` for the exponential
-distribution</dd>
+        <dd>Log-Likelihood Function Generator for the Exponential Distribution</dd>
       </dl><dl><dt>
           
-          <code><a href="exp_rate_score.html">exp_rate_score()</a></code> 
+          <code><a href="exp_score.html">exp_score()</a></code> 
         </dt>
-        <dd>score (derivative of log-likelihood) function generator given data `x`
-for the exponential distribution</dd>
+        <dd>Score Function Generator for the Exponential Distribution</dd>
       </dl><dl><dt>
           
           <code><a href="fim.html">fim()</a></code> 
@@ -151,11 +148,6 @@ matrix of an `mle` object.</dd>
           <code><a href="fim.mle_boot.html">fim(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
         <dd>Computes the variance-covariance matrix of `boot` object.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="is_converged.html">is_converged()</a></code> 
-        </dt>
-        <dd>is_converged</dd>
       </dl><dl><dt>
           
           <code><a href="is_mle.html">is_mle()</a></code> 
@@ -184,39 +176,23 @@ object, assuming it has a likelihood function, e.g., a fitted `mle` object.</dd>
         <dd>Bootstrap MLE</dd>
       </dl><dl><dt>
           
-          <code><a href="mle_exp_rate.html">mle_exp_rate()</a></code> 
+          <code><a href="mle_exp.html">mle_exp()</a></code> 
         </dt>
-        <dd>MLE of the rate parameter when we assume the sample is i.i.d. and drawn
-from the exponential distribution.</dd>
+        <dd>Maximum Likelihood Estimation (MLE) for the Exponential Distribution</dd>
       </dl><dl><dt>
           
-          <code><a href="mle_gradient_ascent.html">mle_gradient_ascent()</a></code> 
-        </dt>
-        <dd>mle_gradient_ascent</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mle_local_search.html">mle_local_search()</a></code> 
-        </dt>
-        <dd>mle_local_search</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mle_newton_raphson.html">mle_newton_raphson()</a></code> 
-        </dt>
-        <dd>mle_newton_raphson</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mle_normal_mu_var.html">mle_normal_mu_var()</a></code> 
+          <code><a href="mle_normal.html">mle_normal()</a></code> 
         </dt>
         <dd>MLE of the (mu,var) parameter vector when we assume the sample is i.i.d. and
 drawn from the normal distribution.</dd>
       </dl><dl><dt>
           
-          <code><a href="mle_optim.html">mle_optim()</a></code> 
+          <code><a href="mle_numerical.html">mle_numerical()</a></code> 
         </dt>
         <dd>mle_optim</dd>
       </dl><dl><dt>
           
-          <code><a href="mle_weibull_shape_scale.html">mle_weibull_shape_scale()</a></code> 
+          <code><a href="mle_weibull.html">mle_weibull()</a></code> 
         </dt>
         <dd>MLE of the rate parameter when we assume the sample is i.i.d. and drawn
 from the weibull distribution.</dd>
@@ -244,6 +220,11 @@ and combines them into a single estimator `mle_weighted`.</dd>
         <dd>Computes the estimate of the MSE of a `boot` object.</dd>
       </dl><dl><dt>
           
+          <code><a href="newton_raphson.html">newton_raphson()</a></code> 
+        </dt>
+        <dd>newton_raphson</dd>
+      </dl><dl><dt>
+          
           <code><a href="nobs.mle.html">nobs(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of observations in the sample used by
@@ -256,19 +237,19 @@ an `mle`.</dd>
 an `mle`.</dd>
       </dl><dl><dt>
           
-          <code><a href="normal_fisher_info_mu_var.html">normal_fisher_info_mu_var()</a></code> 
+          <code><a href="normal_fim.html">normal_fim()</a></code> 
         </dt>
         <dd>Fisher information matrix generator given data `x` for the normal
 distribution</dd>
       </dl><dl><dt>
           
-          <code><a href="normal_loglike_mu_var.html">normal_loglike_mu_var()</a></code> 
+          <code><a href="normal_loglike.html">normal_loglike()</a></code> 
         </dt>
         <dd>log-likelihood function generator given data `x` for the normal
 distribution</dd>
       </dl><dl><dt>
           
-          <code><a href="normal_score_mu_var.html">normal_score_mu_var()</a></code> 
+          <code><a href="normal_score.html">normal_score()</a></code> 
         </dt>
         <dd>Score function generator given data `x` for the normal
 distribution</dd>
@@ -456,22 +437,20 @@ the MLE `object`.</dd>
         <dd>Computes the variance-covariance matrix of `boot` object.</dd>
       </dl><dl><dt>
           
-          <code><a href="weibull_shape_scale_fim.html">weibull_shape_scale_fim()</a></code> 
+          <code><a href="weibull_fim.html">weibull_fim()</a></code> 
         </dt>
-        <dd>log-likelihood function generator given data `x` for the weibull
-distribution</dd>
+        <dd>weibull_fim</dd>
       </dl><dl><dt>
           
-          <code><a href="weibull_shape_scale_loglike.html">weibull_shape_scale_loglike()</a></code> 
+          <code><a href="weibull_loglike.html">weibull_loglike()</a></code> 
         </dt>
-        <dd>log-likelihood function generator given data `x` for the weibull
-distribution.</dd>
+        <dd>weibull_loglike</dd>
       </dl><dl><dt>
           
-          <code><a href="weibull_shape_scale_score.html">weibull_shape_scale_score()</a></code> 
+          <code><a href="weibull_score.html">weibull_score()</a></code> 
         </dt>
         <dd>score function generator given data `x` for the weibull
-distribution given a simple random sample.</dd>
+distributison given a simple random sample.</dd>
       </dl></div>
   </main></div>
 

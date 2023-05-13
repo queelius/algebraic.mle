@@ -93,32 +93,31 @@ function. Since the log-likelihood function is a monotone increasing function,
 the MLE is the value of $\lambda$ that maximizes the log-likelihood function,
 $$
     \ell(\lambda) = \sum_{i=1}^n \log f(x_i;\lambda) = \sum_{i=1}^n
-        \log \lambda - \lambda x_i.
+        \bigl\{ \log \lambda - \lambda x_i \bigr\}. 
 $$
 
 To find the value that maximizes $\ell$, we take the derivative of $\ell$ with
 respect to $\lambda$ and set it equal to zero. We obtain the following
 equation:
 $$
-    \frac{1}{\lambda} \sum_{i=1}^n x_i = n.
+    \frac{n}{\lambda} - \sum_{i=1}^n x_i = 0. 
 $$
-This equation has a unique solution, which is the MLE of the rate parameter
-$\lambda$ of the exponential distribution. Thus, the MLE of the rate parameter
-$\lambda$ of the exponential distribution is given by
+This equation has a unique solution,
 $$
-    \hat\lambda = \frac{1}{n} \sum_{i=1}^n x_i.
+    \hat\lambda = \frac{n}{\sum_i x_i} = \frac{1}{\bar x},
 $$
+which is the MLE of $\lambda$.
 
-The `algebraic.mle` package provides a function `mle_exp_rate` that computes
+The `algebraic.mle` package provides a function `mle_exp` that computes
 the MLE of the rate parameter $\lambda$ of the exponential distribution.
-Since `mle_exp_rate` returns an `mle` object, we can use various methods and
+Since `mle_exp` returns an `mle` object, we can use various methods and
 functions on it, like the `summary` function, to help us understand the MLE
 point estimate and its sampling distribution.
 
 We can compute the MLE of the rate parameter $\lambda$ of the exponential
 distribution with:
 ```{r}
-rate.hat <- mle_exp_rate(x$x)
+rate.hat <- mle_exp(x$x)
 ```
 
 Here is how to get a summary of the MLE:
@@ -152,20 +151,26 @@ $\lambda$, and a variance-covariance given by the inverse of the Fisher
 information matrix $I$, in this case $I(\lambda) = n/\lambda^2$, i.e.,
 $\hat\lambda \sim N(\lambda,I^{-1}(\lambda))$.
 
-We observe the empirical sampling distribution of $\hat\theta$ overlaid with
-the theoretical asymptotic distribution with:
-```{r fig.align='center',fig.width=6,fig.height=4,echo=F,message=F,warning=F}
-B <- 1000
+Next, we plot the respective densities of the non-asymptotic sampling distribution of
+$\hat\theta$ and the theoretical asymptotic distribution.
+```{r fig.align='center',fig.width=6,fig.height=4,echo=F,message=F,warning=F,cache=T}
+B <- 500000
 data0 <- numeric(length=B)
 for (i in 1:B)
 {
     x <- stats::rexp(n,rate)
-    data0[i] <- point(mle_exp_rate(x))
+    data0[i] <- point(mle_exp(x))
 }
-ggplot(tibble(rate.hat=data0), aes(x=rate.hat)) +
-    geom_histogram(aes(y=after_stat(density)),alpha=.3,bins=50) +
-    geom_function(fun=function(x) { dnorm(x,mean=rate,sd=rate/sqrt(n)) })
+# density of data0
+f.emp <- density(data0)
+plot(f.emp,main='',xlab='',ylab='',xlim=c(1,6),ylim=c(0,.8), col='blue')
+curve(dnorm(x,mean=rate,sd=rate/sqrt(n)),add=T, col='red',lwd=2)
+# legend
+legend('topright',legend=c('true','asymptotic'),col=c('blue','red'),lwd=2)
 ```
+
+This is a relatively small sample for the MLE, but we see that the asymptotic
+distribution is still a good approximation.
 
 We do not know $\lambda$, but we may estimate it from a sample, and thus
 we may approximate the sampling distribution of $\hat\lambda$ with
@@ -185,13 +190,15 @@ $B$ estimates of $\lambda$.
 However, we can sample from the approximation of the asymptotic distribution of
 $\hat\lambda$ with:
 ```{r exp.sampler}
-data1 <- sampler(rate.hat)(B)
+data.approx <- sampler(rate.hat)(B)
 ```
 
-We visually compare the two MLE samples, `data0` and `data1`, with:
-```{r,message=F,warning=F}
-data <- data.frame(values=c(data0,data1),
-    group=c(rep("empirical",B),rep("approximation",B)))
+Next, we plot the densities of the asymptotic sampling distribution
+and the approximation of the asymptotic sampling distribution.
+```{r,message=F,warning=F,echo=F,fig.align='center',fig.width=6,fig.height=4}
+data.asymp <- rnorm(B,mean=rate,sd=rate/sqrt(n))
+data <- data.frame(values=c(data.asymp,data.approx),
+    group=c(rep("true asymptotic",B),rep("estimated asymptotic",B)))
 ggplot(data,aes(x=values,fill=group)) +
     geom_histogram(aes(y=..density..),position="identity", alpha=0.2, bins=50)
 ```
@@ -299,7 +306,7 @@ case `rexp` (the sampler for the exponential distribution). The sampler
 must be compatible with the parameter value of `x` (i.e., `point(x)`).
 Here is how we compute the PI for $\hat{T}_{n+1}$:
 ```{r}
-rate.hat <- mle_exp_rate(rexp(n,rate))
+rate.hat <- mle_exp(rexp(n,rate))
 pred(x=rate.hat,samp=rexp)
 ```
 

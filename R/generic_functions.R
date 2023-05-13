@@ -98,6 +98,8 @@ mse <- function(x, theta) {
 #' @param theta true parameter value. usually, this is unknown (NULL), in which
 #'              case we estimate the bias
 #' @param ... pass additional arguments
+#' @return The bias of the estimator. The return type depends on the specific
+#'         method.
 #' @export
 bias <- function(x, theta, ...) {
     UseMethod("bias", x)

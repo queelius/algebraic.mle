@@ -63,7 +63,7 @@ be evidence that the normal distribution is a good fit to the data.
 If we would like to estimate $\theta=(`r theta`)'$, we can do so using maximum likelihood
 estimation as implemented by the `algebraic.mle` package:
 ```{r}
-theta.hat <- mle_normal_mu_var(x)
+theta.hat <- mle_normal(x)
 summary(theta.hat)
 ```
 
@@ -234,10 +234,10 @@ samp <- rnorm(N,mean=theta[1],sd=sqrt(theta[2]))
 samp.sub <- matrix(samp,nrow=r)
 mles.sub <- list(length=r)
 for (i in 1:r)
-    mles.sub[[i]] <- mle_normal_mu_var(samp.sub[i,])
+    mles.sub[[i]] <- mle_normal(samp.sub[i,])
 
 mle.wt <- mle_weighted(mles.sub)
-mle <- mle_normal_mu_var(samp)
+mle <- mle_normal(samp)
 ```
 
 We show the results in the following R code.
@@ -259,12 +259,12 @@ distribution when estimating $\theta$ given i.i.d. samples.
 Let's compare the earlier results that relied on the large sampling assumption
 with the bootstrapped MLE using `mle_boot`.
 First, `mle_boot` needs an MLE solver for the normal distribution. We have
-one with `mle_normal_mu_var`: we just need to wrap it in a function that
+one with `mle_normal`: we just need to wrap it in a function that
 takes the data as input and returns the MLE of the parameters and then
 pass it to `mle_boot` constructor:
 ```{r}
 mle_solver <- function(data, ind)
-    point(mle_normal_mu_var(data[ind]))
+    point(mle_normal(data[ind]))
 R <- 1000 # number of bootstrap replicates
 # recall the data is `x`
 (theta.boot <- mle_boot(mle_solver, x, R))
