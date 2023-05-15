@@ -142,50 +142,43 @@ $\lambda$ and scale $k$ parameters using the maximum likelihood estimator.
 
 To find the MLE of $\theta = (\lambda,k)'$, we need the log-likelihood function,
 which is given by the following R code:
-```{r}
-loglike <- function(theta) sum(dweibull(
-  sim.df$lifetime, shape=theta[1], scale=theta[2], log=T))
-```
-
-An MLE is a point $(\hat k,\hat\lambda)'$ that is a maximum of the loglikelihood
-function, `loglike`, over the support of the parameters. Typically, closed
-solutions aren't possible, so we normally use some sort of iterative technique.
-We don't go into the details here, but normally a local search method, like
-Newton-Raphson (which finds the value that makes the gradient of the loglikelihood
-function zero) is used. However, these local methods -- being local -- need a good
-starting point. 
-
-Here is an example of Newton-raphson code, which we will not use since it is not
-very efficient but is easy to understand:
 ```{r eval=F}
-# f is the function we want to find the root of
-# Jf is the jocabian of f
-# x0 is the starting point
-newton_raphson <- function(f, df, x0)
-{
-  eta <- 1 # learning rate, not too large to avoid overshooting
-           # not too small to avoid slow convergence
-  eps <- 1e-3 # close enough to zero to stop  
-  repeat
-  {
-    fx <- f(x0)        # new function value
-    if (max(abs(fx)) < eps) break # f(x) is close enough to zero
-    J <- Jf(x0)        # jacobian
-    d <- solve(J,fx)   # newton-raphson direction (pointing uphill)
-    x0 <- x0 + eta * d # newton-raphson update (going uphill)
-  }
-  x0
-}
+loglike <- function(theta) sum(dweibull(
+  sim.df$lifetime, shape=theta[1], scale=theta[2], log=TRUE))
 ```
 
-We use a more efficient algorithm to compute the log-likelihood
-function for the Weibull distribution. The code is given below:
+This is the definition of the log-likelihood, where we have used the built-in
+R function `dweibull` to compute the sum of the log-density function for each
+observation. However, we can also use the `algebraic.mle` package to compute
+the log-likelihood function in a more efficient manner.
 ```{r}
 library(algebraic.mle)
 ll.wei <- weibull_loglike(sim.df$lifetime)
 ```
 
-### Numerical considerations
+An MLE is a point $(\hat k,\hat\lambda)'$ that is a maximum of the log-likelihood
+function over the support of the parameters. In cases where a closed solution isn't
+possible, we use iterative techniques.
+
+A popular choice is Newton-Raphson, which is a local search method that relies upon
+both the gradient and the Hessian of the log-likelihood (Jocobian of the gradient) to
+iteratively improve the solution to the MLE equation. Here is an example of
+Newton-raphson code:
+```{r eval=F}
+# f is the function we want to find the root of
+# Jf is the jocabian of f
+# x0 is the starting point
+newton_raphson <- function(f, Jf, x0, iter=100)
+{
+  for (i in 1:iter)
+  {
+    fx <- f(x0)              # new function value
+    d <- solve(Jf(x0), fx)   # newton-raphson direction (pointing uphill)
+    x0 <- x0 - d             # newton-raphson update
+  }
+  x0
+}
+```
 
 Newton-Raphson and other local search methods need a good starting point 
 (that is already close to the MLE) to converge to the MLE. To find a good
@@ -207,7 +200,8 @@ start <- sim_anneal(
 cat("initial guess (k0,lambda0)' = (", start$par, ")'.\n")
 ```
 
-Let's take a look at some plots for the simulated annealing algorithm:
+To get an idea about what the algorithm is doing, we can plot the trace of the
+algorithm. Let's take a look at some plots.
 ```{r, fig.align='center', fig.height=4, fig.width=6, echo=F}
 library(ggplot2)
 m <- 2
@@ -268,6 +262,8 @@ mle.wei.newton <- newton_raphson(
 
 print(mle.wei.newton$par)
 print(mle.wei.newton$value)
+mle.wei.nr <- mle_numerical(mle.wei.newton)
+summary(mle.wei.nr)
 ```
 
 The `trace_info` field of the `mle` object contains the history of the

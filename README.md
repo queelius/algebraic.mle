@@ -43,15 +43,15 @@ rate.hat <- mle_exp(rexp(100, 1))
 summary(rate.hat)
 #> Maximum likelihood estimator of type mle_exp is normally distributed.
 #> The estimates of the parameters are given by:
-#>     rate 
-#> 1.006453 
-#> The standard error is  0.1006453 .
+#>      rate 
+#> 0.9133631 
+#> The standard error is  0.09133631 .
 #> The asymptotic 95% confidence interval of the parameters are given by:
 #>           2.5%    97.5%
-#> rate 0.8409059 1.171999
-#> The MSE of the estimator is  0.0001033514 .
-#> The log-likelihood is  -99.35681 .
-#> The AIC is  200.7136 .
+#> rate 0.7631283 1.063598
+#> The MSE of the estimator is  8.511705e-05 .
+#> The log-likelihood is  -109.0622 .
+#> The AIC is  220.1244 .
 ```
 
 You can see tutorials for more examples of using the package in the

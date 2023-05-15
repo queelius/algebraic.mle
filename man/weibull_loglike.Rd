@@ -2,7 +2,8 @@
 % Please edit documentation in R/mle_weibull.R
 \name{weibull_loglike}
 \alias{weibull_loglike}
-\title{weibull_loglike}
+\title{A log-likelihood function generator given data `x` for the weibull
+distribution.}
 \usage{
 weibull_loglike(x)
 }
@@ -15,10 +16,6 @@ log-likelihood function for the weibull distribution
         given data `x`. (Accepts a parameter vector `par` of size 2.)
 }
 \description{
-A log-likelihood function generator given data `x` for the weibull
-distribution.
-}
-\details{
 The returned log-likelihood function takes a single vector `par` of
 size `2` (at least) where the first component is the shape parameter
 `k` and the second component is the scale parameter `lambda` such

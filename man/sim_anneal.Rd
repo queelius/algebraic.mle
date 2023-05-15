@@ -2,7 +2,15 @@
 % Please edit documentation in R/sim_anneal.R
 \name{sim_anneal}
 \alias{sim_anneal}
-\title{sim_anneal}
+\title{This function implements the simulated annealing algorithm,
+which is a global optimization algorithm that is useful for
+finding a good starting point for a local optimization algorithm.
+We do not return this as an MLE object because, to be a good
+estimate of the MLE, the gradient of `f` evaluated
+at its solution should be close to zero, assuming the MLE
+is interior to the domain of `f`. However, since this algorithm
+is not guided by gradient information, it is not sensitive to
+the gradient of `f` and instead only seeks to maximize `f`.}
 \usage{
 sim_anneal(par, fn, control = list(), ...)
 }

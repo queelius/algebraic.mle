@@ -234,7 +234,11 @@
 <span><span class="co">#&gt; [1,] 20.091080</span></span>
 <span><span class="co">#&gt; [2,]  2.941741</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mle.wei.newton</span><span class="op">$</span><span class="va">value</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 10.99502</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 10.99502</span></span>
+<span><span class="va">mle.wei.nr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="va">mle.wei.newton</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mle.wei.nr</span><span class="op">$</span><span class="va">par</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Length  Class   Mode </span></span>
+<span><span class="co">#&gt;      0   NULL   NULL</span></span></code></pre></div>
 <p>The <code>trace_info</code> field of the <code>mle</code> object contains the history of the log-likelihood values as the algorithm progresses. Here is the code to plot the log-likelihood values as the algorithm progresses: <img src="unknow_dgp_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"> We see that it converges quite quickly to the MLE. (We slowed down the algorithm by setting the learning rate <code>eta=.1</code> to make the plot more readable. Otherwise, it only needed 2 iterations to converge.)</p>
 <p>In the <code>algebraic.mle</code> package, we provide a precise and efficient local search method, <code>mle_weibull</code>, for finding the MLE. It only needs a starting point for the shape parameter <span class="math inline">\(k\)</span>. Here is the code:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">

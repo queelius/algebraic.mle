@@ -3,34 +3,37 @@
 #'
 #' @param x a sample of observations
 #' @param k initial estimate of shape parameter k
-#' @param eps we numerically solve the MLE equation, `|old-new| <= eps` is stopping condition
+#' @param rel_tol when numerically solving the MLE equation,
+#'                `|new-old|/|new| <= rel_tol` is stopping condition
 #' @param keep_obs Boolean, specifies whether to keep observations
 #' @return an `mle` object.
 #' @importFrom MASS ginv
 #' @export
-mle_weibull <- function(x, k0 = 1, eps = 1e-7, keep_obs = F) {
+mle_weibull <- function(x, k0 = 1, rel_tol = 1e-7, keep_obs = FALSE) {
     n <- length(x)
     stopifnot(n > 0)
     stopifnot(k0 > 0)
-    stopifnot(eps > 0)
+    stopifnot(rel_tol > 0)
 
-    s <- mean(log(x))
+    log_x <- log(x)
+    s <- mean(log_x)
     repeat    {
         k1 <- k0
-        k0 <- 1 / (sum(x^k1 * log(x)) / sum(x^k1) - s)
-        if (abs(k0 - k1) < eps) {
+        k0 <- 1 / (sum(x^k1 * log_x) / sum(x^k1) - s)
+        if (abs(k1 - k0) / abs(k1) < rel_tol) {
             break
         }
     }
     par.hat <- c(k0, mean(x^k0)^(1 / k0))
     ll <- weibull_loglike(x)(par.hat)
-    names(par.hat) <- c("shape", "scale")
     fim <- weibull_fim(x)(par.hat)
-    rownames(fim) <- names(par.hat)
-    colnames(fim) <- names(par.hat)
     sigma <- ginv(fim)
-    rownames(sigma) <- names(par.hat)
-    colnames(sigma) <- names(par.hat)
+    cnames <- c("shape", "scale")
+    names(par.hat) <- cnames
+    rownames(fim) <- cnames
+    colnames(fim) <- cnames
+    rownames(sigma) <- cnames
+    colnames(sigma) <- cnames
 
     mle(theta.hat = par.hat,
         loglike = ll,
@@ -43,8 +46,6 @@ mle_weibull <- function(x, k0 = 1, eps = 1e-7, keep_obs = F) {
     )
 }
 
-#' weibull_loglike
-#' 
 #' A log-likelihood function generator given data `x` for the weibull
 #' distribution.
 #'

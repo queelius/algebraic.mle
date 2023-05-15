@@ -159,7 +159,7 @@ newton_raphson <- function(
 
         count <- count + 1L
         if (control$trace) {
-            append_trace(c(val0, par0, gr0))
+            append_trace(c(control$fnscale * val0, par0, gr0))
         }
 
         if (control$debug > 0L && count %% control$REPORT == 0) {

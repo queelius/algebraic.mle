@@ -1,9 +1,3 @@
-
-
-
-
-#' sim_anneal
-#'
 #' This function implements the simulated annealing algorithm,
 #' which is a global optimization algorithm that is useful for
 #' finding a good starting point for a local optimization algorithm.
@@ -60,7 +54,7 @@ sim_anneal <- function(par, fn, control = list(), ...) {
         it_per_temp = 100L,
         maxit = 10000L,
         accept_p = function(temp, val1, val0, ...) {
-            runif(1) < exp((val0 - val1) / temp)
+            val1 < val0 || (runif(1) < exp((val0 - val1) / temp))
         },
         trace = FALSE,
         debug = 0L,
@@ -180,7 +174,8 @@ sim_anneal <- function(par, fn, control = list(), ...) {
             accepted <- accepted + 1L
 
             if (control$trace) {
-                append_trace(c(par0, val0, it, t, best_val == val0))
+                append_trace(c(par0, control$fnscale * val0, it,
+                    t, best_val == val0))
             }
         }
 
@@ -190,7 +185,7 @@ sim_anneal <- function(par, fn, control = list(), ...) {
     }
 
     res <- list(par = best_par,
-                value = best_val,
+                value = control$fnscale * best_val,
                 fn_count = it,
                 accepted = accepted)
 

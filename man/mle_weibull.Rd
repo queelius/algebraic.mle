@@ -5,12 +5,13 @@
 \title{MLE of the rate parameter when we assume the sample is i.i.d. and drawn
 from the weibull distribution.}
 \usage{
-mle_weibull(x, k0 = 1, eps = 1e-07, keep_obs = F)
+mle_weibull(x, k0 = 1, rel_tol = 1e-07, keep_obs = F)
 }
 \arguments{
 \item{x}{a sample of observations}
 
-\item{eps}{we numerically solve the MLE equation, `|old-new| <= eps` is stopping condition}
+\item{rel_tol}{when numerically solving the MLE equation,
+`|new-old|/|new| <= rel_tol` is stopping condition}
 
 \item{keep_obs}{Boolean, specifies whether to keep observations}
 

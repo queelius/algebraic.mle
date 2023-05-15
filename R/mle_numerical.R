@@ -10,10 +10,10 @@
 #' @export
 mle_numerical <- function(sol, options = list()) {
     if (is.null(options$hessian)) {
-        if (!is.null(options$sigma)) {
-            options$hessian <- -ginv(options$sigma)
-        } else if (!is.null(sol$sigma)) {
+        if (!is.null(sol$hessian)) {
             options$hessian <- sol$hessian
+        } else if (!is.null(options$sigma)) {
+            options$hessian <- -ginv(options$sigma)
         }
     }
     if (is.null(options$sigma) && !is.null(options$hessian)) {

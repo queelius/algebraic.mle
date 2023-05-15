@@ -22,13 +22,13 @@ theta.start <- sim_anneal(
     fn=loglik,
     par=theta0,
     control=list(
-        t_init=100,
-        t_end=1e-6,
+        t_init=150,
+        t_end=1e-9,
         fnscale=-1,
-        alpha=0.95,
-        it_per_temp=100,
-        REPORT=200L,
-        maxit=100000L,
+        alpha=0.995,
+        it_per_temp=225,
+        REPORT=250L,
+        maxit=1000000L,
         sup=sup.weibull,
         debug=1L,
         trace=TRUE))
@@ -75,23 +75,25 @@ logliks <- -theta.start$trace_info[,"value"]
 iters <- theta.start$trace_info[,"it"]
 plot(logliks,type="l",xlab="iteration",ylab="log-likelihood")
 
-theta.start$trace_info[theta.start$trace_info[,"best"] == 1,]
+best.trace <- theta.start$trace_info[theta.start$trace_info[,"best"] == 1,]
+plot(-best.trace[,"value"],type="l",xlab="iteration",ylab="log-likelihood")
 
-theta.mle <- mle_weibull_shape_scale(
+theta.mle <- mle_weibull(
     data,
     k0=theta.start$par[1],
     eps=1e-11)
 
-theta.nr <- newton_raphson(
+theta.nr2 <- newton_raphson(
     par=theta.start$par,
     fn=loglik,
     gr=scr,
-    hess=function(x) numDeriv::hessian(loglik, x,
-        method.args=list(eps=1e-5, d=0.00001, r=6)),
+    hess=function(x) -nfo(x),
+    #hess=function(x) numDeriv::hessian(loglik, x,
+    #    method.args=list(eps=1e-5, d=0.00001, r=6)),
     control=list(
         eta=1,
-        abs_tol=1e-18,
-        rel_tol=1e-18,
+        abs_tol=1e-6,
+        rel_tol=1e-6,
         fnscale=-1,
         proj=function(x) pmax(x,1e-3),
         trace=FALSE,
@@ -101,25 +103,21 @@ theta.nr <- newton_raphson(
         REPORT=1000L,
         trace_info_size_inc=10000L,
         inverted=FALSE,
-        maxit=100000))
+        maxit=100))
 
-theta.start$par
--theta.nr$value < theta.optim$value
 point(theta.mle)
-theta.optim
-theta.nr
+theta.optim$par
+theta.nr2$par
+theta.nr$par
+theta.start$par
 
-
-l1 <- weibull_loglike(data)
-scr1 <- weibull_score(data)
 par <- c(1,2)
-weibull_fim(data)(par)
-weibull_fim_2(data)(par)
-hessian(l1, par, method.args=list(eps=1e-5, d=0.00001, r=6))
-weibull_score(data)(par)
-grad(l1, par)
-l1(par)
--sum(dweibull(data,shape=par[1],scale=par[2],log=TRUE))
+-nfo(par)
+numDeriv::hessian(loglik, par, method.args=list(eps=1e-5, d=0.00001, r=6))
+scr(par)
+numDeriv::grad(loglik, par)
+loglik(par)
+sum(dweibull(data,shape=par[1],scale=par[2],log=TRUE))
 
 theta.optim <- optim(
     par=theta.start$par,
@@ -127,9 +125,10 @@ theta.optim <- optim(
     gr=scr,      
     hessian=TRUE,
     control=list(fnscale=-1,reltol=1e-16, maxit=2000000))
-par.mle <- theta.optim$par
--weibull_fim(data)(par.mle)
 
+confint(mle_numerical(theta.optim))
+confint(mle_numerical(theta.nr2))
+confint(theta.mle)
 
 
 
