@@ -24,8 +24,6 @@ exp_conditional_rate_loglike <- function(df, resp, rate) {
     }
 }
 
-
-
 #' Log-Likelihood Function Generator for the Weibull Distribution
 #' with a shape and scale parameters that are a function of predictors in `df`,
 #'
@@ -47,8 +45,7 @@ exp_conditional_rate_loglike <- function(df, resp, rate) {
 #'              parameter vector `beta`
 #' @return Returns a function that computes the conditional log-likelihood
 #' @export
-weibull_conditional_shape_scale_loglike <-
-    function(df, resp, shape, scale) {
+weibull_conditional_shape_scale_loglike <- function(df, resp, shape, scale) {
     function(beta) {
         sum(dweibull(x = resp(df),
             shape = shape(df, beta),
