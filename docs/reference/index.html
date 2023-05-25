@@ -220,11 +220,6 @@ and combines them into a single estimator `mle_weighted`.</dd>
         <dd>Computes the estimate of the MSE of a `boot` object.</dd>
       </dl><dl><dt>
           
-          <code><a href="newton_raphson.html">newton_raphson()</a></code> 
-        </dt>
-        <dd>newton_raphson</dd>
-      </dl><dl><dt>
-          
           <code><a href="nobs.mle.html">nobs(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the number of observations in the sample used by
@@ -413,7 +408,15 @@ the MLE `object`.</dd>
           
           <code><a href="sim_anneal.html">sim_anneal()</a></code> 
         </dt>
-        <dd>sim_anneal</dd>
+        <dd>This function implements the simulated annealing algorithm,
+which is a global optimization algorithm that is useful for
+finding a good starting point for a local optimization algorithm.
+We do not return this as an MLE object because, to be a good
+estimate of the MLE, the gradient of `f` evaluated
+at its solution should be close to zero, assuming the MLE
+is interior to the domain of `f`. However, since this algorithm
+is not guided by gradient information, it is not sensitive to
+the gradient of `f` and instead only seeks to maximize `f`.</dd>
       </dl><dl><dt>
           
           <code><a href="summary.mle.html">summary(<i>&lt;mle&gt;</i>)</a></code> 
@@ -444,7 +447,8 @@ the MLE `object`.</dd>
           
           <code><a href="weibull_loglike.html">weibull_loglike()</a></code> 
         </dt>
-        <dd>weibull_loglike</dd>
+        <dd>A log-likelihood function generator given data `x` for the weibull
+distribution.</dd>
       </dl><dl><dt>
           
           <code><a href="weibull_score.html">weibull_score()</a></code> 

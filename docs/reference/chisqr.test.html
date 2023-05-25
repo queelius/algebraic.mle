@@ -56,7 +56,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">chisqr.test</span><span class="op">(</span><span class="va">obs</span>, <span class="va">cdf</span>, nbreaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">chisqr.test</span><span class="op">(</span><span class="va">obs</span>, <span class="va">cdf</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -69,12 +69,28 @@
 <dd><p>the cdf of the reference distribution</p></dd>
 
 
-<dt>nbreaks</dt>
-<dd><p>number of bins</p></dd>
+<dt>options</dt>
+<dd><p>a list of options to pass to the test function</p></dd>
 
 
 <dt>...</dt>
 <dd><p>additional arguments to pass</p></dd>
+
+
+<dt>breaks</dt>
+<dd><p>the number of breaks to use in the histogram</p></dd>
+
+
+<dt>rescale.p</dt>
+<dd><p>logical, whether to rescale the p-value</p></dd>
+
+
+<dt>simulate.p.value</dt>
+<dd><p>logical, whether to simulate the p-value</p></dd>
+
+
+<dt>nbreaks</dt>
+<dd><p>the number of breaks to use in the histogram</p></dd>
 
 </dl></div>
     <div class="section level2">

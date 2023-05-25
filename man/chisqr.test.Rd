@@ -4,16 +4,24 @@
 \alias{chisqr.test}
 \title{chi-squar goodness-of-fit test}
 \usage{
-chisqr.test(obs, cdf, nbreaks = ceiling(sqrt(length(obs))), ...)
+chisqr.test(obs, cdf, options = list(), ...)
 }
 \arguments{
 \item{obs}{a sample of observations}
 
 \item{cdf}{the cdf of the reference distribution}
 
-\item{nbreaks}{number of bins}
+\item{options}{a list of options to pass to the test function}
 
 \item{...}{additional arguments to pass}
+
+\item{breaks}{the number of breaks to use in the histogram}
+
+\item{rescale.p}{logical, whether to rescale the p-value}
+
+\item{simulate.p.value}{logical, whether to simulate the p-value}
+
+\item{nbreaks}{the number of breaks to use in the histogram}
 }
 \value{
 a hypothesis test object

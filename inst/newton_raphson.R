@@ -17,16 +17,14 @@
 #' @field eta numeric, learning rate
 #' @field fnscale numeric, scaling factor for `fn`. If negative, then
 #'       turns the problem into a maximization problem.
+#' @field inverted logical, whether the hessian function is already inverted
 #' @field maxit integer, maximum number of iterations, defaults to 1000
 #' @field convergence function, check for convergence, defaults to
 #'        `||gr(par)||` and `||(par1 - par0)||` being approximately zero
-#'        (gradient test uses absolute tolerance and parameter difference
-#'        test uses relative tolerance, see `abs_tol` and `rel_tol`).
+#'        (both tests use absolute tolerance,  see `abs_tol`).
 #' @field proj function, projection function to enforce domain of support
 #' @field trace logical, keep track of trace information
 #' @field abs_tol numeric, absolute tolerance for convergence, which is used
-#'        by the default `convergence` function
-#' @field rel_tol numeric, absolute tolerance for convergence, which is used
 #'        by the default `convergence` function
 #' @field REPORT integer, frequency of tracer reports, defautls to every
 #'        10 iterations
@@ -35,7 +33,7 @@
 #'            `par`: best solution
 #'            `value`: function value `fn(par)`
 #'            `gr`: gradient at `par`
-#'            `hess`: hessian at `par`   
+#'            `hessian`: hessian at `par`
 #'            `convergence`: convergence status, 0 if converged, 1 if not
 #'                           (consistent with `optim`)
 #'            `count`: a count of `fn` and `gr` evaluations
@@ -49,14 +47,12 @@ newton_raphson <- function(
     fn,
     gr,
     hess,
-    inverted = FALSE,
     control = list(),
     ...) {
     defaults <- list(
         convergence = NULL,
         proj = function(x) x,
-        abs_tol = 1e-6,
-        rel_tol = 1e-6,
+        tol = 1e-6,
         eta = 1,
         debug = 0L,
         r = 0.5,
@@ -65,35 +61,30 @@ newton_raphson <- function(
         maxit = 100L,
         trace = FALSE,
         trace_info_size_inc = 1000L,
-        REPORT = 10L
+        REPORT = 10L,
+        sup = function(par) TRUE,
+        test = function(par0, par1, gr0, tol, ...) {
+            return(all(abs(par1 - par0) < tol) &&
+                   all(abs(gr0) < tol))
+        }
     )
     control <- modifyList(defaults, control)
     control <- modifyList(control, list(...))
 
-    control$convergence <- function(...) FALSE
-
-#    if (is.null(control$convergence)) {
-#        control$convergence <- function(par0, par1, gr0, ...) {
-#            (max(abs(par1 - par0)) < control$rel_tol * max(abs(par1))) &&
-#            (max(abs(gr0)) < control$abs_tol)
-#        }
-#    }
-
     stopifnot(
-        is.numeric(control$abs_tol), is.numeric(control$rel_tol),
-        is.numeric(control$eta), is.numeric(control$fnscale),
-        is.numeric(control$maxit), is.numeric(control$REPORT),
+        is.numeric(control$tol), is.numeric(control$eta),
+        is.numeric(control$fnscale), is.numeric(control$maxit),
+        is.numeric(control$REPORT), is.numeric(par),
         is.function(fn), is.function(gr), is.function(hess),
-        is.function(control$convergence), is.function(control$proj),
+        is.function(control$test), is.function(control$proj),
         is.logical(control$trace), is.logical(control$inverted),
-        is.numeric(par), is.numeric(control$trace_info_size_inc),
+        is.function(control$sup), is.numeric(control$trace_info_size_inc),
         control$maxit > 0, control$eta > 0, control$maxit != Inf,
-        control$r > 0, control$abs_tol > 0,
-        control$rel_tol > 0, control$REPORT > 0,
-        control$fnscale != 0, control$debug >= 0,
-        control$trace_info_size_inc >= 1)
+        control$r > 0, control$abs_tol > 0, control$REPORT > 0,
+        control$fnscale != 0, control$trace_info_size_inc >= 1)
 
     par0 <- par
+    par1 <- NULL
     val0 <- fn(par0) / control$fnscale
     hess0 <- NULL
     inv_hess0 <- NULL
@@ -119,7 +110,7 @@ newton_raphson <- function(
         }
     }
 
-    debug_out <- function() {
+    debug_out <- function(par0, gr0, val0, it, count) {
         par_str <- paste(sprintf("%.5f", par0), collapse = ", ")
         gr_str <- paste(sprintf("%.5f", gr0), collapse = ", ")
         message(paste(
@@ -130,29 +121,43 @@ newton_raphson <- function(
             "Gradient: (", gr_str, ")"))
     }
 
+    par1 <- NULL
+
     repeat {
         gr0 <- gr(par0)
-        if (control$inverted) {
-            inv_hess0 <- hess(par0)
-        } else {
+        #if (control$inverted) {
+        #    inv_hess0 <- hess(par0)
+        #} else {
             hess0 <- hess(par0)
-            inv_hess0 <- ginv(hess0)
-        }
-        d0 <- inv_hess0 %*% gr0
+        #    inv_hess0 <- ginv(hess0)
+        #}
+        #d0 <- inv_hess0 %*% gr0
+        d0 <- ginv(hess0) %*% gr0
+        #d0 <- gr0
         alpha <- control$eta
         while (it <= control$maxit) {
             it <- it + 1L
             par1 <- control$proj(par0 - alpha * d0)
+            cat("it:", it, "par1: ", par1,
+                ", alpha: ", alpha, ", d0: (", d0, ")'\n")
+            if (!control$sup(par1)) {
+                alpha <- control$r * alpha
+                next
+            }
             val1 <- fn(par1) / control$fnscale
-
+            if (is.nan(val1)) {
+                warning("NaN value encountered")
+                next
+            }
+            cat("val1: ", val1, ", val0: ", val0, "\n")
             if (val1 <= val0) {
                 break
             }
             alpha <- control$r * alpha
         }
 
-        converged <- control$convergence(
-            par0 = par0, par1 = par1, gr0 = gr0, ...)
+        converged <- control$test(
+            par0 = par0, par1 = par1, gr0 = gr0, tol = control$tol, ...)
 
         par0 <- par1
         val0 <- val1
@@ -162,9 +167,9 @@ newton_raphson <- function(
             append_trace(c(control$fnscale * val0, par0, gr0))
         }
 
-        if (control$debug > 0L && count %% control$REPORT == 0) {
-            debug_out()
-        }
+        #if (control$debug > 0L && count %% control$REPORT == 0) {
+        debug_out(par0, gr0, val0, it, count)
+        #}
 
         if (it > control$maxit || converged) {
             break
@@ -181,4 +186,89 @@ newton_raphson <- function(
     }
     res
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+newton_raphson2 <- function(
+    par,
+    fn,
+    gr,
+    hess,
+    control = list(),
+    ...) {
+
+    defaults <- list(
+        proj = function(x) x,
+        sup = function(par) TRUE,
+        tol = 1e-6,
+        eta = 1,
+        r = 0.5,
+        maxit = 100L
+    )
+    control <- modifyList(defaults, control)
+    control <- modifyList(control, list(...))
+
+    stopifnot(
+        is.numeric(control$tol), is.numeric(control$eta),
+        is.numeric(control$maxit),
+        is.numeric(par),
+        is.function(fn), is.function(gr), is.function(hess),
+        is.function(control$proj),
+        is.function(control$sup),
+        control$maxit > 0, control$eta > 0,
+        control$r > 0, control$r < 1)
+
+    par0 <- par
+    par1 <- NULL
+    val0 <- fn(par0)
+    it <- 0L
+    repeat {
+        gr0 <- gr(par0)
+        d0 <- ginv(hess(par0)) %*% gr0
+        alpha <- control$eta
+        while (it <= control$maxit) {
+            it <- it + 1L
+            par1 <- control$proj(par0 - alpha * d0)
+            if (!control$sup(par1)) {
+                alpha <- control$r * alpha
+                next
+            }
+            val1 <- fn(par1)
+            if (is.nan(val1)) {
+                warning("NaN value encountered")
+                next
+            }
+            if (val1 >= val0) {
+                break
+            }
+            alpha <- control$r * alpha
+        }
+
+        converged <- all(abs(par1 - par0) < control$tol)
+        par0 <- par1
+        val0 <- val1
+
+        if (it > control$maxit || converged) {
+            break
+        }
+    }
+
+    list(par = par0, value = val1, it = it)
 }

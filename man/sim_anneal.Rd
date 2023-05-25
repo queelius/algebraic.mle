@@ -65,15 +65,19 @@ Defaults to every 100 iterations.}
 \item{\code{maxit}}{Integer, maximum number of iterations, defaults to 100000}
 
 \item{\code{accept_p}}{Acceptance probability function, defaults to
- `runif(1) < exp((val0 - val1) / temp)`, where `val0` is the
- function value at the current position and `val1` is the
- function value at the proposed position. We pass `temp`, `val1`,
-`val0`, and `...` as arguments to `accept_p`.}
+`runif(1) < exp((val0 - val1) / temp)`, where `val0` is the
+function value at the current position and `val1` is the
+function value at the proposed position. We pass `temp`
+(temperature), `val1` (new value at candidate position `par1`),
+`val0` (old value at current position), `it` (iteration), and
+`...` as arguments to `accept_p`.}
 
 \item{\code{fnscale}}{Scaling factor for `fn`, defaults to 1. If negative,
 then turns the problem into a maximization problem.}
 
 \item{\code{sup}}{Support function, returns TRUE if `par` is in the domain of `fn`}
+
+\item{\code{proj}}{Projection function, returns a vector in the domain of `fn`}
 
 \item{\code{neigh}}{Neighborhood function, returns a random neighbor of `par`,
 defaults to `par + rnorm(length(par))`. We pass `par`

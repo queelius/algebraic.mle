@@ -4,7 +4,7 @@
 \alias{mle_numerical}
 \title{mle_optim}
 \usage{
-mle_numerical(sol, options = list())
+mle_numerical(sol, options = list(), superclasses = NULL)
 }
 \arguments{
 \item{sol}{the output of `optim` or `newton_raphson`}

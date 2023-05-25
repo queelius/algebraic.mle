@@ -18,16 +18,20 @@ sup.weibull <- function(theta) {
     all(theta > 0)
 }
 
+myneigh <- function(temp, it, value) {
+    par + rnorm(length(par),sd=temp)
+}
+
 theta.start <- sim_anneal(
     fn=loglik,
-    par=theta0,
+    par=theta.start$par,
     control=list(
-        t_init=150,
-        t_end=1e-9,
+        t_init=1e-2,
+        t_end=1e-100,
         fnscale=-1,
-        alpha=0.995,
-        it_per_temp=225,
-        REPORT=250L,
+        alpha=0.95,
+        it_per_temp=100L,
+        REPORT=10L,
         maxit=1000000L,
         sup=sup.weibull,
         debug=1L,
@@ -78,13 +82,10 @@ plot(logliks,type="l",xlab="iteration",ylab="log-likelihood")
 best.trace <- theta.start$trace_info[theta.start$trace_info[,"best"] == 1,]
 plot(-best.trace[,"value"],type="l",xlab="iteration",ylab="log-likelihood")
 
-theta.mle <- mle_weibull(
-    data,
-    k0=theta.start$par[1],
-    eps=1e-11)
+theta.mle <- mle_weibull(x=data)
 
-theta.nr2 <- newton_raphson(
-    par=theta.start$par,
+theta.nr <- newton_raphson2(
+    par=c(10,10),#theta.start$par,
     fn=loglik,
     gr=scr,
     hess=function(x) -nfo(x),
@@ -92,18 +93,20 @@ theta.nr2 <- newton_raphson(
     #    method.args=list(eps=1e-5, d=0.00001, r=6)),
     control=list(
         eta=1,
-        abs_tol=1e-6,
-        rel_tol=1e-6,
+        tol=1e-8,
         fnscale=-1,
-        proj=function(x) pmax(x,1e-3),
+        #proj=function(x) pmax(x,1e-3),
+        sup=function(x) all(x > 0),
         trace=FALSE,
         fn=loglik,
         r=.5,
-        debug=1L,
-        REPORT=1000L,
+        debug=4L,
+        REPORT=1L,
         trace_info_size_inc=10000L,
         inverted=FALSE,
-        maxit=100))
+        maxit=1000L))
+
+
 
 point(theta.mle)
 theta.optim$par
@@ -120,18 +123,24 @@ loglik(par)
 sum(dweibull(data,shape=par[1],scale=par[2],log=TRUE))
 
 theta.optim <- optim(
-    par=theta.start$par,
+    par=c(1,1),
     fn=loglik,
-    gr=scr,      
+    gr=scr,
     hessian=TRUE,
-    control=list(fnscale=-1,reltol=1e-16, maxit=2000000))
+    lower=c(0,0),
+    method="L-BFGS-B",
+    control=list(lmm=5,
+        fnscale=-1, trace = 1000))
 
+theta.mle <- mle_numerical(theta.optim)
+nfo(point(theta.mle))
+fim(theta.mle)
 confint(mle_numerical(theta.optim))
 confint(mle_numerical(theta.nr2))
 confint(theta.mle)
 
-
-
+theta.good = mle_weibull(data, keep_obs = TRUE)
+confint(theta.good)
 
 #####################################
 # TODO: bias correction, using bootstrap: theta.bias_cor = theta.hat + boot_estimate(data,mle_solver)$bias.hat

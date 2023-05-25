@@ -2,48 +2,34 @@
 #' from the weibull distribution.
 #'
 #' @param x a sample of observations
-#' @param k initial estimate of shape parameter k
-#' @param rel_tol when numerically solving the MLE equation,
-#'                `|new-old|/|new| <= rel_tol` is stopping condition
+#' @param par0 initial estimate of the parameters, defaults to `c(1,1)`
+#' @param pgtol the convergence tolerance for the optimization algorithm
 #' @param keep_obs Boolean, specifies whether to keep observations
 #' @return an `mle` object.
 #' @importFrom MASS ginv
+#' @importFrom stats optim
 #' @export
-mle_weibull <- function(x, k0 = 1, rel_tol = 1e-7, keep_obs = FALSE) {
+mle_weibull <- function(x, par0 = c(1,1),
+    pgtol = 1e-7, maxit = 10000L, keep_obs = FALSE, ...) {
+
     n <- length(x)
-    stopifnot(n > 0)
-    stopifnot(k0 > 0)
-    stopifnot(rel_tol > 0)
+    stopifnot(n > 0, all(par0 > 0), pgtol > 0, maxit >= 1)
 
-    log_x <- log(x)
-    s <- mean(log_x)
-    repeat    {
-        k1 <- k0
-        k0 <- 1 / (sum(x^k1 * log_x) / sum(x^k1) - s)
-        if (abs(k1 - k0) / abs(k1) < rel_tol) {
-            break
-        }
-    }
-    par.hat <- c(k0, mean(x^k0)^(1 / k0))
-    ll <- weibull_loglike(x)(par.hat)
-    fim <- weibull_fim(x)(par.hat)
-    sigma <- ginv(fim)
-    cnames <- c("shape", "scale")
-    names(par.hat) <- cnames
-    rownames(fim) <- cnames
-    colnames(fim) <- cnames
-    rownames(sigma) <- cnames
-    colnames(sigma) <- cnames
-
-    mle(theta.hat = par.hat,
-        loglike = ll,
-        score = weibull_score(x)(par.hat),
-        sigma = sigma,
-        info = fim,
-        obs = if (keep_obs) x else NULL,
-        nobs = n,
-        superclasses = c("mle_weibull")
-    )
+    ll <- weibull_loglike(x)
+    scr <- weibull_score(x)
+    sol <- optim(par = par0, fn = weibull_loglike(x),
+        gr = weibull_score(x), method = "L-BFGS-B",
+        lower = 0, hessian = TRUE,
+        control = list(fnscale = -1,
+                       pgtol = 1e-16,
+                       maxit = 1000L,
+                       ...))
+    mle_sol <- mle_numerical(
+        sol = sol,
+        superclasses = c("mle_weibull", "mle_numerical"))
+    mle_sol$obs <- if (keep_obs) x else NULL
+    mle_sol$nobs <- n
+    mle_sol
 }
 
 #' A log-likelihood function generator given data `x` for the weibull

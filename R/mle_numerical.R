@@ -8,7 +8,7 @@
 #' @return a `numerical_mle` object.
 #' @importFrom MASS ginv
 #' @export
-mle_numerical <- function(sol, options = list()) {
+mle_numerical <- function(sol, options = list(), superclasses = NULL) {
     if (is.null(options$hessian)) {
         if (!is.null(sol$hessian)) {
             options$hessian <- sol$hessian
@@ -24,10 +24,12 @@ mle_numerical <- function(sol, options = list()) {
         loglike = sol$value,
         score = NULL,
         sigma = options$sigma,
-        info = -options$hessian,
+        info = if (is.null(options$hessian)) NULL else -options$hessian,
         obs = options$obs,
         nobs = options$nobs,
-        superclasses = c("mle_numerical"))
+        superclasses = c(superclasses, "mle_numerical"))
     sol_mle$converged <- sol$convergence == 0
+    sol_mle$sol <- sol
+    sol_mle$sol$call <- match.call()
     sol_mle
 }

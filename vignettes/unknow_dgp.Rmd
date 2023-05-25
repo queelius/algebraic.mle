@@ -70,7 +70,7 @@ library(tibble)
 library(stats)
 
 sim.n <- 27
-sim.err.sd <- 0.05
+sim.err.sd <- 0.1
 sim.shape <- 20
 sim.scale <- 3
 sim.theta = c(sim.shape,sim.scale)
@@ -246,53 +246,29 @@ plot does the same for the $\lambda$ parameter.
 With this starting point in hand, we find an MLE with:
 ```{r}
 library(algebraic.mle)
-score.wei <- weibull_score(sim.df$lifetime)
-info.wei <- weibull_fim(sim.df$lifetime)
-mle.wei.newton <- newton_raphson(
+mle.wei <- mle_numerical(optim(
     par=start$par,
     fn=ll.wei,
-    gr=score.wei,
-    hess=function(x) -info.wei(x),
-    control=list(
-        fnscale=-1,
-        eta=.1,
-        trace=TRUE,
-        maxit=30L,
-        proj=function(x) pmax(x,1e-3)))
-
-print(mle.wei.newton$par)
-print(mle.wei.newton$value)
-mle.wei.nr <- mle_numerical(mle.wei.newton)
-summary(mle.wei.nr)
+    gr=weibull_score(sim.df$lifetime),
+    method="BFGS",
+    control=list(fnscale=-1)))
 ```
 
-The `trace_info` field of the `mle` object contains the history of the
-log-likelihood values as the algorithm progresses. Here is the code to plot
-the log-likelihood values as the algorithm progresses:
-```{r fig.align='center', fig.height=4, fig.width=6, echo=F}
-loglikes <- -mle.wei.newton$trace_info[,"value"]
-plot(loglikes, type="l", xlab="iteration", ylab="log-likelihood")
-```
-We see that it converges quite quickly to the MLE. (We slowed down the algorithm
-by setting the learning rate `eta=.1` to make the plot more readable. Otherwise,
-it only needed 2 iterations to converge.)
+The `mle_numerical` function takes anything that is like an `optim` object and returns an `mle` object for it.
 
-In the `algebraic.mle` package, we provide a precise and efficient local
-search method, `mle_weibull`, for finding the MLE. It only needs a starting
-point for the shape parameter $k$. Here is the code:
-```{r}
-k0 <- start$par[1]
-cat("initial guess for k0 =", k0, "\n")
-mle.wei <- mle_weibull(sim.df$lifetime, k0=k0)
-```
-
-The function, `mle_weibull`, returns an `mle` object that has an
-API that provides a number of conventient methods, such as estimating the
-variance-covariance matrix, confidence intervals, bias, and so on.
-Here's the code to print a summary of the MLE object:
+Here's a summary of it:
 ```{r}
 summary(mle.wei)
 ```
+
+A similar result can be obtained with the `mle_weibull` function from the
+`algebraic.mle` package:
+```{r}
+summary(mle_weibull(sim.df$lifetime))
+```
+
+In either case, the `mle` object exposes an API that provides a number of conventient methods, such as estimating the variance-covariance matrix, confidence intervals, bias, and so on.
+Here's the code to print a summary of the MLE object:
 
 Let's do the same for the normal distribution. We will use the
 `mle_normal` function from the `algebraic.mle` package:

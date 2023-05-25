@@ -25,11 +25,14 @@
 #' @field accept_p Acceptance probability function, defaults to
 #'        `runif(1) < exp((val0 - val1) / temp)`, where `val0` is the
 #'        function value at the current position and `val1` is the
-#'        function value at the proposed position. We pass `temp`, `val1`,
-#'       `val0`, and `...` as arguments to `accept_p`.
+#'        function value at the proposed position. We pass `temp`
+#'        (temperature), `val1` (new value at candidate position `par1`),
+#'        `val0` (old value at current position), `it` (iteration), and
+#'        `...` as arguments to `accept_p`.
 #' @field fnscale Scaling factor for `fn`, defaults to 1. If negative,
 #'        then turns the problem into a maximization problem.
 #' @field sup Support function, returns TRUE if `par` is in the domain of `fn`
+#' @field proj Projection function, returns a vector in the domain of `fn`
 #' @field neigh Neighborhood function, returns a random neighbor of `par`,
 #'              defaults to `par + rnorm(length(par))`. We pass `par`
 #'              `temp`, `it`, `value`, and `...` as arguments to `neigh`.
@@ -44,11 +47,10 @@
 #' @importFrom stats runif
 #' @export
 sim_anneal <- function(par, fn, control = list(), ...) {
-
     m <- length(par)
     defaults <- list(
         t_init = 100,
-        t_end = 1e-50,
+        t_end = 1e-3,
         fnscale = 1,
         alpha = 0.95,
         it_per_temp = 100L,
@@ -60,18 +62,18 @@ sim_anneal <- function(par, fn, control = list(), ...) {
         debug = 0L,
         REPORT = 100L,
         trace_info_size_inc = 10000L,
-        sup = function(par) TRUE,
-        neigh = function(par, temp, ...) par + rnorm(m))
+        sup = function(par, ...) TRUE,
+        proj = function(par, ...) par,
+        neigh = function(par, ...) par + rnorm(m))
 
     control <- modifyList(defaults, control)
     control <- modifyList(control, list(...))
-
     stopifnot(is.numeric(control$REPORT), is.numeric(control$debug),
               is.numeric(control$it_per_temp), is.numeric(control$maxit),
               is.numeric(control$t_init), is.numeric(control$t_end),
               is.numeric(control$alpha), is.function(control$neigh),
               is.function(control$sup), is.function(control$accept_p),
-              is.logical(control$trace),
+              is.function(control$proj), is.logical(control$trace),
               control$t_init > 0, control$t_end > 0,
               control$t_end <= control$t_init,
               control$alpha > 0, control$alpha < 1,
@@ -116,7 +118,7 @@ sim_anneal <- function(par, fn, control = list(), ...) {
             "Iteration", sprintf("%4d", it), "|",
             "Temp:", sprintf("%.4f", t), "|",
             "Solution: (", par_str, ")", "|",
-            "Value:", sprintf("%.4f", val0), "|",
+            "Value:", sprintf("%.4f", control$fnscale) * val0, "|",
             "Best: ", sprintf("%1d", best_val == val0), sep = " "))
     }
 
@@ -135,16 +137,18 @@ sim_anneal <- function(par, fn, control = list(), ...) {
             break
         }
 
-        par1 <- control$neigh(
+        par1 <- control$proj(control$neigh(
             par = par0,
             temp = t,
             value = val0,
             it = it,
-            ...)
+            ...))
 
         if (!control$sup(par1)) {
             if (control$debug > 2L) {
-                message("`neigh` returned a value not in the support at ", par1)
+                # pretty print the vector `par1`
+                message("projected neighbor not in the support: ",
+                        paste(sprintf("%.5f", par1), collapse = ", "))
             }
             next
         }
@@ -162,13 +166,13 @@ sim_anneal <- function(par, fn, control = list(), ...) {
             if (control$debug > 0L) {
                 par_str <- paste(sprintf("%.5f", par1), collapse = ", ")
                 message("Iteration ", it, " | ",
-                        "Found ", val1, " at (", par_str, ")")
+                        "Found better ", val1, " at (", par_str, ")")
             }
             best_par <- par1
             best_val <- val1
         }
 
-        if (control$accept_p(t, val1, val0, ...)) {
+        if (control$accept_p(t, val1, val0, it, ...)) {
             par0 <- par1
             val0 <- val1
             accepted <- accepted + 1L
@@ -194,4 +198,3 @@ sim_anneal <- function(par, fn, control = list(), ...) {
     }
     res
 }
-

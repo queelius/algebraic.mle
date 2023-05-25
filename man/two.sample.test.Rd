@@ -4,7 +4,7 @@
 \alias{two.sample.test}
 \title{General two sample hypothesis test.}
 \usage{
-two.sample.test(sampler, obs, cdf = NULL, n = 10000, method = "cramer")
+two.sample.test(sampler, obs, cdf = NULL, options = list(), ...)
 }
 \arguments{
 \item{sampler}{random sampler for reference distribution}

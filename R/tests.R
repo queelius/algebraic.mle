@@ -2,7 +2,11 @@
 #'
 #' @param obs a sample of observations
 #' @param cdf the cdf of the reference distribution
-#' @param nbreaks number of bins
+#' @param options  a list of options to pass to the test function
+#' @param breaks the number of breaks to use in the histogram
+#' @param rescale.p logical, whether to rescale the p-value
+#' @param simulate.p.value logical, whether to simulate the p-value
+#' @param nbreaks the number of breaks to use in the histogram
 #' @param ... additional arguments to pass
 #' @return a hypothesis test object
 #'
@@ -11,22 +15,36 @@
 #' @export
 chisqr.test <- function(obs,
                         cdf,
-                        nbreaks=ceiling(sqrt(length(obs))),
+                        options = list(),
                         ...)
 {
-    h <- hist(obs,right=F,breaks=nbreaks)
+    defaults <- list(
+        breaks = NULL,
+        rescale.p = TRUE,
+        simulate.p.value = TRUE,
+        nbreaks = ceiling(sqrt(length(obs))))
+
+    options <- modifyList(defaults,options)
+    options <- modifyList(options,list(...))
+
+    if (is.null(options$breaks)) {
+        breaks = options$nbreaks
+    }
+    else {
+        breaks = "Sturges"
+    }
+
+    h <- hist(obs, right = FALSE, breaks = breaks)
     t <- chisq.test(
         h$counts,
-        p=rollapply(cdf(h$breaks,...),
-                         2,
+        p=rollapply(cdf(h$breaks,...), 2,
                          \(x) x[2]-x[1]),
-        rescale.p=T,
-        simulate.p.value=T)
+        rescale.p = options$rescale.p,
+        simulate.p.value = options$simulate.p.value)
 
-    t$data.name=deparse(substitute(obs))
-    t$size=length(obs)
-    t$nbreaks=nbreaks
-
+    t$data.name <- deparse(substitute(obs))
+    t$size <- length(obs)
+    t$nbreaks <- nbreaks
     t
 }
 
@@ -58,29 +76,36 @@ cramer.test <- function(obs,ref)
 #' @return hypothesis test object
 #' @importFrom CDFt KolmogorovSmirnov
 #' @export
-two.sample.test <- function(sampler,obs,cdf=NULL,n=10000,method="cramer")
+two.sample.test <- function(sampler,obs,cdf=NULL,options=list(),...)
 {
-    if (method=="cramer")
+    defaults <- list(
+        n=1000,
+        method="cramer")
+
+    options <- modifyList(defaults,options)
+    options <- modifyList(options,list(...))
+
+    if (options$method=="cramer")
     {
         stopifnot(!is.null(sampler))
-        ref <- sampler(n,...)
+        ref <- sampler(options$n,...)
         return(cramer.test(obs,ref))
     }
-    else if (method=="ks")
+    else if (options$method=="ks")
     {
         stopifnot(!is.null(sampler))
-        ref <- sampler(n,...)
+        ref <- sampler(options$n,...)
         return(ks.test(obs,ref))
     }
-    else if (method=="ks2")
+    else if (options$method=="ks2")
     {
         stopifnot(!is.null(sampler))
         ref <- sampler(n,...)
         return(KolmogorovSmirnov(obs,ref))
     }
-    else if (method=="chisqr")
+    else if (options$method=="chisqr")
     {
         stopifnot(!is.null(cdf))
-        return(chisqr.test(obs,cdf,...))
+        return(chisqr.test(obs=obs,cdf=cdf,...))
     }
 }

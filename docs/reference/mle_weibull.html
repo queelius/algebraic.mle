@@ -62,7 +62,14 @@ from the weibull distribution.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mle_weibull</span><span class="op">(</span><span class="va">x</span>, k0 <span class="op">=</span> <span class="fl">1</span>, eps <span class="op">=</span> <span class="fl">1e-07</span>, keep_obs <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mle_weibull</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  par0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  pgtol <span class="op">=</span> <span class="fl">1e-07</span>,</span>
+<span>  maxit <span class="op">=</span> <span class="fl">10000L</span>,</span>
+<span>  keep_obs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,16 +78,16 @@ from the weibull distribution.</p>
 <dd><p>a sample of observations</p></dd>
 
 
-<dt>eps</dt>
-<dd><p>we numerically solve the MLE equation, `|old-new| &lt;= eps` is stopping condition</p></dd>
+<dt>par0</dt>
+<dd><p>initial estimate of the parameters, defaults to `c(1,1)`</p></dd>
+
+
+<dt>pgtol</dt>
+<dd><p>the convergence tolerance for the optimization algorithm</p></dd>
 
 
 <dt>keep_obs</dt>
 <dd><p>Boolean, specifies whether to keep observations</p></dd>
-
-
-<dt>k</dt>
-<dd><p>initial estimate of shape parameter k</p></dd>
 
 </dl></div>
     <div class="section level2">

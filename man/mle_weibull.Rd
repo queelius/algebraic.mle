@@ -5,17 +5,23 @@
 \title{MLE of the rate parameter when we assume the sample is i.i.d. and drawn
 from the weibull distribution.}
 \usage{
-mle_weibull(x, k0 = 1, rel_tol = 1e-07, keep_obs = F)
+mle_weibull(
+  x,
+  par0 = c(1, 1),
+  pgtol = 1e-07,
+  maxit = 10000L,
+  keep_obs = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a sample of observations}
 
-\item{rel_tol}{when numerically solving the MLE equation,
-`|new-old|/|new| <= rel_tol` is stopping condition}
+\item{par0}{initial estimate of the parameters, defaults to `c(1,1)`}
+
+\item{pgtol}{the convergence tolerance for the optimization algorithm}
 
 \item{keep_obs}{Boolean, specifies whether to keep observations}
-
-\item{k}{initial estimate of shape parameter k}
 }
 \value{
 an `mle` object.
