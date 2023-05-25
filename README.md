@@ -33,53 +33,82 @@ various `mle` type objects. For a full list of functions, see the
 reference](https://queelius.github.io/algebraic.mle/reference/index.html)
 for `algebraic.mle`.
 
-Here is a simple minimum working example (MWE) of fitting an exponential
-model to exponential data.
+Let’s fit a conditional exponential model to some data. In this model,
+`Y | x ~ EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`. First, let’s
+create the DGP (data generating process):
+
+``` r
+dgp <- function(n, x, b0, b1) {
+    rate <- exp(b0 + b1 * x)
+    rexp(n, rate)
+}
+```
+
+Let’s generate some date:
+
+``` r
+n <- 200
+b0 <- -5
+b1 <- .5
+df <- data.frame(x = rep(NA, n), y = rep(NA, n))
+for (i in 1:n) {
+    x <- runif(1, -10, 10)
+    y <- dgp(n = 1, x = x, b0 = b0, b1 = b1)
+    df[i, ] <- c(x, y)
+}
+```
+
+Now, we define two functions, `resp`, `rate`, and `loglik` function
+which will be used to define the model.
+
+``` r
+resp <- function(df) df$y
+rate <- function(df, beta) exp(beta[1] + beta[2] * df$x)
+loglike <- function(df, resp, rate) {
+  function(beta) sum(dexp(x = resp(df), rate = rate(df, beta), log = TRUE))
+}
+```
+
+Let’s fit the model. We’ll use the `optim` function in `stats` to fit
+the model and then wrap it into an `mle` object using `mle_numerical`.
 
 ``` r
 library(algebraic.mle)
-# Fit an exponential model to exponential DGP (data generating process)
-rate.hat <- mle_exp(rexp(100, 1))
-summary(rate.hat)
-#> Maximum likelihood estimator of type mle_exp is normally distributed.
+sol <- mle_numerical(optim(par = c(0, 0),
+    fn = loglike(df, resp, rate),
+    control = list(fnscale = -1),
+    hessian = TRUE))
+summary(sol)
+#> Maximum likelihood estimator of type mle_numerical is normally distributed.
 #> The estimates of the parameters are given by:
-#>      rate 
-#> 0.9698757 
-#> The standard error is  0.09698757 .
+#> [1] -5.0550451  0.5024231
+#> The standard error is  0.07084016 0.01189676 .
 #> The asymptotic 95% confidence interval of the parameters are given by:
-#>           2.5%    97.5%
-#> rate 0.8103453 1.129406
-#> The MSE of the estimator is  9.59758e-05 .
-#> The log-likelihood is  -103.0587 .
-#> The AIC is  208.1175 .
+#>              2.5%      97.5%
+#> param1 -5.1715668 -4.9385234
+#> param2  0.4828547  0.5219916
+#> The MSE of the estimator is  0.005159861 .
+#> The log-likelihood is  -1204.952 .
+#> The AIC is  2413.903 .
 ```
+
+Let’s plot it:
+
+``` r
+# plot the x-y points from the data frame
+plot(df$x,df$y)
+
+# now overlay a plot of the conditional mean
+x <- seq(-10, 10, .1)
+b0.hat <- point(sol)[1]
+b1.hat <- point(sol)[2]
+y.hat <- 1/exp(b0.hat + b1.hat*x)
+y <- 1/exp(b0 + b1*x)
+lines(x, y, col = "green", lwd = 10)
+lines(x, y.hat, col = "blue", lwd = 10)
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 You can see tutorials for more examples of using the package in the
 [vignettes](https://queelius.github.io/algebraic.mle/articles/index.html).
-
-## Future work
-
-  - Fitting with predictors. For instance, in the exponential case, we
-    can have the rate parameter be a function of other observed
-    predictors, say `x1` and `x2`. Then, `Y | (x1,x2) ~
-    EXP(rate(x1,x2))` where `rate(x1,x2)` can take on a variety of
-    forms, e.g., `rate(x1,x2) = exp(beta0 + beta1 x1 + beta2 x2)` if we
-    disallow interaction effects between `x1` and `x2`.
-
-  - Formula interface for fitting models. It will take the following
-    form:
-    
-    ``` r
-    y.hat <- mle(y ~ x1 + x2, data = data, family = "exp")
-    ```
-    
-    It will provide the same API interface as the current API, but this
-    provides a way to fit various models without predictors, e.g., in
-    the above, we see that `Y` is conditioned on `x1` and `x2` through
-    the `rate` parameter as before.
-    
-    The main reason I’m developing this is for another project,
-    `md_series_system`, which is a paper + R package for fitting series
-    systems from *masked data*, notably in the form of masked component
-    causes of failure. See the GitHub repo
-    [md\_series\_system](https://queelius.github.io/md_series_system/).

@@ -88,38 +88,64 @@
 </h2>
 <p>The object representing a fitted model is a type of <code>mle</code> object, the maximum likelihood estimator of the model with respect to observed data.</p>
 <p>The API mostly consists of generic methods with implementations for various <code>mle</code> type objects. For a full list of functions, see the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function reference</a> for <code>algebraic.mle</code>.</p>
-<p>Here is a simple minimum working example (MWE) of fitting an exponential model to exponential data.</p>
+<p>Let’s fit a conditional exponential model to some data. In this model, <code>Y | x ~ EXP(rate(x))</code> where <code>rate(x) = exp(b0 + b1*x)</code>. First, let’s create the DGP (data generating process):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
-<span><span class="co"># Fit an exponential model to exponential DGP (data generating process)</span></span>
-<span><span class="va">rate.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_exp.html">mle_exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.hat</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Maximum likelihood estimator of type mle_exp is normally distributed.</span></span>
-<span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
-<span><span class="co">#&gt;      rate </span></span>
-<span><span class="co">#&gt; 0.9698757 </span></span>
-<span><span class="co">#&gt; The standard error is  0.09698757 .</span></span>
-<span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
-<span><span class="co">#&gt;           2.5%    97.5%</span></span>
-<span><span class="co">#&gt; rate 0.8103453 1.129406</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  9.59758e-05 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  -103.0587 .</span></span>
-<span><span class="co">#&gt; The AIC is  208.1175 .</span></span></code></pre></div>
-<p>You can see tutorials for more examples of using the package in the <a href="https://queelius.github.io/algebraic.mle/articles/index.html">vignettes</a>.</p>
-</div>
-<div class="section level2">
-<h2 id="future-work">Future work<a class="anchor" aria-label="anchor" href="#future-work"></a>
-</h2>
-<ul>
-<li><p>Fitting with predictors. For instance, in the exponential case, we can have the rate parameter be a function of other observed predictors, say <code>x1</code> and <code>x2</code>. Then, <code>Y | (x1,x2) ~     EXP(rate(x1,x2))</code> where <code>rate(x1,x2)</code> can take on a variety of forms, e.g., <code>rate(x1,x2) = exp(beta0 + beta1 x1 + beta2 x2)</code> if we disallow interaction effects between <code>x1</code> and <code>x2</code>.</p></li>
-<li>
-<p>Formula interface for fitting models. It will take the following form:</p>
+<code class="sourceCode R"><span><span class="va">dgp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">x</span>, <span class="va">b0</span>, <span class="va">b1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">rate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0</span> <span class="op">+</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">x</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">rate</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Let’s generate some date:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">y.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle.html">mle</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>, data <span class="op">=</span> <span class="va">data</span>, family <span class="op">=</span> <span class="st">"exp"</span><span class="op">)</span></span></code></pre></div>
-<p>It will provide the same API interface as the current API, but this provides a way to fit various models without predictors, e.g., in the above, we see that <code>Y</code> is conditioned on <code>x1</code> and <code>x2</code> through the <code>rate</code> parameter as before.</p>
-<p>The main reason I’m developing this is for another project, <code>md_series_system</code>, which is a paper + R package for fitting series systems from <em>masked data</em>, notably in the form of masked component causes of failure. See the GitHub repo <a href="https://queelius.github.io/md_series_system/" class="external-link">md_series_system</a>.</p>
-</li>
-</ul>
+<code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">200</span></span>
+<span><span class="va">b0</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">5</span></span>
+<span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fl">.5</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">n</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span>    <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">dgp</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, x <span class="op">=</span> <span class="va">x</span>, b0 <span class="op">=</span> <span class="va">b0</span>, b1 <span class="op">=</span> <span class="va">b1</span><span class="op">)</span></span>
+<span>    <span class="va">df</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Now, we define two functions, <code>resp</code>, <code>rate</code>, and <code>loglik</code> function which will be used to define the model.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="va">df</span><span class="op">$</span><span class="va">y</span></span>
+<span><span class="va">rate</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">beta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">beta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">beta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">loglike</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">dexp</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">resp</span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu">rate</span><span class="op">(</span><span class="va">df</span>, <span class="va">beta</span><span class="op">)</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Let’s fit the model. We’ll use the <code>optim</code> function in <code>stats</code> to fit the model and then wrap it into an <code>mle</code> object using <code>mle_numerical</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
+<span><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    fn <span class="op">=</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate</span><span class="op">)</span>,</span>
+<span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>    hessian <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Maximum likelihood estimator of type mle_numerical is normally distributed.</span></span>
+<span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
+<span><span class="co">#&gt; [1] -5.0550451  0.5024231</span></span>
+<span><span class="co">#&gt; The standard error is  0.07084016 0.01189676 .</span></span>
+<span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
+<span><span class="co">#&gt;              2.5%      97.5%</span></span>
+<span><span class="co">#&gt; param1 -5.1715668 -4.9385234</span></span>
+<span><span class="co">#&gt; param2  0.4828547  0.5219916</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.005159861 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  -1204.952 .</span></span>
+<span><span class="co">#&gt; The AIC is  2413.903 .</span></span></code></pre></div>
+<p>Let’s plot it:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># plot the x-y points from the data frame</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x</span>,<span class="va">df</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># now overlay a plot of the conditional mean</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">.1</span><span class="op">)</span></span>
+<span><span class="va">b0.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/point.html">point</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">b1.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/point.html">point</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">y.hat</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0.hat</span> <span class="op">+</span> <span class="va">b1.hat</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0</span> <span class="op">+</span> <span class="va">b1</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, col <span class="op">=</span> <span class="st">"green"</span>, lwd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y.hat</span>, col <span class="op">=</span> <span class="st">"blue"</span>, lwd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
+<p>You can see tutorials for more examples of using the package in the <a href="https://queelius.github.io/algebraic.mle/articles/index.html">vignettes</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
