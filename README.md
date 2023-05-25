@@ -81,15 +81,15 @@ sol <- mle_numerical(optim(par = c(0, 0),
 summary(sol)
 #> Maximum likelihood estimator of type mle_numerical is normally distributed.
 #> The estimates of the parameters are given by:
-#> [1] -5.0550451  0.5024231
-#> The standard error is  0.07084016 0.01189676 .
+#> [1] -5.0366809  0.4883971
+#> The standard error is  0.07082793 0.01182874 .
 #> The asymptotic 95% confidence interval of the parameters are given by:
 #>              2.5%      97.5%
-#> param1 -5.1715668 -4.9385234
-#> param2  0.4828547  0.5219916
-#> The MSE of the estimator is  0.005159861 .
-#> The log-likelihood is  -1204.952 .
-#> The AIC is  2413.903 .
+#> param1 -5.1531825 -4.9201794
+#> param2  0.4689405  0.5078536
+#> The MSE of the estimator is  0.005156515 .
+#> The log-likelihood is  -1171.433 .
+#> The AIC is  2346.866 .
 ```
 
 Let’s plot it:
