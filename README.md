@@ -4,7 +4,7 @@
 # R package: `algebraic.mle`
 
 <!-- badges: start -->
-http://www.r-pkg.org/badges/version/algebraic.mle
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/algebraic.mle)](https://cran.r-project.org/package=algebraic.mle)
 <!-- badges: end -->
 
 `algebraic.mle` is an R package that provides an algebra over
