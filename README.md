@@ -22,6 +22,19 @@ install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
 
+## Philosophy
+
+The likelihood (and the log-likelihood) is the most important statistical
+object for a parametric model. It's important for the Bayesians and the
+frequentists, and its certainly imporatnt for the likelihood-ists (?).
+When we assume iid for a sample, the MLE enjoys a host of benefits, from
+asymptotic normality (if we look at the log-likelihood, it's just a sum
+of log densities, `loglike(theta|data) = sum(log(pmodel(data, theta))`)
+to, under the right conditions, being the uniform minimum variance unbaised
+estimator of `theta` given the information in `data`.
+Since it is asymptotically normal, we can also do a number of algebraic
+operations that produce other normal distributions.
+
 ## API
 
 The object representing a fitted model is a type of `mle` object, the
@@ -35,16 +48,7 @@ for `algebraic.mle`.
 
 Let’s fit a conditional exponential model to some data. In this model,
 `Y | x ~ EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`. First, let’s
-create the DGP (data generating process):
-
-``` r
-dgp <- function(n, x, b0, b1) {
-    rate <- exp(b0 + b1 * x)
-    rexp(n, rate)
-}
-```
-
-Let’s generate some date:
+observe some data from the DGP (data generating process):
 
 ``` r
 n <- 200
@@ -53,13 +57,13 @@ b1 <- .5
 df <- data.frame(x = rep(NA, n), y = rep(NA, n))
 for (i in 1:n) {
     x <- runif(1, -10, 10)
-    y <- dgp(n = 1, x = x, b0 = b0, b1 = b1)
+    y <- rexp(n, rate = exp(b0 + b1 * x))
     df[i, ] <- c(x, y)
 }
 ```
 
-Now, we define two functions, `resp`, `rate`, and `loglik` function
-which will be used to define the model.
+Now, we define three functions, `resp`, `rate`, and `loglik`, which
+defines our conditional model.
 
 ``` r
 resp <- function(df) df$y
@@ -69,8 +73,9 @@ loglike <- function(df, resp, rate) {
 }
 ```
 
-Let’s fit the model. We’ll use the `optim` function in `stats` to fit
-the model and then wrap it into an `mle` object using `mle_numerical`.
+Let’s fit the model to the data in `df`. We’ll use the `optim` function in
+`stats` to fit the model and then wrap it into an `mle` object using
+`mle_numerical`.
 
 ``` r
 library(algebraic.mle)
@@ -78,6 +83,11 @@ sol <- mle_numerical(optim(par = c(0, 0),
     fn = loglike(df, resp, rate),
     control = list(fnscale = -1),
     hessian = TRUE))
+```
+
+We have fit the model. We can do a lot of things with this model, for instance,
+we can print out summary info:
+``` r
 summary(sol)
 #> Maximum likelihood estimator of type mle_numerical is normally distributed.
 #> The estimates of the parameters are given by:
@@ -92,7 +102,10 @@ summary(sol)
 #> The AIC is  2346.866 .
 ```
 
-Let’s plot it:
+See the API reference for more options.
+
+Let’s plot the data, the true expectation of the
+DGP (green), and the estimate of the DGP (red):
 
 ``` r
 # plot the x-y points from the data frame
@@ -112,3 +125,5 @@ lines(x, y.hat, col = "blue", lwd = 10)
 
 You can see tutorials for more examples of using the package in the
 [vignettes](https://queelius.github.io/algebraic.mle/articles/index.html).
+These vignettes are very simple illustrations, in many ways simpler than
+what we showed above, but they reveal more of the API and how to use it.
