@@ -4,53 +4,52 @@
 # R package: `algebraic.mle`
 
 <!-- badges: start -->
-
+http://www.r-pkg.org/badges/version/algebraic.mle
 <!-- badges: end -->
 
-An algebra over maximum likelihood estimators (MLE).
-
-MLEs have many desirable, well-defined statistical properties. We define
-an algebra over MLEs.
+`algebraic.mle` is an R package that provides an algebra over
+Maximum Likelihood Estimators (MLEs). These estimators possess
+many desirable, well-defined statistical properties which the package
+helps you manipulate and utilize.
 
 ## Installation
 
-You can install `algebraic.mle` from
-[GitHub](https://github.com/queelius/algebraic.mle) with:
-
+`algebraic.mle` can be installed from GitHub by using the devtools package
+in R:
 ``` r
 install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
 
-## Philosophy
+## Purpose
 
-The likelihood (and the log-likelihood) is the most important statistical
-object for a parametric model. It's important for the Bayesians and the
-frequentists, and its certainly imporatnt for the likelihood-ists (?).
-When we assume iid for a sample, the MLE enjoys a host of benefits, from
-asymptotic normality (if we look at the log-likelihood, it's just a sum
-of log densities, `loglike(theta|data) = sum(log(pmodel(data, theta))`)
-to, under the right conditions, being the uniform minimum variance unbaised
-estimator of `theta` given the information in `data`.
-Since it is asymptotically normal, we can also do a number of algebraic
-operations that produce other normal distributions.
+Purpose
+The primary focus of this package is the likelihood and the log-likelihood,
+fundamental statistical concepts for a parametric model. They are integral
+to both Bayesian and frequentist statistics, as well as for those who
+prioritize likelihood. The algebraic.mle package enables easy handling of
+MLEs, which, under certain conditions and assumptions (such as independence
+and identical distribution (iid) for a sample), present numerous advantages,
+including asymptotic normality and being the uniformly minimum variance
+unbiased estimator of theta.
 
-## API
+## API Overview
 
-The object representing a fitted model is a type of `mle` object, the
-maximum likelihood estimator of the model with respect to observed data.
-
-The API mostly consists of generic methods with implementations for
-various `mle` type objects. For a full list of functions, see the
-[function
-reference](https://queelius.github.io/algebraic.mle/reference/index.html)
+The main object in the `algebraic.mle` package is the `mle` object, which
+represents a fitted model. The package provides a number of generic methods
+designed for `mle` objects. A comprehensive list of functions is available
+in the [function reference](https://queelius.github.io/algebraic.mle/reference/index.html)
 for `algebraic.mle`.
 
-Let’s fit a conditional exponential model to some data. In this model,
-`Y | x ~ EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`. First, let’s
-observe some data from the DGP (data generating process):
+
+## Example
+Here is an example of fitting a conditional exponential model to some data
+using `algebraic.mle`.
+The true DGP is given by `Y | x ~ EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`,
+and we do not care how `x` is distributed.
 
 ``` r
+# Generate data (DGP)
 n <- 200
 b0 <- -5
 b1 <- .5
@@ -123,7 +122,7 @@ lines(x, y.hat, col = "blue", lwd = 10)
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
-You can see tutorials for more examples of using the package in the
-[vignettes](https://queelius.github.io/algebraic.mle/articles/index.html).
-These vignettes are very simple illustrations, in many ways simpler than
-what we showed above, but they reveal more of the API and how to use it.
+For a more comprehensive exploration of `algebraic.mle` and its API,
+refer to the tutorials in [vignettes](https://queelius.github.io/algebraic.mle/articles/index.html).
+These provide simple, yet instructive demonstrations of how to use the package
+effectively.
