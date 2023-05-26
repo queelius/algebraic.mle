@@ -123,3 +123,28 @@ bias.mle_exp <- function(x, par = NULL, ...) {
     names(b) <- c("bias(rate)")
     b
 }
+
+#' Log-Likelihood Function Generator for the Exponential Distribution
+#' with a rate parameter that is a function of predictors in `df`,
+#'
+#'    `resp(df) ~ exp(rate(df, beta))`
+#'
+#' where `beta` is a vector of parameters.
+#' 
+#' The function returned by this function is suitable for use with
+#' `optim` or `nlm` to find the maximum likelihood estimate of `beta`.
+#' 
+#' Note that the expected value is `1/rate(...)`.
+#' 
+#' @param df a numeric vector representing a sample of observations.
+#' @param resp a function that returns the response variable given a row
+#'             from a data frame.
+#' @param rate a function that returns the rate given a row from a data frame
+#'             and a parameter vector `beta`
+#' @return Returns a function that computes the conditional log-likelihood
+#' @export
+exp_conditional_loglike <- function(df, resp, rate) {
+    function(beta) {
+        sum(dexp(x = resp(df), rate = rate(df, beta), log = TRUE))
+    }
+}

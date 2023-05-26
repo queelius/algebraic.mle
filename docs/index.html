@@ -73,64 +73,81 @@
 <div class="page-header"><h1 id="r-package-algebraicmle">R package: <code>algebraic.mle</code>
 <a class="anchor" aria-label="anchor" href="#r-package-algebraicmle"></a>
 </h1></div>
-<!-- badges: start --><!-- badges: end --><p>An algebra over maximum likelihood estimators (MLE).</p>
-<p>MLEs have many desirable, well-defined statistical properties. We define an algebra over MLEs.</p>
+<!-- badges: start -->
+<p><code>algebraic.mle</code> is an R package that provides an algebra over Maximum Likelihood Estimators (MLEs). These estimators possess many desirable, well-defined statistical properties which the package helps you manipulate and utilize.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <code>algebraic.mle</code> from <a href="https://github.com/queelius/algebraic.mle" class="external-link">GitHub</a> with:</p>
+<p><code>algebraic.mle</code> can be installed from GitHub by using the devtools package in R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"queelius/algebraic.mle"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="api">API<a class="anchor" aria-label="anchor" href="#api"></a>
+<h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
 </h2>
-<p>The object representing a fitted model is a type of <code>mle</code> object, the maximum likelihood estimator of the model with respect to observed data.</p>
-<p>The API mostly consists of generic methods with implementations for various <code>mle</code> type objects. For a full list of functions, see the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function reference</a> for <code>algebraic.mle</code>.</p>
-<p>Let’s fit a conditional exponential model to some data. In this model, <code>Y | x ~ EXP(rate(x))</code> where <code>rate(x) = exp(b0 + b1*x)</code>. First, let’s create the DGP (data generating process):</p>
+<p>The primary focus of this package is the likelihood and the log-likelihood, fundamental statistical concepts for a parametric model. They are integral to both Bayesian and frequentist statistics, as well as for those who prioritize likelihood. The algebraic.mle package enables easy handling of MLEs, which, under certain conditions and assumptions (such as independence and identical distribution (iid) for a sample), present numerous advantages, including asymptotic normality and being the uniformly minimum variance unbiased estimator of theta.</p>
+</div>
+<div class="section level2">
+<h2 id="api-overview">API Overview<a class="anchor" aria-label="anchor" href="#api-overview"></a>
+</h2>
+<p>The main object in the <code>algebraic.mle</code> package is the <code>mle</code> object, which represents a fitted model. The package provides a number of generic methods designed for <code>mle</code> objects. A comprehensive list of functions is available in the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function reference</a> for <code>algebraic.mle</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>Here is an example of fitting a conditional exponential model to some data using <code>algebraic.mle</code>. The true DGP is given by <code>Y | x ~ EXP(rate(x))</code> where <code>rate(x) = exp(b0 + b1*x)</code>, and we do not care how <code>x</code> is distributed.</p>
+<p>Let’s fit a conditional exponential model to some data. In this model, <code>Y | x ~ EXP(rate(x))</code> where <code>rate(x) = exp(b0 + b1*x)</code>. First, let’s define the DGP (data generating process):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dgp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">x</span>, <span class="va">b0</span>, <span class="va">b1</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">b0</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">.1</span></span>
+<span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fl">0.5</span></span>
+<span></span>
+<span><span class="va">dgp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">rate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0</span> <span class="op">+</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">x</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">rate</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">rate</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">1e-3</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Let’s generate some date:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">200</span></span>
-<span><span class="va">b0</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">5</span></span>
-<span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fl">.5</span></span>
+<code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">75</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1231</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">n</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span>    <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">dgp</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, x <span class="op">=</span> <span class="va">x</span>, b0 <span class="op">=</span> <span class="va">b0</span>, b1 <span class="op">=</span> <span class="va">b1</span><span class="op">)</span></span>
+<span>    <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">dgp</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, x <span class="op">=</span> <span class="va">x</span><span class="op">)</span></span>
 <span>    <span class="va">df</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Now, we define two functions, <code>resp</code>, <code>rate</code>, and <code>loglik</code> function which will be used to define the model.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="va">df</span><span class="op">$</span><span class="va">y</span></span>
 <span><span class="va">rate</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">beta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">beta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">beta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="va">loglike</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">loglik</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">dexp</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">resp</span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu">rate</span><span class="op">(</span><span class="va">df</span>, <span class="va">beta</span><span class="op">)</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Let’s fit the model. We’ll use the <code>optim</code> function in <code>stats</code> to fit the model and then wrap it into an <code>mle</code> object using <code>mle_numerical</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
-<span><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>    fn <span class="op">=</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate</span><span class="op">)</span>,</span>
+<span></span>
+<span><span class="co"># initial guess for the parameters</span></span>
+<span><span class="va">par0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">par0</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b0"</span>, <span class="st">"b1"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="va">par0</span>,</span>
+<span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate</span><span class="op">)</span>,</span>
 <span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>    hessian <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_numerical is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
-<span><span class="co">#&gt; [1] -5.0366809  0.4883971</span></span>
-<span><span class="co">#&gt; The standard error is  0.07082793 0.01182874 .</span></span>
+<span><span class="co">#&gt;         b0         b1 </span></span>
+<span><span class="co">#&gt; -0.2253626  0.4560893 </span></span>
+<span><span class="co">#&gt; The standard error is  0.1167634 0.02145606 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
-<span><span class="co">#&gt;              2.5%      97.5%</span></span>
-<span><span class="co">#&gt; param1 -5.1531825 -4.9201794</span></span>
-<span><span class="co">#&gt; param2  0.4689405  0.5078536</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.005156515 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  -1171.433 .</span></span>
-<span><span class="co">#&gt; The AIC is  2346.866 .</span></span></code></pre></div>
+<span><span class="co">#&gt;          2.5%       97.5%</span></span>
+<span><span class="co">#&gt; b0 -0.4174213 -0.03330395</span></span>
+<span><span class="co">#&gt; b1  0.4207972  0.49138139</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.01409405 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  -119.6977 .</span></span>
+<span><span class="co">#&gt; The AIC is  243.3954 .</span></span></code></pre></div>
 <p>Let’s plot it:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot the x-y points from the data frame</span></span>
@@ -144,8 +161,70 @@
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0</span> <span class="op">+</span> <span class="va">b1</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, col <span class="op">=</span> <span class="st">"green"</span>, lwd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y.hat</span>, col <span class="op">=</span> <span class="st">"blue"</span>, lwd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
+<div class="section level3">
+<h3 id="hypothesis-test-and-model-selection">Hypothesis test and model selection<a class="anchor" aria-label="anchor" href="#hypothesis-test-and-model-selection"></a>
+</h3>
+<p>Let’s test the hypothesis that <code>b0 = 0</code> using a likelihood ratio test. We can use the LRT because this null model is a special case (nested) of the full model. The null model is <code>Y | x ~ EXP(rate(x))</code> where <code>rate(x) = exp(b1*x)</code>, while the full model is <code>Y | x ~ EXP(rate(x))</code> where <code>rate(x) = exp(b0 + b1*x)</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># construct null model where b1 = 0</span></span>
+<span><span class="va">rateb0_zero</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">b1</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b1</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># initial guess for the parameters</span></span>
+<span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">b1</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"b1"</span></span>
+<span></span>
+<span><span class="co"># fit the model under the null hypothesis</span></span>
+<span><span class="va">sol_null_b0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="va">b1</span>,</span>
+<span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rateb0_zero</span><span class="op">)</span>,</span>
+<span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sol_null_b0</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Maximum likelihood estimator of type mle_numerical is normally distributed.</span></span>
+<span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
+<span><span class="co">#&gt;        b1 </span></span>
+<span><span class="co">#&gt; 0.4617093 </span></span>
+<span><span class="co">#&gt; The standard error is  0.01899941 .</span></span>
+<span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
+<span><span class="co">#&gt;         2.5%     97.5%</span></span>
+<span><span class="co">#&gt; b1 0.4304581 0.4929605</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.0003609774 .</span></span>
+<span><span class="co">#&gt; The log-likelihood is  -121.7164 .</span></span>
+<span><span class="co">#&gt; The AIC is  245.4328 .</span></span></code></pre></div>
+<p>Let’s compute the likelihood ratio test statistic and p-value:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">lrt</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol_null_b0</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4.037435</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
+<span><span class="co">#&gt; [1] 0.04450142</span></span></code></pre></div>
+<p>We see that the <code>p &gt; 0.05</code>, so the data appears to be <em>compatible</em> with the null hypothesis <code>b0 = 0</code>.</p>
+<p>If we wanted to do model selection, we could use the AIC:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 243.3954</span></span>
+<span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol_null_b0</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 245.4328</span></span></code></pre></div>
+<p>Since the AIC of the null model is greater than the AIC of the full model, we conclude that the data is “more” compatible with the full model.</p>
+<p>So, even though the data appears to be compatible with the null hypothesis according to the LRT, the AIC suggests that the full model is better. We actually know the DGP and both models are reasonable approximations, but neither of course models the DGP exactly.</p>
+<p>“All models are wrong, but some are useful.” - George Box</p>
+<p>Eventually, if we have a sufficiently large sample, any model that is not the DGP can be discarded, but reality is so complex that we will never have a large enough sample and we will never be able to come up with a model that is exactly the DGP.</p>
+<p>Let’s do another test, <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;b1%20%3D%200%20%22b1%20=%200%22" alt="b1 = 0">, i.e., it’s an unconditional exponential model, or just a standard exponential distribution.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rate_b1_zero</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">b0</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0</span><span class="op">)</span></span>
+<span><span class="co"># fit the model under the null hypothesis</span></span>
+<span><span class="va">sol_null_b1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate_b1_zero</span><span class="op">)</span>,</span>
+<span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">lrt.null_b1</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol_null_b1</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 285.0265</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.null_b1</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
+<span><span class="co">#&gt; [1] 6.029289e-64</span></span></code></pre></div>
+<p>This has a <code>p</code>-value of essentially zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
 <p>You can see tutorials for more examples of using the package in the <a href="https://queelius.github.io/algebraic.mle/articles/index.html">vignettes</a>.</p>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -159,8 +238,9 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 
@@ -179,7 +259,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/queelius/algebraic.mle/blob/master/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
