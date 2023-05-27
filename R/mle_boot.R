@@ -20,18 +20,19 @@
 #' @examples
 #' data <- rnorm(15)
 #' solver <- function(data, ind) {
-#'     point(mle_normal_mu_var(data[ind]))
+#'     point(mle_normal(data[ind]))
 #' }
-#' mle_boot(solver, data, 1000)
+#' theta.bt <- mle_boot(solver, data, 1000)
+#' 
 mle_boot <- function(mle_solver, data, R=999, ...) {
     stopifnot(is.function(mle_solver))
-    theta.boot <- boot::boot(
+    theta.bt <- boot(
         data = data,
         statistic = mle_solver,
         R = R, ...
     )
-    class(theta.boot) <- c("mle_boot", "mle", class(theta.boot))
-    theta.boot
+    class(theta.b) <- c("mle_boot", "mle", class(theta.bt))
+    theta.bt
 }
 
 #' Method for obtaining the parameters of an `boot` object.
@@ -71,20 +72,9 @@ obs.mle_boot <- function(object, ...) object$data
 #' @importFrom stats cov
 #' @export
 vcov.mle_boot <- function(object, ...) {
-    cov(object$t, ...)
+    # remove the Bessel correction, since this is an MLE
+    cov(object$t, ...) * (nobs(object) - 1) / nobs(object
 }
-
-#' Computes the variance-covariance matrix of `boot` object.
-#'
-#' @param object the `boot` object to obtain the variance-covariance of
-#' @param ... additional arguments to pass
-#'
-#' @importFrom MASS ginv
-#' @export
-fim.mle_boot <- function(object, ...) {
-    ginv(vcov(object, ...))
-}
-
 
 #' Computes the estimate of the MSE of a `boot` object.
 #'

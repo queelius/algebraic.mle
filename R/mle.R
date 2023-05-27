@@ -275,35 +275,6 @@ is_mle <- function(x) {
     inherits(x, "mle")
 }
 
-#' Function for obtaining sample points for an `mle` object that is within
-#' the `p`-probability region.
-#'
-#' @param n the sample size
-#' @param x the `mle` object
-#' @param p the probability region
-#'
-#' @importFrom stats qchisq mahalanobis
-#' @export
-sample_mle_region <- function(n, x, p = .95) {
-    stopifnot(p > 0.0 && p <= 1.0, n > 0, is_mle(x))
-    k <- nparams(x)
-    crit <- qchisq(p, k)
-    nfo <- fim(x)
-    mu <- point(x)
-
-    i <- 0L
-    samp <- sampler(x)
-    data <- matrix(nrow = n, ncol = k)
-    while (i < n) {
-        x <- samp(1)
-        d <- mahalanobis(x, center = mu, cov = nfo, inverted = T)
-        if (d <= crit) {
-            i <- i + 1L
-            data[i, ] <- x
-        }
-    }
-    data
-}
 
 #' Method for determining the orthogonal components of an `mle` object
 #' `x`.

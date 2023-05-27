@@ -41,7 +41,6 @@ theta.start$par
 # Load required library
 library(ggplot2)
 
-
 m <- 2
 # Convert the matrix to a data frame
 data_df <- as_tibble(theta.start$trace_info)
