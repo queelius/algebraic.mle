@@ -1,4 +1,12 @@
 
+  - [R package: `algebraic.mle`](#r-package-algebraicmle)
+      - [Installation](#installation)
+      - [Purpose](#purpose)
+      - [API Overview](#api-overview)
+      - [Example](#example)
+          - [Hypothesis test and model
+            selection](#hypothesis-test-and-model-selection)
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -49,13 +57,23 @@ for `algebraic.mle`.
 ## Example
 
 Here is an example of fitting a conditional exponential model to some
-data using `algebraic.mle`. The true DGP is given by `Y | x ~
-EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`, and we do not care how
-`x` is distributed.
+data using `algebraic.mle`. The true DGP is given by `Y | x ~ X(x) + W$`
+where `X(x) ~ EXP(rate(x))`, `W ~ N(0, 1e-3)`, and `rate(x) = exp(b0 +
+b1 * x)`.
 
-Let’s fit a conditional exponential model to some data. In this model,
-`Y | x ~ EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`. First, let’s
-define the DGP (data generating process):
+In this analysis, we do not care how `x` is distributed, and we take it
+to be an observable exogenous variable. We are interested in the
+conditional distribution of `Y | x`.
+
+Let’s fit a conditional exponential model to some data from this DGP.
+While the true DGP is a bit more complicated, the most salient part is
+the exponential component, and the gaussian term may be thought of as
+added noise, say, from imprecise measurement. Of course, the true DGP is
+unknown in practice, so arriving at an conditional exponential model is
+a matter of judgement and domain knowledge.
+
+In this model, `Y | x ~ EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`.
+First, let’s define the DGP (data generating process):
 
 ``` r
 b0 <- -.1
@@ -63,15 +81,17 @@ b1 <- 0.5
 
 dgp <- function(n, x) {
     rate <- exp(b0 + b1 * x)
-    rexp(n, rate) + rnorm(n, 0, 1e-3)
+    X <- rexp(n, rate)
+    W <- rnorm(n, 0, 1e-3)
+    return(X + W)
 }
 ```
 
 Let’s generate some date:
 
 ``` r
-n <- 75
-set.seed(1231)
+n <- 75 # number of observations
+set.seed(1231) # for reproducibility
 df <- data.frame(x = rep(NA, n), y = rep(NA, n))
 for (i in 1:n) {
     x <- runif(1, -10, 10)
@@ -183,8 +203,8 @@ pchisq(lrt, df = 1, lower.tail = FALSE) # compute the p-value
 #> [1] 0.04450142
 ```
 
-We see that the `p > 0.05`, so the data appears to be *compatible* with
-the null hypothesis `b0 = 0`.
+We see that the `p < 0.05`, but just barely, so we say the data is not
+compatible with the null hypothesis `b0 = 0`.
 
 If we wanted to do model selection, we could use the AIC:
 
@@ -195,14 +215,10 @@ aic(sol_null_b0)
 #> [1] 245.4328
 ```
 
-Since the AIC of the null model is greater than the AIC of the full
-model, we conclude that the data is “more” compatible with the full
-model.
-
-So, even though the data appears to be compatible with the null
-hypothesis according to the LRT, the AIC suggests that the full model is
-better. We actually know the DGP and both models are reasonable
-approximations, but neither of course models the DGP exactly.
+By the AIC measure, since the full model has an AIC less than the null
+model, we would choose the full model. We actually know the DGP and both
+models are reasonable approximations, but the full model is a closer
+approximation.
 
 “All models are wrong, but some are useful.” - George Box
 
@@ -211,10 +227,8 @@ not the DGP can be discarded, but reality is so complex that we will
 never have a large enough sample and we will never be able to come up
 with a model that is exactly the DGP.
 
-Let’s do another test, ![b1
-= 0](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;b1%20%3D%200
-"b1 = 0"), i.e., it’s an unconditional exponential model, or just a
-standard exponential distribution.
+Let’s do another test, `b1 = 0`, i.e., it’s an unconditional exponential
+model, or just a standard exponential distribution.
 
 ``` r
 rate_b1_zero <- function(df, b0) exp(b0)

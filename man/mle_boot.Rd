@@ -7,7 +7,7 @@
 mle_boot(mle_solver, data, R = 999, ...)
 }
 \arguments{
-\item{mle_solver}{given a data, find the MLE.}
+\item{mle_solver}{given data, find the MLE.}
 
 \item{data}{data for resampling, where for each resample we generate an MLE}
 
@@ -16,14 +16,15 @@ mle_boot(mle_solver, data, R = 999, ...)
 \item{...}{additional arguments to pass.}
 }
 \value{
-an `mle_boot` object, which is an `mle` object with a
-`boot` object as its parent.
+an `mle_boot` object, which is an `mle` object with a `boot` object
+        as its parent.
 }
 \description{
 Sometimes, the large sample asymptotic theory of MLEs is not applicable.
 In such cases, we can use the bootstrap to estimate the sampling distribution
 of the MLE.
-
+}
+\details{
 Look up the `boot` package for more information on the bootstrap and
 how to use it. You can pass additional arguments to the `boot` function
 using the `...` argument to `mle_boot`.
@@ -31,7 +32,7 @@ using the `...` argument to `mle_boot`.
 \examples{
 data <- rnorm(15)
 solver <- function(data, ind) {
-    point(mle_normal_mu_var(data[ind]))
+    point(mle_normal(data[ind]))
 }
-mle_boot(solver, data, 1000)
+theta.bt <- mle_boot(solver, data)
 }

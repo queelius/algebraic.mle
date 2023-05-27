@@ -1,6 +1,5 @@
-#' @title Bootstrap MLE
+#' Bootstrap MLE
 #'
-#' @description
 #' Sometimes, the large sample asymptotic theory of MLEs is not applicable.
 #' In such cases, we can use the bootstrap to estimate the sampling distribution
 #' of the MLE.
@@ -9,12 +8,12 @@
 #' how to use it. You can pass additional arguments to the `boot` function
 #' using the `...` argument to `mle_boot`.
 #'
-#' @param mle_solver given a data, find the MLE.
+#' @param mle_solver given data, find the MLE.
 #' @param data data for resampling, where for each resample we generate an MLE
 #' @param R bootstrap replicates, defaults to 999
 #' @param ... additional arguments to pass.
-#' @return an `mle_boot` object, which is an `mle` object with a
-#' `boot` object as its parent.
+#' @return an `mle_boot` object, which is an `mle` object with a `boot` object
+#'         as its parent.
 #' @importFrom boot boot
 #' @export
 #' @examples
@@ -22,16 +21,15 @@
 #' solver <- function(data, ind) {
 #'     point(mle_normal(data[ind]))
 #' }
-#' theta.bt <- mle_boot(solver, data, 1000)
-#' 
-mle_boot <- function(mle_solver, data, R=999, ...) {
+#' theta.bt <- mle_boot(solver, data)
+mle_boot <- function(mle_solver, data, R = 999, ...) {
     stopifnot(is.function(mle_solver))
     theta.bt <- boot(
         data = data,
         statistic = mle_solver,
         R = R, ...
     )
-    class(theta.b) <- c("mle_boot", "mle", class(theta.bt))
+    class(theta.bt) <- c("mle_boot", "mle", class(theta.bt))
     theta.bt
 }
 
@@ -73,7 +71,7 @@ obs.mle_boot <- function(object, ...) object$data
 #' @export
 vcov.mle_boot <- function(object, ...) {
     # remove the Bessel correction, since this is an MLE
-    cov(object$t, ...) * (nobs(object) - 1) / nobs(object
+    cov(object$t, ...) * (nobs(object) - 1) / nobs(object)
 }
 
 #' Computes the estimate of the MSE of a `boot` object.
