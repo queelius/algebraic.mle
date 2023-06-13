@@ -76,10 +76,7 @@
 <li><a href="#purpose">Purpose</a></li>
 <li><a href="#api-overview">API Overview</a></li>
 <li>
-<a href="#fitting-exponential-models">Fitting exponential models</a><ul>
-<li><a href="#hypothesis-test-and-model-selection">Hypothesis test and model selection</a></li>
-<li><a href="#time-dependent-rate">Time-dependent rate</a></li>
-</ul>
+<a href="#fitting-exponential-models">Fitting exponential models</a><ul><li><a href="#hypothesis-test-and-model-selection">Hypothesis test and model selection</a></li></ul>
 </li>
 </ul>
 </li></ul>
@@ -245,23 +242,6 @@
 <span><span class="co">#&gt; b0 -0.4174213 -0.03330395</span></span>
 <span><span class="co">#&gt; b1  0.4207972  0.49138139</span></span></code></pre></div>
 <p>We see that the 95% confidence interval for <code>b0</code> does not include zero, so we reject the null hypothesis that <code>b0 = 0</code>. The 95% confidence interval for <code>b1</code> does not include zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
-</div>
-<div class="section level3">
-<h3 id="time-dependent-rate">Time-dependent rate<a class="anchor" aria-label="anchor" href="#time-dependent-rate"></a>
-</h3>
-<p>What happens if we allow rate to be a function of time? By definition, the exponential ditribution has a memoryless property, so the rate should not depend on time. However, we have introduced covariates or predictors into the model, and we could allow time to be another one.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rate</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">beta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">beta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">beta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">t</span><span class="op">)</span></span>
-<span><span class="co"># fit the model under the null hypothesis</span></span>
-<span><span class="va">sol4</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>,</span>
-<span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate</span><span class="op">)</span>,</span>
-<span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
-<span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">(</span><span class="va">lrt.sol4</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol4</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -239.3954</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.sol3</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
-<span><span class="co">#&gt; [1] 6.029289e-64</span></span></code></pre></div>
 <p>You can see tutorials for more examples of using the package in the <a href="https://queelius.github.io/algebraic.mle/articles/index.html">vignettes</a>.</p>
 </div>
 </div>

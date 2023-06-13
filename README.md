@@ -6,7 +6,6 @@
       - [Fitting exponential models](#fitting-exponential-models)
           - [Hypothesis test and model
             selection](#hypothesis-test-and-model-selection)
-          - [Time-dependent rate](#time-dependent-rate)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -259,27 +258,6 @@ We see that the 95% confidence interval for `b0` does not include zero,
 so we reject the null hypothesis that `b0 = 0`. The 95% confidence
 interval for `b1` does not include zero, so we reject the null
 hypothesis that `b1 = 0`.
-
-### Time-dependent rate
-
-What happens if we allow rate to be a function of time? By definition,
-the exponential ditribution has a memoryless property, so the rate
-should not depend on time. However, we have introduced covariates or
-predictors into the model, and we could allow time to be another one.
-
-``` r
-rate <- function(df, beta) exp(beta[1] + beta[2] * df$t)
-# fit the model under the null hypothesis
-sol4 <- mle_numerical(optim(par = c(0,0),
-    fn = loglik(df, resp, rate),
-    control = list(fnscale = -1),
-    hessian = TRUE,
-    method = "BFGS"))
-(lrt.sol4 <- -2 * (loglike(sol4) - loglike(sol)))
-#> [1] -239.3954
-pchisq(lrt.sol3, df = 1, lower.tail = FALSE) # compute the p-value
-#> [1] 6.029289e-64
-```
 
 You can see tutorials for more examples of using the package in the
 [vignettes](https://queelius.github.io/algebraic.mle/articles/index.html).
