@@ -45,6 +45,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/dgp.html">Dynamic failure rate model</a>
     <a class="dropdown-item" href="articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="articles/normal-mle.html">Normal distribution MLE</a>
     <a class="dropdown-item" href="articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
@@ -75,7 +76,10 @@
 <li><a href="#purpose">Purpose</a></li>
 <li><a href="#api-overview">API Overview</a></li>
 <li>
-<a href="#example">Example</a><ul><li><a href="#hypothesis-test-and-model-selection">Hypothesis test and model selection</a></li></ul>
+<a href="#fitting-exponential-models">Fitting exponential models</a><ul>
+<li><a href="#hypothesis-test-and-model-selection">Hypothesis test and model selection</a></li>
+<li><a href="#time-dependent-rate">Time-dependent rate</a></li>
+</ul>
 </li>
 </ul>
 </li></ul>
@@ -104,7 +108,7 @@
 <p>The main object in the <code>algebraic.mle</code> package is the <code>mle</code> object, which represents a fitted model. The package provides a number of generic methods designed for <code>mle</code> objects. A comprehensive list of functions is available in the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function reference</a> for <code>algebraic.mle</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="fitting-exponential-models">Fitting exponential models<a class="anchor" aria-label="anchor" href="#fitting-exponential-models"></a>
 </h2>
 <p>Here is an example of fitting a conditional exponential model to some data using <code>algebraic.mle</code>. The true DGP is given by <code>Y | x ~ X(x) + W$</code> where <code>X(x) ~ EXP(rate(x))</code>, <code>W ~ N(0, 1e-3)</code>, and <code>rate(x) = exp(b0 + b1 * x)</code>.</p>
 <p>In this analysis, we do not care how <code>x</code> is distributed, and we take it to be an observable exogenous variable. We are interested in the conditional distribution of <code>Y | x</code>.</p>
@@ -182,42 +186,38 @@
 <p>Let’s test the hypothesis that <code>b0 = 0</code> using a likelihood ratio test. We can use the LRT because this null model is a special case (nested) of the full model. The null model is <code>Y | x ~ EXP(rate(x))</code> where <code>rate(x) = exp(b1*x)</code>, while the full model is <code>Y | x ~ EXP(rate(x))</code> where <code>rate(x) = exp(b0 + b1*x)</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># construct null model where b1 = 0</span></span>
-<span><span class="va">rateb0_zero</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">b1</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b1</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">rate_b0_zero</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">b1</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b1</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># initial guess for the parameters</span></span>
-<span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">b1</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"b1"</span></span>
-<span></span>
 <span><span class="co"># fit the model under the null hypothesis</span></span>
-<span><span class="va">sol_null_b0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="va">b1</span>,</span>
-<span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rateb0_zero</span><span class="op">)</span>,</span>
+<span><span class="va">sol2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate_b0_zero</span><span class="op">)</span>,</span>
 <span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sol_null_b0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_numerical is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
-<span><span class="co">#&gt;        b1 </span></span>
-<span><span class="co">#&gt; 0.4617093 </span></span>
+<span><span class="co">#&gt; [1] 0.4617093</span></span>
 <span><span class="co">#&gt; The standard error is  0.01899941 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
-<span><span class="co">#&gt;         2.5%     97.5%</span></span>
-<span><span class="co">#&gt; b1 0.4304581 0.4929605</span></span>
+<span><span class="co">#&gt;             2.5%     97.5%</span></span>
+<span><span class="co">#&gt; param1 0.4304581 0.4929605</span></span>
 <span><span class="co">#&gt; The MSE of the estimator is  0.0003609774 .</span></span>
 <span><span class="co">#&gt; The log-likelihood is  -121.7164 .</span></span>
 <span><span class="co">#&gt; The AIC is  245.4328 .</span></span></code></pre></div>
 <p>Let’s compute the likelihood ratio test statistic and p-value:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">lrt</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol_null_b0</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">lrt.sol2</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 4.037435</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.sol2</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
 <span><span class="co">#&gt; [1] 0.04450142</span></span></code></pre></div>
 <p>We see that the <code>p &lt; 0.05</code>, but just barely, so we say the data is not compatible with the null hypothesis <code>b0 = 0</code>.</p>
 <p>If we wanted to do model selection, we could use the AIC:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 243.3954</span></span>
-<span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol_null_b0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 245.4328</span></span></code></pre></div>
 <p>By the AIC measure, since the full model has an AIC less than the null model, we would choose the full model. We actually know the DGP and both models are reasonable approximations, but the full model is a closer approximation.</p>
 <p>“All models are wrong, but some are useful.” - George Box</p>
@@ -226,16 +226,42 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rate_b1_zero</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">b0</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0</span><span class="op">)</span></span>
 <span><span class="co"># fit the model under the null hypothesis</span></span>
-<span><span class="va">sol_null_b1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fl">0</span>,</span>
+<span><span class="va">sol3</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate_b1_zero</span><span class="op">)</span>,</span>
 <span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">(</span><span class="va">lrt.null_b1</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol_null_b1</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">lrt.sol3</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol3</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 285.0265</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.null_b1</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.sol3</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
 <span><span class="co">#&gt; [1] 6.029289e-64</span></span></code></pre></div>
 <p>This has a <code>p</code>-value of essentially zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
+<p>Let’s compare the confidence intervals for each of these models.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">CI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<span><span class="co"># print the confidence interval</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">CI</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          2.5%       97.5%</span></span>
+<span><span class="co">#&gt; b0 -0.4174213 -0.03330395</span></span>
+<span><span class="co">#&gt; b1  0.4207972  0.49138139</span></span></code></pre></div>
+<p>We see that the 95% confidence interval for <code>b0</code> does not include zero, so we reject the null hypothesis that <code>b0 = 0</code>. The 95% confidence interval for <code>b1</code> does not include zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="time-dependent-rate">Time-dependent rate<a class="anchor" aria-label="anchor" href="#time-dependent-rate"></a>
+</h3>
+<p>What happens if we allow rate to be a function of time? By definition, the exponential ditribution has a memoryless property, so the rate should not depend on time. However, we have introduced covariates or predictors into the model, and we could allow time to be another one.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rate</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">beta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">beta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">beta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">t</span><span class="op">)</span></span>
+<span><span class="co"># fit the model under the null hypothesis</span></span>
+<span><span class="va">sol4</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>,</span>
+<span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate</span><span class="op">)</span>,</span>
+<span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">lrt.sol4</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol4</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] -239.3954</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.sol3</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
+<span><span class="co">#&gt; [1] 6.029289e-64</span></span></code></pre></div>
 <p>You can see tutorials for more examples of using the package in the <a href="https://queelius.github.io/algebraic.mle/articles/index.html">vignettes</a>.</p>
 </div>
 </div>

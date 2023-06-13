@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
     <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
     <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
@@ -114,6 +115,11 @@ In this case, the bias is zero (or zero vector).</dd>
         <dd>Function to compute the confidence intervals of `mle` objects.</dd>
       </dl><dl><dt>
           
+          <code><a href="confint.mle_boot.html">confint(<i>&lt;mle_boot&gt;</i>)</a></code> 
+        </dt>
+        <dd>Method for obtained the confidence interval of an `mle_boot` object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="cramer.test.html">cramer.test()</a></code> 
         </dt>
         <dd>Cramer Von Mises hypothesis test</dd>
@@ -156,6 +162,11 @@ matrix of an `mle` object.</dd>
         <dd>Determine if an object `x` is an `mle` object.</dd>
       </dl><dl><dt>
           
+          <code><a href="is_mle_boot.html">is_mle_boot()</a></code> 
+        </dt>
+        <dd>Determine if an object is an `mle_boot` object.</dd>
+      </dl><dl><dt>
+          
           <code><a href="loglike.html">loglike()</a></code> 
         </dt>
         <dd>Generic method for obtaining the log-likelihood of fitted distribution
@@ -174,7 +185,7 @@ object, assuming it has a likelihood function, e.g., a fitted `mle` object.</dd>
           
           <code><a href="mle_boot.html">mle_boot()</a></code> 
         </dt>
-        <dd>Bootstrap MLE</dd>
+        <dd>Bootstrapped MLE</dd>
       </dl><dl><dt>
           
           <code><a href="mle_exp.html">mle_exp()</a></code> 

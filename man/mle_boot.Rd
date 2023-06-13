@@ -2,22 +2,15 @@
 % Please edit documentation in R/mle_boot.R
 \name{mle_boot}
 \alias{mle_boot}
-\title{Bootstrap MLE}
+\title{Bootstrapped MLE}
 \usage{
-mle_boot(mle_solver, data, R = 999, ...)
+mle_boot(object)
 }
 \arguments{
-\item{mle_solver}{given data, find the MLE.}
-
-\item{data}{data for resampling, where for each resample we generate an MLE}
-
-\item{R}{bootstrap replicates, defaults to 999}
-
-\item{...}{additional arguments to pass.}
+\item{object}{the `boot` return value}
 }
 \value{
-an `mle_boot` object, which is an `mle` object with a `boot` object
-        as its parent.
+an `mle_boot` object (wrapper for `boot` object)
 }
 \description{
 Sometimes, the large sample asymptotic theory of MLEs is not applicable.
@@ -25,14 +18,12 @@ In such cases, we can use the bootstrap to estimate the sampling distribution
 of the MLE.
 }
 \details{
-Look up the `boot` package for more information on the bootstrap and
-how to use it. You can pass additional arguments to the `boot` function
-using the `...` argument to `mle_boot`.
-}
-\examples{
-data <- rnorm(15)
-solver <- function(data, ind) {
-    point(mle_normal(data[ind]))
-}
-theta.bt <- mle_boot(solver, data)
+This takes an approach similiar to the `mle_numerical` object, which is
+a wrapper for a `stats::optim` return value, or something that is compatible
+with the `optim` return value. Here, we take a `boot` object, which is
+the sampling distribution of an MLE, and wrap it in an `mle_boot` object
+and then provide a number of methods for the `mle_boot` object that satisfies
+the concept of an `mle` object.
+
+Look up the `boot` package for more information on the bootstrap.
 }

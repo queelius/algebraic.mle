@@ -110,36 +110,40 @@ newton_raphson <- function(
         }
     }
 
-    debug_out <- function(par0, gr0, val0, it, count) {
-        par_str <- paste(sprintf("%.5f", par0), collapse = ", ")
-        gr_str <- paste(sprintf("%.5f", gr0), collapse = ", ")
-        message(paste(
-            "Iteration", sprintf("%4d", it), "|",
-            "Count", sprintf("%4d", count), "|",
-            "Solution: (", par_str, ")", "|",
-            "Value:", sprintf("%.5f", val0), "|",
-            "Gradient: (", gr_str, ")"))
+    debug_out <- function(...) {
+        prnt <- function(x, msg) {
+            if (!is.null(x)) {
+                if (is.integer(x)) {
+                    message(paste("|", msg, ": ", sprintf("%4d", x),
+                        collapse = ", "))
+                } else if (is.matrix(x)) {
+                    message(paste(msg, ":\n"))
+                    print(x)
+                } else {
+                    message(paste("|", msg, ": ", sprintf("%.5f", x),
+                        collapse = ", "))
+                }
+            }
+        }
+
+        items <- list(...)
+        item_names <- names(items)
+        for (i in 1:length(items))
+            prnt(items[[i]], item_names[i])
     }
 
     par1 <- NULL
-
     repeat {
-        gr0 <- gr(par0)
-        #if (control$inverted) {
-        #    inv_hess0 <- hess(par0)
-        #} else {
-            hess0 <- hess(par0)
-        #    inv_hess0 <- ginv(hess0)
-        #}
-        #d0 <- inv_hess0 %*% gr0
-        d0 <- ginv(hess0) %*% gr0
-        #d0 <- gr0
+        g <- gr(par0)
+        d <- solve(hess(par0)) %*% g
         alpha <- control$eta
         while (it <= control$maxit) {
             it <- it + 1L
-            par1 <- control$proj(par0 - alpha * d0)
-            cat("it:", it, "par1: ", par1,
-                ", alpha: ", alpha, ", d0: (", d0, ")'\n")
+            par1 <- control$proj(par0 - alpha * d)
+            if (control$trace && it %% control$REPORT == 0) {
+                debug_out(par0 = par0, par1 = par1,
+                    d = d, g = g, val = val, it = it, alpha = alpha)
+            }
             if (!control$sup(par1)) {
                 alpha <- control$r * alpha
                 next
@@ -149,7 +153,6 @@ newton_raphson <- function(
                 warning("NaN value encountered")
                 next
             }
-            cat("val1: ", val1, ", val0: ", val0, "\n")
             if (val1 <= val0) {
                 break
             }
@@ -157,19 +160,15 @@ newton_raphson <- function(
         }
 
         converged <- control$test(
-            par0 = par0, par1 = par1, gr0 = gr0, tol = control$tol, ...)
+            par0 = par0, par1 = par1, gr0 = g, tol = control$tol, ...)
 
         par0 <- par1
-        val0 <- val1
+        val <- val1
 
         count <- count + 1L
         if (control$trace) {
-            append_trace(c(control$fnscale * val0, par0, gr0))
+            append_trace(c(control$fnscale * val, par0, g))
         }
-
-        #if (control$debug > 0L && count %% control$REPORT == 0) {
-        debug_out(par0, gr0, val0, it, count)
-        #}
 
         if (it > control$maxit || converged) {
             break

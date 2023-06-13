@@ -217,12 +217,12 @@ ggplot(df.tmp) +
 
 
 ## PIs
-n <- 100
+n <- 10
 theta <- c(4,2)
 x <- rnorm(n,mean=theta[1],sd=sqrt(theta[2]))
 head(x,n=4)
 hist(x)
-theta.hat <- mle_normal_mu_var(x)
+theta.hat <- mle_normal(x)
 summary(theta.hat)
 point(theta.hat)
 fim(theta.hat)
@@ -233,13 +233,41 @@ bias(theta.hat)
 mse(theta.hat)        # estimate of MSE
 mse(theta.hat,theta)  # true MSE
 
-mle_solver <- function(data, ind)
-    point(mle_normal_mu_var(data[ind]))
+mle_solver <- function(data, ind) {
+    point(mle_normal(data[ind]))
+}
 R <- 100000 # number of bootstrap replicates
 
 theta.boot <- mle_boot(mle_solver, x, R, parallel="multicore", ncpus=4)
-bias(theta.boot)
-bias(theta.hat)
+round(bias(theta.boot),digits=4)
+round(bias(theta.hat), digits=4)
 
 samplr <- function(n=1,theta) rnorm(n,theta[1],theta[2])
 pred(x=theta.hat, samp=samplr)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+####################################
+
+

@@ -1,37 +1,30 @@
-#' Bootstrap MLE
+#' Bootstrapped MLE
 #'
 #' Sometimes, the large sample asymptotic theory of MLEs is not applicable.
 #' In such cases, we can use the bootstrap to estimate the sampling distribution
 #' of the MLE.
+#' 
+#' This takes an approach similiar to the `mle_numerical` object, which is
+#' a wrapper for a `stats::optim` return value, or something that is compatible
+#' with the `optim` return value. Here, we take a `boot` object, which is
+#' the sampling distribution of an MLE, and wrap it in an `mle_boot` object
+#' and then provide a number of methods for the `mle_boot` object that satisfies
+#' the concept of an `mle` object.
 #'
-#' Look up the `boot` package for more information on the bootstrap and
-#' how to use it. You can pass additional arguments to the `boot` function
-#' using the `...` argument to `mle_boot`.
+#' Look up the `boot` package for more information on the bootstrap.
 #'
-#' @param mle_solver given data, find the MLE.
-#' @param data data for resampling, where for each resample we generate an MLE
-#' @param R bootstrap replicates, defaults to 999
-#' @param ... additional arguments to pass.
-#' @return an `mle_boot` object, which is an `mle` object with a `boot` object
-#'         as its parent.
-#' @importFrom boot boot
+#' @param object the `boot` return value
+#' @return an `mle_boot` object (wrapper for `boot` object)
 #' @export
-#' @examples
-#' data <- rnorm(15)
-#' solver <- function(data, ind) {
-#'     point(mle_normal(data[ind]))
-#' }
-#' theta.bt <- mle_boot(solver, data)
-mle_boot <- function(mle_solver, data, R = 999, ...) {
-    stopifnot(is.function(mle_solver))
-    theta.bt <- boot(
-        data = data,
-        statistic = mle_solver,
-        R = R, ...
-    )
-    class(theta.bt) <- c("mle_boot", "mle", class(theta.bt))
-    theta.bt
+mle_boot <- function(object) {
+    class(object) <- c("mle_boot", "mle", class(object))
+    object
 }
+
+#' Determine if an object is an `mle_boot` object.
+#' @param x the object to test
+#' @export
+is_mle_boot <- function(x) inherits(x, "mle_boot")
 
 #' Method for obtaining the parameters of an `boot` object.
 #'
@@ -145,7 +138,24 @@ se.mle_boot <- function(object) {
 #' @param ... additional arguments to pass
 #' @export
 sampler.mle_boot <- function(x, ...) {
-    function(n) {
-        x$t[sample.int(nrow(x$t), n, replace = TRUE), ]
+    if (length(x$t) == 1) {
+        function(n) {
+            x$t[sample.int(nrow(x$t), n, replace = TRUE)]
+        }
+    } else {
+        function(n) {
+            x$t[sample.int(nrow(x$t), n, replace = TRUE), ]
+        }
     }
+}
+
+#' Method for obtained the confidence interval of an `mle_boot` object.
+#' @param object the `mle_boot` object to obtain the confidence interval of
+#' @param parm the parameter to obtain the confidence interval of
+#' @param level the confidence level
+#' @param ... additional arguments to pass
+#' @importFrom boot boot.ci
+#' @export
+confint.mle_boot <- function(object, parm, level = 0.95, ...) {
+    boot.ci(object, conf = level, ...)
 }

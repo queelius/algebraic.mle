@@ -3,8 +3,7 @@ Type: Package
 Title: Algebraic Maximum Likelihood Estimators
 Version: 0.9.0
 Authors@R: 
-    person("Alexander", "Towell", , "lex@metafunctor.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-6443-9897"))
+    person("Alexander", "Towell", , "lex@metafunctor.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6443-9897"))
 Maintainer: Alexander Towell <lex@metafunctor.com>
 Description: We define an algebra over maximum likelihood estimators by
     defining a set of operators that are closed over maximum likelhood estimators

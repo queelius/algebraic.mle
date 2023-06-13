@@ -3,9 +3,10 @@
       - [Installation](#installation)
       - [Purpose](#purpose)
       - [API Overview](#api-overview)
-      - [Example](#example)
+      - [Fitting exponential models](#fitting-exponential-models)
           - [Hypothesis test and model
             selection](#hypothesis-test-and-model-selection)
+          - [Time-dependent rate](#time-dependent-rate)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -54,7 +55,7 @@ functions is available in the [function
 reference](https://queelius.github.io/algebraic.mle/reference/index.html)
 for `algebraic.mle`.
 
-## Example
+## Fitting exponential models
 
 Here is an example of fitting a conditional exponential model to some
 data using `algebraic.mle`. The true DGP is given by `Y | x ~ X(x) + W$`
@@ -168,27 +169,23 @@ the full model. The null model is `Y | x ~ EXP(rate(x))` where `rate(x)
 
 ``` r
 # construct null model where b1 = 0
-rateb0_zero <- function(df, b1) exp(b1 * df$x)
+rate_b0_zero <- function(df, b1) exp(b1 * df$x)
 
 # initial guess for the parameters
-b1 <- 0
-names(b1) <- "b1"
-
 # fit the model under the null hypothesis
-sol_null_b0 <- mle_numerical(optim(par = b1,
-    fn = loglik(df, resp, rateb0_zero),
+sol2 <- mle_numerical(optim(par = 0,
+    fn = loglik(df, resp, rate_b0_zero),
     control = list(fnscale = -1),
     hessian = TRUE,
     method = "BFGS"))
-summary(sol_null_b0)
+summary(sol2)
 #> Maximum likelihood estimator of type mle_numerical is normally distributed.
 #> The estimates of the parameters are given by:
-#>        b1 
-#> 0.4617093 
+#> [1] 0.4617093
 #> The standard error is  0.01899941 .
 #> The asymptotic 95% confidence interval of the parameters are given by:
-#>         2.5%     97.5%
-#> b1 0.4304581 0.4929605
+#>             2.5%     97.5%
+#> param1 0.4304581 0.4929605
 #> The MSE of the estimator is  0.0003609774 .
 #> The log-likelihood is  -121.7164 .
 #> The AIC is  245.4328 .
@@ -197,9 +194,9 @@ summary(sol_null_b0)
 Let’s compute the likelihood ratio test statistic and p-value:
 
 ``` r
-(lrt <- -2 * (loglike(sol_null_b0) - loglike(sol)))
+(lrt.sol2 <- -2 * (loglike(sol2) - loglike(sol)))
 #> [1] 4.037435
-pchisq(lrt, df = 1, lower.tail = FALSE) # compute the p-value
+pchisq(lrt.sol2, df = 1, lower.tail = FALSE) # compute the p-value
 #> [1] 0.04450142
 ```
 
@@ -211,7 +208,7 @@ If we wanted to do model selection, we could use the AIC:
 ``` r
 aic(sol)
 #> [1] 243.3954
-aic(sol_null_b0)
+aic(sol2)
 #> [1] 245.4328
 ```
 
@@ -233,19 +230,56 @@ model, or just a standard exponential distribution.
 ``` r
 rate_b1_zero <- function(df, b0) exp(b0)
 # fit the model under the null hypothesis
-sol_null_b1 <- mle_numerical(optim(par = 0,
+sol3 <- mle_numerical(optim(par = 0,
     fn = loglik(df, resp, rate_b1_zero),
     control = list(fnscale = -1),
     hessian = TRUE,
     method = "BFGS"))
-(lrt.null_b1 <- -2 * (loglike(sol_null_b1) - loglike(sol)))
+(lrt.sol3 <- -2 * (loglike(sol3) - loglike(sol)))
 #> [1] 285.0265
-pchisq(lrt.null_b1, df = 1, lower.tail = FALSE) # compute the p-value
+pchisq(lrt.sol3, df = 1, lower.tail = FALSE) # compute the p-value
 #> [1] 6.029289e-64
 ```
 
 This has a `p`-value of essentially zero, so we reject the null
 hypothesis that `b1 = 0`.
+
+Let’s compare the confidence intervals for each of these models.
+
+``` r
+CI <- confint(sol)
+# print the confidence interval
+print(CI)
+#>          2.5%       97.5%
+#> b0 -0.4174213 -0.03330395
+#> b1  0.4207972  0.49138139
+```
+
+We see that the 95% confidence interval for `b0` does not include zero,
+so we reject the null hypothesis that `b0 = 0`. The 95% confidence
+interval for `b1` does not include zero, so we reject the null
+hypothesis that `b1 = 0`.
+
+### Time-dependent rate
+
+What happens if we allow rate to be a function of time? By definition,
+the exponential ditribution has a memoryless property, so the rate
+should not depend on time. However, we have introduced covariates or
+predictors into the model, and we could allow time to be another one.
+
+``` r
+rate <- function(df, beta) exp(beta[1] + beta[2] * df$t)
+# fit the model under the null hypothesis
+sol4 <- mle_numerical(optim(par = c(0,0),
+    fn = loglik(df, resp, rate),
+    control = list(fnscale = -1),
+    hessian = TRUE,
+    method = "BFGS"))
+(lrt.sol4 <- -2 * (loglike(sol4) - loglike(sol)))
+#> [1] -239.3954
+pchisq(lrt.sol3, df = 1, lower.tail = FALSE) # compute the p-value
+#> [1] 6.029289e-64
+```
 
 You can see tutorials for more examples of using the package in the
 [vignettes](https://queelius.github.io/algebraic.mle/articles/index.html).
