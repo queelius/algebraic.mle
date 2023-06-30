@@ -3,7 +3,7 @@
 \name{nparams}
 \alias{nparams}
 \title{Generic method for obtaining the number of parameters of a fitted
-distribution object.}
+distribution object `x`.}
 \usage{
 nparams(x)
 }
@@ -12,5 +12,5 @@ nparams(x)
 }
 \description{
 Generic method for obtaining the number of parameters of a fitted
-distribution object.
+distribution object `x`.
 }

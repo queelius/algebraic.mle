@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle.R
 \name{score.mle}
 \alias{score.mle}
-\title{score}
+\title{Computes the score of an `mle` object.}
 \usage{
 \method{score}{mle}(x, ...)
 }
@@ -12,9 +12,6 @@
 \item{...}{pass additional arguments}
 }
 \description{
-Computes the score of an `mle` object.
-}
-\details{
 If reguarlity conditions are satisfied, it should be zero (or approximately,
 if rounding errors occur).
 }

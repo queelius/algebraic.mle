@@ -27,9 +27,8 @@ params <- function(x) {
     UseMethod("params", x)
 }
 
-
 #' Generic method for obtaining the number of parameters of a fitted
-#' distribution object.
+#' distribution object `x`.
 #'
 #' @param x the fitted object to obtain the number of parameters for
 #'
@@ -38,7 +37,8 @@ nparams <- function(x) {
     UseMethod("nparams", x)
 }
 
-#' Generic method for obtaining the best point estimate from an estimator.
+#' Generic method for obtaining the best point estimate from an estimator
+#' object `x`.
 #'
 #' @param x the object to obtain the point estimate of
 #' @param ... additional arguments to pass
@@ -133,21 +133,22 @@ rmap <- function(x, g, ...) {
     UseMethod("rmap", x)
 }
 
-#' Generic function for obtaining the observations used by a fitted model `object`.
+#' Generic function for obtaining the observations used by a fitted model `x`.
 #'
-#' @param object the fitted object to obtain the number of observations used by the fit
+#' @param x the fitted object to obtain the number of observations used by the fit
 #' @param ... additional arguments to pass
 #' @export
-obs <- function(object, ...) {
-    UseMethod("obs", object)
+obs <- function(x, ...) {
+    UseMethod("obs", x)
 }
 
 #' Method for obtaining the standard error of an estimator.
 #'
-#' @param object the estimator
+#' @param x the estimator
+#' @param ... additional arguments to pass
 #' @export
-se <- function(object) {
-    UseMethod("se", object)
+se <- function(x, ...) {
+    UseMethod("se", x)
 }
 
 #' Method for determining the orthogonal parameters of an estimator.
@@ -171,3 +172,12 @@ pred <- function(x, samp = NULL, alpha = .05, ...) {
     UseMethod("pred", x)
 }
 
+#' Compute the confidence interval given an estimator object `x`.
+#'
+#' @param x the estimator object
+#' @param level confidence interval level
+#' @param ... additional arguments to pass
+#' @export
+confint <- function(x, level = .95, ...) {
+    UseMethod("confint", x)
+}

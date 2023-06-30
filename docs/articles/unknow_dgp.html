@@ -44,6 +44,7 @@
     <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
     <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
+    <a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a>
     <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
 </li>
@@ -165,6 +166,11 @@
 <p>This is the definition of the log-likelihood, where we have used the built-in R function <code>dweibull</code> to compute the sum of the log-density function for each observation. However, we can also use the <code>algebraic.mle</code> package to compute the log-likelihood function in a more efficient manner.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'algebraic.mle'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     confint</span></span>
 <span><span class="va">ll.wei</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/weibull_loglike.html">weibull_loglike</a></span><span class="op">(</span><span class="va">sim.df</span><span class="op">$</span><span class="va">lifetime</span><span class="op">)</span></span></code></pre></div>
 <p>An MLE is a point <span class="math inline">\((\hat k,\hat\lambda)'\)</span> that is a maximum of the log-likelihood function over the support of the parameters. In cases where a closed solution isn’t possible, we use iterative techniques.</p>
 <p>A popular choice is Newton-Raphson, which is a local search method that relies upon both the gradient and the Hessian of the log-likelihood (Jocobian of the gradient) to iteratively improve the solution to the MLE equation. Here is an example of Newton-raphson code:</p>
@@ -216,7 +222,9 @@
 <span><span class="co">#&gt; Maximum likelihood estimator of type mle_numerical is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
 <span><span class="co">#&gt; [1] 18.884786  2.953124</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0 .</span></span>
+<span><span class="co">#&gt; The MSE of the individual componetns in a multivariate estimator is:</span></span>
+<span><span class="co">#&gt; &lt;0 x 0 matrix&gt;</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is   .</span></span>
 <span><span class="co">#&gt; The log-likelihood is  9.141514 .</span></span>
 <span><span class="co">#&gt; The AIC is  -14.28303 .</span></span></code></pre></div>
 <p>A similar result can be obtained with the <code>mle_weibull</code> function from the <code>algebraic.mle</code> package:</p>
@@ -228,9 +236,11 @@
 <span><span class="co">#&gt; The standard error is  2.749064 0.03182087 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
 <span><span class="co">#&gt;             2.5%     97.5%</span></span>
-<span><span class="co">#&gt; param1 14.362978 23.406594</span></span>
-<span><span class="co">#&gt; param2  2.900783  3.005465</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  7.558365 .</span></span>
+<span><span class="co">#&gt; param1 13.234004 24.535568</span></span>
+<span><span class="co">#&gt; param2  2.887715  3.018533</span></span>
+<span><span class="co">#&gt; The MSE of the individual componetns in a multivariate estimator is:</span></span>
+<span><span class="co">#&gt; [1] 7.557352664 0.001012568</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  7.557353 0.02842253 0.02842253 0.001012568 .</span></span>
 <span><span class="co">#&gt; The log-likelihood is  9.141514 .</span></span>
 <span><span class="co">#&gt; The AIC is  -14.28303 .</span></span></code></pre></div>
 <p>In either case, the <code>mle</code> object exposes an API that provides a number of conventient methods, such as estimating the variance-covariance matrix, confidence intervals, bias, and so on. Here’s the code to print a summary of the MLE object:</p>
@@ -245,9 +255,11 @@
 <span><span class="co">#&gt; The standard error is  0.03275565 0.007884412 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
 <span><span class="co">#&gt;           2.5%      97.5%</span></span>
-<span><span class="co">#&gt; mu  2.82020597 2.92796247</span></span>
-<span><span class="co">#&gt; var 0.01600048 0.04193788</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.001136248 .</span></span>
+<span><span class="co">#&gt; mu  2.80675402 2.94141443</span></span>
+<span><span class="co">#&gt; var 0.01276254 0.04517582</span></span>
+<span><span class="co">#&gt; The MSE of the individual componetns in a multivariate estimator is:</span></span>
+<span><span class="co">#&gt; [1] 1.072933e-03 6.331514e-05</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.001072933 0 0 6.331514e-05 .</span></span>
 <span><span class="co">#&gt; The log-likelihood is  9.499217 .</span></span>
 <span><span class="co">#&gt; The AIC is  -14.99843 .</span></span></code></pre></div>
 <p>Let’s plot the pdfs of the Weibull and normal distributions: <img src="unknow_dgp_files/figure-html/unnamed-chunk-13-1.png" width="384" style="display: block; margin: auto;"></p>

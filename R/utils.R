@@ -1,3 +1,79 @@
+#' Function to compute the confidence intervals from a variance-covariance matrix
+#'
+#' @param sigma either the variance-covariance matrix or the vector of variances
+#'              of the parameter estimator
+#' @param theta the point estimate
+#' @param level confidence level, defaults to 0.95 (alpha=.05)
+#' @param ... additional arguments to pass
+#' @importFrom stats qnorm
+#' @export
+confint_from_sigma <- function(sigma, theta, level = .95) {
+    stopifnot(is.numeric(level), level >= 0, level <= 1)
+    if (is.matrix(sigma)) {
+        sigma <- diag(sigma)
+    }
+    alpha <- (1 - level) / 2
+    p <- length(theta)
+    q <- stats::qnorm(1 - alpha)
+    ci <- matrix(nrow = p, ncol = 2)
+    colnames(ci) <- c(paste0(alpha * 100, "%"),
+                      paste0((1 - alpha) * 100, "%"))
+
+    for (j in 1:p) {
+        ci[j, ] <- c(
+            theta[j] - q * sqrt(sigma[j]),
+            theta[j] + q * sqrt(sigma[j])
+        )
+    }
+
+    if (is.null(names(theta))) {
+        rownames(ci) <- paste0("param", 1:p)
+    } else {
+        rownames(ci) <- names(theta)[1:p]
+    }
+    ci
+}
+
+#' MSE matrix of an estimate
+mse_matrix <- function(estimates, par) {
+    # Reshape estimate and par to ensure correct matrix operations
+    estimate <- matrix(estimates, ncol = length(par), byrow = TRUE)
+    par <- matrix(par, ncol = length(par), byrow = TRUE)
+
+    # Compute error matrix
+    error_matrix <- t(estimate - par)
+
+    # Compute mse_matrix
+    error_matrix %*% t(error_matrix) / nrow(error_matrix)
+}
+
+coverage_prob <- function(estimates, par, level = 0.95, vcov, ...) {
+
+    stopifnot(
+        !is.null(estimates),
+        is.matrix(estimates),
+        !is.null(par),
+        length(par) == ncol(estimates),
+        is.function(vcov),
+        is.numeric(level), level >= 0, level <= 1)
+
+    counts <- rep(0, ncol(par))
+    B <- nrow(estimates)
+    for (i in 1:B) {
+        ci <- confint_from_sigma(
+            vcov(estimates[i,], ...),
+            estimates[i, ],
+            level)
+
+        for (j in 1:p) {
+            if (ci[j,1] <= par && par <= ci[j,2]) {
+                counts[j] <- counts[j] + 1
+            }
+        }
+    }
+
+    counts / B
+}
 
 
 entropy <- function(p) {
@@ -38,34 +114,6 @@ welford_stats <- function() {
             if (n < 2) NA else M2 / (n - 1)
         }
     )
-}
-
-confidence_intervals <- function(V, theta, parm = NULL, level = 0.95, ...) {
-    sigma <- diag(V)
-    p <- length(theta)
-    q <- stats::qnorm(level)
-    if (is.null(parm)) {
-        parm <- 1:p
-    }
-
-    parm <- parm[parm >= 1 & parm <= p]
-    ci <- matrix(nrow = length(parm), ncol = 2)
-    colnames(ci) <- c(
-        paste((1 - level) / 2 * 100, "%"),
-        paste((1 - (1 - level) / 2) * 100, "%")
-    )
-
-    i <- 1
-    for (j in parm)
-    {
-        ci[i, ] <- c(
-            theta[j] - q * sqrt(sigma[j]),
-            theta[j] + q * sqrt(sigma[j])
-        )
-        i <- i + 1
-    }
-    rownames(ci) <- parm
-    ci
 }
 
 clip_step <- function(step, max_norm = 1) {
@@ -280,3 +328,5 @@ grad_descent <- function(f, x0, df,
     }
     return(list(param = x1, iter = iter, converged = converged))
 }
+
+

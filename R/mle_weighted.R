@@ -46,7 +46,6 @@ mle_weighted <- function(mles) {
     cov.wt <- ginv(info.wt)
     theta.wt <- as.vector(cov.wt %*%
         Reduce(`+`, Map(`%*%`, fims, lapply(mles, point))))
-
     names(theta.wt) <- get_first_attr(mles, point, c(names, colnames))
 
     mle(

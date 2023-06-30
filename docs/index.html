@@ -48,6 +48,7 @@
     <a class="dropdown-item" href="articles/dgp.html">Dynamic failure rate model</a>
     <a class="dropdown-item" href="articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="articles/normal-mle.html">Normal distribution MLE</a>
+    <a class="dropdown-item" href="articles/statistics.html">Statistics and characteristics of the MLE</a>
     <a class="dropdown-item" href="articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
 </li>
@@ -235,7 +236,7 @@
 <p>This has a <code>p</code>-value of essentially zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
 <p>Let’s compare the confidence intervals for each of these models.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">CI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">CI</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/confint.html">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
 <span><span class="co"># print the confidence interval</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">CI</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          2.5%       97.5%</span></span>

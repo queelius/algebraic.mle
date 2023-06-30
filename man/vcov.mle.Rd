@@ -2,15 +2,15 @@
 % Please edit documentation in R/mle.R
 \name{vcov.mle}
 \alias{vcov.mle}
-\title{Computes the variance-covariance matrix of `mle` objects.}
+\title{Computes the variance-covariance matrix of `mle` object `x`.}
 \usage{
-\method{vcov}{mle}(object, ...)
+\method{vcov}{mle}(x, ...)
 }
 \arguments{
-\item{object}{the `mle` object to obtain the variance-covariance of}
+\item{x}{the `mle` object to obtain the variance-covariance of}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-Computes the variance-covariance matrix of `mle` objects.
+Computes the variance-covariance matrix of `mle` object `x`.
 }

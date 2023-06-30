@@ -6,12 +6,12 @@
 approximation is valid and the MLE regularity conditions are satisfied.
 In this case, the bias is zero (or zero vector).}
 \usage{
-\method{bias}{mle}(x, par = NULL, ...)
+\method{bias}{mle}(x, theta = NULL, ...)
 }
 \arguments{
 \item{x}{the `mle` object to compute the bias of.}
 
-\item{par}{true parameter value. normally, unknown (NULL), in which case
+\item{theta}{true parameter value. normally, unknown (NULL), in which case
 we estimate the bias (say, using bootstrap)}
 
 \item{...}{additional arguments to pass}

@@ -2,7 +2,8 @@
 % Please edit documentation in R/generic_functions.R
 \name{point}
 \alias{point}
-\title{Generic method for obtaining the best point estimate from an estimator.}
+\title{Generic method for obtaining the best point estimate from an estimator
+object `x`.}
 \usage{
 point(x, ...)
 }
@@ -12,5 +13,6 @@ point(x, ...)
 \item{...}{additional arguments to pass}
 }
 \description{
-Generic method for obtaining the best point estimate from an estimator.
+Generic method for obtaining the best point estimate from an estimator
+object `x`.
 }

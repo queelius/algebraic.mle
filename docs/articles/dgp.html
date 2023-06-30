@@ -44,6 +44,7 @@
     <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
     <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
     <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
+    <a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a>
     <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
 </li>
@@ -79,7 +80,6 @@
 
     
     
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 <p><a href="https://github.com/queelius/algebraic.mle/blob/master/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a> <!-- badges: end --></p>
 <p><code>algebraic.mle</code> is an R package that provides an algebra over Maximum Likelihood Estimators (MLEs). These estimators possess many desirable, well-defined statistical properties which the package helps you manipulate and utilize.</p>
@@ -138,6 +138,11 @@
 <p>Let’s fit the model. We’ll use the <code>optim</code> function in <code>stats</code> to fit the model and then wrap it into an <code>mle</code> object using <code>mle_numerical</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'algebraic.mle'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     confint</span></span>
 <span></span>
 <span><span class="co"># initial guess for the parameters</span></span>
 <span><span class="va">par0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
@@ -154,10 +159,14 @@
 <span><span class="co">#&gt; -0.2253626  0.4560893 </span></span>
 <span><span class="co">#&gt; The standard error is  0.1167634 0.02145606 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
+<span><span class="co">#&gt; Warning in confint.mle(object$x): Unknown number of observations, using large</span></span>
+<span><span class="co">#&gt; sample approximation.</span></span>
 <span><span class="co">#&gt;          2.5%       97.5%</span></span>
-<span><span class="co">#&gt; b0 -0.4174213 -0.03330395</span></span>
-<span><span class="co">#&gt; b1  0.4207972  0.49138139</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.01409405 .</span></span>
+<span><span class="co">#&gt; b0 -0.4542147 0.003489406</span></span>
+<span><span class="co">#&gt; b1  0.4140362 0.498142415</span></span>
+<span><span class="co">#&gt; The MSE of the individual componetns in a multivariate estimator is:</span></span>
+<span><span class="co">#&gt; [1] 0.0136336902 0.0004603623</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.01363369 0.0003746527 0.0003746527 0.0004603623 .</span></span>
 <span><span class="co">#&gt; The log-likelihood is  -119.6977 .</span></span>
 <span><span class="co">#&gt; The AIC is  243.3954 .</span></span></code></pre></div>
 <p>Let’s plot it:</p>
@@ -196,7 +205,8 @@
 <span><span class="co">#&gt; The standard error is  0.01899941 .</span></span>
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
 <span><span class="co">#&gt;             2.5%     97.5%</span></span>
-<span><span class="co">#&gt; param1 0.4304581 0.4929605</span></span>
+<span><span class="co">#&gt; param1 0.4244712 0.4989475</span></span>
+<span><span class="co">#&gt; The MSE of the estimator is  0.0003609774 .</span></span>
 <span><span class="co">#&gt; The MSE of the estimator is  0.0003609774 .</span></span>
 <span><span class="co">#&gt; The log-likelihood is  -121.7164 .</span></span>
 <span><span class="co">#&gt; The AIC is  245.4328 .</span></span></code></pre></div>
@@ -232,12 +242,14 @@
 <p>This has a <code>p</code>-value of essentially zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
 <p>Let’s compare the confidence intervals for each of these models.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">CI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">CI</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/confint.html">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in confint.mle(sol): Unknown number of observations, using large sample</span></span>
+<span><span class="co">#&gt; approximation.</span></span>
 <span><span class="co"># print the confidence interval</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">CI</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          2.5%       97.5%</span></span>
-<span><span class="co">#&gt; b0 -0.4174213 -0.03330395</span></span>
-<span><span class="co">#&gt; b1  0.4207972  0.49138139</span></span></code></pre></div>
+<span><span class="co">#&gt; b0 -0.4542147 0.003489406</span></span>
+<span><span class="co">#&gt; b1  0.4140362 0.498142415</span></span></code></pre></div>
 <p>We see that the 95% confidence interval for <code>b0</code> does not include zero, so we reject the null hypothesis that <code>b0 = 0</code>. The 95% confidence interval for <code>b1</code> does not include zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
 </div>
 <div class="section level3">

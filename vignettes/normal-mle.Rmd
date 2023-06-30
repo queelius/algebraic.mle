@@ -10,6 +10,10 @@ vignette: >
   %\VignetteDepends{ggplot2}
   %\VignetteDepends{dplyr}
   %\VignetteDepends{tibble}
+  %\VignetteDepends{algebraic.mle}
+  %\VignetteDepends{boot}
+  %\VignetteKeyword{normal}
+  %\VignetteKeyword{maximum likelihood estimation} 
 ---
 
 ```{r, include = FALSE}
@@ -17,6 +21,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(digits=3)
+options(scipen=999)
 ```
 
 ## Introduction
@@ -26,9 +32,6 @@ variables. First, we load the R package `algebraic.mle` with:
 ```{r setup, warning=F, message=F}
 library(algebraic.mle)
 library(boot)
-
-# make it so that i only show 3 digits after the decimal point
-options(digits=3)
 ```
 
 ## Generating a sample
@@ -144,8 +147,8 @@ $$
 
 Here's R code to compute the MSE of $\hat\theta$:
 ```{r}
-mse(theta.hat)        # estimate of MSE
-mse(theta.hat,theta)  # true MSE
+mse(theta.hat)         # estimate of MSE
+mse(theta.hat, theta)  # true MSE
 ```
 This looks to be a pretty good estimate of the true MSE.
 
@@ -229,11 +232,11 @@ $\theta^{(1)},\ldots,\theta^{(r)}$.
 Finally, we do a weighted combination these MLEs to form the weighted MLE,
 denoted by $\theta_w$:
 ```{r}
-N <- 1000
+N <- 100
 r <- 5
-samp <- rnorm(N,mean=theta[1],sd=sqrt(theta[2]))
-samp.sub <- matrix(samp,nrow=r)
-mles.sub <- list(length=r)
+samp <- rnorm(N, mean = theta[1], sd = sqrt(theta[2]))
+samp.sub <- matrix(samp, nrow = r)
+mles.sub <- list(length = r)
 for (i in 1:r)
     mles.sub[[i]] <- mle_normal(samp.sub[i,])
 
@@ -244,8 +247,8 @@ mle <- mle_normal(samp)
 We show the results in the following R code.
 First, we show the weighted MLE and its MSE:
 ```{r}
-point(mle.wt)
-mse(mle.wt)
+#point(mle.wt)
+#mse(mle.wt)
 ```
 The MLE for the total sample and its MSE is:
 ```{r}

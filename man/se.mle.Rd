@@ -3,16 +3,18 @@
 \name{se.mle}
 \alias{se.mle}
 \title{Function for obtaining an estimate of the standard error of the MLE
-`object`.}
+`x`.}
 \usage{
-\method{se}{mle}(object, ...)
+\method{se}{mle}(x, se.matrix = FALSE, ...)
 }
 \arguments{
-\item{object}{the MLE object}
+\item{x}{the bootstrapped MLE object}
 
-\item{...}{pass additional arguments}
+\item{se.matrix}{if `TRUE`, return the square root of the variance-covariance}
+
+\item{...}{additional arguments to pass}
 }
 \description{
 Function for obtaining an estimate of the standard error of the MLE
-`object`.
+`x`.
 }

@@ -67,18 +67,18 @@ aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
 #' Method for obtaining the number of observations in the sample used by
 #' an `mle`.
 #'
-#' @param object the `mle` object to obtain the number of observations for
+#' @param x the `mle` object to obtain the number of observations for
 #' @param ... additional arguments to pass
 #' @importFrom stats nobs
 #' @export
-nobs.mle <- function(object, ...) object$nobs
+nobs.mle <- function(x, ...) x$nobs
 
-#' Method for obtaining the observations used by the `mle`.
+#' Method for obtaining the observations used by the `mle` object `x`.
 #'
-#' @param object the `mle` object to obtain the number of observations for
+#' @param x the `mle` object to obtain the number of observations for
 #' @param ... additional arguments to pass
 #' @export
-obs.mle <- function(object, ...) object$obs
+obs.mle <- function(x, ...) x$obs
 
 #' Method for obtaining the log-likelihood of an `mle` object.
 #'
@@ -90,51 +90,48 @@ loglike.mle <- function(x, ...) x$loglike
 
 #' Function to compute the confidence intervals of `mle` objects.
 #'
-#' @param object the `mle` object to compute the confidence intervals for
-#' @param parm parameter indexes to compute the confidence intervals for,
-#'             defaults to all
+#' @param x the `mle` object to compute the confidence intervals for
 #' @param level confidence level, defaults to 0.95 (alpha=.05)
 #' @param ... additional arguments to pass
-#'
-#' @importFrom stats confint
 #' @export
-confint.mle <- function(object, parm = NULL, level = .95, ...) {
+confint.mle <- function(x, level = .95, use_t_dist = TRUE, ...) {
     stopifnot(is.numeric(level), level >= 0, level <= 1)
-    V <- vcov(object, ...)
+    V <- vcov(x, ...)
     if (is.null(V)) stop("No variance-covariance matrix available.")
     if (is.matrix(V)) {
         V <- diag(V)
     }
     sigma <- V
 
-    theta <- point(object, ...)
+    theta <- point(x, ...)
+    alpha <- (1 - level) / 2
     p <- length(theta)
-    q <- stats::qnorm(level)
-    if (is.null(parm)) {
-        parm <- 1:p
+
+    if (use_t_dist && is.null(nobs(x))) {
+        warning("Unknown number of observations, using large sample approximation.")
+        use_t_dist <- FALSE
     }
 
-    parm <- parm[parm >= 1 & parm <= p]
-    ci <- matrix(nrow = length(parm), ncol = 2)
-    colnames(ci) <- c(
-        paste0((1 - level) / 2 * 100, "%"),
-        paste0((1 - (1 - level) / 2) * 100, "%")
-    )
+    if (use_t_dist) {
+        q <- stats::qt(1 - alpha, df = nobs(x) - 1)
+    } else {
+        q <- stats::qnorm(1 - alpha)
+    }
+    ci <- matrix(nrow = p, ncol = 2)
+    colnames(ci) <- c(paste0(alpha * 100, "%"),
+                      paste0((1 - alpha) * 100, "%"))
 
-    i <- 1
-    for (j in parm)
+    for (j in 1:p)
     {
-        ci[i, ] <- c(
+        ci[j, ] <- c(
             theta[j] - q * sqrt(sigma[j]),
-            theta[j] + q * sqrt(sigma[j])
-        )
-        i <- i + 1
+            theta[j] + q * sqrt(sigma[j]))
     }
 
     if (is.null(names(theta))) {
-        rownames(ci) <- paste0("param", parm)
+        rownames(ci) <- paste0("param", 1:p)
     } else {
-        rownames(ci) <- names(theta)[parm]
+        rownames(ci) <- names(theta)[1:p]
     }
     ci
 }
@@ -155,23 +152,23 @@ sampler.mle <- function(x, ...) {
     mu <- point(x)
 
     if (nparams(x) == 1L) {
-        sd <- sqrt(V)
-        function(n = 1) stats::rnorm(n, mean = mu, sd = sd, ...)
+        stddev <- sqrt(V)
+        function(n = 1) stats::rnorm(n, mean = mu, sd = stddev, ...)
     } else {
         function(n = 1) mvtnorm::rmvnorm(n, mu, V, ...)
     }
 }
 
 
-#' Computes the variance-covariance matrix of `mle` objects.
+#' Computes the variance-covariance matrix of `mle` object `x`.
 #'
-#' @param object the `mle` object to obtain the variance-covariance of
+#' @param x the `mle` object to obtain the variance-covariance of
 #' @param ... additional arguments to pass
 #'
 #' @importFrom stats vcov
 #' @export
-vcov.mle <- function(object, ...) {
-    object$sigma
+vcov.mle <- function(x, ...) {
+    x$sigma
 }
 
 
@@ -180,23 +177,46 @@ vcov.mle <- function(object, ...) {
 #' The MSE of an estimator is just the expected sum of squared differences,
 #' e.g., if the true parameter value is `x` and we have an estimator `x.hat`,
 #' then the MSE is
-#' `mse(x.hat) = E[(x.hat-x)^2] = trace(vcov(x.hat)) + (bias(x.hat))^2`.
+#' ```
+#'     mse(x.hat) = E[(x.hat-x) %*% t(x.hat - x)] =
+#'                       vcov(x.hat) + bias(x.hat, x) %*% t(bias(x.hat, x))
+#' ```
 #'
 #' Since `x` is not typically known, we normally must estimate the bias.
-#' For sufficiently large samples, for the MLE assuming the regularity conditions,
-#' the bias is given by
-#' `mse(x.hat) = trace(vcov(x.hat)) + bias(x.hat)^2`, where
-#' `bias(x.hat)` is an estimate of `bias(x.hat,x)`. Sometimes, we
-#' can estimate the bias in closed form, but other times simulations must be
-#' done, such as bootstrapping the bias. And, for really large samples, since
-#' the MLE is asymptotically unbiased, `trace(vcov(x.hat))` may be a
-#' reasonable estimate of the MSE.
+#' Asymptotically, assuming the regularity conditions, the bias of an MLE
+#' is zero, so we can estimate the MSE as `mse(x.hat) = vcov(x.hat)`, but for
+#' small samples, this is not generally the case. If we can estimate the bias, then
+#' we can replace the bias with an estimate of the bias.
+#' 
+#' Sometimes, we can estimate the bias analytically, but if not, we can use something
+#' like the bootstrap. For example, if we have a sample of size `n`, we can bootstrap
+#' the bias by sampling `n` observations with replacement, computing the MLE, and
+#' then computing the difference between the bootstrapped MLE and the MLE. We can
+#' repeat this process `B` times, and then average the differences to get an estimate
+#' of the bias.
 #'
 #' @param x the `mle` object to compute the MSE of.
-#' @param theta true parameter value
+#' @param theta true parameter value, defaults to `NULL` for unknown. If `NULL`,
+#'             then we let the bias method deal with it. Maybe it has a nice way
+#'             of estimating the bias.
 #' @export
 mse.mle <- function(x, theta = NULL) {
-    sum(diag(vcov(x))) + sum(bias(x, theta)^2)
+
+    if (!is.null(theta)) {
+        stopifnot(length(theta) == nparams(x))
+    }
+
+    b <- bias(x, theta)
+    V <- vcov(x)
+    if (nparams(x) == 1L) {
+        res <- V + b^2
+    } else {
+        # multivariate MSE is a matrix whose diagonal elements are
+        # the MSEs of the individual parameters. note that we are taking the
+        # outer product of b with itself.
+        res <- V + b %*% t(b)
+    }
+    res
 }
 
 #' Computes the point estimate of an `mle` object.
@@ -248,6 +268,12 @@ print.summary_mle <- function(object, ...) {
         cat("The asymptotic 95% confidence interval of the parameters are given by:\n")
         print(confint(object$x))
     }
+    if (nparams(object$x) == 1L) {
+        cat("The MSE of the estimator is ", mse(object$x), ".\n")
+    } else {
+        cat("The MSE of the individual componetns in a multivariate estimator is:\n")
+        print(diag(mse(object$x)))
+    }
     cat("The MSE of the estimator is ", mse(object$x), ".\n")
     if (!is.null(loglike(object$x))) {
         cat("The log-likelihood is ", loglike(object$x), ".\n")
@@ -256,15 +282,26 @@ print.summary_mle <- function(object, ...) {
 }
 
 #' Function for obtaining an estimate of the standard error of the MLE
-#' `object`.
-#'
-#' @param object the MLE object
-#' @param ... pass additional arguments
+#' `x`.
+
+#' @param x the bootstrapped MLE object
+#' @param se.matrix if `TRUE`, return the square root of the variance-covariance
+#' @param ... additional arguments to pass
 #' @export
-se.mle <- function(object, ...) {
-    V <- vcov(object, ...)
+se.mle <- function(x, se.matrix = FALSE, ...) {
+
+    V <- vcov(x, ...)
     if (is.null(V)) return(NULL)
-    sqrt(diag(as.matrix(V)))
+
+    if (se.matrix && is.matrix(V)) {
+        return(chol(V))
+    } else {
+        if (is.matrix(V)) {
+            return(sqrt(diag(V)))
+        } else {
+            return(sqrt(V))
+        }
+    }
 }
 
 #' Determine if an object `x` is an `mle` object.
@@ -274,7 +311,6 @@ se.mle <- function(object, ...) {
 is_mle <- function(x) {
     inherits(x, "mle")
 }
-
 
 #' Method for determining the orthogonal components of an `mle` object
 #' `x`.
@@ -293,8 +329,6 @@ orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
     abs(fim(x, ...)) <= tol
 }
 
-#' score
-#' 
 #' Computes the score of an `mle` object.
 #'
 #' If reguarlity conditions are satisfied, it should be zero (or approximately,
@@ -315,13 +349,12 @@ score.mle <- function(x, ...) {
 #' arguably better than returning `NULL`.
 #'
 #' @param x the `mle` object to compute the bias of.
-#' @param par true parameter value. normally, unknown (NULL), in which case
+#' @param theta true parameter value. normally, unknown (NULL), in which case
 #'              we estimate the bias (say, using bootstrap)
 #' @param ... additional arguments to pass
-#'
 #' @export
-bias.mle <- function(x, par = NULL, ...) {
-    rep(0, nparams(x, ...))
+bias.mle <- function(x, theta = NULL, ...) {
+    rep(0, nparams(x))
 }
 
 #' Estimate of predictive interval of `T|x` where `T` is a statistic and `x`

@@ -46,7 +46,13 @@ nparams.mle_boot <- function(x) length(x$t0)
 #' @param ... additional arguments to pass
 #' @importFrom stats nobs
 #' @export
-nobs.mle_boot <- function(object, ...) length(object$data)
+nobs.mle_boot <- function(object, ...) {
+    if (is.matrix(object$data) || is.data.frame(object$data)) {
+        return(nrow(object$data))
+    } else {
+        length(object$data)
+    }
+}
 
 #' Method for obtaining the observations used by the `mle`.
 #'
@@ -64,7 +70,7 @@ obs.mle_boot <- function(object, ...) object$data
 #' @export
 vcov.mle_boot <- function(object, ...) {
     # remove the Bessel correction, since this is an MLE
-    cov(object$t, ...) * (nobs(object) - 1) / nobs(object)
+    cov(object$t, ...) # * (nobs(object) - 1) / nobs(object)
 }
 
 #' Computes the estimate of the MSE of a `boot` object.
@@ -114,15 +120,6 @@ point.mle_boot <- function(x, ...) {
     x$t0
 }
 
-#' Function for obtaining an estimate of the standard error of the bootstrap of
-#' the MLE `object`.
-#'
-#' @param object the bootstrapped MLE object
-#' @export
-se.mle_boot <- function(object) {
-    sqrt(diag(vcov(object)))
-}
-
 #' Method for sampling from an `mle_boot` object.
 #'
 #' It creates a sampler for the `mle_boot` object. It returns a function
@@ -150,12 +147,11 @@ sampler.mle_boot <- function(x, ...) {
 }
 
 #' Method for obtained the confidence interval of an `mle_boot` object.
-#' @param object the `mle_boot` object to obtain the confidence interval of
-#' @param parm the parameter to obtain the confidence interval of
+#' @param x the `mle_boot` object to obtain the confidence interval of
 #' @param level the confidence level
 #' @param ... additional arguments to pass
 #' @importFrom boot boot.ci
 #' @export
-confint.mle_boot <- function(object, parm, level = 0.95, ...) {
-    boot.ci(object, conf = level, ...)
+confint.mle_boot <- function(x, level = 0.95, ...) {
+    boot.ci(x, conf = level, ...)
 }

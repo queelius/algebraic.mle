@@ -4,12 +4,10 @@
 \alias{confint.mle_boot}
 \title{Method for obtained the confidence interval of an `mle_boot` object.}
 \usage{
-\method{confint}{mle_boot}(object, parm, level = 0.95, ...)
+\method{confint}{mle_boot}(x, level = 0.95, ...)
 }
 \arguments{
-\item{object}{the `mle_boot` object to obtain the confidence interval of}
-
-\item{parm}{the parameter to obtain the confidence interval of}
+\item{x}{the `mle_boot` object to obtain the confidence interval of}
 
 \item{level}{the confidence level}
 

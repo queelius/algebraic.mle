@@ -4,10 +4,12 @@
 \alias{se}
 \title{Method for obtaining the standard error of an estimator.}
 \usage{
-se(object)
+se(x, ...)
 }
 \arguments{
-\item{object}{the estimator}
+\item{x}{the estimator}
+
+\item{...}{additional arguments to pass}
 }
 \description{
 Method for obtaining the standard error of an estimator.

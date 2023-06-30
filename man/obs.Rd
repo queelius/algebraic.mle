@@ -2,15 +2,15 @@
 % Please edit documentation in R/generic_functions.R
 \name{obs}
 \alias{obs}
-\title{Generic function for obtaining the observations used by a fitted model `object`.}
+\title{Generic function for obtaining the observations used by a fitted model `x`.}
 \usage{
-obs(object, ...)
+obs(x, ...)
 }
 \arguments{
-\item{object}{the fitted object to obtain the number of observations used by the fit}
+\item{x}{the fitted object to obtain the number of observations used by the fit}
 
 \item{...}{additional arguments to pass}
 }
 \description{
-Generic function for obtaining the observations used by a fitted model `object`.
+Generic function for obtaining the observations used by a fitted model `x`.
 }
