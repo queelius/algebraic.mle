@@ -1,0 +1,403 @@
+---
+title: "Statistics and characteristics of the MLE"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Statistics and characteristics of the MLE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{ggplot2}
+  %\VignetteDepends{tibble}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+options(digits = 4)
+```
+
+
+
+<!-- 
+> If MLEs had different sampling distributions (e.g., depend on different kinds
+> of samples, like right-censored samples or different sized samples), we would
+> more optimally use a weighted average of the MLEs (see `mle_weighted`), but in this
+> case, the variance-covariance matrices are identical, so we can use the sample
+> of MLEs as an approximation of the sampling distribution of the MLEs and take
+> simple statistics of the sample of MLEs to get any desired estimate of the
+> population parameter vector $(\mu, \sigma^2)'$. -->
+
+
+
+<!-- badges: start -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/queelius/algebraic.mle/blob/master/LICENSE)
+<!-- badges: end -->
+
+`algebraic.mle` is an R package that provides an algebra over
+Maximum Likelihood Estimators (MLEs). These estimators possess
+many desirable, well-defined statistical properties which the package
+helps you manipulate and utilize.
+
+## Installation
+
+The R package `algebraic.mle` can be installed from GitHub by using the devtools package
+in R:
+```{r install, eval = FALSE}
+install.packages("devtools")
+devtools::install_github("queelius/algebraic.mle")
+```
+
+```{r setup, include = FALSE}
+library(algebraic.mle)
+library(ggplot2)
+library(tibble)
+library(mvtnorm)
+```
+
+## Monte-carlo (MC) simulation of the sampling distribution of the MLE
+
+```{r mc-samp, cache=TRUE}
+# Simulate a sample of n observations from a normal with mean 1 and variance 2.
+set.seed(51234)
+n <- 50
+mu <- 1
+var <- 2
+B <- 500000
+
+theta <- c(mu, var)
+mles <- matrix(NA, nrow = B, ncol = 2)
+for (i in 1:B) {
+    x <- rnorm(n, mean = mu, sd = sqrt(var))
+    mles[i, ] <- point(mle_normal(x, keep_obs = FALSE))
+}
+colnames(mles) <- c("mu", "var")
+head(mles)
+```
+
+The matrix `mles` is a sample of MLEs from the sampling distribution of the MLE. It
+is an *empirical distribution* of the MLE $(\mu, \sigma^2)'$ from samples of size $n$
+$X_i \sim N(\mu, \sigma^2)$ for $i=1,\ldots,n$.
+
+This particular example is Monte Carlo simulation of the sampling
+distribution, since we are simulating the sampling distribution by repeatedly
+sampling from the population distribution and computing the MLE for each sample.
+
+> In bootstrap, we would *resample* from the sample, not the population, but with a
+> large enough sample, the two will produce nearly identical results. See the
+> bootstrap section for more details, where we'll compare the two.
+
+For a sufficiently large number of simulations $B$, the empirical sampling
+distribution should be very close to the true sampling distribution. We can plot the
+empirical sampling distribution of the MLEs using the `plot` function on the
+`mles` matrix.
+
+```{r fig.width=4, fig.height=4, echo=FALSE, fig.align="center", fig.cap="Sampling distribution of the MLEs.", warning=FALSE, cache=TRUE}
+tmp <- colMeans(mles)
+# countour plot of the sampling distribution `mles` and with the point of the
+# true mean and variance, theta = (mu, var), shown. label it "true parameter"
+ggplot(as_tibble(mles), aes(x = mu, y = var)) +
+    labs(x = expression(mu), y = expression(sigma^2)) +
+    theme_bw() +
+    geom_hline(yintercept = var) +
+    geom_vline(xintercept = mu) + 
+    geom_point(aes(x = tmp[1], y = tmp[2]), color = "green") +
+    geom_point(aes(x = mu, y = var), color = "red") +
+    stat_density2d(aes(fill = ..level..), geom = "polygon", alpha = 0.2) +
+    scale_fill_gradient(low = "blue", high = "red")
+```
+
+In `algebraic.mle`, we can use the `mle_emp` function to model the empirical
+sampling distribution of the MLEs. It takes a sample of MLEs and, optionally,
+the sample size the MLEs were computed from.
+
+```{r}
+theta.mc <- mle_emp(mles, n)
+```
+
+We will use this as a sort of *ground truth* for the sampling distribution of the
+MLEs. We know the *asymptotic* sampling distribution of the MLEs is normal with
+a mean $\theta = (\mu = `r mu`, \sigma^2 = `r var`)'$ and a variance-covariance
+matrix $\Sigma = I^{-1}(\theta)_n$, where $I$ is the Fisher information matrix
+and $n$ is the sample size.
+
+For $n = `r n`$, what does the sampling distribution of the MLE look like?
+First, let's look at some basic statistics.
+
+```{r}
+point(theta.mc)
+```
+
+The mean looks pretty close to the true parameter vector
+$$
+    \theta = (\mu = `r mu`, \sigma^2 = `r var`)'.
+$$
+
+Let's compute the bias:
+```{r}
+bias(theta.mc, theta)
+```
+This is pretty close to the expected bias of the asymptotic sampling distribution
+of the MLE, which we will compute later.
+
+```{r}
+mle_normal(x, keep_obs = FALSE)
+```
+
+
+## Asymptotic sampling distribution of the MLE
+
+In the previous section, we estimated the sampling distribution with a Monte Carlo
+simulation. In this section, we will compute the asymptotic sampling distribution
+using facilities in the `algebraic.mle` R package.
+
+### Bias
+
+Bias is a measure of the systematic error of an estimator; it measures how far its 
+average value is from the true value being estimated. Formally, it is defined as
+the difference between the expected value of the estimator and the true
+value of the parameter, i.e.,
+$$
+\operatorname{Bias}(\hat\theta) = E_{\hat\theta}(\hat\theta) - \theta,
+$$
+where $E_{\hat\theta}$ denotes the expectation operator with respect to the
+sampling distribution of $\hat\theta$. (Normally, we drop the subscript in the
+expectation operator and write $E$ instead of $E_{\hat\theta}$ unless it's not
+clear from context which expectation operator we are using.)
+
+When the bias is zero, the estimator is *unbiased*, otherwise it is *biased*.
+
+We actually know the analytical solution for the bias in the case of the normal
+distribution, which is given by:
+```{r}
+bias(mle_normal(rnorm(n, mean = mu, sd = sqrt(var))), theta)
+```
+
+We see that they are very close.
+
+<details>
+<summary>Click to show/hide R code</summary>
+```{r bias-code}
+N <- 100
+ns <- c(seq(10, 200, 10),300, 400, 600, 1000)
+bias_mu <- matrix(NA, nrow = N, ncol = length(ns))
+bias_var <- matrix(NA, nrow = N, ncol = length(ns))
+j <- 1
+for (n in ns) {
+    for (i in 1:N) {
+        theta.hat <- point(mle_normal(rnorm(n, mean = mu, sd = sqrt(var))))
+        b <- theta.hat - theta
+        bias_mu[i, j] <- b[1]
+        bias_var[i, j] <- b[2]
+    }
+    j <- j + 1
+}
+```
+</details>
+
+```{r bias-plot, echo=FALSE, fig.height=4, fig.width=5}
+# i have a matrix N x k `bias_mu` which computes the bias for each of k sample sizes
+# N times each. I want to plot the bias for each sample size as a boxplot.
+library(dplyr)
+library(tidyr)
+print(bias_mu)
+bias_mu <- as_tibble(bias_mu)
+bias_mu <- gather(bias_mu, "n", "bias", 1:ncol(bias_mu))
+print(bias_mu)
+bias_mu$n <- as.numeric(gsub("X", "", bias_mu$n))
+bias_mu$n <- factor(bias_mu$n, levels = ns)
+ggplot(bias_mu, aes(x = n, y = bias)) +
+    geom_boxplot() +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    labs(x = "Sample size", y = "Bias") +
+    theme_bw()
+```
+
+
+### Variance-covariance matrix
+
+The variance-covariance matrix is one of the more important statistical measures
+of an estimator of a parameter vector. It quantities both the variability of the
+individual parameter estimates and how they co-vary wieht each other.
+
+The variance-covariance matrix of a parameter vector $\theta = (\theta_1, \ldots, \theta_p)'$
+is an $n \times n$ matrix defined as
+$$
+\operatorname{Var}(\hat\theta) = E_{\hat\theta}\!\bigl[(\hat\theta - E_{\hat\theta}(\hat\theta))
+    (\hat\theta - E_{\hat\theta}(\hat\theta))'\bigr].
+$$
+
+The $(i, j)$th element of the variance-covariance matrix is the covariance between
+the $i$th and $j$th elements of the parameter vector, respectively $\theta_i$ and
+$\theta_j$. Thus, the diagonal elements of the variance-covariance matrix are the
+variances of the individual parameter estimates, and the off-diagonal elements are
+the covariances between the parameter estimates.
+
+
+```{r}
+vcov(mle_normal(rnorm(n, mean = mu, sd = sqrt(var))))
+vcov(theta.mc)
+```
+
+### Standard error
+The standard error of an estimator is a measure of its statistical accuracy.
+We consider two types of standard errors: the independent standard errors of the
+estimator and the standard error matrix, which captures the correlations between
+the errors of the parameters.
+
+#### Individual standard errors
+
+This standard error is the element-wise square root of the diagonal of the
+variance-covariance matrix of the estimator. It may be used to construct confidence
+intervals for the parameter estimates or to perform hypothesis tests on parameters
+independently. It is the most straight-forward measure of the accuracy of the
+estimator, and it is the most commonly used measure of accuracy.
+
+### Standard error matrix
+
+The standard error matrix is the square root of the variance-covariance matrix of the
+estimator. This is less straightforward, but it is a more complete measure of the
+accuracy of the estimator. It captures the correlations between the errors of the
+parameters. This is useful for constructing confidence regions for the parameters,
+which are analogous to confidence intervals for a single parameter. It is also useful
+for performing hypothesis tests on multiple parameters simultaneously.
+
+The square root of a matrix is not unique, but a common choice is to use the Cholesky
+decomposition.
+
+### Confidence intervals
+
+```{r}
+confint(mle_normal(rnorm(n, mean = mu, sd = sqrt(var))))
+confint_from_sigma(vcov(theta.mc), params(theta.mc))
+```
+
+#### Coverage probability
+A very important measure of the accuracy of an estimator is its coverage
+probability, which is the probability that the confidence interval for the
+parameter estimate contains the true value of the parameter. If the coverage
+probability for an $(1-\alpha) \%$-confidence interval is $1-\alpha$, then the
+confidence interval is said to be *well-calibrated*. If the coverage probability
+is less than $1-\alpha$, then the confidence interval is said to be
+*conservative*; if the coverage probability is greater than $1-\alpha$, then the
+confidence interval is said to be *anti-conservative*.
+
+<details>
+<summary>Click to show/hide R code</summary>
+```{r coverage-prob-calc, cache=TRUE}
+N <- 10000
+ns <- c(seq(10, 200, 10), 300, 400, 600, 1000)
+df <- data.frame(n = ns,
+    coverage_mu = rep(0, length(ns)),
+    coverage_var = rep(0, length(ns)))
+j <- 1
+for (n in ns) {
+    counts <- c(0, 0)
+    for (i in 1:N) {
+        theta.mle <- mle_normal(rnorm(n, mean = mu, sd = sqrt(var)))
+        ci <- confint(theta.mle)
+        if (ci[1, 1] <= mu && mu <= ci[1, 2]) {
+            counts[1] <- counts[1] + 1
+        }
+        if (ci[2, 1] <= var && var <= ci[2, 2]) {
+            counts[2] <- counts[2] + 1
+        }
+    }
+    df$coverage_mu[j] <- counts[1] / N
+    df$coverage_var[j] <- counts[2] / N
+    j <- j + 1
+}
+```
+</details>
+
+```{r coverage-prob-plot, echo=FALSE, fig.height=4, fig.width=5}
+plot(df$n, df$coverage_mu, type = "l", ylim = c(0.8, 1),
+    xlab = "Sample size", col = "blue", ylab = "Coverage")
+lines(df$n, df$coverage_var, col = "green")
+legend("bottomright", legend = c("mu", "var"), col = c("blue", "red"), lty = 1)
+# draw a line at y=.95
+abline(h = 0.95, lty = 2)
+
+```
+
+
+## Mean squared error matrix
+The mean squared error (MSE) of an estimator of a parameter vector $\theta$ is
+defined as
+$$
+\operatorname{MSE}(\hat\theta) = E\bigl[(\hat\theta - \theta)(\hat\theta - \theta)'\bigr],
+$$
+where $\hat\theta - \theta$ is a column vector of differences between the
+estimator and the true parameter and $(\hat\theta - \theta)'$ is a row vector of
+the same differences, and we are performing a standard matrix multiplication
+between the two vectors. The MSE is a measure of the average squared error of
+the estimator. It is a function of the true parameter value $\theta$.
+
+This MSE is a *matrix*. It is very similar to the variance-covariance matrix, which
+is defined as
+$$
+\operatorname{Var}(\hat\theta) = E\bigl[(\hat\theta - E(\hat\theta))
+    (\hat\theta - E(\hat\theta))'\bigr],
+$$
+where we replace the true paramater $\theta$ with the expected value of the estimator
+$\hat\theta$. If the estimator is unbiased, then $E(\hat\theta) = \theta$ and
+$\operatorname{Var}(\hat\theta) = \operatorname{MSE}(\hat\theta)$.
+
+We not only need to consider the estimation error for each parameter individually,
+but also how these errors might relate to each other. For instance, it could be the
+case that when we overestimate one parameter, we tend to underestimate another. This
+kind of relationship between errors in estimating different parameters can be
+captured by the off-diagonal elements of the MSE matrix, which represent the
+covariances between errors.
+
+The diagonal elements of the MSE represent the MSE of the individual
+parameter estimators, e.g., the $i$th diagonal element represents
+$\operatorname{MSE}(\hat\theta_j)$.
+
+The *trace* of the MSE, the sum of the diagonal elements, represents the total
+MSE across all parameters. As a single summary statistic, it may be useful for
+comparing different estimators.
+
+The MSE can be decomposed into two parts:
+
+1. The *bias*, which is the difference between the expected value of the estimator
+and the true parameter value, and
+2. The *variance*, which is the variance of the estimator.
+
+The MSE is then computed as the sum of the bias outer product and the
+variance-covariance matrix:
+
+$$
+\operatorname{MSE}(\hat\theta) = \operatorname{Bias}(\hat\theta)\operatorname{Bias}(\hat\theta)'
+    + \operatorname{Var}(\hat\theta).
+$$
+
+
+
+
+# Bootstrap of the sampling distribution of the MLE
+
+```{r mle-boot, cache=TRUE}
+# Simulate a sample of n observations from a normal with mean 1 and variance 2.
+set.seed(51234)
+n <- 50
+mu <- 1
+var <- 2
+B <- 100000
+
+x <- rnorm(n, mean = mu, sd = sqrt(var))
+theta <- c(mu, var)
+
+library(boot)
+theta.boot <- mle_boot(boot(
+    data = x,
+    statistic = function(x, ind) {
+        point(mle_normal(x[ind], keep_obs = FALSE))
+    },
+    R = B))
+```
