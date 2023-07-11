@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{the `mle_boot` object to create sampler for}
 
-\item{...}{additional arguments to pass}
+\item{...}{additional arguments to pass (not used)}
 }
 \description{
 It creates a sampler for the `mle_boot` object. It returns a function

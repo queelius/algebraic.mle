@@ -2,7 +2,8 @@
 % Please edit documentation in R/mle.R
 \name{mle}
 \alias{mle}
-\title{`mle` makes an `mle` object.}
+\title{Constructor for making `mle` objects, which provides a common interface
+for maximum likelihood estimators.}
 \usage{
 mle(
   theta.hat,
@@ -33,5 +34,6 @@ mle(
 \item{superclasses}{class (or classes) with `mle` as base}
 }
 \description{
-`mle` makes an `mle` object.
+Constructor for making `mle` objects, which provides a common interface
+for maximum likelihood estimators.
 }

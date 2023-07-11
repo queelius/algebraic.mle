@@ -2,7 +2,8 @@
 % Please edit documentation in R/mle_numerical.R
 \name{mle_numerical}
 \alias{mle_numerical}
-\title{mle_optim}
+\title{This function takes the output of `optim`, `newton_raphson`, or `sim_anneal`
+and turns it into an `mle_numerical` (subclass of `mle`) object.}
 \usage{
 mle_numerical(sol, options = list(), superclasses = NULL)
 }

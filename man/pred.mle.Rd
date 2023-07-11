@@ -2,29 +2,40 @@
 % Please edit documentation in R/mle.R
 \name{pred.mle}
 \alias{pred.mle}
-\title{Estimate of predictive interval of `T|x` where `T` is a statistic and `x`
-is an `mle` object that it is conditioned on. Generally, what this means
-is that we want to find the distribution of `T` when we marginalize over
-the distribution of `x`, since `x` is an uncertain estimate of the true
-parameter value.}
+\title{Estimate of predictive interval of `T|data` using Monte Carlo integration.}
 \usage{
-\method{pred}{mle}(x, samp, alpha = 0.05)
+\method{pred}{mle}(x, samp, alpha = 0.05, R = 50000, ...)
 }
 \arguments{
-\item{x}{`mle` object}
+\item{x}{an `mle` object.}
 
-\item{samp}{`mle` sampler for parametric distribution that is a function
-of `x`}
+\item{samp}{The sampler for the distribution that is parameterized by the
+MLE `x`, i.e., `T|x`.}
 
-\item{alpha}{(1-alpha)-predictive interval for `T|x`}
+\item{alpha}{(1-alpha)-predictive interval for `T|x`. Defaults to 0.05.}
+
+\item{R}{number of samples to draw from the sampling distribution of `x`.
+Defaults to 50000.}
+
+\item{...}{additional arguments to pass into `samp`.}
 }
 \description{
 Let
   `T|x ~ f(t|x)``
 be the pdf of vector `T` given MLE `x` and
-  `x ~ MVN(point(x),vcov(x))``
-be the multivariate normal of the MLE `x`. Then,
+  `x ~ MVN(params(x),vcov(x))``
+be the estimate of the sampling distribution of the MLE for the parameters
+of `T`. Then,
   `(T,x) ~ f(t,x) = f(t|x) f(x)
-is the joint distribution of `(T,x)`. To find `f(t)`,
-we integrate `f(t,theta.hat)` over `x`.
+is the joint distribution of `(T,x)`. To find `f(t)` for a fixed `t`, we
+integrate `f(t,x)` over `x` using Monte Carlo integration to find the
+marginal distribution of `T`. That is, we:
+}
+\details{
+1. Sample from MVN `x`
+2. Compute `f(t,x)` for each sample
+3. Take the mean of the `f(t,x)` values asn an estimate of `f(t)`.
+
+The `samp` function is used to sample from the distribution of `T|x`. It should
+be designed to take
 }

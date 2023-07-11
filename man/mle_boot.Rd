@@ -4,10 +4,10 @@
 \alias{mle_boot}
 \title{Bootstrapped MLE}
 \usage{
-mle_boot(object)
+mle_boot(x)
 }
 \arguments{
-\item{object}{the `boot` return value}
+\item{x}{the `boot` return value}
 }
 \value{
 an `mle_boot` object (wrapper for `boot` object)

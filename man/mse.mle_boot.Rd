@@ -12,7 +12,7 @@
 \item{par}{if the true parameter value is known, you may provide it;
 otherwise we use the MLE of `par`.}
 
-\item{...}{pass additional arguments}
+\item{...}{pass additional arguments (not used)}
 }
 \description{
 Computes the estimate of the MSE of a `boot` object.

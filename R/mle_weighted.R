@@ -7,12 +7,14 @@
 #' is given in the summation, or alternatively, the more information it
 #' has about the parameter, the more weight it is given in the summation.
 #'
-#' Each `mle` object should have a `fim` method, which returns
-#' the information matrix (inverse of the variance-covariance matrix).
+#' Each `mle` object should have an `observed_fim` method, which returns
+#' the Fisher information matrix (FIM) for the parameter. The FIM is
+#' assumed to be the negative of the expected value of the Hessian of the
+#' log-likelihood function. The `mle` objects should also have a `params`
+#' method, which returns the parameter vector.
 #'
-#' We assume that the observations used to estimate the MLE objects are
-#' independent, which might not always be the case. If this is not the case,
-#' then the computation of the log-likelihood is necessarily meaningful.
+#' We assume that the observations used to estimate each of the MLE objects
+#' in `mles` are independent.
 #'
 #' @param mles A list of `mle` objects, all for the same parameter.
 #' @return An object of type `mle_weighted` (which inherits from
@@ -41,20 +43,18 @@ mle_weighted <- function(mles) {
         return(mles[[1]])
     }
 
-    fims <- lapply(mles, fim)
+    fims <- lapply(mles, observed_fim)
     info.wt <- Reduce(`+`, fims)
     cov.wt <- ginv(info.wt)
     theta.wt <- as.vector(cov.wt %*%
-        Reduce(`+`, Map(`%*%`, fims, lapply(mles, point))))
-    names(theta.wt) <- get_first_attr(mles, point, c(names, colnames))
+        Reduce(`+`, Map(`%*%`, fims, lapply(mles, params))))
 
-    mle(
-        theta.hat = theta.wt,
-        loglike = sum(sapply(mles, loglike)),
-        score = mean(sapply(mles, score)),
+    mle(theta.hat = theta.wt,
+        loglike = NULL,
+        score = NULL,
         sigma = cov.wt,
         info = info.wt,
-        obs = lapply(mles, obs),
+        obs = NULL,
         nobs = sum(sapply(mles, nobs)),
         superclasses = c("mle_weighted")
     )

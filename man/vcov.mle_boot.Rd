@@ -4,7 +4,7 @@
 \alias{vcov.mle_boot}
 \title{Computes the variance-covariance matrix of `boot` object.}
 \usage{
-\method{vcov}{mle_boot}(object, ...)
+\method{vcov}{mle_boot}(x)
 }
 \arguments{
 \item{object}{the `boot` object to obtain the variance-covariance of}

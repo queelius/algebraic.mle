@@ -2,35 +2,31 @@
 % Please edit documentation in R/mle_rmap.R
 \name{rmap.mle}
 \alias{rmap.mle}
-\title{rmap.mle}
+\title{Computes the distribution of `g(x)` where `x` is an `mle` object.}
 \usage{
-\method{rmap}{mle}(x, g, n = 1000L, method = "mc", ...)
+rmap.mle(x, g, ..., n = 1000L, method = c("mc", "delta"))
 }
 \arguments{
-\item{x}{a list of distribution (random element) objects.}
+\item{x}{an `mle` object}
 
-\item{g}{a function that accepts arguments sampled from the distribution
-objects in `x`.}
+\item{g}{a function}
+
+\item{...}{additional arguments to pass to the `g` function}
 
 \item{n}{number of samples to take to estimate distribution of `g(x)` if
-`method=="mc"`.}
+`method == "mc"`.}
 
 \item{method}{method to use to estimate distribution of `g(x)`,
 "delta" or "mc".}
-
-\item{...}{additional arguments to pass to the `mle` sampler if
-`method=="mc"` or to the `grad` function if `method=="delta"`.}
 }
 \description{
-Computes the distribution of `g(x)` where `x` is an `mle` object.
-}
-\details{
 By the invariance property of the MLE, if `x` is an `mle` object,
 then under the right conditions, asymptotically, `g(x)` is normally
 distributed,
     g(x) ~ normal(g(point(x)),sigma)
 where `sigma` is the variance-covariance of `f(x)`
-
+}
+\details{
 We provide two different methods for estimating the
 variance-covariance of `f(x)`:
     method = "delta" -> delta method

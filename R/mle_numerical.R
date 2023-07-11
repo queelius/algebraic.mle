@@ -1,5 +1,3 @@
-#' mle_optim
-#'
 #' This function takes the output of `optim`, `newton_raphson`, or `sim_anneal`
 #' and turns it into an `mle_numerical` (subclass of `mle`) object.
 #' 

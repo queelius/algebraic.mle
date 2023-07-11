@@ -160,6 +160,12 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/is_mle_emp.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/loglik_val.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/loglik_val.mle.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/loglike.html</loc>
   </url>
   <url>
@@ -307,6 +313,12 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/obs.mle_boot.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/observed_fim.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/observed_fim.mle.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/options.html</loc>
   </url>
   <url>
@@ -395,6 +407,12 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/score.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/score_val.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/score_val.mle.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/se.boot.html</loc>

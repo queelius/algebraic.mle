@@ -4,10 +4,12 @@
 \alias{confint.mle}
 \title{Function to compute the confidence intervals of `mle` objects.}
 \usage{
-\method{confint}{mle}(x, level = 0.95, use_t_dist = TRUE, ...)
+\method{confint}{mle}(object, parm = NULL, level = 0.95, use_t_dist = TRUE, ...)
 }
 \arguments{
-\item{x}{the `mle` object to compute the confidence intervals for}
+\item{object}{the `mle` object to compute the confidence intervals for}
+
+\item{parm}{the parameters to compute the confidence intervals for (not used)}
 
 \item{level}{confidence level, defaults to 0.95 (alpha=.05)}
 

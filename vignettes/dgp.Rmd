@@ -38,6 +38,7 @@ in R:
 ``` r
 install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
+devtools::install_github("queelius/algebraic.dist")
 ```
 
 ## Purpose
@@ -81,6 +82,7 @@ In this model, `Y | x ~ EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`.
 First, let's define the DGP (data generating process):
 
 ```{r dgp-1}
+library(algebraic.dist)
 b0 <- -.1
 b1 <- 0.5
 
@@ -138,8 +140,8 @@ plot(df$x,df$y)
 
 # now overlay a plot of the conditional mean
 x <- seq(-10, 10, .1)
-b0.hat <- point(sol)[1]
-b1.hat <- point(sol)[2]
+b0.hat <- params(sol)[1]
+b1.hat <- params(sol)[2]
 y.hat <- 1/exp(b0.hat + b1.hat*x)
 y <- 1/exp(b0 + b1*x)
 lines(x, y, col = "green", lwd = 10)
@@ -171,7 +173,7 @@ summary(sol2)
 
 Let's compute the likelihood ratio test statistic and p-value:
 ```{r}
-(lrt.sol2 <- -2 * (loglike(sol2) - loglike(sol)))
+(lrt.sol2 <- -2 * (loglik_val(sol2) - loglik_val(sol)))
 pchisq(lrt.sol2, df = 1, lower.tail = FALSE) # compute the p-value
 ```
 
@@ -204,7 +206,7 @@ sol3 <- mle_numerical(optim(par = 0,
     control = list(fnscale = -1),
     hessian = TRUE,
     method = "BFGS"))
-(lrt.sol3 <- -2 * (loglike(sol2) - loglike(sol)))
+(lrt.sol3 <- -2 * (loglik_val(sol2) - loglik_val(sol)))
 pchisq(lrt.sol3, df = 1, lower.tail = FALSE) # compute the p-value
 ```
 
@@ -222,34 +224,6 @@ print(CI)
 We see that the 95% confidence interval for `b0` does not include zero, so we
 reject the null hypothesis that `b0 = 0`. The 95% confidence interval for `b1`
 does not include zero, so we reject the null hypothesis that `b1 = 0`.
-
-### Time-dependent rate
-What happens if we allow rate to be a function of time? By definition,
-the exponential ditribution has a memoryless property, so the rate should
-not depend on time. However, we have introduced covariates or predictors
-into the model, and we could allow time to be another one.
-
-
-
-Let's fit this model to the date.
-```{r dgp-2}
-resp <- function(df) df$y
-rate <- function(df, beta) exp(beta[1] + beta[2] * df$x)
-loglik <- function(df, resp, rate) {
-  function(beta) sum(dexp(x = resp(df), rate = rate(df, beta), log = TRUE))
-}
-
-b0 <- -.1
-b1 <- 0.5
-
-dgp <- function(n, t, x) {
-    rate <- exp(b0 + b1 * sin(t))
-    X <- rexp(n, rate)
-    X
-}
-```
-
-
 
 
 You can see tutorials for more examples of using the package in the

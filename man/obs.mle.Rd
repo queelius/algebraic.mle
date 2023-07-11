@@ -4,12 +4,10 @@
 \alias{obs.mle}
 \title{Method for obtaining the observations used by the `mle` object `x`.}
 \usage{
-\method{obs}{mle}(x, ...)
+obs.mle(x)
 }
 \arguments{
 \item{x}{the `mle` object to obtain the number of observations for}
-
-\item{...}{additional arguments to pass}
 }
 \description{
 Method for obtaining the observations used by the `mle` object `x`.

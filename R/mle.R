@@ -1,4 +1,5 @@
-#' `mle` makes an `mle` object.
+#' Constructor for making `mle` objects, which provides a common interface
+#' for maximum likelihood estimators.
 #'
 #' @param theta.hat the MLE
 #' @param loglike the log-likelihood of `theta.hat` given the data
@@ -41,88 +42,109 @@ print.mle <- function(x, ...) {
     print(summary(x, ...))
 }
 
-#' Method for obtaining the parameters of an `mle` object.
-#'
-#' @param x the `mle` object to obtain the parameters of
-#'
+#' Computes the variance-covariance matrix of `mle` object.
+#' 
+#' @param object the `mle` object to obtain the variance-covariance of
+#' @param ... additional arguments to pass (not used)
+#' @return the variance-covariance matrix
 #' @export
-params.mle <- function(x, ...) {
-    x$theta
+vcov.mle <- function(object, ...) {
+    object$sigma
+}
+
+
+#' Method for obtaining the parameters of an `mle` object.
+#' 
+#' @param x the `mle` object to obtain the parameters of
+#' @export
+params.mle <- function(x) {
+    x$theta.hat
 }
 
 #' Method for obtaining the number of parameters of an `mle` object.
-#'
+#' 
 #' @param x the `mle` object to obtain the number of parameters of
-#'
+#' @importFrom algebraic.dist params
 #' @export
-nparams.mle <- function(x) length(params(x))
+nparams.mle <- function(x) { 
+    length(params(x))
+}
 
 #' Method for obtaining the AIC of an `mle` object.
 #'
 #' @param x the `mle` object to obtain the AIC of
-#'
+#' @importFrom algebraic.dist nparams
 #' @export
-aic.mle <- function(x) -2 * loglike(x) + 2 * nparams(x)
+aic.mle <- function(x) {
+    -2 * loglik_val(x) + 2 * nparams(x)
+}
 
 #' Method for obtaining the number of observations in the sample used by
 #' an `mle`.
 #'
-#' @param x the `mle` object to obtain the number of observations for
-#' @param ... additional arguments to pass
-#' @importFrom stats nobs
+#' @param object the `mle` object to obtain the number of observations for
+#' @param ... additional arguments to pass (not used)
 #' @export
-nobs.mle <- function(x, ...) x$nobs
+nobs.mle <- function(object, ...) {
+    object$nobs
+}
 
 #' Method for obtaining the observations used by the `mle` object `x`.
 #'
 #' @param x the `mle` object to obtain the number of observations for
-#' @param ... additional arguments to pass
 #' @export
-obs.mle <- function(x, ...) x$obs
+obs.mle <- function(x) {
+    x$obs
+}
 
 #' Method for obtaining the log-likelihood of an `mle` object.
 #'
 #' @param x the log-likelihood `l` evaluated at `x`, `l(x)`.
 #' @param ... additional arguments to pass
-#'
+#' @return the log-likelihood of the fitted mle object `x`
 #' @export
-loglike.mle <- function(x, ...) x$loglike
+loglik_val.mle <- function(x, ...) {
+    x$loglike
+}
 
 #' Function to compute the confidence intervals of `mle` objects.
 #'
-#' @param x the `mle` object to compute the confidence intervals for
+#' @param object the `mle` object to compute the confidence intervals for
+#' @param parm the parameters to compute the confidence intervals for (not used)
 #' @param level confidence level, defaults to 0.95 (alpha=.05)
 #' @param ... additional arguments to pass
+#' @importFrom stats qt qnorm vcov nobs
+#' @importFrom algebraic.dist params
 #' @export
-confint.mle <- function(x, level = .95, use_t_dist = TRUE, ...) {
+confint.mle <- function(object, parm = NULL, level = .95,
+    use_t_dist = TRUE, ...) {
     stopifnot(is.numeric(level), level >= 0, level <= 1)
-    V <- vcov(x, ...)
+    V <- vcov(object)
     if (is.null(V)) stop("No variance-covariance matrix available.")
     if (is.matrix(V)) {
         V <- diag(V)
     }
     sigma <- V
 
-    theta <- point(x, ...)
+    theta <- params(object)
     alpha <- (1 - level) / 2
     p <- length(theta)
 
-    if (use_t_dist && is.null(nobs(x))) {
+    if (use_t_dist && is.null(nobs(object))) {
         warning("Unknown number of observations, using large sample approximation.")
         use_t_dist <- FALSE
     }
 
     if (use_t_dist) {
-        q <- stats::qt(1 - alpha, df = nobs(x) - 1)
+        q <- qt(1 - alpha, df = nobs(object) - 1)
     } else {
-        q <- stats::qnorm(1 - alpha)
+        q <- qnorm(1 - alpha)
     }
     ci <- matrix(nrow = p, ncol = 2)
     colnames(ci) <- c(paste0(alpha * 100, "%"),
                       paste0((1 - alpha) * 100, "%"))
 
-    for (j in 1:p)
-    {
+    for (j in 1:p) {
         ci[j, ] <- c(
             theta[j] - q * sqrt(sigma[j]),
             theta[j] + q * sqrt(sigma[j]))
@@ -144,33 +166,21 @@ confint.mle <- function(x, level = .95, use_t_dist = TRUE, ...) {
 #'
 #' @param x the `mle` object to create sampler for
 #' @param ... additional arguments to pass
-#' @importFrom stats rnorm
+#' @importFrom stats rnorm vcov
 #' @importFrom mvtnorm rmvnorm
+#' @importFrom algebraic.dist params nparams
 #' @export
 sampler.mle <- function(x, ...) {
     V <- vcov(x)
-    mu <- point(x)
+    mu <- params(x)
 
     if (nparams(x) == 1L) {
         stddev <- sqrt(V)
-        function(n = 1) stats::rnorm(n, mean = mu, sd = stddev, ...)
+        function(n = 1) rnorm(n, mean = mu, sd = stddev, ...)
     } else {
-        function(n = 1) mvtnorm::rmvnorm(n, mu, V, ...)
+        function(n = 1) rmvnorm(n, mu, V, ...)
     }
 }
-
-
-#' Computes the variance-covariance matrix of `mle` object `x`.
-#'
-#' @param x the `mle` object to obtain the variance-covariance of
-#' @param ... additional arguments to pass
-#'
-#' @importFrom stats vcov
-#' @export
-vcov.mle <- function(x, ...) {
-    x$sigma
-}
-
 
 #' Computes the MSE of an `mle` object.
 #'
@@ -199,6 +209,8 @@ vcov.mle <- function(x, ...) {
 #' @param theta true parameter value, defaults to `NULL` for unknown. If `NULL`,
 #'             then we let the bias method deal with it. Maybe it has a nice way
 #'             of estimating the bias.
+#' @importFrom algebraic.dist nparams
+#' @importFrom stats vcov
 #' @export
 mse.mle <- function(x, theta = NULL) {
 
@@ -219,21 +231,12 @@ mse.mle <- function(x, theta = NULL) {
     res
 }
 
-#' Computes the point estimate of an `mle` object.
+#' Function for obtaining the observed FIM of an `mle` object.
 #'
-#' @param x the `mle` object.
+#' @param x the `mle` object to obtain the FIM of.
 #' @param ... pass additional arguments
 #' @export
-point.mle <- function(x, ...) {
-    x$theta.hat
-}
-
-#' Function for obtaining the fisher information matrix of an `mle` object.
-#'
-#' @param x the `mle` object to obtain the fisher information of.
-#' @param ... pass additional arguments
-#' @export
-fim.mle <- function(x, ...) {
+observed_fim.mle <- function(x, ...) {
     x$info
 }
 
@@ -242,24 +245,22 @@ fim.mle <- function(x, ...) {
 #'
 #' @param object the `mle` object
 #' @param ... pass additional arguments
-#'
 #' @export
 summary.mle <- function(object, ...) {
-    structure(list(x = object),
-        class = c("summary_mle", "summary")
-    )
+    structure(list(x = object), class = c("summary_mle", "summary"))
 }
 
 #' Function for printing a `summary` object for an `mle` object.
 #'
 #' @param object the `summary_mle` object
 #' @param ... pass additional arguments
-#'
+#' @importFrom stats vcov
+#' @importFrom algebraic.dist nparams params
 #' @export
 print.summary_mle <- function(object, ...) {
     cat("Maximum likelihood estimator of type", class(object$x)[1], "is normally distributed.\n")
     cat("The estimates of the parameters are given by:\n")
-    print(point(object$x))
+    print(params(object$x))
 
     SE <- se(object$x)
     if (!is.null(SE))
@@ -275,22 +276,23 @@ print.summary_mle <- function(object, ...) {
         print(diag(mse(object$x)))
     }
     cat("The MSE of the estimator is ", mse(object$x), ".\n")
-    if (!is.null(loglike(object$x))) {
-        cat("The log-likelihood is ", loglike(object$x), ".\n")
+    if (!is.null(loglik_val(object$x))) {
+        cat("The log-likelihood is ", loglik_val(object$x), ".\n")
         cat("The AIC is ", aic(object$x), ".\n")
     }
 }
 
 #' Function for obtaining an estimate of the standard error of the MLE
-#' `x`.
-
-#' @param x the bootstrapped MLE object
+#' object `x`.
+#' 
+#' @param x the MLE object
 #' @param se.matrix if `TRUE`, return the square root of the variance-covariance
-#' @param ... additional arguments to pass
+#' @param ... additional arguments to pass (not used)
+#' @importFrom stats vcov
 #' @export
 se.mle <- function(x, se.matrix = FALSE, ...) {
 
-    V <- vcov(x, ...)
+    V <- vcov(x)
     if (is.null(V)) return(NULL)
 
     if (se.matrix && is.matrix(V)) {
@@ -318,26 +320,24 @@ is_mle <- function(x) {
 #' @param x the `mle` object
 #' @param tol the tolerance for determining if a number is close enough to zero
 #' @param ... pass additional arguments
-#'
 #' @export
 orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
-    I <- fim(x, ...)
+    I <- observed_fim(x, ...)
     if(is.null(I)) {
         return(NULL)
     }
 
-    abs(fim(x, ...)) <= tol
+    abs(I) <= tol
 }
 
-#' Computes the score of an `mle` object.
+#' Computes the score of an `mle` object (score evaluated at the MLE).
 #'
 #' If reguarlity conditions are satisfied, it should be zero (or approximately,
 #' if rounding errors occur).
 #'
-#' @inheritParams score
-#' @method score mle
+#' @inheritParams score_val
 #' @export
-score.mle <- function(x, ...) {
+score_val.mle <- function(x, ...) {
     x$score
 }
 
@@ -352,62 +352,70 @@ score.mle <- function(x, ...) {
 #' @param theta true parameter value. normally, unknown (NULL), in which case
 #'              we estimate the bias (say, using bootstrap)
 #' @param ... additional arguments to pass
+#' @importFrom algebraic.dist nparams
 #' @export
 bias.mle <- function(x, theta = NULL, ...) {
     rep(0, nparams(x))
 }
 
-#' Estimate of predictive interval of `T|x` where `T` is a statistic and `x`
-#' is an `mle` object that it is conditioned on. Generally, what this means
-#' is that we want to find the distribution of `T` when we marginalize over
-#' the distribution of `x`, since `x` is an uncertain estimate of the true
-#' parameter value.
+#' Estimate of predictive interval of `T|data` using Monte Carlo integration.
 #'
 #' Let
 #'   `T|x ~ f(t|x)``
 #' be the pdf of vector `T` given MLE `x` and
-#'   `x ~ MVN(point(x),vcov(x))``
-#' be the multivariate normal of the MLE `x`. Then,
+#'   `x ~ MVN(params(x),vcov(x))``
+#' be the estimate of the sampling distribution of the MLE for the parameters
+#' of `T`. Then,
 #'   `(T,x) ~ f(t,x) = f(t|x) f(x)
-#' is the joint distribution of `(T,x)`. To find `f(t)`,
-#' we integrate `f(t,theta.hat)` over `x`.
+#' is the joint distribution of `(T,x)`. To find `f(t)` for a fixed `t`, we
+#' integrate `f(t,x)` over `x` using Monte Carlo integration to find the
+#' marginal distribution of `T`. That is, we:
+#' 
+#' 1. Sample from MVN `x`
+#' 2. Compute `f(t,x)` for each sample
+#' 3. Take the mean of the `f(t,x)` values asn an estimate of `f(t)`.
+#' 
+#' The `samp` function is used to sample from the distribution of `T|x`. It should
+#' be designed to take 
 #'
-#' @param x `mle` object
-#' @param samp `mle` sampler for parametric distribution that is a function
-#'             of `x`
-#' @param alpha (1-alpha)-predictive interval for `T|x`
+#' @param x an `mle` object.
+#' @param samp The sampler for the distribution that is parameterized by the
+#'             MLE `x`, i.e., `T|x`.
+#' @param alpha (1-alpha)-predictive interval for `T|x`. Defaults to 0.05.
+#' @param R number of samples to draw from the sampling distribution of `x`.
+#'          Defaults to 50000.
+#' @param ... additional arguments to pass into `samp`.
 #' @importFrom mvtnorm rmvnorm
+#' @importFrom stats vcov quantile rnorm
+#' @importFrom algebraic.dist params
 #' @export
-pred.mle <- function(x, samp, alpha = 0.05) {
-    N <- 50000
-    theta <- point(x)
-    names(theta) <- NULL # maybe more efficient? benchmark this
+pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
+
+    theta <- params(x)
     sigma <- vcov(x)
+
     thetas <- NULL
     if (length(theta) == 1) {
-        thetas <- matrix(rnorm(N, theta, sd = sqrt(sigma)),nrow=N)
+        thetas <- matrix(rnorm(n = R, mu = theta, sd = sqrt(sigma)), nrow = R)
     } else {
-        thetas <- rmvnorm(N, theta, sigma)
+        thetas <- rmvnorm(n = R, mean = theta, sigma = sigma)
     }
 
-    ob <- samp(1, theta)
+    ob <- samp(n = 1, par = theta, ...)
     p <- length(ob)
 
-    data <- matrix(nrow = N, ncol = p)
-    data[1,] <- ob
-    for (i in 2:N) {
-        data[i,] <- samp(1, thetas[i,])
+    data <- matrix(NA, nrow = R, ncol = p)
+    data[1, ] <- ob
+    for (i in 2:R) {
+        data[i, ] <- samp(1, thetas[i, ], ...)
     }
 
-    pi <- matrix(nrow=p, ncol=3)
-    for (j in 1:p)
-    {
-        ## predictive interval for T_j|x
-        dj <- sort(data[,j])
-        pi[j,] <- c(mean(dj),quantile(dj, c(alpha / 2, 1 - alpha / 2)))
+    PI <- matrix(NA, nrow = p, ncol = 3)
+    for (j in 1:p) {
+        dj <- data[, j]
+        PI[j, ] <- c(mean(dj), quantile(
+            x = dj, probs = c(alpha / 2, 1 - alpha / 2)))
     }
-    colnames(pi) <- c("mean", "lower", "upper")
-    pi
+    colnames(PI) <- c("mean", "lower", "upper")
+    PI
 }
-
-

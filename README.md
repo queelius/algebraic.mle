@@ -148,8 +148,8 @@ plot(df$x,df$y)
 
 # now overlay a plot of the conditional mean
 x <- seq(-10, 10, .1)
-b0.hat <- point(sol)[1]
-b1.hat <- point(sol)[2]
+b0.hat <- params(sol)[1]
+b1.hat <- params(sol)[2]
 y.hat <- 1/exp(b0.hat + b1.hat*x)
 y <- 1/exp(b0 + b1*x)
 lines(x, y, col = "green", lwd = 10)
@@ -193,7 +193,7 @@ summary(sol2)
 Let’s compute the likelihood ratio test statistic and p-value:
 
 ``` r
-(lrt.sol2 <- -2 * (loglike(sol2) - loglike(sol)))
+(lrt.sol2 <- -2 * (loglik_val(sol2) - loglik_val(sol)))
 #> [1] 4.037435
 pchisq(lrt.sol2, df = 1, lower.tail = FALSE) # compute the p-value
 #> [1] 0.04450142
@@ -234,7 +234,7 @@ sol3 <- mle_numerical(optim(par = 0,
     control = list(fnscale = -1),
     hessian = TRUE,
     method = "BFGS"))
-(lrt.sol3 <- -2 * (loglike(sol3) - loglike(sol)))
+(lrt.sol3 <- -2 * (loglik_val(sol3) - loglik_val(sol)))
 #> [1] 285.0265
 pchisq(lrt.sol3, df = 1, lower.tail = FALSE) # compute the p-value
 #> [1] 6.029289e-64

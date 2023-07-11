@@ -46,10 +46,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="articles/dgp.html">Dynamic failure rate model</a>
-    <a class="dropdown-item" href="articles/exponential-mle.html">Exponential distribution MLE</a>
-    <a class="dropdown-item" href="articles/normal-mle.html">Normal distribution MLE</a>
     <a class="dropdown-item" href="articles/statistics.html">Statistics and characteristics of the MLE</a>
-    <a class="dropdown-item" href="articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
 </li>
       </ul>
@@ -171,8 +168,8 @@
 <span></span>
 <span><span class="co"># now overlay a plot of the conditional mean</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">.1</span><span class="op">)</span></span>
-<span><span class="va">b0.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/point.html">point</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="va">b1.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/point.html">point</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">b0.hat</span> <span class="op">&lt;-</span> <span class="fu">params</span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">b1.hat</span> <span class="op">&lt;-</span> <span class="fu">params</span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">y.hat</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0.hat</span> <span class="op">+</span> <span class="va">b1.hat</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0</span> <span class="op">+</span> <span class="va">b1</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, col <span class="op">=</span> <span class="st">"green"</span>, lwd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
@@ -206,7 +203,7 @@
 <span><span class="co">#&gt; The AIC is  245.4328 .</span></span></code></pre></div>
 <p>Let’s compute the likelihood ratio test statistic and p-value:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">lrt.sol2</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">lrt.sol2</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglik_val.html">loglik_val</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglik_val.html">loglik_val</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 4.037435</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.sol2</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
 <span><span class="co">#&gt; [1] 0.04450142</span></span></code></pre></div>
@@ -229,14 +226,14 @@
 <span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">(</span><span class="va">lrt.sol3</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol3</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglike.html">loglike</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">lrt.sol3</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/loglik_val.html">loglik_val</a></span><span class="op">(</span><span class="va">sol3</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="reference/loglik_val.html">loglik_val</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 285.0265</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.sol3</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
 <span><span class="co">#&gt; [1] 6.029289e-64</span></span></code></pre></div>
 <p>This has a <code>p</code>-value of essentially zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
 <p>Let’s compare the confidence intervals for each of these models.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">CI</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/confint.html">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">CI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
 <span><span class="co"># print the confidence interval</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">CI</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          2.5%       97.5%</span></span>

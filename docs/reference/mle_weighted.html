@@ -35,10 +35,7 @@ has about the parameter, the more weight it is given in the summation."><!-- mat
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
-    <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
-    <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
     <a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a>
-    <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -91,11 +88,13 @@ has about the parameter, the more weight it is given in the summation.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Each `mle` object should have a `fim` method, which returns
-the information matrix (inverse of the variance-covariance matrix).</p>
-<p>We assume that the observations used to estimate the MLE objects are
-independent, which might not always be the case. If this is not the case,
-then the computation of the log-likelihood is necessarily meaningful.</p>
+    <p>Each `mle` object should have an `observed_fim` method, which returns
+the Fisher information matrix (FIM) for the parameter. The FIM is
+assumed to be the negative of the expected value of the Hessian of the
+log-likelihood function. The `mle` objects should also have a `params`
+method, which returns the parameter vector.</p>
+<p>We assume that the observations used to estimate each of the MLE objects
+in `mles` are independent.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

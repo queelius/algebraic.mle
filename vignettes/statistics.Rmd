@@ -19,7 +19,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-options(digits = 4)
+options(digits = 3)
+options(scipen = 999)
 ```
 
 
@@ -54,29 +55,90 @@ devtools::install_github("queelius/algebraic.mle")
 ```
 
 ```{r setup, include = FALSE}
+library(algebraic.dist)
 library(algebraic.mle)
+library(numDeriv)
+library(MASS)
 library(ggplot2)
 library(tibble)
 library(mvtnorm)
 ```
 
+## Normal distribution
+
+We are going to the classic Normal distribution to demonstrate how to use
+`algebraic.mle`. We are using it for a few reasons:
+
+1. It's well-understood, so we can compare our results to the known results.
+2. It's a very common distribution, so it's useful to have a good understanding
+of its properties.
+3. The MLE is multivariate, so we can demonstrate how to use `algebraic.mle` for
+multivariate distributions.
+
+
+So, first, we define a simple MLE solver for the normal distribution.
+
+
+```{r}
+fit_normal <- function(data) {
+    sigma <- function(data) {
+        mean((data - mean(data))^2)
+    }
+    loglik <- function(par, data) {
+        n <- length(data)
+        -n / 2 * log(2 * pi * par[2]) - 1 / (2 * par[2]) *
+            (sum(data^2) - 2 * par[1] * sum(data) + n * par[1]^2)
+    }
+    par.hat <- c(mu = mean(data), var = sigma(data))
+    H <- numDeriv::hessian(func = loglik, x = par.hat, data = data)
+    algebraic.mle::mle(
+        theta.hat = par.hat,
+        loglike = loglik(par.hat, data),
+        score = numDeriv::grad(func = loglik, x = par.hat, data = data),
+        sigma = MASS::ginv(-H),
+        info = -H,
+        obs = NULL,
+        nobs = length(data),
+        superclasses = c("mle_normal"))
+}
+```
+
+As you can see, we return an `mle` object, and then we give it a sub-class
+`mle_normal` (it is also a subclass of `mle` and `algebraic.dist`'s `dist`)
+so we can specialize some of the methods for MLE of the normal distribution,
+e.g., `bias.mle_normal` which we show later.
+
 ## Monte-carlo (MC) simulation of the sampling distribution of the MLE
 
-```{r mc-samp, cache=TRUE}
-# Simulate a sample of n observations from a normal with mean 1 and variance 2.
-set.seed(51234)
-n <- 50
-mu <- 1
-var <- 2
-B <- 500000
+Let's define `theta_samp_mc`, which stands for the Monte Carlo simulation
+of the sampling distribution of the MLE. It takes a sample size `n`, a true
+parameter value `theta`, and a number of simulations `B` to run. It returns a matrix
+with `B` rows and two columns, the first column is the MLE of the mean and the
+second column is the MLE of the variance.
 
-theta <- c(mu, var)
-mles <- matrix(NA, nrow = B, ncol = 2)
-for (i in 1:B) {
-    x <- rnorm(n, mean = mu, sd = sqrt(var))
-    mles[i, ] <- point(mle_normal(x, keep_obs = FALSE))
+```{r theta-samp-mc}
+theta_samp_mc <- function(n, theta, B = 10000) {
+    mu <- theta[1]
+    var <- theta[2]
+    mles <- matrix(NA, nrow = B, ncol = 2)
+    for (i in 1:B) {
+        d <- rnorm(n, mean = mu, sd = sqrt(var))
+        mles[i, ] <- params(fit_normal(d))
+    }
+    colnames(mles) <- c("mu", "var")
+    mles
 }
-colnames(mles) <- c("mu", "var")
+```
+
+```{r mc-samp, cache=TRUE}
+# Set up the parameters of a simulation
+set.seed(913254)
+n <- 70
+mu <- 1
+var <- 1
+B <- 10000
+theta <- c(mu, var)
+mles <- theta_samp_mc(n = n, theta = theta, B = B)
 head(mles)
 ```
 
@@ -112,25 +174,35 @@ ggplot(as_tibble(mles), aes(x = mu, y = var)) +
     scale_fill_gradient(low = "blue", high = "red")
 ```
 
-In `algebraic.mle`, we can use the `mle_emp` function to model the empirical
-sampling distribution of the MLEs. It takes a sample of MLEs and, optionally,
-the sample size the MLEs were computed from.
-
+In `algebraic.dist`, we can use `empirical_dist` to represent an empirical
+sampling distribution by giving it the sample of MLEs previously generated:
 ```{r}
-theta.mc <- mle_emp(mles, n)
+theta.mc <- algebraic.dist::empirical_dist(mles)
 ```
 
-We will use this as a sort of *ground truth* for the sampling distribution of the
-MLEs. We know the *asymptotic* sampling distribution of the MLEs is normal with
-a mean $\theta = (\mu = `r mu`, \sigma^2 = `r var`)'$ and a variance-covariance
-matrix $\Sigma = I^{-1}(\theta)_n$, where $I$ is the Fisher information matrix
-and $n$ is the sample size.
+In general, for any MLE and assuming the the regularity conditions hold,
+the asymptotic sampling distribution of the MLE is normal with mean $\theta$ and
+variance-covariance matrix $\Sigma = I^{-1}(\theta)_n$, where $I$ is the Fisher
+information matrix and $n$ is the sample size. However, in general:
 
-For $n = `r n`$, what does the sampling distribution of the MLE look like?
-First, let's look at some basic statistics.
+1. We don't know when the asymptotic sampling distribution is a good approximation
+to the true sampling distribution. In these cases, the empirical sampling
+distribution may be used instead.
+2. We may not be confident our implementation of the MLE is correct,
+in which case the empirical sampling distribution can be used to check our
+implementation. 
+3. The regularity conditions may not hold, in which case the asymptotic sampling
+distribution may not be known. In these cases, the empirical sampling distribution
+may be used instead.
 
+With these caveats in mind, we compare some of the statistics of the empirical
+sampling distribution of the MLE for the normal distribution and the asymptotic
+sampling distribution.
+
+Let's look at some basic parameters of the sampling distribution of the MLE for the
+normal distribution. First, let's look at the mean:
 ```{r}
-point(theta.mc)
+(mu.mc <- mean(theta.mc))
 ```
 
 The mean looks pretty close to the true parameter vector
@@ -138,25 +210,31 @@ $$
     \theta = (\mu = `r mu`, \sigma^2 = `r var`)'.
 $$
 
-Let's compute the bias:
-```{r}
-bias(theta.mc, theta)
+We can actually compute any parameter, since `theta.mc`, models the concept of a
+distribution. In particular, it models a distribution in `algebraic.dist`, and thus
+the API exposed by `algebraic.dist` is available to us. For instance, we can compute
+various parameters of the sampling distribution of the MLE using the `expectation`
+function:
+```{r expectation-tests, cache = TRUE}
+# should sum to 1
+expectation(theta.mc, function(x) 1)
+# mean
+expectation(theta.mc, function(x) x)
+# variance of (mu, var)
+expectation(theta.mc, function(x) (x - mu.mc)^2)
+# kurtosis of (mu, var) 
+expectation(theta.mc, function(x) (x - mu.mc)^4) /
+    expectation(theta.mc, function(x) (x - mu.mc)^2)^2
+# skewness of mu and var -- should be (0, 0)
+expectation(theta.mc, function(x) ((x - mu.mc) / theta)^3)
+# covariance of (mu, var) -- should be around 0
+expectation(theta.mc, function(x) (x[1] - mu.mc[1]) * (x[2] - mu.mc[2]))
 ```
-This is pretty close to the expected bias of the asymptotic sampling distribution
-of the MLE, which we will compute later.
 
-```{r}
-mle_normal(x, keep_obs = FALSE)
-```
+We could use the mean and variance-covariance matrix to parameterize a multivariate
+normal distribution (MVN), for instance, but we don't do that here.
 
-
-## Asymptotic sampling distribution of the MLE
-
-In the previous section, we estimated the sampling distribution with a Monte Carlo
-simulation. In this section, we will compute the asymptotic sampling distribution
-using facilities in the `algebraic.mle` R package.
-
-### Bias
+## Bias
 
 Bias is a measure of the systematic error of an estimator; it measures how far its 
 average value is from the true value being estimated. Formally, it is defined as
@@ -171,51 +249,75 @@ expectation operator and write $E$ instead of $E_{\hat\theta}$ unless it's not
 clear from context which expectation operator we are using.)
 
 When the bias is zero, the estimator is *unbiased*, otherwise it is *biased*.
-
-We actually know the analytical solution for the bias in the case of the normal
-distribution, which is given by:
+Analytically, the asymptotic bias of the MLE for the parameters of the normal
+distribution is
+$$
+    \operatorname{Bias}(\hat\theta) = \left(\begin{array}{c}
+        0 \\
+        -\frac{\sigma^2}{n}
+    \end{array}\right).
+$$
+Plugging in the true value of $\sigma^2 = `r var`$ and the sample size $n = `r n`$,
+we get $(0, 0.02857143)'$. We may also provide an appropriate implementation of the
+`bias` method in `algebraic.mle` for `mle_normal` (which is what we called our
+the object that we returned from `fit_normal`):
 ```{r}
-bias(mle_normal(rnorm(n, mean = mu, sd = sqrt(var))), theta)
+bias.mle_normal <- function(x, par = NULL, ...) {
+    if (is.null(par)) {
+        par <- params(x)
+    }
+    c(mu = 0, var = -(1 / nobs(x)) * par[2])
+}
 ```
 
-We see that they are very close.
+Now, let's compute the bias using this function, and the estimate of the bias
+provided by the `bias.mle_emp`:
+```{r bias-1}
+# first, we sample some data from the true distribution
+data <- rnorm(n = n, mean = mu, sd = sqrt(var))
+
+# now we fit it to the normal distribution
+theta.hat <- fit_normal(data)
+
+# now we compute the bias, first using the asymptotic theory
+bias(theta.hat, theta)
+# now using the empirical sampling distribution
+expectation(theta.mc, function(x) x - theta) # mean(theta.mc) - theta
+```
+
+The asymptotic bias and the empirical bias are pretty close.
+Let's see how the bias of the variance changes as the sample size increases.
 
 <details>
 <summary>Click to show/hide R code</summary>
-```{r bias-code}
-N <- 100
-ns <- c(seq(10, 200, 10),300, 400, 600, 1000)
-bias_mu <- matrix(NA, nrow = N, ncol = length(ns))
-bias_var <- matrix(NA, nrow = N, ncol = length(ns))
+```{r bias-code, cache = TRUE}
+N <- 1000
+ns <- seq(10, 200, 10)
+bias_var <- numeric(length(ns))
 j <- 1
 for (n in ns) {
+    vars <- numeric(length(N))
     for (i in 1:N) {
-        theta.hat <- point(mle_normal(rnorm(n, mean = mu, sd = sqrt(var))))
-        b <- theta.hat - theta
-        bias_mu[i, j] <- b[1]
-        bias_var[i, j] <- b[2]
+        d <- rnorm(n = n, mean = mu, sd = sqrt(var))
+        fit <- fit_normal(d)
+        vars[i] <- params(fit)[2]
     }
+    bias_var[j] <- mean(vars) - var
     j <- j + 1
 }
 ```
 </details>
 
 ```{r bias-plot, echo=FALSE, fig.height=4, fig.width=5}
-# i have a matrix N x k `bias_mu` which computes the bias for each of k sample sizes
-# N times each. I want to plot the bias for each sample size as a boxplot.
-library(dplyr)
-library(tidyr)
-print(bias_mu)
-bias_mu <- as_tibble(bias_mu)
-bias_mu <- gather(bias_mu, "n", "bias", 1:ncol(bias_mu))
-print(bias_mu)
-bias_mu$n <- as.numeric(gsub("X", "", bias_mu$n))
-bias_mu$n <- factor(bias_mu$n, levels = ns)
-ggplot(bias_mu, aes(x = n, y = bias)) +
-    geom_boxplot() +
-    geom_hline(yintercept = 0, linetype = "dashed") +
-    labs(x = "Sample size", y = "Bias") +
-    theme_bw()
+plot(ns[1:10], bias_var[1:10], type = "l",
+    xlab = "Sample size", ylab = "Bias")
+# plot the asymptotic bias
+lines(ns[1:10], -(1 / ns[1:10]) * var, lty = 2)
+
+# plot the rest
+plot(ns[11:length(ns)], bias_var[11:length(ns)], type = "l",
+    xlab = "Sample size", ylab = "Bias")
+lines(ns[11:length(ns)], -(1 / ns[11:length(ns)]) * var, lty = 2)
 ```
 
 
@@ -223,7 +325,7 @@ ggplot(bias_mu, aes(x = n, y = bias)) +
 
 The variance-covariance matrix is one of the more important statistical measures
 of an estimator of a parameter vector. It quantities both the variability of the
-individual parameter estimates and how they co-vary wieht each other.
+individual parameter estimates and how they co-vary with each other.
 
 The variance-covariance matrix of a parameter vector $\theta = (\theta_1, \ldots, \theta_p)'$
 is an $n \times n$ matrix defined as
@@ -238,46 +340,21 @@ $\theta_j$. Thus, the diagonal elements of the variance-covariance matrix are th
 variances of the individual parameter estimates, and the off-diagonal elements are
 the covariances between the parameter estimates.
 
-
 ```{r}
-vcov(mle_normal(rnorm(n, mean = mu, sd = sqrt(var))))
-vcov(theta.mc)
+round(vcov(theta.hat), digits=3)
+round(vcov(theta.mc), digits=3)
 ```
 
-### Standard error
-The standard error of an estimator is a measure of its statistical accuracy.
-We consider two types of standard errors: the independent standard errors of the
-estimator and the standard error matrix, which captures the correlations between
-the errors of the parameters.
-
-#### Individual standard errors
-
-This standard error is the element-wise square root of the diagonal of the
-variance-covariance matrix of the estimator. It may be used to construct confidence
-intervals for the parameter estimates or to perform hypothesis tests on parameters
-independently. It is the most straight-forward measure of the accuracy of the
-estimator, and it is the most commonly used measure of accuracy.
-
-### Standard error matrix
-
-The standard error matrix is the square root of the variance-covariance matrix of the
-estimator. This is less straightforward, but it is a more complete measure of the
-accuracy of the estimator. It captures the correlations between the errors of the
-parameters. This is useful for constructing confidence regions for the parameters,
-which are analogous to confidence intervals for a single parameter. It is also useful
-for performing hypothesis tests on multiple parameters simultaneously.
-
-The square root of a matrix is not unique, but a common choice is to use the Cholesky
-decomposition.
+They look reasonably close, suggesting at $n = `r n`$, the asymptotic sampling
+distribution is a good approximation to the "true" sampling distribution of the MLE.
 
 ### Confidence intervals
 
-```{r}
-confint(mle_normal(rnorm(n, mean = mu, sd = sqrt(var))))
-confint_from_sigma(vcov(theta.mc), params(theta.mc))
+We can compute the CI of a parameter using the `confint` function:
+```{r confint-1}
+confint(theta.hat)
 ```
 
-#### Coverage probability
 A very important measure of the accuracy of an estimator is its coverage
 probability, which is the probability that the confidence interval for the
 parameter estimate contains the true value of the parameter. If the coverage
@@ -287,44 +364,49 @@ is less than $1-\alpha$, then the confidence interval is said to be
 *conservative*; if the coverage probability is greater than $1-\alpha$, then the
 confidence interval is said to be *anti-conservative*.
 
+We can estimate it by simulating a large number of samples from the population
+distribution and computing the proportion of times the confidence interval
+contains the true value of the parameter. We can do this for both the mean and
+variance of the normal distribution.
+
 <details>
 <summary>Click to show/hide R code</summary>
-```{r coverage-prob-calc, cache=TRUE}
-N <- 10000
-ns <- c(seq(10, 200, 10), 300, 400, 600, 1000)
-df <- data.frame(n = ns,
-    coverage_mu = rep(0, length(ns)),
-    coverage_var = rep(0, length(ns)))
+```{r covearge-prob, cache = TRUE}
+N <- 1000
+ns <- seq(10, 1000, 10)
+coverage_prob <- matrix(NA, nrow=length(ns), ncol=2)
 j <- 1
 for (n in ns) {
-    counts <- c(0, 0)
+    count1 <- 0L
+    count2 <- 0L
     for (i in 1:N) {
-        theta.mle <- mle_normal(rnorm(n, mean = mu, sd = sqrt(var)))
-        ci <- confint(theta.mle)
+        d <- rnorm(n = n, mean = mu, sd = sqrt(var))
+        fit <- fit_normal(d)
+        ci <- confint(fit)
         if (ci[1, 1] <= mu && mu <= ci[1, 2]) {
-            counts[1] <- counts[1] + 1
+            count1 <- count1 + 1
         }
         if (ci[2, 1] <= var && var <= ci[2, 2]) {
-            counts[2] <- counts[2] + 1
+            count2 <- count2 + 1
         }
     }
-    df$coverage_mu[j] <- counts[1] / N
-    df$coverage_var[j] <- counts[2] / N
+    coverage_prob[j, 1] <- count1 / N
+    coverage_prob[j, 2] <- count2 / N
     j <- j + 1
 }
 ```
 </details>
-
-```{r coverage-prob-plot, echo=FALSE, fig.height=4, fig.width=5}
-plot(df$n, df$coverage_mu, type = "l", ylim = c(0.8, 1),
+```{r cov-plot, echo = FALSE, fig.height = 4, fig.width = 5, cache = TRUE}
+plot(ns, coverage_prob[, 2], type = "l",
     xlab = "Sample size", col = "blue", ylab = "Coverage")
-lines(df$n, df$coverage_var, col = "green")
-legend("bottomright", legend = c("mu", "var"), col = c("blue", "red"), lty = 1)
-# draw a line at y=.95
+lines(ns, coverage_prob[, 1], col = "green")
+legend("bottomright", legend = c("mu", "var"), col = c("blue", "green"), lty = 1)
 abline(h = 0.95, lty = 2)
-
 ```
 
+We see that the coverage probability is close to the nominal coverage probability,
+and converges to it as the sample size increases. This suggests that the
+confidence intervals are well-calibrated.
 
 ## Mean squared error matrix
 The mean squared error (MSE) of an estimator of a parameter vector $\theta$ is
@@ -377,27 +459,340 @@ $$
     + \operatorname{Var}(\hat\theta).
 $$
 
+```{r mse-1}
+mse.hat <- mse(theta.hat, theta)
+mse.mc <- matrix(expectation(theta.mc,
+    function(x) (x - theta) %*% t(x - theta)), nrow = 2)
+
+round(mse.hat, digits = 3)
+round(mse.mc, digits = 3)
+```
+
+It's hard to distinguish the MSE matrices from the variance-covariance
+matrices reported previously, which is not surprising, since the bias is relatively
+small and so the MSE is dominated by the variance.
+
+Let's take a closer look at the variance and MSE of the mean $\hat\mu$:
+```{r}
+# temporarily show more digits in the numbers/outputs for this code block
+options(digits = 12)
+# mse(mu)
+expectation(theta.mc, function(x) (x[1] - mu)^2)
+# variance(mu)
+(mu.var <- expectation(theta.mc, function(x) (x[1] - mean(theta.mc)[1])^2))
+b <- expectation(theta.mc, function(x) x[1] - mu)
+# mse = bias^2 + variance
+b^2 + mu.var
+options(digits = 3)
+```
+
+They are very close, since the bias is so small.
+
+We should take the MSE from the Monte Carlo simulation as a sort of "true" MSE,
+since it is computed from the empirical sampling distribution of the MLE. We expect
+that as the sample size increases, the asymptotic MSE (`mse.hat`) and the
+MC MSE (`mse.mc`) will converge to the same value. In fact, let's run a little
+experiment to show this:
+
+```{r mse-sample-size, cache = TRUE}
+ns <- seq(10, 200, 10)
+mses.mc <- matrix(NA, nrow = length(ns), ncol = 2)
+mses.hat <- matrix(NA, nrow = length(ns), ncol = 2)
+mses.hat.hat <- matrix(NA, nrow = length(ns), ncol = 2)
+j <- 1
+for (n in ns) {
+    theta.n <- empirical_dist(theta_samp_mc(n = n, theta = theta, B = B))
+    mse.mu.n <- expectation(theta.n, function(x) (x[1] - mu)^2)
+    mse.var.n <- expectation(theta.n, function(x) (x[2] - var)^2)
+    data <- rnorm(n = n, mean = mu, sd = sqrt(var))
+    fit <- fit_normal(data)
+    mses.mc[j, ] <- c(mse.mu.n, mse.var.n)
+    mses.hat[j, ] <- diag(mse(fit, theta))
+    mses.hat.hat[j, ] <- diag(mse(fit))
+    j <- j + 1
+}
+```
+
+```{r mse-plots, echo = FALSE, fig.height = 4, fig.width = 6}
+plot(ns, mses.mc[, 1], type = "l", col = rgb(0,0,1,0.5), ylab = "MSE(mu)", xlab = "Sample size") # blue with transparency
+lines(ns, mses.hat[, 1], col = rgb(0,1,0,0.5)) # green with transparency
+lines(ns, mses.hat.hat[, 1], col = rgb(1,0,0,0.5)) # red with transparency
+legend("topright", legend = c("MC", "Asymptotic", "Asymptotic (estimate)"), 
+    col = c(rgb(0,0,1,0.5), rgb(0,1,0,0.5), rgb(1,0,0,0.5)), lty = 1)
+
+plot(ns, mses.mc[, 2], type = "l", col = rgb(0,0,1,0.5), ylab = "MSE(var)", xlab = "Sample size") # blue with transparency
+lines(ns, mses.hat[, 2], col = rgb(0,1,0,0.5)) # green with transparency
+lines(ns, mses.hat.hat[, 2], col = rgb(1,0,0,0.5)) # red with transparency
+legend("topright", legend = c("MC", "Asymptotic", "Asymptotic (estimate)"), 
+    col = c(rgb(0,0,1,0.5), rgb(0,1,0,0.5), rgb(1,0,0,0.5)), lty = 1)
+```
 
 
+These plots demonstrate that the asymptotic MSE is a good approximation to the
+"true" MSE, which is the MSE computed from the empirical sampling distribution of
+the MLE.
 
-# Bootstrap of the sampling distribution of the MLE
+It's difficult to distinguish the estimated asymptotic MSE, where the true
+parameter $\theta$ is not known, from the asymptotic MSE, where the true parameter
+$\theta$ is known. This is because the bias is so small, and so the MSE is
+dominated by the variance.
+
+## Bootstrap of the sampling distribution of the MLE
+
+Normally, we don't know the true data generating process (DGP) of the data we
+observe. We only have a sample of data, and we want to use that sample to
+estimate the parameters of some model that hopefully provides a good fit to the
+DGP using maximum likelihood estimation.
+
+Earlier, we simulated a sample of data from a normal distribution with mean 1 and
+variance 1 and then used MLE on each sample to generate an empirical sampling
+distribution of the MLE. This is called *Monte Carlo simulation*.
+
+However, we can also use the sample of data we have to generate an empirical
+sampling distribution of the MLE. This is called *bootstrap*. The idea is that
+the sample we have is a sample from the true DGP, and we can use that sample to
+generate new samples (resample) and fit an MLE to each of these to generate an
+Bootstrapped empirical sampling distribution of the MLE.
 
 ```{r mle-boot, cache=TRUE}
 # Simulate a sample of n observations from a normal with mean 1 and variance 2.
-set.seed(51234)
-n <- 50
-mu <- 1
-var <- 2
-B <- 100000
-
-x <- rnorm(n, mean = mu, sd = sqrt(var))
-theta <- c(mu, var)
-
 library(boot)
 theta.boot <- mle_boot(boot(
-    data = x,
+    data = data,
     statistic = function(x, ind) {
-        point(mle_normal(x[ind], keep_obs = FALSE))
+        params(fit_normal(x[ind]))
     },
     R = B))
 ```
+
+Let's compute some statistics:
+```{r}
+params(theta.boot)
+confint(theta.boot)
+```
+
+
+Let's use these Bootstrapped MLEs to generate an aproximation of the empirical
+sampling distribution:
+```{r}
+theta.b <- empirical_dist(theta.boot$t)
+```
+
+As before, let's do some basic expectations of the Bootstrapped sampling distribution
+of the MLE and compare to the previous results:
+```{r expectation-tests-boot, cache = TRUE}
+# should sum to 1
+expectation(theta.b, function(x) 1)
+# mean
+(mu.b <- mean(theta.b))
+# variance of (mu, var)
+expectation(theta.b, function(x) (x - mu.b)^2)
+# kurtosis of (mu, var) 
+expectation(theta.b, function(x) (x - mu.b)^4) /
+    expectation(theta.b, function(x) (x - mu.b)^2)^2
+# skewness of mu and var -- should be (0, 0)
+expectation(theta.b, function(x) ((x - mu.b) / theta)^3)
+# covariance of (mu, var) -- should be around 0
+expectation(theta.b, function(x) (x[1] - mu.b[1]) * (x[2] - mu.b[2]))
+```
+
+These are not too bad.
+
+Let's compute the bias and compare it to the previous results:
+```{r bias-2}
+bias(theta.boot)
+expectation(theta.mc, function(x) x - theta)
+bias(theta.hat, theta)
+```
+
+We see that the `bias` function for `mle_boot` is not too bad. Note that the
+`bias` is an expectation w.r.t. the sampling distribution of the MLE.
+In general, we can have a better estimator if we use
+$$
+    \hat\theta^* = \hat\theta - \operatorname{Bias}(\hat\theta),
+$$
+assuming the bias estimate is accurate. In this particular example that
+transformation makes it worse, which is fine, the bias of the transformed
+estimator would be less in theory. Howevever, in practice, we don't trust the bias
+reported by the Bootstrap, except as evidence that our estimator is biased or not.
+The analytic bias, `bias.mle_normal`, is more accurate, and will generally produce
+estimators with less bias (although by the bias-variance trade-off, it may have
+more variance).
+
+Let's compare the variance-covariance matrix of the
+Bootstrapped sampling distribution of the MLE to the "true" sampling distribution
+and the asymptotic sampling distribution:
+```{r}
+round(vcov(theta.b), digits = 3)
+round(vcov(theta.mc), digits = 3)
+round(vcov(theta.hat), digits = 3)
+```
+
+They are all pretty close. Let's generate the coverage probability for the
+Bootstrapped CIs:
+<details>
+<summary>Click to show/hide R code</summary>
+```{r coverage-prob-boot, cache = TRUE}
+N <- 100
+ns <- seq(20, 140, 20)
+coverage_prob <- matrix(NA, nrow=length(ns), ncol=2)
+j <- 1
+for (n in ns) {
+    count1 <- 0L
+    count2 <- 0L
+    for (i in 1:N) {
+        d <- rnorm(n = n, mean = mu, sd = sqrt(var))
+        fit.boot <- mle_boot(boot(
+            data = d,
+            statistic = function(x, ind) {
+                params(fit_normal(x[ind]))
+            },
+            R = 250))
+        ci <- confint(fit.boot)
+        if (ci[1, 1] <= mu && mu <= ci[1, 2]) {
+            count1 <- count1 + 1
+        }
+        if (ci[2, 1] <= var && var <= ci[2, 2]) {
+            count2 <- count2 + 1
+        }
+    }
+    coverage_prob[j, 1] <- count1 / N
+    coverage_prob[j, 2] <- count2 / N
+    #cat("n = ", n, ", coverage = ", coverage_prob[j, ], "\n")
+    j <- j + 1
+}
+```
+</details>
+```{r cov-plot-boot, echo = FALSE, fig.height = 4, fig.width = 5, cache = TRUE}
+plot(ns, coverage_prob[, 2], type = "l",
+    xlab = "Sample size", col = "blue", ylab = "Coverage")
+lines(ns, coverage_prob[, 1], col = "green")
+legend("bottomright", legend = c("mu", "var"), col = c("blue", "green"), lty = 1)
+abline(h = 0.95, lty = 2)
+```
+
+## Prediction intervals
+
+Frequently, we are actually interested in predicting the outcome of the
+random variable (or vector) that we are estimating the parameters of.
+
+We observed a sample $\mathcal{D} = \{X_i\}_{i=1}^n$ where $X_i \sim \operatorname{Normal}(\mu, \sigma)$,
+$\theta = (\mu, \sigma)$ not known. To estimate $\theta$, we solved the MLE which,
+asymptotically, is normally distributed with a mean $\theta$ and a variance-covariance
+given by the inverse of the FIM (or, using the Bootstrap, by estimating the
+covariance of the sampling distribution of the Bootstrapped MLEs).
+
+We wish to model the uncertainty of a new observation, $\hat{X}_{n+1}|\mathcal{D}$. We do so
+by considering both the uncertainty inherent to the Normal distribution and
+the uncertainty of our estimate $\hat\theta$.
+In particular, we let $\hat{X}_{n+1}|\hat\theta \sim \operatorname{Normal}(\hat\theta)$
+and $\hat\theta \sim \operatorname{MVN}(\theta,I^{-1}(\theta)/n)$.
+Then, the joint distribution of $\hat{X}_{n+1}$ and $\hat\theta$ has the pdf
+given by
+$$
+    f(t,\theta) = f_{\hat{X}|\hat\theta}(x|\theta) f_{\hat\theta}(\theta),
+$$
+and thus to find $f(t)$, we marginalize over $\theta$, obtaining
+$$
+    f(x) = \int_{R^2} f_{\hat{X}_{n+1},\hat\theta}(x,\theta) d\theta.
+$$
+
+Given the information in the sample, the uncertainty in the new observation
+is characterized by the distribution
+$$
+    \hat{X}_{n+1} \sim f(x).
+$$
+
+It has greater variance than $X_{n+1}|\hat\theta$ because, as stated earlier, we do
+not know $\theta$, we only have an uncertain estimate $\hat\theta$.
+
+In `pred`, we compute the predictive interval (PI) of the
+distribution of $\hat{X}_{n+1}$ using Monte Carlo integration, i.e., sum over a
+large number of draws from the joint distribution of $\hat{X}_{n+1}$ and $\hat\theta$
+and then compute the empirical quantiles.
+
+The function `pred` takes as arguments `x`, in this case an `mle` object, 
+and a sampler for the distribution of the random variable of interest, in this
+case `rnorm` (the sampler for the normal distribution). The sampler
+must be compatible with the parameter value of `x` (i.e., `params(x)`).
+Here is how we compute the PI for $\hat{X}_{n+1}$:
+```{r}
+samp <- function(n, par) rnorm(n = n, mean = par[1], sd = sqrt(par[2]))
+pred(x = theta.hat, samp = samp)
+```
+
+How does this compare to $X_{n+1}|\hat\theta$?
+```{r}
+par <- params(theta.hat)
+mu.hat <- par[1]
+var.hat <- par[2]
+c(mu.hat, qnorm(c(.025,.975), mean = mu.hat, sd = sqrt(var.hat)))
+```
+
+We see that the 95% quantile interval for $X_{n+1}|\hat\theta$ is a bit
+smaller than $\hat{X}_{n+1}$, which is what we expected. Of course, for
+sufficiently large sample sizes, they will converge to the same quantiles.
+
+## Weighted MLE: a weighted sum of maximum likelihood estimators
+
+Since the variance-covariance of an MLE is inversely proportional to the
+FIM that the MLE is defined with respect to, we can combine
+multiple MLEs of $\theta$, each of which may be defined with respect to a
+different kind of sample, to arrive at the MLE that incorporates the Fisher
+information in all of those samples.
+
+Consider $k$ mutually independent MLEs of parameter $\theta$,
+$\hat\theta_1,\ldots,\hat\theta_k$, where $\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))$.
+Then, the sampling MLE of $\theta$ that incorporates all of the data in
+$\hat\theta_1,\ldots,\hat\theta_k$ is given by the inverse-variance
+weighted mean,
+$$
+    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
+$$
+which, asymptotically, has an expected value of $\theta$ and a variance-covariance
+of $\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}$.
+
+To evaluate the performance of the weighted MLE, we generate a sample of
+$N=1000$ observations from $\mathcal{N}(\theta)$ and compute the MLE
+for the observed sample, denoted by $\hat\theta$.
+
+We then divide the observed sample into $r=5$ sub-samples, each of size
+$N/r=100$, and compute the MLE for each sub-sampled, denoted by
+$\theta^{(1)},\ldots,\theta^{(r)}$.
+
+Finally, we do a weighted combination these MLEs to form the weighted MLE,
+denoted by $\theta_w$:
+```{r}
+N <- 100
+r <- 5
+samp <- rnorm(N, mean = theta[1], sd = sqrt(theta[2]))
+samp.sub <- matrix(samp, nrow = r)
+mles.sub <- list(length = r)
+for (i in 1:r)
+    mles.sub[[i]] <- fit_normal(samp.sub[i,])
+
+mle.wt <- mle_weighted(mles.sub)
+mle <- fit_normal(samp)
+```
+
+We show the results in the following R code.
+First, we show the weighted MLE and its MSE:
+```{r}
+params(mle.wt)
+vcov(mle.wt)
+```
+The MLE for the total sample and its MSE is:
+```{r}
+params(mle)
+vcov(mle)
+```
+
+Unfortuantely, $\hat\theta$ is a much better estimator of $\theta$ than
+$\hat\theta_w$. According to theory, they should be identical, but in
+practice, there may be issues like numerical instability that cause
+the weighted MLE to perform poorly.
+
+We are in fact using numerical differentiation to compute the FIM, which may be
+a source of error. We can try to improve the accuracy of the FIM by using
+a more accurate method of computing the FIM, such as an analytical solution 
+or a more accurate numerical approximation.

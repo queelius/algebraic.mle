@@ -13,12 +13,12 @@
 #'
 #' Look up the `boot` package for more information on the bootstrap.
 #'
-#' @param object the `boot` return value
+#' @param x the `boot` return value
 #' @return an `mle_boot` object (wrapper for `boot` object)
 #' @export
-mle_boot <- function(object) {
-    class(object) <- c("mle_boot", "mle", class(object))
-    object
+mle_boot <- function(x) {
+    class(x) <- c("mle_boot", "mle", class(x))
+    x
 }
 
 #' Determine if an object is an `mle_boot` object.
@@ -30,36 +30,38 @@ is_mle_boot <- function(x) inherits(x, "mle_boot")
 #'
 #' @param x the `boot` object to obtain the parameters of.
 #' @export
-params.mle_boot <- function(x) point(x)
+params.mle_boot <- function(x) {
+    x$t0
+}
 
 #' Method for obtaining the number of parameters of an `boot` object.
 #'
 #' @param x the `boot` object to obtain the number of parameters of
-#'
 #' @export
-nparams.mle_boot <- function(x) length(x$t0)
+nparams.mle_boot <- function(x) {
+    length(x$t0)
+}
 
 #' Method for obtaining the number of observations in the sample used by
 #' an `mle`.
 #'
-#' @param object the `mle` object to obtain the number of observations for
-#' @param ... additional arguments to pass
-#' @importFrom stats nobs
+#' @param x the `mle` object to obtain the number of observations for
 #' @export
-nobs.mle_boot <- function(object, ...) {
-    if (is.matrix(object$data) || is.data.frame(object$data)) {
-        return(nrow(object$data))
+nobs.mle_boot <- function(x) {
+    if (is.matrix(x$data) || is.data.frame(x$data)) {
+        return(nrow(x$data))
     } else {
-        length(object$data)
+        length(x$data)
     }
 }
 
 #' Method for obtaining the observations used by the `mle`.
 #'
-#' @param object the `mle` object to obtain the number of observations for
-#' @param ... additional arguments to pass
+#' @param x the `mle` object to obtain the number of observations for
 #' @export
-obs.mle_boot <- function(object, ...) object$data
+obs.mle_boot <- function(x) {
+    x$data
+}
 
 #' Computes the variance-covariance matrix of `boot` object.
 #'
@@ -68,9 +70,8 @@ obs.mle_boot <- function(object, ...) object$data
 #'
 #' @importFrom stats cov
 #' @export
-vcov.mle_boot <- function(object, ...) {
-    # remove the Bessel correction, since this is an MLE
-    cov(object$t, ...) # * (nobs(object) - 1) / nobs(object)
+vcov.mle_boot <- function(x) {
+    cov(x$t) # (nobs(x) - 1) / nobs(x)
 }
 
 #' Computes the estimate of the MSE of a `boot` object.
@@ -78,11 +79,12 @@ vcov.mle_boot <- function(object, ...) {
 #' @param x the `boot` object to compute the MSE of.
 #' @param par if the true parameter value is known, you may provide it;
 #'            otherwise we use the MLE of `par`.
-#' @param ... pass additional arguments
+#' @param ... pass additional arguments (not used)
+#' @importFrom algebraic.dist params
 #' @export
 mse.mle_boot <- function(x, par = NULL, ...) {
     if (is.null(par)) {
-        par <- point(x)
+        par <- params(x)
     }
     mean(rowSums(t(t(x$t) - as.vector(par))^2))
 }
@@ -94,30 +96,16 @@ mse.mle_boot <- function(x, par = NULL, ...) {
 #' estimators.
 #'
 #' @param x the `mle_boot` object to compute the bias of.
-#' @param par if the true parameter value is known, you may provide it;
-#'            otherwise we use the MLE of `par`.
-#' @param ... pass additional arguments
+#' @param par for the `mle_boot`, we ignore this parameter.
+#' @param ... pass additional arguments (not used)
+#' @importFrom algebraic.dist params nparams
 #' @export
 bias.mle_boot <- function(x, par = NULL, ...) {
-    if (is.null(par)) {
-        par <- point(x)
-    }
-    stopifnot(length(par) == nparams(x))
-
-    if (length(par) == 1) {
-        return(mean(x$t) - par)
+    if (length(params(x)) == 1) {
+        return(mean(x$t) - params(x))
     } else {
-        return(colMeans(x$t) - par)
+        return(colMeans(x$t) - params(x))
     }
-}
-
-#' Computes the point estimate of an `mle` object.
-#'
-#' @param x the `boot` object.
-#' @param ... pass additional arguments
-#' @export
-point.mle_boot <- function(x, ...) {
-    x$t0
 }
 
 #' Method for sampling from an `mle_boot` object.
@@ -132,7 +120,7 @@ point.mle_boot <- function(x, ...) {
 #' small samples.
 #'
 #' @param x the `mle_boot` object to create sampler for
-#' @param ... additional arguments to pass
+#' @param ... additional arguments to pass (not used)
 #' @export
 sampler.mle_boot <- function(x, ...) {
     if (length(x$t) == 1) {
@@ -147,11 +135,37 @@ sampler.mle_boot <- function(x, ...) {
 }
 
 #' Method for obtained the confidence interval of an `mle_boot` object.
-#' @param x the `mle_boot` object to obtain the confidence interval of
+#' @param object the `mle_boot` object to obtain the confidence interval of
+#' @param parm the parameter to obtain the confidence interval of (not used)
 #' @param level the confidence level
 #' @param ... additional arguments to pass
 #' @importFrom boot boot.ci
 #' @export
-confint.mle_boot <- function(x, level = 0.95, ...) {
-    boot.ci(x, conf = level, ...)
+confint.mle_boot <- function(object, parm = NULL, level = 0.95,
+    type = c("norm", "basic", "perc", "bca"), ...) {
+
+    type <- match.arg(type)
+    type_long <- switch(type,
+        norm = "normal",
+        basic = "basic",
+        perc = "percent",
+        bca = "bca")
+
+    p <- nparams(object)
+    alpha <- 1 - level
+    CI <- matrix(NA, nrow = p, ncol = 2)
+    colnames(CI) <- c(paste0(alpha / 2 * 100, "%"),
+                      paste0((1 - alpha / 2) * 100, "%"))
+    for (j in 1:p) {
+        ci <- boot.ci(object, conf = level, type = type, index = j, ...)
+        CI[j, ] <- tail(ci[[type_long]][1,], 2)
+    }
+
+    theta <- params(object)
+    if (is.null(names(theta))) {
+        rownames(CI) <- paste0("param", 1:p)
+    } else {
+        rownames(CI) <- names(theta)[1:p]
+    }
+    CI
 }

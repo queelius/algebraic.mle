@@ -42,10 +42,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
-    <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
-    <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
     <a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a>
-    <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
   </div>
 </li>
       </ul>
@@ -91,40 +88,81 @@
 <!-- badges: start -->
 <p><a href="https://github.com/queelius/algebraic.mle/blob/master/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a> <!-- badges: end --></p>
 <p><code>algebraic.mle</code> is an R package that provides an algebra over Maximum Likelihood Estimators (MLEs). These estimators possess many desirable, well-defined statistical properties which the package helps you manipulate and utilize.</p>
-<div class="section level3">
-<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h3>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>The R package <code>algebraic.mle</code> can be installed from GitHub by using the devtools package in R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"queelius/algebraic.mle"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="monte-carlo-mc-simulation-of-the-sampling-distribution-of-the-mle">Monte-carlo (MC) simulation of the sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#monte-carlo-mc-simulation-of-the-sampling-distribution-of-the-mle"></a>
-</h3>
+<div class="section level2">
+<h2 id="normal-distribution">Normal distribution<a class="anchor" aria-label="anchor" href="#normal-distribution"></a>
+</h2>
+<p>We are going to the classic Normal distribution to demonstrate how to use <code>algebraic.mle</code>. We are using it for a few reasons:</p>
+<ol style="list-style-type: decimal">
+<li>It’s well-understood, so we can compare our results to the known results.</li>
+<li>It’s a very common distribution, so it’s useful to have a good understanding of its properties.</li>
+<li>The MLE is multivariate, so we can demonstrate how to use <code>algebraic.mle</code> for multivariate distributions.</li>
+</ol>
+<p>So, first, we define a simple MLE solver for the normal distribution.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Simulate a sample of n observations from a normal with mean 1 and variance 2.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">51234</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">50</span></span>
+<code class="sourceCode R"><span><span class="va">fit_normal</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">sigma</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">data</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="va">loglik</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">par</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span>        <span class="op">-</span><span class="va">n</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">*</span> <span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span></span>
+<span>            <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">data</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">+</span> <span class="va">n</span> <span class="op">*</span> <span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="va">par.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sigma.html" class="external-link">sigma</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">H</span> <span class="op">&lt;-</span> <span class="fu">numDeriv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/numDeriv/man/hessian.html" class="external-link">hessian</a></span><span class="op">(</span>func <span class="op">=</span> <span class="va">loglik</span>, x <span class="op">=</span> <span class="va">par.hat</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span>
+<span>    <span class="fu">algebraic.mle</span><span class="fu">::</span><span class="fu"><a href="../reference/mle.html">mle</a></span><span class="op">(</span></span>
+<span>        theta.hat <span class="op">=</span> <span class="va">par.hat</span>,</span>
+<span>        loglike <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">par.hat</span>, <span class="va">data</span><span class="op">)</span>,</span>
+<span>        score <span class="op">=</span> <span class="fu">numDeriv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/numDeriv/man/grad.html" class="external-link">grad</a></span><span class="op">(</span>func <span class="op">=</span> <span class="va">loglik</span>, x <span class="op">=</span> <span class="va">par.hat</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,</span>
+<span>        sigma <span class="op">=</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/ginv.html" class="external-link">ginv</a></span><span class="op">(</span><span class="op">-</span><span class="va">H</span><span class="op">)</span>,</span>
+<span>        info <span class="op">=</span> <span class="op">-</span><span class="va">H</span>,</span>
+<span>        obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        nobs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
+<span>        superclasses <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mle_normal"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>As you can see, we return an <code>mle</code> object, and then we give it a sub-class <code>mle_normal</code> (it is also a subclass of <code>mle</code> and <code>algebraic.dist</code>’s <code>dist</code>) so we can specialize some of the methods for MLE of the normal distribution, e.g., <code>bias.mle_normal</code> which we show later.</p>
+</div>
+<div class="section level2">
+<h2 id="monte-carlo-mc-simulation-of-the-sampling-distribution-of-the-mle">Monte-carlo (MC) simulation of the sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#monte-carlo-mc-simulation-of-the-sampling-distribution-of-the-mle"></a>
+</h2>
+<p>Let’s define <code>theta_samp_mc</code>, which stands for the Monte Carlo simulation of the sampling distribution of the MLE. It takes a sample size <code>n</code>, a true parameter value <code>theta</code>, and a number of simulations <code>B</code> to run. It returns a matrix with <code>B</code> rows and two columns, the first column is the MLE of the mean and the second column is the MLE of the variance.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">theta_samp_mc</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">theta</span>, <span class="va">B</span> <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">mu</span> <span class="op">&lt;-</span> <span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span>    <span class="va">var</span> <span class="op">&lt;-</span> <span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span>    <span class="va">mles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">B</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">mles</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mles</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"var"</span><span class="op">)</span></span>
+<span>    <span class="va">mles</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Set up the parameters of a simulation</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">913254</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">70</span></span>
 <span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="va">var</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
-<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fl">500000</span></span>
-<span></span>
+<span><span class="va">var</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
 <span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu</span>, <span class="va">var</span><span class="op">)</span></span>
-<span><span class="va">mles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">B</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="va">mles</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fu"><a href="../reference/mle_normal.html">mle_normal</a></span><span class="op">(</span><span class="va">x</span>, keep_obs <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mles</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"var"</span><span class="op">)</span></span>
+<span><span class="va">mles</span> <span class="op">&lt;-</span> <span class="fu">theta_samp_mc</span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, theta <span class="op">=</span> <span class="va">theta</span>, B <span class="op">=</span> <span class="va">B</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mles</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          mu   var</span></span>
-<span><span class="co">#&gt; [1,] 0.9363 2.317</span></span>
-<span><span class="co">#&gt; [2,] 1.0422 2.391</span></span>
-<span><span class="co">#&gt; [3,] 1.2495 2.026</span></span>
-<span><span class="co">#&gt; [4,] 0.9415 1.606</span></span>
-<span><span class="co">#&gt; [5,] 0.9095 2.454</span></span>
-<span><span class="co">#&gt; [6,] 0.8426 1.908</span></span></code></pre></div>
+<span><span class="co">#&gt;         mu   var</span></span>
+<span><span class="co">#&gt; [1,] 0.891 0.728</span></span>
+<span><span class="co">#&gt; [2,] 1.033 1.102</span></span>
+<span><span class="co">#&gt; [3,] 1.105 1.094</span></span>
+<span><span class="co">#&gt; [4,] 1.146 0.832</span></span>
+<span><span class="co">#&gt; [5,] 0.916 0.895</span></span>
+<span><span class="co">#&gt; [6,] 0.986 0.904</span></span></code></pre></div>
 <p>The matrix <code>mles</code> is a sample of MLEs from the sampling distribution of the MLE. It is an <em>empirical distribution</em> of the MLE <span class="math inline">\((\mu, \sigma^2)'\)</span> from samples of size <span class="math inline">\(n\)</span> <span class="math inline">\(X_i \sim N(\mu, \sigma^2)\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span>.</p>
 <p>This particular example is Monte Carlo simulation of the sampling distribution, since we are simulating the sampling distribution by repeatedly sampling from the population distribution and computing the MLE for each sample.</p>
 <blockquote>
@@ -132,586 +170,170 @@
 </blockquote>
 <p>For a sufficiently large number of simulations <span class="math inline">\(B\)</span>, the empirical sampling distribution should be very close to the true sampling distribution. We can plot the empirical sampling distribution of the MLEs using the <code>plot</code> function on the <code>mles</code> matrix.</p>
 <div class="figure" style="text-align: center">
-<img src="reference/figures/README-unnamed-chunk-2-1.png" alt="Sampling distribution of the MLEs." width="100%"><p class="caption">
+<img src="reference/figures/README-unnamed-chunk-3-1.png" alt="Sampling distribution of the MLEs." width="100%"><p class="caption">
 Sampling distribution of the MLEs.
 </p>
 </div>
-<p>In <code>algebraic.mle</code>, we can use the <code>mle_emp</code> function to model the empirical sampling distribution of the MLEs. It takes a sample of MLEs and, optionally, the sample size the MLEs were computed from.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">theta.mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_emp.html">mle_emp</a></span><span class="op">(</span><span class="va">mles</span>, <span class="va">n</span><span class="op">)</span></span></code></pre></div>
-<p>We will use this as a sort of <em>ground truth</em> for the sampling distribution of the MLEs. We know the <em>asymptotic</em> sampling distribution of the MLEs is normal with a mean <span class="math inline">\(\theta = (\mu = 1, \sigma^2 = 2)'\)</span> and a variance-covariance matrix <span class="math inline">\(\Sigma = I^{-1}(\theta)_n\)</span>, where <span class="math inline">\(I\)</span> is the Fisher information matrix and <span class="math inline">\(n\)</span> is the sample size.</p>
-<p>For <span class="math inline">\(n = 50\)</span>, what does the sampling distribution of the MLE look like? First, let’s look at some basic statistics.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     mu    var </span></span>
-<span><span class="co">#&gt; 0.9998 1.9598</span></span></code></pre></div>
-<p>The mean looks pretty close to the true parameter vector <span class="math display">\[
-    \theta = (\mu = 1, \sigma^2 = 2)'.
-\]</span></p>
-<p>Let’s compute the bias:</p>
+<p>In <code>algebraic.dist</code>, we can use <code>empirical_dist</code> to represent an empirical sampling distribution by giving it the sample of MLEs previously generated:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="va">theta</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         mu        var </span></span>
-<span><span class="co">#&gt; -0.0002229 -0.0402124</span></span></code></pre></div>
-<p>This is pretty close to the expected bias of the asymptotic sampling distribution of the MLE, which we will compute later.</p>
+<code class="sourceCode R"><span><span class="va">theta.mc</span> <span class="op">&lt;-</span> <span class="fu">algebraic.dist</span><span class="fu">::</span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/empirical_dist.html" class="external-link">empirical_dist</a></span><span class="op">(</span><span class="va">mles</span><span class="op">)</span></span></code></pre></div>
+<p>In general, for any MLE and assuming the the regularity conditions hold, the asymptotic sampling distribution of the MLE is normal with mean <span class="math inline">\(\theta\)</span> and variance-covariance matrix <span class="math inline">\(\Sigma = I^{-1}(\theta)_n\)</span>, where <span class="math inline">\(I\)</span> is the Fisher information matrix and <span class="math inline">\(n\)</span> is the sample size. However, in general:</p>
+<ol style="list-style-type: decimal">
+<li>We don’t know when the asymptotic sampling distribution is a good approximation to the true sampling distribution. In these cases, the empirical sampling distribution may be used instead.</li>
+<li>We may not be confident our implementation of the MLE is correct, in which case the empirical sampling distribution can be used to check our implementation.</li>
+<li>The regularity conditions may not hold, in which case the asymptotic sampling distribution may not be known. In these cases, the empirical sampling distribution may be used instead.</li>
+</ol>
+<p>With these caveats in mind, we compare some of the statistics of the empirical sampling distribution of the MLE for the normal distribution and the asymptotic sampling distribution.</p>
+<p>Let’s look at some basic parameters of the sampling distribution of the MLE for the normal distribution. First, let’s look at the mean:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/mle_normal.html">mle_normal</a></span><span class="op">(</span><span class="va">x</span>, keep_obs <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Maximum likelihood estimator of type mle_normal is normally distributed.</span></span>
-<span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">mu.mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    mu   var </span></span>
-<span><span class="co">#&gt; 1.012 2.225 </span></span>
-<span><span class="co">#&gt; The standard error is  0.2109 0.4449 .</span></span>
-<span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
-<span><span class="co">#&gt;      2.5% 97.5%</span></span>
-<span><span class="co">#&gt; mu  0.588 1.436</span></span>
-<span><span class="co">#&gt; var 1.330 3.119</span></span>
-<span><span class="co">#&gt; The MSE of the individual componetns in a multivariate estimator is:</span></span>
-<span><span class="co">#&gt; [1] 0.04449 0.19992</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.04449 -6.322e-18 1.421e-18 0.1999 .</span></span>
-<span><span class="co">#&gt; The log-likelihood is  -90.94 .</span></span>
-<span><span class="co">#&gt; The AIC is  185.9 .</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.999 0.988</span></span></code></pre></div>
+<p>The mean looks pretty close to the true parameter vector <span class="math display">\[
+    \theta = (\mu = 1, \sigma^2 = 1)'.
+\]</span></p>
+<p>We can actually compute any parameter, since <code>theta.mc</code>, models the concept of a distribution. In particular, it models a distribution in <code>algebraic.dist</code>, and thus the API exposed by <code>algebraic.dist</code> is available to us. For instance, we can compute various parameters of the sampling distribution of the MLE using the <code>expectation</code> function:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># should sum to 1</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1</span></span>
+<span><span class="co"># mean</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 0.999 0.988</span></span>
+<span><span class="co"># variance of (mu, var)</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.mc</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     mu    var </span></span>
+<span><span class="co">#&gt; 0.0142 0.0289</span></span>
+<span><span class="co"># kurtosis of (mu, var) </span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.mc</span><span class="op">)</span><span class="op">^</span><span class="fl">4</span><span class="op">)</span> <span class="op">/</span></span>
+<span>    <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.mc</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
+<span><span class="co">#&gt;   mu  var </span></span>
+<span><span class="co">#&gt; 3.01 3.11</span></span>
+<span><span class="co"># skewness of mu and var -- should be (0, 0)</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.mc</span><span class="op">)</span> <span class="op">/</span> <span class="va">theta</span><span class="op">)</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         mu        var </span></span>
+<span><span class="co">#&gt; -0.0000342  0.0017230</span></span>
+<span><span class="co"># covariance of (mu, var) -- should be around 0</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu.mc</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu.mc</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] -0.0000648</span></span></code></pre></div>
+<p>We could use the mean and variance-covariance matrix to parameterize a multivariate normal distribution (MVN), for instance, but we don’t do that here.</p>
 </div>
-<div class="section level3">
-<h3 id="asymptotic-sampling-distribution-of-the-mle">Asymptotic sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#asymptotic-sampling-distribution-of-the-mle"></a>
-</h3>
-<p>In the previous section, we estimated the sampling distribution with a Monte Carlo simulation. In this section, we will compute the asymptotic sampling distribution using facilities in the <code>algebraic.mle</code> R package.</p>
-<div class="section level4">
-<h4 id="bias">Bias<a class="anchor" aria-label="anchor" href="#bias"></a>
-</h4>
+<div class="section level2">
+<h2 id="bias">Bias<a class="anchor" aria-label="anchor" href="#bias"></a>
+</h2>
 <p>Bias is a measure of the systematic error of an estimator; it measures how far its average value is from the true value being estimated. Formally, it is defined as the difference between the expected value of the estimator and the true value of the parameter, i.e., <span class="math display">\[
 \operatorname{Bias}(\hat\theta) = E_{\hat\theta}(\hat\theta) - \theta,
 \]</span> where <span class="math inline">\(E_{\hat\theta}\)</span> denotes the expectation operator with respect to the sampling distribution of <span class="math inline">\(\hat\theta\)</span>. (Normally, we drop the subscript in the expectation operator and write <span class="math inline">\(E\)</span> instead of <span class="math inline">\(E_{\hat\theta}\)</span> unless it’s not clear from context which expectation operator we are using.)</p>
-<p>When the bias is zero, the estimator is <em>unbiased</em>, otherwise it is <em>biased</em>.</p>
-<p>We actually know the analytical solution for the bias in the case of the normal distribution, which is given by:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="fu"><a href="../reference/mle_normal.html">mle_normal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="va">theta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1]  0.00 -0.04</span></span></code></pre></div>
-<p>We see that they are very close.</p>
-<details><p><summary>Click to show/hide R code</summary></p>
+<p>When the bias is zero, the estimator is <em>unbiased</em>, otherwise it is <em>biased</em>. Analytically, the asymptotic bias of the MLE for the parameters of the normal distribution is <span class="math display">\[
+    \operatorname{Bias}(\hat\theta) = \left(\begin{array}{c}
+        0 \\
+        -\frac{\sigma^2}{n}
+    \end{array}\right).
+\]</span> Plugging in the true value of <span class="math inline">\(\sigma^2 = 1\)</span> and the sample size <span class="math inline">\(n = 70\)</span>, we get <span class="math inline">\((0, 0.02857143)'\)</span>. We may also provide an appropriate implementation of the <code>bias</code> method in <code>algebraic.mle</code> for <code>mle_normal</code> (which is what we called our the object that we returned from <code>fit_normal</code>):</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
-<span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">200</span>, <span class="fl">10</span><span class="op">)</span>,<span class="fl">300</span>, <span class="fl">400</span>, <span class="fl">600</span>, <span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="va">bias_mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="va">N</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">bias_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="va">N</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">bias.mle_normal</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">par</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">par</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">par</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fl">0</span>, var <span class="op">=</span> <span class="op">-</span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/nobs.html" class="external-link">nobs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Now, let’s compute the bias using this function, and the estimate of the bias provided by the <code>bias.mle_emp</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># first, we sample some data from the true distribution</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># now we fit it to the normal distribution</span></span>
+<span><span class="va">theta.hat</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># now we compute the bias, first using the asymptotic theory</span></span>
+<span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.hat</span>, <span class="va">theta</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      mu     var </span></span>
+<span><span class="co">#&gt;  0.0000 -0.0143</span></span>
+<span><span class="co"># now using the empirical sampling distribution</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span> <span class="va">theta</span><span class="op">)</span> <span class="co"># mean(theta.mc) - theta</span></span>
+<span><span class="co">#&gt;       mu      var </span></span>
+<span><span class="co">#&gt; -0.00109 -0.01245</span></span></code></pre></div>
+<p>The asymptotic bias and the empirical bias are pretty close. Let’s see how the bias of the variance changes as the sample size increases.</p>
+<details><p><summary>Click to show/hide R code</summary></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
+<span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">200</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">bias_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">j</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">ns</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">theta.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fu"><a href="../reference/mle_normal.html">mle_normal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="va">b</span> <span class="op">&lt;-</span> <span class="va">theta.hat</span> <span class="op">-</span> <span class="va">theta</span></span>
-<span>        <span class="va">bias_mu</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span>        <span class="va">bias_var</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span>        <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span>        <span class="va">vars</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span>    <span class="op">}</span></span>
+<span>    <span class="va">bias_var</span><span class="op">[</span><span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">vars</span><span class="op">)</span> <span class="op">-</span> <span class="va">var</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</details><pre><code><span><span class="co">#&gt;             [,1]       [,2]      [,3]      [,4]      [,5]      [,6]       [,7]</span></span>
-<span><span class="co">#&gt;   [1,]  0.283591  0.2223313  0.171523  0.002387 -0.115370 -0.020384 -0.0758508</span></span>
-<span><span class="co">#&gt;   [2,]  0.506234 -0.0557680 -0.251513 -0.245678  0.291869  0.062427  0.0150906</span></span>
-<span><span class="co">#&gt;   [3,]  0.353077 -0.1144113  0.226676  0.624426  0.351484  0.049167 -0.1809722</span></span>
-<span><span class="co">#&gt;   [4,] -0.578200 -0.4145211  0.177684 -0.006286 -0.025957 -0.366335  0.0195286</span></span>
-<span><span class="co">#&gt;   [5,]  0.184489 -0.3446145  0.567628 -0.021873  0.051907 -0.029916 -0.0908621</span></span>
-<span><span class="co">#&gt;   [6,] -0.190756 -0.0949657 -0.145923  0.264890 -0.039902 -0.218091 -0.0184011</span></span>
-<span><span class="co">#&gt;   [7,] -0.303377  0.2508253 -0.035460 -0.180001 -0.002038  0.045651 -0.3312238</span></span>
-<span><span class="co">#&gt;   [8,]  0.786822 -0.0180507  0.558472 -0.199026  0.294762  0.038412  0.1558647</span></span>
-<span><span class="co">#&gt;   [9,]  0.644750 -0.0007832 -0.228616  0.146980 -0.206038  0.109470 -0.0117129</span></span>
-<span><span class="co">#&gt;  [10,]  0.257284  0.4356282  0.382002 -0.291123 -0.093368 -0.068948 -0.0148615</span></span>
-<span><span class="co">#&gt;  [11,] -0.496352  0.7563317  0.264850 -0.445326  0.274371 -0.171670  0.1490404</span></span>
-<span><span class="co">#&gt;  [12,]  0.351246  0.2363774  0.038943 -0.291611  0.076167 -0.146682 -0.3597191</span></span>
-<span><span class="co">#&gt;  [13,]  0.350439 -0.2258936 -0.463615  0.076668  0.148131  0.107912 -0.1170578</span></span>
-<span><span class="co">#&gt;  [14,]  0.553400  0.0393463 -0.055626 -0.088122  0.062257  0.210518 -0.1602887</span></span>
-<span><span class="co">#&gt;  [15,]  0.077233  0.0143762  0.218377  0.224821  0.180525 -0.006660  0.0267124</span></span>
-<span><span class="co">#&gt;  [16,] -0.242673 -0.5282364  0.020310  0.051772 -0.448839 -0.029992  0.0490555</span></span>
-<span><span class="co">#&gt;  [17,] -0.251555  0.2521891  0.076153  0.166579 -0.291171 -0.115424 -0.2326794</span></span>
-<span><span class="co">#&gt;  [18,]  0.094954 -0.1101995  0.200889  0.009000 -0.044749 -0.068491 -0.3657781</span></span>
-<span><span class="co">#&gt;  [19,]  0.378531 -0.4740687  0.023048 -0.149847 -0.136614 -0.292115 -0.3888301</span></span>
-<span><span class="co">#&gt;  [20,]  0.744917  0.3613625 -0.175037  0.249268  0.262714 -0.188304 -0.1387571</span></span>
-<span><span class="co">#&gt;  [21,] -0.353242  0.6809864  0.388171  0.161521  0.120009 -0.220100 -0.1020983</span></span>
-<span><span class="co">#&gt;  [22,] -0.934512 -0.1223596  0.472376  0.027548 -0.224580  0.204829  0.0909240</span></span>
-<span><span class="co">#&gt;  [23,] -0.359725 -0.1910152 -0.069785 -0.217678  0.060869 -0.010214  0.1513697</span></span>
-<span><span class="co">#&gt;  [24,] -0.476317  0.2035051  0.548922  0.331079 -0.086031 -0.003270  0.3936776</span></span>
-<span><span class="co">#&gt;  [25,] -0.911662 -0.2018116 -0.006468 -0.289175 -0.060565 -0.054070  0.3416768</span></span>
-<span><span class="co">#&gt;  [26,] -0.756638 -0.1195261 -0.426735  0.296888 -0.409167 -0.165450 -0.0904604</span></span>
-<span><span class="co">#&gt;  [27,] -0.297200 -0.1716625  0.060114 -0.076109  0.005996  0.214267  0.1568899</span></span>
-<span><span class="co">#&gt;  [28,] -0.243209  0.3694695  0.093500 -0.374121  0.124065 -0.063136  0.0975043</span></span>
-<span><span class="co">#&gt;  [29,] -0.167959  0.3114674 -0.052589 -0.012858 -0.011825 -0.041709  0.1488258</span></span>
-<span><span class="co">#&gt;  [30,] -0.514751 -0.2734903  0.016214 -0.204101 -0.007035  0.063631 -0.1894047</span></span>
-<span><span class="co">#&gt;  [31,] -0.190084  0.6184943 -0.086932  0.088274  0.044138  0.024689  0.1530567</span></span>
-<span><span class="co">#&gt;  [32,] -0.020994  0.4910933  0.105931 -0.199769  0.303489 -0.152937  0.2114804</span></span>
-<span><span class="co">#&gt;  [33,] -0.506850 -0.1961920 -0.129167 -0.284582  0.249760  0.050685 -0.0998759</span></span>
-<span><span class="co">#&gt;  [34,] -0.883114 -0.1099042  0.244859 -0.541590 -0.135147  0.060417 -0.1653803</span></span>
-<span><span class="co">#&gt;  [35,] -0.035097 -0.2374539 -0.195727  0.370275 -0.159317  0.135562  0.0530573</span></span>
-<span><span class="co">#&gt;  [36,]  0.018280  0.1874596  0.307182 -0.010223  0.360634 -0.158510  0.1214549</span></span>
-<span><span class="co">#&gt;  [37,]  0.210484  0.3630510  0.181459  0.031926 -0.129689  0.091028 -0.2840656</span></span>
-<span><span class="co">#&gt;  [38,]  0.217580 -0.3837882 -0.387916  0.135530  0.330134  0.023941  0.2349111</span></span>
-<span><span class="co">#&gt;  [39,] -0.315930 -0.1458699 -0.229539  0.023389  0.038724 -0.153669 -0.2176716</span></span>
-<span><span class="co">#&gt;  [40,]  1.004223  0.2602801  0.037840 -0.195038  0.115193  0.042439  0.2815018</span></span>
-<span><span class="co">#&gt;  [41,] -0.809273 -0.1443629 -0.073033  0.090591 -0.444551  0.021444 -0.3585258</span></span>
-<span><span class="co">#&gt;  [42,]  0.245330  0.6202307  0.302512  0.101420 -0.232616  0.216154 -0.2361573</span></span>
-<span><span class="co">#&gt;  [43,]  0.302963  0.0460614 -0.062679 -0.099839  0.099624 -0.263108 -0.2643584</span></span>
-<span><span class="co">#&gt;  [44,] -0.410202  0.1041174 -0.042412  0.458684  0.202719 -0.107318  0.2491812</span></span>
-<span><span class="co">#&gt;  [45,] -0.009055  0.5053872  0.005530  0.281190 -0.039283  0.193901  0.0615596</span></span>
-<span><span class="co">#&gt;  [46,]  0.854819 -0.2534565  0.084031 -0.332612 -0.388897  0.214473  0.0972277</span></span>
-<span><span class="co">#&gt;  [47,]  0.160006 -0.5159585  0.011407  0.233796  0.679225  0.150621  0.1012592</span></span>
-<span><span class="co">#&gt;  [48,] -0.397552  0.4194744  0.121929 -0.206992  0.011468 -0.051054 -0.0852601</span></span>
-<span><span class="co">#&gt;  [49,] -0.206006  0.0674526  0.105912 -0.233981  0.033057 -0.305351  0.3140998</span></span>
-<span><span class="co">#&gt;  [50,]  0.039027  0.2803844 -0.396384 -0.135646  0.011144 -0.180720 -0.0694719</span></span>
-<span><span class="co">#&gt;  [51,]  0.745176  0.2504778  0.172175  0.520209 -0.119699 -0.160101 -0.1036337</span></span>
-<span><span class="co">#&gt;  [52,]  0.408336  0.2795478  0.206966 -0.038510 -0.203822 -0.007633 -0.1899842</span></span>
-<span><span class="co">#&gt;  [53,] -0.563933  0.0794078 -0.400304 -0.383958 -0.347047 -0.065797  0.1814203</span></span>
-<span><span class="co">#&gt;  [54,]  0.196799  0.2050862 -0.045055  0.018127 -0.128358 -0.045465  0.0927385</span></span>
-<span><span class="co">#&gt;  [55,] -0.191242 -0.8880991  0.019886  0.070778  0.208772 -0.325505  0.0409659</span></span>
-<span><span class="co">#&gt;  [56,] -0.057892 -0.2202589  0.185963  0.328945 -0.067414 -0.088427 -0.1117003</span></span>
-<span><span class="co">#&gt;  [57,]  0.719167  0.0909462  0.334257  0.597152 -0.188312 -0.268355 -0.0633639</span></span>
-<span><span class="co">#&gt;  [58,] -0.556948 -0.3422501 -0.333465 -0.208662  0.036176  0.245816  0.1703265</span></span>
-<span><span class="co">#&gt;  [59,]  1.276122 -0.8264585  0.155738 -0.627532 -0.160330  0.017326 -0.0457593</span></span>
-<span><span class="co">#&gt;  [60,]  0.404481 -0.2329181  0.050110  0.092816 -0.273829 -0.331023  0.0408495</span></span>
-<span><span class="co">#&gt;  [61,] -0.139935 -0.4094371 -0.225128  0.087020 -0.055313 -0.191062 -0.1446117</span></span>
-<span><span class="co">#&gt;  [62,]  0.661687 -0.5094922 -0.333600  0.301111 -0.049002  0.147043  0.2049035</span></span>
-<span><span class="co">#&gt;  [63,] -0.314771  0.3572912 -0.082770  0.302763  0.135567  0.215929 -0.2553329</span></span>
-<span><span class="co">#&gt;  [64,]  0.074219 -0.0516736  0.307327 -0.159353  0.189323  0.019895 -0.1659252</span></span>
-<span><span class="co">#&gt;  [65,]  0.651282 -0.0555880 -0.323097 -0.250399  0.055765 -0.013796  0.0473248</span></span>
-<span><span class="co">#&gt;  [66,] -0.114443  0.4533324  0.045579 -0.530192 -0.066500 -0.061692  0.4448731</span></span>
-<span><span class="co">#&gt;  [67,] -0.091041 -0.1490150 -0.117849  0.042556  0.051485  0.319297 -0.3012033</span></span>
-<span><span class="co">#&gt;  [68,] -0.398962  0.1067157 -0.110397 -0.096392 -0.214936  0.130534 -0.0227907</span></span>
-<span><span class="co">#&gt;  [69,]  0.046819  0.1512663  0.708078 -0.196053  0.280328  0.330548  0.1612780</span></span>
-<span><span class="co">#&gt;  [70,] -0.176136 -0.1715743 -0.321807 -0.081130  0.432383  0.044399 -0.0406044</span></span>
-<span><span class="co">#&gt;  [71,] -0.863745 -0.1749986  0.299450 -0.270936  0.394590 -0.203585  0.2745736</span></span>
-<span><span class="co">#&gt;  [72,]  0.134267  0.8985365 -0.582087  0.073154 -0.228322  0.012193 -0.0017863</span></span>
-<span><span class="co">#&gt;  [73,]  0.306409 -0.1160611 -0.425259 -0.039252  0.282724 -0.041542 -0.2454971</span></span>
-<span><span class="co">#&gt;  [74,] -0.117927 -0.5927802 -0.036836  0.142108  0.231029 -0.259416  0.1517424</span></span>
-<span><span class="co">#&gt;  [75,] -0.079805 -0.5733460 -0.175071  0.241728 -0.108188  0.075236  0.1961931</span></span>
-<span><span class="co">#&gt;  [76,] -0.097525 -0.3963060  0.501210 -0.543077 -0.034064 -0.191264 -0.2722265</span></span>
-<span><span class="co">#&gt;  [77,]  0.351312  0.4250338 -0.068714  0.560077  0.196607  0.213777 -0.0987099</span></span>
-<span><span class="co">#&gt;  [78,]  0.300852 -0.0950647  0.036432 -0.166408 -0.048216  0.191134 -0.1691899</span></span>
-<span><span class="co">#&gt;  [79,] -0.347808 -0.4787674  0.221083  0.313236  0.008027 -0.166232  0.0850554</span></span>
-<span><span class="co">#&gt;  [80,] -0.076376 -0.0394384 -0.041749 -0.226306  0.093019 -0.112396 -0.0583773</span></span>
-<span><span class="co">#&gt;  [81,] -0.461873  0.0672624  0.174121  0.205462  0.071871 -0.022419  0.0699216</span></span>
-<span><span class="co">#&gt;  [82,]  1.078884  0.3181200 -0.039786  0.133068 -0.015718  0.124753 -0.1310959</span></span>
-<span><span class="co">#&gt;  [83,]  0.806245 -0.4040496  0.335271  0.234551  0.180950  0.231819  0.0607659</span></span>
-<span><span class="co">#&gt;  [84,]  0.394788  0.0146837 -0.614133 -0.208735  0.262133 -0.133968 -0.0887824</span></span>
-<span><span class="co">#&gt;  [85,] -1.055769  0.1732785 -0.207003 -0.272741  0.071440 -0.300827  0.2790371</span></span>
-<span><span class="co">#&gt;  [86,]  0.048794 -0.2917995 -0.525543  0.146898 -0.212854 -0.092717 -0.1278665</span></span>
-<span><span class="co">#&gt;  [87,] -0.519800  0.1993997 -0.058613  0.419449  0.003710  0.092721  0.0002055</span></span>
-<span><span class="co">#&gt;  [88,] -0.622015 -0.0504464 -0.385244 -0.205300 -0.073592  0.216138  0.0192063</span></span>
-<span><span class="co">#&gt;  [89,]  0.349676 -0.5511847  0.039947  0.329311 -0.033016 -0.031636 -0.2686687</span></span>
-<span><span class="co">#&gt;  [90,]  0.135670  0.0199863 -0.165658 -0.055811  0.171082  0.189769  0.2094105</span></span>
-<span><span class="co">#&gt;  [91,]  0.651723 -0.5314084  0.195946 -0.211005  0.397703 -0.117394 -0.1156506</span></span>
-<span><span class="co">#&gt;  [92,]  0.178910 -0.5535541  0.102391  0.249954 -0.069892  0.185197  0.0395249</span></span>
-<span><span class="co">#&gt;  [93,]  0.257857 -0.1840286 -0.423928  0.206917  0.111947 -0.010098 -0.0255971</span></span>
-<span><span class="co">#&gt;  [94,]  0.296469  0.0237552 -0.024269  0.079233 -0.009679  0.143037 -0.0212188</span></span>
-<span><span class="co">#&gt;  [95,] -0.833529 -0.0193796 -0.706945  0.223770 -0.085037  0.225356 -0.0857594</span></span>
-<span><span class="co">#&gt;  [96,] -0.253948  0.1558948 -0.305556 -0.077890  0.181993 -0.231174 -0.0978759</span></span>
-<span><span class="co">#&gt;  [97,]  0.192148  0.0447088  0.052926 -0.284293  0.023842 -0.001059 -0.1160089</span></span>
-<span><span class="co">#&gt;  [98,]  0.907830  0.0906140  0.303634  0.107429 -0.311418 -0.059981  0.1721653</span></span>
-<span><span class="co">#&gt;  [99,]  0.559716 -0.6552421  0.018958  0.369188  0.151847 -0.120891  0.0536403</span></span>
-<span><span class="co">#&gt; [100,] -0.014909 -0.0388781  0.122478  0.322644 -0.117232  0.266972  0.4380767</span></span>
-<span><span class="co">#&gt;              [,8]     [,9]     [,10]      [,11]     [,12]     [,13]      [,14]</span></span>
-<span><span class="co">#&gt;   [1,] -0.0459064  0.06706  0.060296  0.1104028 -0.153657  0.014477 -0.0880799</span></span>
-<span><span class="co">#&gt;   [2,]  0.1742299  0.05224  0.170481  0.0904075  0.026861 -0.157417  0.1269029</span></span>
-<span><span class="co">#&gt;   [3,] -0.0128912  0.13851 -0.155293  0.0836781 -0.005868  0.149774 -0.0419468</span></span>
-<span><span class="co">#&gt;   [4,]  0.0765508  0.29337  0.306786  0.2910357 -0.235372  0.087038 -0.2292379</span></span>
-<span><span class="co">#&gt;   [5,]  0.0078807 -0.02499  0.218857  0.0614562  0.015910 -0.001923 -0.0081840</span></span>
-<span><span class="co">#&gt;   [6,]  0.1045729 -0.09444  0.041054 -0.0900082 -0.029630 -0.067812  0.1026539</span></span>
-<span><span class="co">#&gt;   [7,]  0.0457372  0.12989 -0.028585 -0.0054631 -0.069171 -0.262215 -0.0705578</span></span>
-<span><span class="co">#&gt;   [8,] -0.1525743  0.26866 -0.078262 -0.0773152  0.011395 -0.338278  0.1571016</span></span>
-<span><span class="co">#&gt;   [9,] -0.0498515  0.11233  0.093112  0.0468839  0.133361  0.085006  0.3251633</span></span>
-<span><span class="co">#&gt;  [10,]  0.1039687 -0.04525 -0.160003  0.1297843 -0.095791  0.120101  0.0432684</span></span>
-<span><span class="co">#&gt;  [11,] -0.2425212 -0.11554 -0.036405  0.1161076  0.122304  0.205342  0.0662111</span></span>
-<span><span class="co">#&gt;  [12,]  0.0153732 -0.03864  0.029317  0.1362197 -0.046854  0.064067 -0.1365348</span></span>
-<span><span class="co">#&gt;  [13,] -0.2161624  0.04134 -0.276525  0.0809508 -0.039012  0.028662  0.1356645</span></span>
-<span><span class="co">#&gt;  [14,]  0.1903722 -0.15332 -0.204024  0.0442760 -0.143209  0.124715  0.0865684</span></span>
-<span><span class="co">#&gt;  [15,] -0.0482423 -0.09886 -0.147896 -0.0061671  0.030931 -0.213611 -0.1769198</span></span>
-<span><span class="co">#&gt;  [16,] -0.0393149 -0.13220  0.037005 -0.2408761  0.315534  0.097495  0.2012787</span></span>
-<span><span class="co">#&gt;  [17,]  0.2206615 -0.02124  0.024575  0.1770938  0.033012  0.055677 -0.0055747</span></span>
-<span><span class="co">#&gt;  [18,]  0.0360197  0.05668  0.193301 -0.0253195 -0.198049  0.109171  0.0946360</span></span>
-<span><span class="co">#&gt;  [19,]  0.1473246 -0.03490  0.079177 -0.1180002 -0.111206  0.130603  0.1946581</span></span>
-<span><span class="co">#&gt;  [20,] -0.3639425  0.17988 -0.091574  0.0095233  0.120617  0.072537  0.1247107</span></span>
-<span><span class="co">#&gt;  [21,] -0.3620982 -0.08015  0.112817  0.1292770 -0.155304  0.056500  0.0127907</span></span>
-<span><span class="co">#&gt;  [22,]  0.0694011 -0.02392 -0.116071 -0.0108615 -0.110639 -0.021550 -0.0120778</span></span>
-<span><span class="co">#&gt;  [23,]  0.0437346 -0.12117  0.002708 -0.0935167  0.108784  0.075689  0.0781379</span></span>
-<span><span class="co">#&gt;  [24,] -0.1376331 -0.25644 -0.136759  0.1296479  0.183546  0.026478  0.0795932</span></span>
-<span><span class="co">#&gt;  [25,] -0.0908460  0.10583 -0.183064 -0.0039552 -0.015024 -0.015268  0.1011522</span></span>
-<span><span class="co">#&gt;  [26,]  0.1017082  0.09747  0.088471 -0.1169204 -0.179369  0.222202 -0.0344759</span></span>
-<span><span class="co">#&gt;  [27,] -0.1964552  0.10436 -0.234645  0.0128404  0.107052 -0.093115 -0.1918078</span></span>
-<span><span class="co">#&gt;  [28,] -0.0093462 -0.18221 -0.053850  0.0866724  0.108859  0.035658  0.0626071</span></span>
-<span><span class="co">#&gt;  [29,]  0.1236477  0.09549  0.208475 -0.2905731  0.078492  0.054126 -0.0592478</span></span>
-<span><span class="co">#&gt;  [30,] -0.1468174 -0.18092  0.001084 -0.2143373  0.006515 -0.198556 -0.1531667</span></span>
-<span><span class="co">#&gt;  [31,]  0.0901407 -0.11461 -0.009661 -0.2391839 -0.008902  0.203429 -0.1662490</span></span>
-<span><span class="co">#&gt;  [32,]  0.0613342 -0.38910 -0.090598 -0.1641261  0.121373  0.163030  0.0475728</span></span>
-<span><span class="co">#&gt;  [33,]  0.0080455  0.12670 -0.024539 -0.0191462  0.088915 -0.019736 -0.0139193</span></span>
-<span><span class="co">#&gt;  [34,] -0.1793287 -0.19266 -0.053527 -0.3062778 -0.016534 -0.038261  0.0067331</span></span>
-<span><span class="co">#&gt;  [35,] -0.3150949  0.31733  0.090302 -0.0073202  0.183278 -0.140733  0.2436971</span></span>
-<span><span class="co">#&gt;  [36,] -0.2584123 -0.02195 -0.059865  0.0336595  0.005092  0.055396 -0.0226354</span></span>
-<span><span class="co">#&gt;  [37,] -0.1890991  0.01699  0.175464 -0.0562046  0.187409  0.139022 -0.0651338</span></span>
-<span><span class="co">#&gt;  [38,] -0.0738342 -0.08298 -0.036366 -0.0908823  0.138083 -0.130637  0.1823626</span></span>
-<span><span class="co">#&gt;  [39,] -0.0007600 -0.06572  0.066018  0.1450349 -0.013356  0.159099 -0.0017155</span></span>
-<span><span class="co">#&gt;  [40,] -0.0157843 -0.06955 -0.396126 -0.1659884 -0.021470  0.002464 -0.0117462</span></span>
-<span><span class="co">#&gt;  [41,]  0.0694633 -0.12893  0.164384  0.1286988  0.148132  0.172068 -0.0338829</span></span>
-<span><span class="co">#&gt;  [42,] -0.0121495  0.02253  0.050858  0.1189551 -0.025033  0.063279  0.0094787</span></span>
-<span><span class="co">#&gt;  [43,]  0.1747603 -0.13745 -0.061535 -0.0607454 -0.013282 -0.020850 -0.0872891</span></span>
-<span><span class="co">#&gt;  [44,] -0.1405817  0.05515  0.193523  0.0260740  0.085849 -0.132878  0.0122966</span></span>
-<span><span class="co">#&gt;  [45,] -0.1390401  0.08507 -0.061314  0.1451655 -0.059148 -0.134479  0.1862610</span></span>
-<span><span class="co">#&gt;  [46,] -0.2240310  0.18633 -0.013641  0.0284134  0.035945 -0.068014 -0.0851125</span></span>
-<span><span class="co">#&gt;  [47,]  0.2526680 -0.12372 -0.029376 -0.1692361 -0.143900 -0.031393 -0.0786947</span></span>
-<span><span class="co">#&gt;  [48,] -0.0908938  0.25514 -0.161865 -0.0264262  0.033147 -0.148434 -0.0170091</span></span>
-<span><span class="co">#&gt;  [49,] -0.1350204  0.15621 -0.075957 -0.1265030 -0.039314  0.022333 -0.1554831</span></span>
-<span><span class="co">#&gt;  [50,] -0.0420317 -0.28362  0.117710  0.2146604  0.005642  0.112539  0.2272046</span></span>
-<span><span class="co">#&gt;  [51,] -0.0231661  0.19136  0.151602 -0.0006048 -0.133340 -0.150310  0.0057661</span></span>
-<span><span class="co">#&gt;  [52,] -0.1476579  0.06480  0.108542  0.2317455  0.034865  0.105006 -0.0137652</span></span>
-<span><span class="co">#&gt;  [53,] -0.0985953  0.26481 -0.114063  0.0691080 -0.123507 -0.075595  0.2827878</span></span>
-<span><span class="co">#&gt;  [54,] -0.3152454  0.08856 -0.166083 -0.2463262  0.135343 -0.067677 -0.1976862</span></span>
-<span><span class="co">#&gt;  [55,]  0.0557724  0.10934  0.073089 -0.0565744 -0.060550  0.006387 -0.1327503</span></span>
-<span><span class="co">#&gt;  [56,]  0.0528143  0.15864  0.025350 -0.0599887  0.130876  0.039961 -0.0223905</span></span>
-<span><span class="co">#&gt;  [57,] -0.0683313 -0.11680  0.037740 -0.4372060 -0.081468  0.076643  0.0486453</span></span>
-<span><span class="co">#&gt;  [58,]  0.0490836  0.08790  0.125187  0.0452660  0.041903 -0.090776 -0.1638849</span></span>
-<span><span class="co">#&gt;  [59,]  0.0308081  0.15559 -0.090413 -0.1976178  0.148169 -0.113062  0.1647023</span></span>
-<span><span class="co">#&gt;  [60,] -0.0022903 -0.14182  0.110249  0.0013182 -0.276885  0.057146 -0.1311208</span></span>
-<span><span class="co">#&gt;  [61,] -0.0425811 -0.24532  0.138149  0.0432234  0.065690  0.231564  0.0004401</span></span>
-<span><span class="co">#&gt;  [62,]  0.0811481  0.29953  0.006931 -0.0635149 -0.091419  0.120697 -0.2245289</span></span>
-<span><span class="co">#&gt;  [63,] -0.1573527  0.18591  0.179321  0.0990577 -0.008239 -0.001149 -0.0271258</span></span>
-<span><span class="co">#&gt;  [64,]  0.0007765  0.22833 -0.035193  0.0081700  0.116051 -0.022476 -0.0168918</span></span>
-<span><span class="co">#&gt;  [65,]  0.1852576  0.18137 -0.073610  0.1635036  0.103768 -0.109728 -0.0119765</span></span>
-<span><span class="co">#&gt;  [66,] -0.0079773 -0.05630  0.022199 -0.1495573  0.064735  0.005258 -0.0637872</span></span>
-<span><span class="co">#&gt;  [67,]  0.2817301 -0.04812 -0.019193 -0.2666550 -0.046491 -0.066376  0.0064978</span></span>
-<span><span class="co">#&gt;  [68,] -0.0087143  0.11242 -0.108688  0.0204240 -0.195286 -0.264691 -0.1437871</span></span>
-<span><span class="co">#&gt;  [69,]  0.2184490 -0.26386 -0.160270 -0.1262362 -0.191761 -0.069214 -0.3487843</span></span>
-<span><span class="co">#&gt;  [70,]  0.1083801 -0.16908 -0.025726 -0.0553566  0.188122  0.073484  0.1977508</span></span>
-<span><span class="co">#&gt;  [71,] -0.2638097 -0.03513  0.073247  0.0962550  0.097235 -0.022110  0.1096118</span></span>
-<span><span class="co">#&gt;  [72,] -0.1851686 -0.25177 -0.098846  0.0693465 -0.025370 -0.020699  0.0115146</span></span>
-<span><span class="co">#&gt;  [73,] -0.2004188 -0.14526 -0.255118 -0.0146536 -0.028207  0.099603  0.1123971</span></span>
-<span><span class="co">#&gt;  [74,] -0.1112140 -0.07436  0.188550 -0.0105178 -0.106758 -0.078573 -0.1257933</span></span>
-<span><span class="co">#&gt;  [75,]  0.0142148  0.05836 -0.090152 -0.0532640 -0.052737 -0.123372 -0.0217113</span></span>
-<span><span class="co">#&gt;  [76,] -0.1128373  0.12169  0.117763 -0.0547286 -0.250564  0.153428 -0.0385927</span></span>
-<span><span class="co">#&gt;  [77,] -0.0696331 -0.31392 -0.072707  0.0191921  0.020063 -0.172550  0.0472727</span></span>
-<span><span class="co">#&gt;  [78,]  0.0623050 -0.32493 -0.040537 -0.0736777  0.116316  0.155702  0.0982516</span></span>
-<span><span class="co">#&gt;  [79,]  0.0193990  0.09819 -0.194644 -0.0609597  0.036752 -0.237055 -0.1271943</span></span>
-<span><span class="co">#&gt;  [80,]  0.0320019 -0.03892  0.155009  0.2836985  0.071518  0.193790  0.0316190</span></span>
-<span><span class="co">#&gt;  [81,] -0.2589348 -0.19650  0.280217  0.1049766  0.121906 -0.022824 -0.0346232</span></span>
-<span><span class="co">#&gt;  [82,] -0.0013436  0.21050 -0.164776  0.0073341 -0.045932  0.242921  0.2175814</span></span>
-<span><span class="co">#&gt;  [83,] -0.5296701  0.08376  0.045425  0.0533070  0.070084 -0.190799 -0.0236104</span></span>
-<span><span class="co">#&gt;  [84,] -0.0231570 -0.11909 -0.102473  0.0026795 -0.010450 -0.008329  0.0937510</span></span>
-<span><span class="co">#&gt;  [85,]  0.1718181  0.15200  0.152210  0.0293141 -0.275106 -0.104101  0.1713532</span></span>
-<span><span class="co">#&gt;  [86,] -0.3136603  0.05446 -0.096920 -0.1768127 -0.166602 -0.012610 -0.0427212</span></span>
-<span><span class="co">#&gt;  [87,] -0.0171711  0.10231  0.019698 -0.2687837  0.064362  0.237523 -0.0800303</span></span>
-<span><span class="co">#&gt;  [88,] -0.3340925 -0.21713 -0.045683  0.0475371 -0.019856  0.037647 -0.0605797</span></span>
-<span><span class="co">#&gt;  [89,] -0.0938220 -0.18368 -0.141610  0.0688438 -0.119002 -0.197771 -0.0268658</span></span>
-<span><span class="co">#&gt;  [90,] -0.1871915  0.09143 -0.102309  0.1880162  0.402587 -0.147639  0.0695919</span></span>
-<span><span class="co">#&gt;  [91,]  0.0274027 -0.07052 -0.026454 -0.1540083  0.115558  0.182244  0.2041840</span></span>
-<span><span class="co">#&gt;  [92,] -0.2024675  0.01781 -0.022956  0.1718116 -0.168089  0.086332  0.0801247</span></span>
-<span><span class="co">#&gt;  [93,]  0.0160333  0.38760  0.388636  0.0124080 -0.172027 -0.026285  0.0161632</span></span>
-<span><span class="co">#&gt;  [94,]  0.0480307 -0.09722  0.054340 -0.1256805  0.202503  0.037854  0.0761335</span></span>
-<span><span class="co">#&gt;  [95,]  0.1116256  0.20799 -0.124182 -0.1464251 -0.052966 -0.119267  0.1399414</span></span>
-<span><span class="co">#&gt;  [96,]  0.0184464  0.11194 -0.016013 -0.0182812 -0.070886  0.017501  0.0963788</span></span>
-<span><span class="co">#&gt;  [97,]  0.1258021 -0.08602 -0.023130 -0.0247344 -0.076444 -0.216714  0.1687897</span></span>
-<span><span class="co">#&gt;  [98,] -0.0482531 -0.00124  0.159725  0.0254710  0.040614  0.068987 -0.0107896</span></span>
-<span><span class="co">#&gt;  [99,]  0.0300842  0.13785  0.128049  0.1976996 -0.017623  0.172700  0.1793805</span></span>
-<span><span class="co">#&gt; [100,]  0.1127790  0.15327 -0.111002 -0.1768975 -0.144864  0.028028 -0.0842936</span></span>
-<span><span class="co">#&gt;             [,15]     [,16]     [,17]      [,18]     [,19]      [,20]</span></span>
-<span><span class="co">#&gt;   [1,] -0.0310933  0.041723 -0.031898 -0.0699536  0.149148  0.0682066</span></span>
-<span><span class="co">#&gt;   [2,]  0.0410613 -0.060513  0.197166  0.1726551  0.075794  0.0836948</span></span>
-<span><span class="co">#&gt;   [3,] -0.0888424 -0.002457  0.077752  0.0145245  0.151731  0.1914694</span></span>
-<span><span class="co">#&gt;   [4,]  0.0071529  0.091965 -0.022228  0.0629704 -0.033681  0.0677435</span></span>
-<span><span class="co">#&gt;   [5,]  0.0798035  0.150834  0.128749 -0.1669940 -0.023722 -0.0609806</span></span>
-<span><span class="co">#&gt;   [6,] -0.1088482 -0.101557 -0.061716  0.0155182  0.360307 -0.0707679</span></span>
-<span><span class="co">#&gt;   [7,]  0.0452906 -0.059571 -0.077434 -0.0820540 -0.112647  0.1199240</span></span>
-<span><span class="co">#&gt;   [8,]  0.1335054 -0.137975  0.085968 -0.1471620  0.103388 -0.0602124</span></span>
-<span><span class="co">#&gt;   [9,]  0.2292452 -0.018599 -0.104872 -0.0994910  0.104702  0.0424381</span></span>
-<span><span class="co">#&gt;  [10,]  0.1941483  0.013469 -0.026987 -0.0848053  0.050190 -0.1123763</span></span>
-<span><span class="co">#&gt;  [11,]  0.2142832  0.034121 -0.064745  0.0717672 -0.045953 -0.0842637</span></span>
-<span><span class="co">#&gt;  [12,] -0.0949185  0.008953  0.127528  0.0127579 -0.173121 -0.0150089</span></span>
-<span><span class="co">#&gt;  [13,] -0.1973665  0.106111  0.100554 -0.0430785  0.018517  0.0373943</span></span>
-<span><span class="co">#&gt;  [14,]  0.0003789 -0.098538 -0.048653  0.1228162  0.039732 -0.0944228</span></span>
-<span><span class="co">#&gt;  [15,] -0.0754222 -0.135718  0.106470 -0.0819273 -0.174422 -0.0003847</span></span>
-<span><span class="co">#&gt;  [16,]  0.0546386 -0.167994 -0.092348 -0.0203956 -0.200984 -0.1781862</span></span>
-<span><span class="co">#&gt;  [17,]  0.0853401  0.238575  0.131246 -0.0290463 -0.102868 -0.0817429</span></span>
-<span><span class="co">#&gt;  [18,] -0.0443648  0.189548 -0.279909  0.0749584 -0.086466 -0.1044251</span></span>
-<span><span class="co">#&gt;  [19,]  0.0358825  0.125428  0.015128  0.0636873  0.047429 -0.0381850</span></span>
-<span><span class="co">#&gt;  [20,]  0.0932294  0.155709  0.193085 -0.1053037  0.060562  0.0545932</span></span>
-<span><span class="co">#&gt;  [21,]  0.1919446 -0.088330 -0.192234 -0.1185708 -0.073234  0.1560742</span></span>
-<span><span class="co">#&gt;  [22,] -0.0399608 -0.183496 -0.067778 -0.0774151  0.071242 -0.2078549</span></span>
-<span><span class="co">#&gt;  [23,] -0.1817356 -0.092263  0.078505 -0.0020711 -0.001192  0.0116499</span></span>
-<span><span class="co">#&gt;  [24,] -0.0106687  0.010634  0.092177 -0.1545476  0.237657  0.0972296</span></span>
-<span><span class="co">#&gt;  [25,]  0.0999225  0.088433  0.022324  0.0123628  0.037135  0.1000362</span></span>
-<span><span class="co">#&gt;  [26,]  0.0693288  0.030303  0.049179  0.0669571  0.054778 -0.0029560</span></span>
-<span><span class="co">#&gt;  [27,]  0.1466075 -0.127018  0.104490 -0.0810555 -0.008873 -0.1835692</span></span>
-<span><span class="co">#&gt;  [28,] -0.1411226 -0.002081 -0.144449 -0.0485308 -0.100656  0.0609217</span></span>
-<span><span class="co">#&gt;  [29,]  0.0651865 -0.044781 -0.036307  0.0623370  0.198255 -0.2318739</span></span>
-<span><span class="co">#&gt;  [30,]  0.2242000 -0.067454 -0.056292 -0.1362759 -0.018744  0.0505081</span></span>
-<span><span class="co">#&gt;  [31,] -0.1234211 -0.213130 -0.072526 -0.1217535 -0.055616  0.1404210</span></span>
-<span><span class="co">#&gt;  [32,] -0.0680376 -0.129025  0.237436  0.1558726 -0.129317 -0.1259298</span></span>
-<span><span class="co">#&gt;  [33,]  0.1080305  0.125383 -0.052658 -0.0648872  0.117299  0.0967038</span></span>
-<span><span class="co">#&gt;  [34,]  0.2737908  0.079810  0.084728 -0.0826855 -0.128507 -0.0166660</span></span>
-<span><span class="co">#&gt;  [35,]  0.1539450  0.008237 -0.031927  0.1038060  0.155585  0.1822344</span></span>
-<span><span class="co">#&gt;  [36,] -0.1775963  0.123936  0.032514 -0.0574782  0.008193 -0.0542421</span></span>
-<span><span class="co">#&gt;  [37,]  0.0029672  0.038151  0.215102  0.0504470 -0.101747  0.0972615</span></span>
-<span><span class="co">#&gt;  [38,] -0.0006931 -0.042695 -0.063583  0.0082413 -0.072600 -0.1032979</span></span>
-<span><span class="co">#&gt;  [39,]  0.0691544  0.116594  0.085404 -0.0631002 -0.081588 -0.0770884</span></span>
-<span><span class="co">#&gt;  [40,]  0.0650798 -0.100502  0.187067  0.0528236  0.163930 -0.0024711</span></span>
-<span><span class="co">#&gt;  [41,] -0.1472741  0.028402 -0.187597  0.0280033 -0.103971 -0.0410125</span></span>
-<span><span class="co">#&gt;  [42,] -0.0836559  0.170358 -0.115135 -0.0548001 -0.088413  0.0685153</span></span>
-<span><span class="co">#&gt;  [43,] -0.0415832  0.036946  0.042835 -0.0164074 -0.111493  0.0953342</span></span>
-<span><span class="co">#&gt;  [44,]  0.0452566 -0.114619 -0.249201  0.0738633  0.096687 -0.2066208</span></span>
-<span><span class="co">#&gt;  [45,]  0.2154723 -0.126966 -0.231969 -0.0146824  0.049051 -0.0126835</span></span>
-<span><span class="co">#&gt;  [46,]  0.0745587 -0.023397  0.058545  0.0123960  0.078862 -0.0263702</span></span>
-<span><span class="co">#&gt;  [47,]  0.0634607 -0.092933  0.022904 -0.0966270 -0.007908 -0.1525288</span></span>
-<span><span class="co">#&gt;  [48,] -0.0085044  0.013068 -0.186843  0.0308994  0.006327 -0.0129579</span></span>
-<span><span class="co">#&gt;  [49,] -0.0300199  0.111799  0.076583 -0.1031056 -0.169640 -0.0531969</span></span>
-<span><span class="co">#&gt;  [50,] -0.0227151  0.104877 -0.111483  0.0350376 -0.020047 -0.0071260</span></span>
-<span><span class="co">#&gt;  [51,] -0.0331629 -0.019867  0.017331 -0.0643729  0.113618  0.0267001</span></span>
-<span><span class="co">#&gt;  [52,] -0.1121284 -0.091246  0.078205 -0.0601165  0.026551  0.1145950</span></span>
-<span><span class="co">#&gt;  [53,]  0.0014240  0.127165 -0.109370 -0.0029576  0.049284  0.0829766</span></span>
-<span><span class="co">#&gt;  [54,]  0.0442356  0.004860  0.088633 -0.0014404  0.181317 -0.0472131</span></span>
-<span><span class="co">#&gt;  [55,]  0.2224602  0.032236 -0.037349  0.1387460 -0.097070  0.1805172</span></span>
-<span><span class="co">#&gt;  [56,] -0.0588293  0.095021 -0.025730 -0.0915042  0.002754 -0.0434962</span></span>
-<span><span class="co">#&gt;  [57,]  0.0878465  0.107601 -0.003594  0.1320308 -0.051277 -0.1425534</span></span>
-<span><span class="co">#&gt;  [58,] -0.0302892  0.053206  0.037856  0.0241148  0.125361  0.1316005</span></span>
-<span><span class="co">#&gt;  [59,] -0.0384698 -0.274180 -0.071040 -0.0857291  0.064830  0.1820471</span></span>
-<span><span class="co">#&gt;  [60,] -0.1287371  0.116174  0.135492 -0.0345889  0.139849  0.1050985</span></span>
-<span><span class="co">#&gt;  [61,] -0.0407359 -0.188782  0.046319  0.1941894  0.108647  0.1233394</span></span>
-<span><span class="co">#&gt;  [62,]  0.0760041 -0.158384  0.060876 -0.0438363  0.013122  0.0980800</span></span>
-<span><span class="co">#&gt;  [63,] -0.1121132  0.045666  0.135624 -0.0355075  0.027582 -0.1913139</span></span>
-<span><span class="co">#&gt;  [64,]  0.0192530  0.089944  0.031940  0.0248811  0.064160  0.1225106</span></span>
-<span><span class="co">#&gt;  [65,]  0.2027512  0.045860  0.100348 -0.1001885 -0.072281 -0.0438245</span></span>
-<span><span class="co">#&gt;  [66,]  0.1108283 -0.033901 -0.112825 -0.1714562 -0.016416 -0.0036295</span></span>
-<span><span class="co">#&gt;  [67,]  0.0801907 -0.205005  0.081586 -0.0192395 -0.007315  0.0384531</span></span>
-<span><span class="co">#&gt;  [68,]  0.0599547  0.115917  0.101017  0.0707715 -0.026049  0.0235074</span></span>
-<span><span class="co">#&gt;  [69,] -0.1762451 -0.085621 -0.023627 -0.0835053 -0.243132  0.0728315</span></span>
-<span><span class="co">#&gt;  [70,] -0.0032260  0.115301 -0.127079  0.1132922 -0.096824  0.0571369</span></span>
-<span><span class="co">#&gt;  [71,] -0.0762798  0.116046  0.003231  0.0793477  0.043864  0.0712050</span></span>
-<span><span class="co">#&gt;  [72,] -0.1713507 -0.031393 -0.348193 -0.0329419 -0.011470  0.0472414</span></span>
-<span><span class="co">#&gt;  [73,] -0.0368538 -0.116309  0.167525 -0.0803749 -0.174363  0.0918286</span></span>
-<span><span class="co">#&gt;  [74,] -0.1920874  0.129481  0.048296  0.0090744 -0.098015 -0.1518858</span></span>
-<span><span class="co">#&gt;  [75,] -0.1050638 -0.071038  0.074307 -0.2086919  0.206051 -0.1559287</span></span>
-<span><span class="co">#&gt;  [76,] -0.1757703 -0.025557 -0.048017  0.1029970 -0.010313 -0.1995226</span></span>
-<span><span class="co">#&gt;  [77,] -0.2253763 -0.082301  0.015407  0.0410920  0.120752 -0.0183149</span></span>
-<span><span class="co">#&gt;  [78,] -0.0273420 -0.019303  0.051399 -0.0984317  0.211310 -0.1423816</span></span>
-<span><span class="co">#&gt;  [79,] -0.0198927  0.109456  0.059138  0.1939897 -0.005101 -0.0440859</span></span>
-<span><span class="co">#&gt;  [80,]  0.0592884 -0.135340 -0.006763  0.0038438  0.034183  0.0435155</span></span>
-<span><span class="co">#&gt;  [81,] -0.0665536 -0.063374  0.053334  0.0038481 -0.094599 -0.0894305</span></span>
-<span><span class="co">#&gt;  [82,] -0.0811864  0.019365  0.022171 -0.0310455  0.046788 -0.0938717</span></span>
-<span><span class="co">#&gt;  [83,]  0.0850887  0.047873  0.013545  0.0305977  0.182341 -0.2280152</span></span>
-<span><span class="co">#&gt;  [84,] -0.0283459 -0.018077 -0.057691 -0.0717803  0.056317  0.0217983</span></span>
-<span><span class="co">#&gt;  [85,]  0.1602419  0.057088 -0.159819 -0.1040824  0.097647 -0.0511976</span></span>
-<span><span class="co">#&gt;  [86,] -0.0056666  0.109381 -0.120060 -0.0070645  0.200508  0.0127710</span></span>
-<span><span class="co">#&gt;  [87,] -0.0609347 -0.176881 -0.188914 -0.0003547 -0.029413  0.0136769</span></span>
-<span><span class="co">#&gt;  [88,] -0.2307053  0.133507  0.058398  0.0116286 -0.227996  0.1381503</span></span>
-<span><span class="co">#&gt;  [89,] -0.1426517  0.121748 -0.220130  0.0545204  0.018250  0.0811819</span></span>
-<span><span class="co">#&gt;  [90,] -0.0735067  0.060830 -0.075665 -0.1077535 -0.057684  0.0519037</span></span>
-<span><span class="co">#&gt;  [91,] -0.0601003 -0.027685 -0.185506 -0.0801926  0.172648  0.0618153</span></span>
-<span><span class="co">#&gt;  [92,]  0.0196250 -0.077078  0.116452 -0.0321302  0.066405  0.0712134</span></span>
-<span><span class="co">#&gt;  [93,]  0.1527745  0.041019  0.069113  0.0692845 -0.086461  0.0014755</span></span>
-<span><span class="co">#&gt;  [94,]  0.1390354 -0.154025  0.155838 -0.1132112  0.004996 -0.0375459</span></span>
-<span><span class="co">#&gt;  [95,]  0.1351381 -0.070001  0.060592 -0.1316422 -0.030717 -0.1045957</span></span>
-<span><span class="co">#&gt;  [96,]  0.0656224 -0.021216  0.105841 -0.0659564  0.272779  0.1335515</span></span>
-<span><span class="co">#&gt;  [97,] -0.1084839 -0.206789  0.170431 -0.1429289  0.034148  0.0096025</span></span>
-<span><span class="co">#&gt;  [98,]  0.0799512 -0.128746  0.268890  0.2531388  0.043684 -0.1209028</span></span>
-<span><span class="co">#&gt;  [99,]  0.1731693 -0.223969 -0.068955 -0.1069681 -0.163325 -0.0209652</span></span>
-<span><span class="co">#&gt; [100,]  0.2720567  0.013828 -0.099349 -0.0545107 -0.036013 -0.0449864</span></span>
-<span><span class="co">#&gt;             [,21]      [,22]     [,23]      [,24]</span></span>
-<span><span class="co">#&gt;   [1,] -0.0424150  0.0526916 -0.026419 -0.0814201</span></span>
-<span><span class="co">#&gt;   [2,] -0.0341369  0.0160437  0.066759  0.0509284</span></span>
-<span><span class="co">#&gt;   [3,] -0.0826025  0.1888572 -0.032933  0.0040753</span></span>
-<span><span class="co">#&gt;   [4,] -0.0489637  0.0095104  0.041602 -0.0424313</span></span>
-<span><span class="co">#&gt;   [5,] -0.1341100 -0.0794646  0.005309 -0.0031748</span></span>
-<span><span class="co">#&gt;   [6,]  0.0783931  0.0822056  0.070867 -0.0486972</span></span>
-<span><span class="co">#&gt;   [7,] -0.0252710 -0.0541623 -0.014750  0.0251735</span></span>
-<span><span class="co">#&gt;   [8,]  0.0543542 -0.1175600  0.068907  0.0011730</span></span>
-<span><span class="co">#&gt;   [9,]  0.1219544 -0.1911651 -0.021042 -0.0150327</span></span>
-<span><span class="co">#&gt;  [10,]  0.0262981 -0.1186627  0.060691 -0.0709487</span></span>
-<span><span class="co">#&gt;  [11,]  0.0507942  0.0429910  0.008453 -0.0290845</span></span>
-<span><span class="co">#&gt;  [12,] -0.1599187  0.0119673  0.026723  0.0384939</span></span>
-<span><span class="co">#&gt;  [13,]  0.0897710  0.0465829  0.002654 -0.0404237</span></span>
-<span><span class="co">#&gt;  [14,] -0.1320673 -0.0279125  0.022063  0.0301925</span></span>
-<span><span class="co">#&gt;  [15,]  0.1116759 -0.0078561 -0.023207 -0.0527049</span></span>
-<span><span class="co">#&gt;  [16,]  0.0562110  0.0342648  0.112683 -0.0131499</span></span>
-<span><span class="co">#&gt;  [17,] -0.1326706 -0.0041638  0.053063 -0.0351465</span></span>
-<span><span class="co">#&gt;  [18,] -0.0730802  0.0863648 -0.012628 -0.0548963</span></span>
-<span><span class="co">#&gt;  [19,] -0.0270619  0.0075652  0.112655 -0.0040039</span></span>
-<span><span class="co">#&gt;  [20,] -0.0861122  0.0622457  0.008146  0.0021320</span></span>
-<span><span class="co">#&gt;  [21,]  0.0487918  0.0756339 -0.043929  0.0035485</span></span>
-<span><span class="co">#&gt;  [22,] -0.1244063  0.0094542 -0.021479 -0.0001975</span></span>
-<span><span class="co">#&gt;  [23,] -0.0210411  0.0163621 -0.064977 -0.0105781</span></span>
-<span><span class="co">#&gt;  [24,]  0.1426058  0.0460716 -0.022884  0.0131994</span></span>
-<span><span class="co">#&gt;  [25,]  0.1196208 -0.0549730 -0.048790 -0.0215696</span></span>
-<span><span class="co">#&gt;  [26,]  0.0153060  0.1490638  0.077438  0.0327297</span></span>
-<span><span class="co">#&gt;  [27,]  0.0740779  0.0019523 -0.096264 -0.0315369</span></span>
-<span><span class="co">#&gt;  [28,] -0.0009454 -0.0089602  0.007350  0.0114376</span></span>
-<span><span class="co">#&gt;  [29,] -0.0125241 -0.0677838 -0.087240  0.0501463</span></span>
-<span><span class="co">#&gt;  [30,]  0.1357378 -0.0616960  0.016261 -0.1232249</span></span>
-<span><span class="co">#&gt;  [31,] -0.1038464  0.0588280  0.067416 -0.0344808</span></span>
-<span><span class="co">#&gt;  [32,]  0.0584629  0.0612513 -0.038330  0.0074885</span></span>
-<span><span class="co">#&gt;  [33,]  0.1386417  0.0288779  0.047294 -0.0970106</span></span>
-<span><span class="co">#&gt;  [34,] -0.0160444  0.0955047  0.079599 -0.0160093</span></span>
-<span><span class="co">#&gt;  [35,]  0.0183541 -0.0361561 -0.103809 -0.0308219</span></span>
-<span><span class="co">#&gt;  [36,] -0.0059494  0.0776929  0.135410 -0.0426878</span></span>
-<span><span class="co">#&gt;  [37,]  0.0031797  0.0516534 -0.027069  0.0212179</span></span>
-<span><span class="co">#&gt;  [38,] -0.0807381 -0.0803549 -0.012522 -0.0045794</span></span>
-<span><span class="co">#&gt;  [39,]  0.1804376  0.1103587  0.101878 -0.0169541</span></span>
-<span><span class="co">#&gt;  [40,] -0.0214876  0.0435649  0.032237 -0.0614633</span></span>
-<span><span class="co">#&gt;  [41,] -0.0306678  0.0363178  0.047970  0.1034192</span></span>
-<span><span class="co">#&gt;  [42,]  0.0228009  0.1058658 -0.028255  0.0651057</span></span>
-<span><span class="co">#&gt;  [43,] -0.1763951 -0.0075291  0.034161 -0.0060878</span></span>
-<span><span class="co">#&gt;  [44,]  0.0487212  0.0596778  0.024402  0.0156223</span></span>
-<span><span class="co">#&gt;  [45,]  0.0569874 -0.0398575 -0.003624 -0.0090902</span></span>
-<span><span class="co">#&gt;  [46,]  0.0763563 -0.0244651 -0.083530  0.0256984</span></span>
-<span><span class="co">#&gt;  [47,]  0.0902202 -0.0883558 -0.059133 -0.0025026</span></span>
-<span><span class="co">#&gt;  [48,] -0.0026186 -0.0239690  0.059597 -0.0280716</span></span>
-<span><span class="co">#&gt;  [49,] -0.0131074 -0.0209307  0.073484  0.0829802</span></span>
-<span><span class="co">#&gt;  [50,] -0.1478846 -0.0756096 -0.028256 -0.0118482</span></span>
-<span><span class="co">#&gt;  [51,]  0.0175995  0.0084011 -0.158148  0.0429299</span></span>
-<span><span class="co">#&gt;  [52,]  0.0320135 -0.0942893 -0.033676 -0.0026640</span></span>
-<span><span class="co">#&gt;  [53,]  0.1071082  0.0692714  0.053586 -0.0310297</span></span>
-<span><span class="co">#&gt;  [54,]  0.0013702  0.0909967 -0.042123  0.0806012</span></span>
-<span><span class="co">#&gt;  [55,] -0.0896378 -0.1332668 -0.033691 -0.0159132</span></span>
-<span><span class="co">#&gt;  [56,] -0.0290065 -0.0330778  0.003368  0.0395863</span></span>
-<span><span class="co">#&gt;  [57,] -0.1987923  0.0228908 -0.124683 -0.0226530</span></span>
-<span><span class="co">#&gt;  [58,]  0.0606250 -0.1716979 -0.052778 -0.0010906</span></span>
-<span><span class="co">#&gt;  [59,] -0.0341937 -0.0004529 -0.067220  0.0478536</span></span>
-<span><span class="co">#&gt;  [60,]  0.0016772  0.0226776 -0.098729  0.0042134</span></span>
-<span><span class="co">#&gt;  [61,] -0.0119049 -0.0475547  0.064027 -0.0352658</span></span>
-<span><span class="co">#&gt;  [62,] -0.0805632 -0.0605691 -0.003070 -0.0492235</span></span>
-<span><span class="co">#&gt;  [63,] -0.0309312 -0.0083753 -0.003021 -0.0603871</span></span>
-<span><span class="co">#&gt;  [64,] -0.1234004 -0.0110027  0.034375 -0.0081625</span></span>
-<span><span class="co">#&gt;  [65,] -0.0191013  0.0273712 -0.072162 -0.0134096</span></span>
-<span><span class="co">#&gt;  [66,] -0.1817900  0.0447163 -0.107013  0.0092618</span></span>
-<span><span class="co">#&gt;  [67,]  0.0601318 -0.1188237 -0.019094 -0.0250841</span></span>
-<span><span class="co">#&gt;  [68,]  0.0850033  0.0136952 -0.019685 -0.0035132</span></span>
-<span><span class="co">#&gt;  [69,]  0.0428490 -0.0319438 -0.011168  0.0291644</span></span>
-<span><span class="co">#&gt;  [70,] -0.0427591 -0.0495591 -0.035178 -0.0852317</span></span>
-<span><span class="co">#&gt;  [71,] -0.1848935 -0.0367763 -0.001416  0.0397335</span></span>
-<span><span class="co">#&gt;  [72,]  0.0689195 -0.0381926 -0.085306 -0.0359937</span></span>
-<span><span class="co">#&gt;  [73,]  0.0130312 -0.0191939  0.017285  0.0372370</span></span>
-<span><span class="co">#&gt;  [74,] -0.1316712  0.0602161  0.051941  0.0261102</span></span>
-<span><span class="co">#&gt;  [75,]  0.1584393  0.0633143 -0.022015  0.0074549</span></span>
-<span><span class="co">#&gt;  [76,]  0.0395249  0.0852197  0.031877 -0.0492800</span></span>
-<span><span class="co">#&gt;  [77,] -0.0774112  0.0710114 -0.002107  0.0012756</span></span>
-<span><span class="co">#&gt;  [78,] -0.0819237  0.0871314  0.087948  0.0424020</span></span>
-<span><span class="co">#&gt;  [79,] -0.1180924 -0.0962888  0.080788  0.0107511</span></span>
-<span><span class="co">#&gt;  [80,]  0.0097910 -0.0790515 -0.022346  0.0862206</span></span>
-<span><span class="co">#&gt;  [81,] -0.1563280 -0.0457245 -0.110625 -0.0721910</span></span>
-<span><span class="co">#&gt;  [82,] -0.1398267  0.1138508 -0.092129  0.1111187</span></span>
-<span><span class="co">#&gt;  [83,]  0.0977688  0.0858581  0.098282 -0.0336170</span></span>
-<span><span class="co">#&gt;  [84,] -0.0001305  0.0629837  0.106105 -0.0109101</span></span>
-<span><span class="co">#&gt;  [85,]  0.0919010  0.1113789  0.074878  0.0573795</span></span>
-<span><span class="co">#&gt;  [86,] -0.1570159  0.0258348 -0.024432 -0.0465340</span></span>
-<span><span class="co">#&gt;  [87,] -0.2539401 -0.0627145  0.051906  0.0261781</span></span>
-<span><span class="co">#&gt;  [88,]  0.0570400 -0.1141989 -0.074108  0.0763646</span></span>
-<span><span class="co">#&gt;  [89,] -0.0736714 -0.1435291  0.063050  0.0052780</span></span>
-<span><span class="co">#&gt;  [90,] -0.0014334  0.0325999  0.087022 -0.0771747</span></span>
-<span><span class="co">#&gt;  [91,] -0.0046981  0.0508278 -0.019338  0.0372303</span></span>
-<span><span class="co">#&gt;  [92,] -0.0213444 -0.1147574 -0.065163  0.0263465</span></span>
-<span><span class="co">#&gt;  [93,] -0.0336340  0.0688032 -0.063913 -0.0506828</span></span>
-<span><span class="co">#&gt;  [94,] -0.0967541  0.0208973  0.083018 -0.0793773</span></span>
-<span><span class="co">#&gt;  [95,] -0.0708959 -0.0446939 -0.066442  0.0196782</span></span>
-<span><span class="co">#&gt;  [96,] -0.1126599  0.0107139 -0.013827 -0.0527241</span></span>
-<span><span class="co">#&gt;  [97,] -0.0298684  0.0161802 -0.033966 -0.0309772</span></span>
-<span><span class="co">#&gt;  [98,]  0.0486113  0.0663810 -0.002099  0.0522629</span></span>
-<span><span class="co">#&gt;  [99,]  0.0059665  0.1159373  0.044068  0.0313260</span></span>
-<span><span class="co">#&gt; [100,] -0.1466448 -0.0274904  0.067202 -0.0212693</span></span>
-<span><span class="co">#&gt; Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if</span></span>
-<span><span class="co">#&gt; `.name_repair` is omitted as of tibble 2.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using compatibility `.name_repair`.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,400 × 2</span></span></span>
-<span><span class="co">#&gt;    n       bias</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> V1     0.284</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> V1     0.506</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> V1     0.353</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> V1    -<span style="color: #BB0000;">0.578</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> V1     0.184</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> V1    -<span style="color: #BB0000;">0.191</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> V1    -<span style="color: #BB0000;">0.303</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> V1     0.787</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V1     0.645</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> V1     0.257</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,390 more rows</span></span></span>
-<span><span class="co">#&gt; Warning: NAs introduced by coercion</span></span></code></pre>
-<p><img src="reference/figures/README-bias-plot-1.png" width="100%"></p>
-</div>
-<div class="section level4">
-<h4 id="variance-covariance-matrix">Variance-covariance matrix<a class="anchor" aria-label="anchor" href="#variance-covariance-matrix"></a>
-</h4>
-<p>The variance-covariance matrix is one of the more important statistical measures of an estimator of a parameter vector. It quantities both the variability of the individual parameter estimates and how they co-vary wieht each other.</p>
+</details><p><img src="reference/figures/README-bias-plot-1.png" width="100%"><img src="reference/figures/README-bias-plot-2.png" width="100%"></p>
+<div class="section level3">
+<h3 id="variance-covariance-matrix">Variance-covariance matrix<a class="anchor" aria-label="anchor" href="#variance-covariance-matrix"></a>
+</h3>
+<p>The variance-covariance matrix is one of the more important statistical measures of an estimator of a parameter vector. It quantities both the variability of the individual parameter estimates and how they co-vary with each other.</p>
 <p>The variance-covariance matrix of a parameter vector <span class="math inline">\(\theta = (\theta_1, \ldots, \theta_p)'\)</span> is an <span class="math inline">\(n \times n\)</span> matrix defined as <span class="math display">\[
 \operatorname{Var}(\hat\theta) = E_{\hat\theta}\!\bigl[(\hat\theta - E_{\hat\theta}(\hat\theta))
     (\hat\theta - E_{\hat\theta}(\hat\theta))'\bigr].
 \]</span></p>
 <p>The <span class="math inline">\((i, j)\)</span>th element of the variance-covariance matrix is the covariance between the <span class="math inline">\(i\)</span>th and <span class="math inline">\(j\)</span>th elements of the parameter vector, respectively <span class="math inline">\(\theta_i\)</span> and <span class="math inline">\(\theta_j\)</span>. Thus, the diagonal elements of the variance-covariance matrix are the variances of the individual parameter estimates, and the off-diagonal elements are the covariances between the parameter estimates.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="fu"><a href="../reference/mle_normal.html">mle_normal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          [,1]     [,2]</span></span>
-<span><span class="co">#&gt; [1,] 0.001953 0.000000</span></span>
-<span><span class="co">#&gt; [2,] 0.000000 0.007625</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span></span>
-<span><span class="co">#&gt;             mu        var</span></span>
-<span><span class="co">#&gt; mu   0.0400097 -0.0002342</span></span>
-<span><span class="co">#&gt; var -0.0002342  0.1569160</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="standard-error">Standard error<a class="anchor" aria-label="anchor" href="#standard-error"></a>
-</h4>
-<p>The standard error of an estimator is a measure of its statistical accuracy. We consider two types of standard errors: the independent standard errors of the estimator and the standard error matrix, which captures the correlations between the errors of the parameters.</p>
-<div class="section level5">
-<h5 id="individual-standard-errors">Individual standard errors<a class="anchor" aria-label="anchor" href="#individual-standard-errors"></a>
-</h5>
-<p>This standard error is the element-wise square root of the diagonal of the variance-covariance matrix of the estimator. It may be used to construct confidence intervals for the parameter estimates or to perform hypothesis tests on parameters independently. It is the most straight-forward measure of the accuracy of the estimator, and it is the most commonly used measure of accuracy.</p>
-</div>
-</div>
-<div class="section level4">
-<h4 id="standard-error-matrix">Standard error matrix<a class="anchor" aria-label="anchor" href="#standard-error-matrix"></a>
-</h4>
-<p>The standard error matrix is the square root of the variance-covariance matrix of the estimator. This is less straightforward, but it is a more complete measure of the accuracy of the estimator. It captures the correlations between the errors of the parameters. This is useful for constructing confidence regions for the parameters, which are analogous to confidence intervals for a single parameter. It is also useful for performing hypothesis tests on multiple parameters simultaneously.</p>
-<p>The square root of a matrix is not unique, but a common choice is to use the Cholesky decomposition.</p>
-</div>
-<div class="section level4">
-<h4 id="confidence-intervals">Confidence intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals"></a>
-</h4>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/confint.html">confint</a></span><span class="op">(</span><span class="fu"><a href="../reference/mle_normal.html">mle_normal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      2.5% 97.5%</span></span>
-<span><span class="co">#&gt; mu  0.989 1.165</span></span>
-<span><span class="co">#&gt; var 1.836 2.189</span></span>
-<span><span class="fu"><a href="../reference/confint_from_sigma.html">confint_from_sigma</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span>, <span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       2.5% 97.5%</span></span>
-<span><span class="co">#&gt; mu  0.6077 1.392</span></span>
-<span><span class="co">#&gt; var 1.1834 2.736</span></span></code></pre></div>
-<div class="section level5">
-<h5 id="coverage-probability">Coverage probability<a class="anchor" aria-label="anchor" href="#coverage-probability"></a>
-</h5>
-<p>A very important measure of the accuracy of an estimator is its coverage probability, which is the probability that the confidence interval for the parameter estimate contains the true value of the parameter. If the coverage probability for an <span class="math inline">\((1-\alpha) \%\)</span>-confidence interval is <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>well-calibrated</em>. If the coverage probability is less than <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>conservative</em>; if the coverage probability is greater than <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>anti-conservative</em>.</p>
-<details><p><summary>Click to show/hide R code</summary></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
-<span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">200</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fl">300</span>, <span class="fl">400</span>, <span class="fl">600</span>, <span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">ns</span>,</span>
-<span>    coverage_mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    coverage_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">j</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">ns</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">theta.mle</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_normal.html">mle_normal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="va">ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/confint.html">confint</a></span><span class="op">(</span><span class="va">theta.mle</span><span class="op">)</span></span>
-<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">ci</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;=</span> <span class="va">mu</span> <span class="op">&amp;&amp;</span> <span class="va">mu</span> <span class="op">&lt;=</span> <span class="va">ci</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>            <span class="va">counts</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">counts</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1</span></span>
-<span>        <span class="op">}</span></span>
-<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">ci</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;=</span> <span class="va">var</span> <span class="op">&amp;&amp;</span> <span class="va">var</span> <span class="op">&lt;=</span> <span class="va">ci</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>            <span class="va">counts</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">counts</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1</span></span>
-<span>        <span class="op">}</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="va">df</span><span class="op">$</span><span class="va">coverage_mu</span><span class="op">[</span><span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">counts</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="va">N</span></span>
-<span>    <span class="va">df</span><span class="op">$</span><span class="va">coverage_var</span><span class="op">[</span><span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">counts</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="va">N</span></span>
-<span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-</details><p><img src="reference/figures/README-coverage-prob-plot-1.png" width="100%"></p>
-</div>
-</div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.019 0.000</span></span>
+<span><span class="co">#&gt; [2,] 0.000 0.052</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        mu   var</span></span>
+<span><span class="co">#&gt; mu  0.014 0.000</span></span>
+<span><span class="co">#&gt; var 0.000 0.029</span></span></code></pre></div>
+<p>They look reasonably close, suggesting at <span class="math inline">\(n = 200\)</span>, the asymptotic sampling distribution is a good approximation to the “true” sampling distribution of the MLE.</p>
 </div>
 <div class="section level3">
-<h3 id="mean-squared-error-matrix">Mean squared error matrix<a class="anchor" aria-label="anchor" href="#mean-squared-error-matrix"></a>
+<h3 id="confidence-intervals">Confidence intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals"></a>
 </h3>
+<p>We can compute the CI of a parameter using the <code>confint</code> function:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      2.5% 97.5%</span></span>
+<span><span class="co">#&gt; mu  0.533  1.09</span></span>
+<span><span class="co">#&gt; var 0.892  1.80</span></span></code></pre></div>
+<p>A very important measure of the accuracy of an estimator is its coverage probability, which is the probability that the confidence interval for the parameter estimate contains the true value of the parameter. If the coverage probability for an <span class="math inline">\((1-\alpha) \%\)</span>-confidence interval is <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>well-calibrated</em>. If the coverage probability is less than <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>conservative</em>; if the coverage probability is greater than <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>anti-conservative</em>.</p>
+<p>We can estimate it by simulating a large number of samples from the population distribution and computing the proportion of times the confidence interval contains the true value of the parameter. We can do this for both the mean and variance of the normal distribution.</p>
+<details><p><summary>Click to show/hide R code</summary></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
+<span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">1000</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">coverage_prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">j</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">ns</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">count1</span> <span class="op">&lt;-</span> <span class="fl">0L</span></span>
+<span>    <span class="va">count2</span> <span class="op">&lt;-</span> <span class="fl">0L</span></span>
+<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span>        <span class="va">ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">ci</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;=</span> <span class="va">mu</span> <span class="op">&amp;&amp;</span> <span class="va">mu</span> <span class="op">&lt;=</span> <span class="va">ci</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
+<span>            <span class="va">count1</span> <span class="op">&lt;-</span> <span class="va">count1</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span>        <span class="op">}</span></span>
+<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">ci</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;=</span> <span class="va">var</span> <span class="op">&amp;&amp;</span> <span class="va">var</span> <span class="op">&lt;=</span> <span class="va">ci</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
+<span>            <span class="va">count2</span> <span class="op">&lt;-</span> <span class="va">count2</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span>        <span class="op">}</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="va">coverage_prob</span><span class="op">[</span><span class="va">j</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">count1</span> <span class="op">/</span> <span class="va">N</span></span>
+<span>    <span class="va">coverage_prob</span><span class="op">[</span><span class="va">j</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">count2</span> <span class="op">/</span> <span class="va">N</span></span>
+<span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</details><p><img src="reference/figures/README-cov-plot-1.png" width="100%"></p>
+<p>We see that the coverage probability is close to the nominal coverage probability, and converges to it as the sample size increases. This suggests that the confidence intervals are well-calibrated.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="mean-squared-error-matrix">Mean squared error matrix<a class="anchor" aria-label="anchor" href="#mean-squared-error-matrix"></a>
+</h2>
 <p>The mean squared error (MSE) of an estimator of a parameter vector <span class="math inline">\(\theta\)</span> is defined as <span class="math display">\[
 \operatorname{MSE}(\hat\theta) = E\bigl[(\hat\theta - \theta)(\hat\theta - \theta)'\bigr],
 \]</span> where <span class="math inline">\(\hat\theta - \theta\)</span> is a column vector of differences between the estimator and the true parameter and <span class="math inline">\((\hat\theta - \theta)'\)</span> is a row vector of the same differences, and we are performing a standard matrix multiplication between the two vectors. The MSE is a measure of the average squared error of the estimator. It is a function of the true parameter value <span class="math inline">\(\theta\)</span>.</p>
@@ -732,28 +354,239 @@ Sampling distribution of the MLEs.
 \operatorname{MSE}(\hat\theta) = \operatorname{Bias}(\hat\theta)\operatorname{Bias}(\hat\theta)'
     + \operatorname{Var}(\hat\theta).
 \]</span></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mse.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">theta.hat</span>, <span class="va">theta</span><span class="op">)</span></span>
+<span><span class="va">mse.mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>,</span>
+<span>    <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">theta</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">theta</span><span class="op">)</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">mse.hat</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         mu   var</span></span>
+<span><span class="co">#&gt; [1,] 0.019 0.000</span></span>
+<span><span class="co">#&gt; [2,] 0.000 0.052</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">mse.mc</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.014 0.000</span></span>
+<span><span class="co">#&gt; [2,] 0.000 0.029</span></span></code></pre></div>
+<p>It’s hard to distinguish the MSE matrices from the variance-covariance matrices reported previously, which is not surprising, since the bias is relatively small and so the MSE is dominated by the variance.</p>
+<p>Let’s take a closer look at the variance and MSE of the mean <span class="math inline">\(\hat\mu\)</span>:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># temporarily show more digits in the numbers/outputs for this code block</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<span><span class="co"># mse(mu)</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.014176072516</span></span>
+<span><span class="co"># variance(mu)</span></span>
+<span><span class="op">(</span><span class="va">mu.var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.0141748829208</span></span>
+<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span></span>
+<span><span class="co"># mse = bias^2 + variance</span></span>
+<span><span class="va">b</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">mu.var</span></span>
+<span><span class="co">#&gt; [1] 0.014176072516</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<p>They are very close, since the bias is so small.</p>
+<p>We should take the MSE from the Monte Carlo simulation as a sort of “true” MSE, since it is computed from the empirical sampling distribution of the MLE. We expect that as the sample size increases, the asymptotic MSE (<code>mse.hat</code>) and the MC MSE (<code>mse.mc</code>) will converge to the same value. In fact, let’s run a little experiment to show this:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">200</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">mses.mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">mses.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">mses.hat.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">j</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">ns</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">theta.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/empirical_dist.html" class="external-link">empirical_dist</a></span><span class="op">(</span><span class="fu">theta_samp_mc</span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, theta <span class="op">=</span> <span class="va">theta</span>, B <span class="op">=</span> <span class="va">B</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">mse.mu.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.n</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="va">mse.var.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.n</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">var</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span>    <span class="va">mses.mc</span><span class="op">[</span><span class="va">j</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mse.mu.n</span>, <span class="va">mse.var.n</span><span class="op">)</span></span>
+<span>    <span class="va">mses.hat</span><span class="op">[</span><span class="va">j</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">theta</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">mses.hat.hat</span><span class="op">[</span><span class="va">j</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p><img src="reference/figures/README-mse-plots-1.png" width="100%"><img src="reference/figures/README-mse-plots-2.png" width="100%"></p>
+<p>These plots demonstrate that the asymptotic MSE is a good approximation to the “true” MSE, which is the MSE computed from the empirical sampling distribution of the MLE.</p>
+<p>It’s difficult to distinguish the estimated asymptotic MSE, where the true parameter <span class="math inline">\(\theta\)</span> is not known, from the asymptotic MSE, where the true parameter <span class="math inline">\(\theta\)</span> is known. This is because the bias is so small, and so the MSE is dominated by the variance.</p>
 </div>
 <div class="section level2">
 <h2 id="bootstrap-of-the-sampling-distribution-of-the-mle">Bootstrap of the sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#bootstrap-of-the-sampling-distribution-of-the-mle"></a>
 </h2>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p>Normally, we don’t know the true data generating process (DGP) of the data we observe. We only have a sample of data, and we want to use that sample to estimate the parameters of some model that hopefully provides a good fit to the DGP using maximum likelihood estimation.</p>
+<p>Earlier, we simulated a sample of data from a normal distribution with mean 1 and variance 1 and then used MLE on each sample to generate an empirical sampling distribution of the MLE. This is called <em>Monte Carlo simulation</em>.</p>
+<p>However, we can also use the sample of data we have to generate an empirical sampling distribution of the MLE. This is called <em>bootstrap</em>. The idea is that the sample we have is a sample from the true DGP, and we can use that sample to generate new samples (resample) and fit an MLE to each of these to generate an Bootstrapped empirical sampling distribution of the MLE.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simulate a sample of n observations from a normal with mean 1 and variance 2.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">51234</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">50</span></span>
-<span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="va">var</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
-<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fl">100000</span></span>
-<span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu</span>, <span class="va">var</span><span class="op">)</span></span>
-<span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">boot</span><span class="op">)</span></span>
 <span><span class="va">theta.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">x</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">data</span>,</span>
 <span>    statistic <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">ind</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fu"><a href="../reference/mle_normal.html">mle_normal</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span>, keep_obs <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">}</span>,</span>
 <span>    R <span class="op">=</span> <span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Let’s compute some statistics:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 0.936 0.984</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      2.5% 97.5%</span></span>
+<span><span class="co">#&gt; mu  0.798  1.07</span></span>
+<span><span class="co">#&gt; var 0.796  1.18</span></span></code></pre></div>
+<p>Let’s use these Bootstrapped MLEs to generate an aproximation of the empirical sampling distribution:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">theta.b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/empirical_dist.html" class="external-link">empirical_dist</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">$</span><span class="va">t</span><span class="op">)</span></span></code></pre></div>
+<p>As before, let’s do some basic expectations of the Bootstrapped sampling distribution of the MLE and compare to the previous results:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># should sum to 1</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1</span></span>
+<span><span class="co"># mean</span></span>
+<span><span class="op">(</span><span class="va">mu.b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">theta.b</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.937 0.978</span></span>
+<span><span class="co"># variance of (mu, var)</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.00488 0.00973</span></span>
+<span><span class="co"># kurtosis of (mu, var) </span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">)</span><span class="op">^</span><span class="fl">4</span><span class="op">)</span> <span class="op">/</span></span>
+<span>    <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
+<span><span class="co">#&gt; [1] 2.98 3.10</span></span>
+<span><span class="co"># skewness of mu and var -- should be (0, 0)</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">)</span> <span class="op">/</span> <span class="va">theta</span><span class="op">)</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] -0.00000665  0.00020805</span></span>
+<span><span class="co"># covariance of (mu, var) -- should be around 0</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.000151</span></span></code></pre></div>
+<p>These are not too bad.</p>
+<p>Let’s compute the bias and compare it to the previous results:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       mu      var </span></span>
+<span><span class="co">#&gt;  0.00104 -0.00556</span></span>
+<span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span> <span class="va">theta</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       mu      var </span></span>
+<span><span class="co">#&gt; -0.00109 -0.01245</span></span>
+<span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.hat</span>, <span class="va">theta</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      mu     var </span></span>
+<span><span class="co">#&gt;  0.0000 -0.0143</span></span></code></pre></div>
+<p>We see that the <code>bias</code> function for <code>mle_boot</code> is not too bad. Note that the <code>bias</code> is an expectation w.r.t. the sampling distribution of the MLE. In general, we can have a better estimator if we use <span class="math display">\[
+    \hat\theta^* = \hat\theta - \operatorname{Bias}(\hat\theta),
+\]</span> assuming the bias estimate is accurate. In this particular example that transformation makes it worse, which is fine, the bias of the transformed estimator would be less in theory. Howevever, in practice, we don’t trust the bias reported by the Bootstrap, except as evidence that our estimator is biased or not. The analytic bias, <code>bias.mle_normal</code>, is more accurate, and will generally produce estimators with less bias (although by the bias-variance trade-off, it may have more variance).</p>
+<p>Let’s compare the variance-covariance matrix of the Bootstrapped sampling distribution of the MLE to the “true” sampling distribution and the asymptotic sampling distribution:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.b</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       [,1] [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.005 0.00</span></span>
+<span><span class="co">#&gt; [2,] 0.000 0.01</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        mu   var</span></span>
+<span><span class="co">#&gt; mu  0.014 0.000</span></span>
+<span><span class="co">#&gt; var 0.000 0.029</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.019 0.000</span></span>
+<span><span class="co">#&gt; [2,] 0.000 0.052</span></span></code></pre></div>
+They are all pretty close. Let’s generate the coverage probability for the Bootstrapped CIs:
+<details><p><summary>Click to show/hide R code</summary></p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">140</span>, <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="va">coverage_prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">j</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">ns</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">count1</span> <span class="op">&lt;-</span> <span class="fl">0L</span></span>
+<span>    <span class="va">count2</span> <span class="op">&lt;-</span> <span class="fl">0L</span></span>
+<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">fit.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span></span>
+<span>            data <span class="op">=</span> <span class="va">d</span>,</span>
+<span>            statistic <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">ind</span><span class="op">)</span> <span class="op">{</span></span>
+<span>                <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>            <span class="op">}</span>,</span>
+<span>            R <span class="op">=</span> <span class="fl">250</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit.boot</span><span class="op">)</span></span>
+<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">ci</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;=</span> <span class="va">mu</span> <span class="op">&amp;&amp;</span> <span class="va">mu</span> <span class="op">&lt;=</span> <span class="va">ci</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
+<span>            <span class="va">count1</span> <span class="op">&lt;-</span> <span class="va">count1</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span>        <span class="op">}</span></span>
+<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">ci</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;=</span> <span class="va">var</span> <span class="op">&amp;&amp;</span> <span class="va">var</span> <span class="op">&lt;=</span> <span class="va">ci</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
+<span>            <span class="va">count2</span> <span class="op">&lt;-</span> <span class="va">count2</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span>        <span class="op">}</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="va">coverage_prob</span><span class="op">[</span><span class="va">j</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">count1</span> <span class="op">/</span> <span class="va">N</span></span>
+<span>    <span class="va">coverage_prob</span><span class="op">[</span><span class="va">j</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">count2</span> <span class="op">/</span> <span class="va">N</span></span>
+<span>    <span class="co">#cat("n = ", n, ", coverage = ", coverage_prob[j, ], "\n")</span></span>
+<span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</details><p><img src="reference/figures/README-cov-plot-boot-1.png" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="prediction-intervals">Prediction intervals<a class="anchor" aria-label="anchor" href="#prediction-intervals"></a>
+</h2>
+<p>Frequently, we are actually interested in predicting the outcome of the random variable (or vector) that we are estimating the parameters of.</p>
+<p>We observed a sample <span class="math inline">\(\mathcal{D} = \{X_i\}_{i=1}^n\)</span> where <span class="math inline">\(X_i \sim \operatorname{Normal}(\mu, \sigma)\)</span>, <span class="math inline">\(\theta = (\mu, \sigma)\)</span> not known. To estimate <span class="math inline">\(\theta\)</span>, we solved the MLE which, asymptotically, is normally distributed with a mean <span class="math inline">\(\theta\)</span> and a variance-covariance given by the inverse of the FIM (or, using the Bootstrap, by estimating the covariance of the sampling distribution of the Bootstrapped MLEs).</p>
+<p>We wish to model the uncertainty of a new observation, <span class="math inline">\(\hat{X}_{n+1}|\mathcal{D}\)</span>. We do so by considering both the uncertainty inherent to the Normal distribution and the uncertainty of our estimate <span class="math inline">\(\hat\theta\)</span>. In particular, we let <span class="math inline">\(\hat{X}_{n+1}|\hat\theta \sim \operatorname{Normal}(\hat\theta)\)</span> and <span class="math inline">\(\hat\theta \sim \operatorname{MVN}(\theta,I^{-1}(\theta)/n)\)</span>. Then, the joint distribution of <span class="math inline">\(\hat{X}_{n+1}\)</span> and <span class="math inline">\(\hat\theta\)</span> has the pdf given by <span class="math display">\[
+    f(t,\theta) = f_{\hat{X}|\hat\theta}(x|\theta) f_{\hat\theta}(\theta),
+\]</span> and thus to find <span class="math inline">\(f(t)\)</span>, we marginalize over <span class="math inline">\(\theta\)</span>, obtaining <span class="math display">\[
+    f(x) = \int_{R^2} f_{\hat{X}_{n+1},\hat\theta}(x,\theta) d\theta.
+\]</span></p>
+<p>Given the information in the sample, the uncertainty in the new observation is characterized by the distribution <span class="math display">\[
+    \hat{X}_{n+1} \sim f(x).
+\]</span></p>
+<p>It has greater variance than <span class="math inline">\(X_{n+1}|\hat\theta\)</span> because, as stated earlier, we do not know <span class="math inline">\(\theta\)</span>, we only have an uncertain estimate <span class="math inline">\(\hat\theta\)</span>.</p>
+<p>In <code>pred</code>, we compute the predictive interval (PI) of the distribution of <span class="math inline">\(\hat{X}_{n+1}\)</span> using Monte Carlo integration, i.e., sum over a large number of draws from the joint distribution of <span class="math inline">\(\hat{X}_{n+1}\)</span> and <span class="math inline">\(\hat\theta\)</span> and then compute the empirical quantiles.</p>
+<p>The function <code>pred</code> takes as arguments <code>x</code>, in this case an <code>mle</code> object, and a sampler for the distribution of the random variable of interest, in this case <code>rnorm</code> (the sampler for the normal distribution). The sampler must be compatible with the parameter value of <code>x</code> (i.e., <code>params(x)</code>). Here is how we compute the PI for <span class="math inline">\(\hat{X}_{n+1}\)</span>:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">samp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">par</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/pred.html">pred</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">theta.hat</span>, samp <span class="op">=</span> <span class="va">samp</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       mean lower upper</span></span>
+<span><span class="co">#&gt; [1,] 0.803 -1.47  3.09</span></span></code></pre></div>
+<p>How does this compare to <span class="math inline">\(X_{n+1}|\hat\theta\)</span>?</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">par</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
+<span><span class="va">mu.hat</span> <span class="op">&lt;-</span> <span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">var.hat</span> <span class="op">&lt;-</span> <span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu.hat</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.025</span>,<span class="fl">.975</span><span class="op">)</span>, mean <span class="op">=</span> <span class="va">mu.hat</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var.hat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     mu               </span></span>
+<span><span class="co">#&gt;  0.809 -1.464  3.083</span></span></code></pre></div>
+<p>We see that the 95% quantile interval for <span class="math inline">\(X_{n+1}|\hat\theta\)</span> is a bit smaller than <span class="math inline">\(\hat{X}_{n+1}\)</span>, which is what we expected. Of course, for sufficiently large sample sizes, they will converge to the same quantiles.</p>
+</div>
+<div class="section level2">
+<h2 id="weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators">Weighted MLE: a weighted sum of maximum likelihood estimators<a class="anchor" aria-label="anchor" href="#weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators"></a>
+</h2>
+<p>Since the variance-covariance of an MLE is inversely proportional to the FIM that the MLE is defined with respect to, we can combine multiple MLEs of <span class="math inline">\(\theta\)</span>, each of which may be defined with respect to a different kind of sample, to arrive at the MLE that incorporates the Fisher information in all of those samples.</p>
+<p>Consider <span class="math inline">\(k\)</span> mutually independent MLEs of parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span>, where <span class="math inline">\(\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))\)</span>. Then, the sampling MLE of <span class="math inline">\(\theta\)</span> that incorporates all of the data in <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span> is given by the inverse-variance weighted mean, <span class="math display">\[
+    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
+\]</span> which, asymptotically, has an expected value of <span class="math inline">\(\theta\)</span> and a variance-covariance of <span class="math inline">\(\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}\)</span>.</p>
+<p>To evaluate the performance of the weighted MLE, we generate a sample of <span class="math inline">\(N=1000\)</span> observations from <span class="math inline">\(\mathcal{N}(\theta)\)</span> and compute the MLE for the observed sample, denoted by <span class="math inline">\(\hat\theta\)</span>.</p>
+<p>We then divide the observed sample into <span class="math inline">\(r=5\)</span> sub-samples, each of size <span class="math inline">\(N/r=100\)</span>, and compute the MLE for each sub-sampled, denoted by <span class="math inline">\(\theta^{(1)},\ldots,\theta^{(r)}\)</span>.</p>
+<p>Finally, we do a weighted combination these MLEs to form the weighted MLE, denoted by <span class="math inline">\(\theta_w\)</span>:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
+<span><span class="va">samp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">N</span>, mean <span class="op">=</span> <span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">samp.sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="va">samp</span>, nrow <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span>
+<span><span class="va">mles.sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>length <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">r</span><span class="op">)</span></span>
+<span>    <span class="va">mles.sub</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp.sub</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_weighted.html">mle_weighted</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span></span>
+<span><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></span></code></pre></div>
+<p>We show the results in the following R code. First, we show the weighted MLE and its MSE:</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.892 0.624</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                    [,1]               [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.0071944135025693 0.0000000000000243</span></span>
+<span><span class="co">#&gt; [2,] 0.0000000000000243 0.0089815176185350</span></span></code></pre></div>
+<p>The MLE for the total sample and its MSE is:</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 0.956 0.860</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                    [,1]               [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.0085950404213935 0.0000000000000141</span></span>
+<span><span class="co">#&gt; [2,] 0.0000000000000141 0.0147749439691487</span></span></code></pre></div>
+<p>Unfortuantely, <span class="math inline">\(\hat\theta\)</span> is a much better estimator of <span class="math inline">\(\theta\)</span> than <span class="math inline">\(\hat\theta_w\)</span>. According to theory, they should be identical, but in practice, there may be issues like numerical instability that cause the weighted MLE to perform poorly.</p>
+<p>We are in fact using numerical differentiation to compute the FIM, which may be a source of error. We can try to improve the accuracy of the FIM by using a more accurate method of computing the FIM, such as an analytical solution or a more accurate numerical approximation.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
