@@ -7,7 +7,23 @@ estimate of the MLE, the gradient of `f` evaluated
 at its solution should be close to zero, assuming the MLE
 is interior to the domain of `f`. However, since this algorithm
 is not guided by gradient information, it is not sensitive to
-the gradient of `f` and instead only seeks to maximize `f`."><title>sim_anneal — sim_anneal • algebraic.mle</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="sim_anneal — sim_anneal"><meta property="og:description" content="This function implements the simulated annealing algorithm,
+the gradient of `f` and instead only seeks to maximize `f`."><title>This function implements the simulated annealing algorithm,
+which is a global optimization algorithm that is useful for
+finding a good starting point for a local optimization algorithm.
+We do not return this as an MLE object because, to be a good
+estimate of the MLE, the gradient of `f` evaluated
+at its solution should be close to zero, assuming the MLE
+is interior to the domain of `f`. However, since this algorithm
+is not guided by gradient information, it is not sensitive to
+the gradient of `f` and instead only seeks to maximize `f`. — sim_anneal • algebraic.mle</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="This function implements the simulated annealing algorithm,
+which is a global optimization algorithm that is useful for
+finding a good starting point for a local optimization algorithm.
+We do not return this as an MLE object because, to be a good
+estimate of the MLE, the gradient of `f` evaluated
+at its solution should be close to zero, assuming the MLE
+is interior to the domain of `f`. However, since this algorithm
+is not guided by gradient information, it is not sensitive to
+the gradient of `f` and instead only seeks to maximize `f`. — sim_anneal"><meta property="og:description" content="This function implements the simulated annealing algorithm,
 which is a global optimization algorithm that is useful for
 finding a good starting point for a local optimization algorithm.
 We do not return this as an MLE object because, to be a good
@@ -40,9 +56,8 @@ the gradient of `f` and instead only seeks to maximize `f`."><!-- mathjax --><sc
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/exponential-mle.html">Exponential distribution MLE</a>
-    <a class="dropdown-item" href="../articles/normal-mle.html">Normal distribution MLE</a>
-    <a class="dropdown-item" href="../articles/unknow_dgp.html">Fitting models to unknown DGPs</a>
+    <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
+    <a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -61,8 +76,16 @@ the gradient of `f` and instead only seeks to maximize `f`."><!-- mathjax --><sc
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>sim_anneal</h1>
-      <small class="dont-index">Source: <a href="https://github.com/queelius/algebraic.mle/blob/HEAD/R/numerical_mle.R" class="external-link"><code>R/numerical_mle.R</code></a></small>
+      <img src="" class="logo" alt=""><h1>This function implements the simulated annealing algorithm,
+which is a global optimization algorithm that is useful for
+finding a good starting point for a local optimization algorithm.
+We do not return this as an MLE object because, to be a good
+estimate of the MLE, the gradient of `f` evaluated
+at its solution should be close to zero, assuming the MLE
+is interior to the domain of `f`. However, since this algorithm
+is not guided by gradient information, it is not sensitive to
+the gradient of `f` and instead only seeks to maximize `f`.</h1>
+      <small class="dont-index">Source: <a href="https://github.com/queelius/algebraic.mle/blob/HEAD/R/sim_anneal.R" class="external-link"><code>R/sim_anneal.R</code></a></small>
       <div class="d-none name"><code>sim_anneal.Rd</code></div>
     </div>
 
@@ -80,78 +103,105 @@ the gradient of `f` and instead only seeks to maximize `f`.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_anneal</span><span class="op">(</span><span class="va">f</span>, <span class="va">x0</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_anneal</span><span class="op">(</span><span class="va">par</span>, <span class="va">fn</span>, control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>f</dt>
-<dd><p>Objective function to maximize</p></dd>
-
-
-<dt>x0</dt>
+    <dl><dt>par</dt>
 <dd><p>Initial guess</p></dd>
 
 
-<dt>options</dt>
+<dt>fn</dt>
+<dd><p>Objective function to maximize</p></dd>
+
+
+<dt>control</dt>
 <dd><p>List of optional arguments</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Additional arguments that may be passed to `neigh`</p></dd>
+<dd><p>Additional arguments that may be passed; loads into options,
+and is also passed into `neigh`</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>list with best solution (argmax) and its corresponding
-        objective function value (max), and optionally path</p>
+<p>list, members include:
+           `par`: best solution
+           `value`: function value `fn(par)`
+           `fn_count`: a count of `fn` invocations
+           `accepted`: a count of accepted moves
+           `trace_info`: a matrix of trace information (optional)</p>
     </div>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
     
-<ul><li><p><code>sim_anneal()</code>: options</p></li>
+<ul><li><p><code>sim_anneal()</code>: control</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="fields">Fields<a class="anchor" aria-label="anchor" href="#fields"></a></h2>
     
 
 <dl><dt><code>t_init</code></dt>
-<dd><p>Initial temperature</p></dd>
+<dd><p>Initial temperature, defaults to 100</p></dd>
 
 
 <dt><code>t_end</code></dt>
-<dd><p>Final temperature</p></dd>
+<dd><p>Final temperature, defaults to 0</p></dd>
 
 
 <dt><code>alpha</code></dt>
-<dd><p>Cooling factor</p></dd>
+<dd><p>Numberic, cooling factor, defaults to .95</p></dd>
 
 
-<dt><code>iter_per_temp</code></dt>
-<dd><p>Number of iterations per temperature</p></dd>
+<dt><code>REPORT</code></dt>
+<dd><p>The frequency of reports if control$debug &gt; 0.
+Defaults to every 100 iterations.</p></dd>
 
 
-<dt><code>max_iter</code></dt>
-<dd><p>Maximum number of iterations, used instead of t_end
-if not NULL, defaults to NULL</p></dd>
+<dt><code>it_per_temp</code></dt>
+<dd><p>Ineger, iterations per temperature, defaults to 100</p></dd>
 
 
-<dt><code>debug</code></dt>
-<dd><p>If TRUE, print debugging information to the console</p></dd>
+<dt><code>maxit</code></dt>
+<dd><p>Integer, maximum number of iterations, defaults to 100000</p></dd>
 
 
-<dt><code>trace</code></dt>
-<dd><p>If TRUE, track the history of positions and values</p></dd>
+<dt><code>accept_p</code></dt>
+<dd><p>Acceptance probability function, defaults to
+`runif(1) &lt; exp((val0 - val1) / temp)`, where `val0` is the
+function value at the current position and `val1` is the
+function value at the proposed position. We pass `temp`
+(temperature), `val1` (new value at candidate position `par1`),
+`val0` (old value at current position), `it` (iteration), and
+`...` as arguments to `accept_p`.</p></dd>
+
+
+<dt><code>fnscale</code></dt>
+<dd><p>Scaling factor for `fn`, defaults to 1. If negative,
+then turns the problem into a maximization problem.</p></dd>
 
 
 <dt><code>sup</code></dt>
-<dd><p>Support function, returns TRUE if x is in the domain of f</p></dd>
+<dd><p>Support function, returns TRUE if `par` is in the domain of `fn`</p></dd>
+
+
+<dt><code>proj</code></dt>
+<dd><p>Projection function, returns a vector in the domain of `fn`</p></dd>
 
 
 <dt><code>neigh</code></dt>
-<dd><p>Neighborhood function, returns a random neighbor of x</p></dd>
+<dd><p>Neighborhood function, returns a random neighbor of `par`,
+defaults to `par + rnorm(length(par))`. We pass `par`
+`temp`, `it`, `value`, and `...` as arguments to `neigh`.</p></dd>
+
+
+<dt><code>trace</code></dt>
+<dd><p>logical, whether to store current changes in position
+and associated other values in a `trace_info` matrix.</p></dd>
 
 
 </dl></div>
