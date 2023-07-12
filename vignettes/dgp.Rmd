@@ -7,20 +7,14 @@ vignette: >
   %\VignetteIndexEntry{Dynamic failure rate model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteDepends{ggplot2}
-  %\VignetteDepends{tibble}
 ---
 
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
+  comment = "#>")
 ```
-
 
 <!-- badges: start -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/queelius/algebraic.mle/blob/master/LICENSE)
@@ -38,7 +32,6 @@ in R:
 ``` r
 install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
-devtools::install_github("queelius/algebraic.dist")
 ```
 
 ## Purpose

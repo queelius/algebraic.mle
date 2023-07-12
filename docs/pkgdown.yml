@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   dgp: dgp.html
   statistics: statistics.html
-last_built: 2023-07-11T23:29Z
+last_built: 2023-07-12T00:09Z
 urls:
   reference: https://queelius.github.io/algebraic.mle/reference
   article: https://queelius.github.io/algebraic.mle/articles

@@ -7,33 +7,17 @@ vignette: >
   %\VignetteIndexEntry{Statistics and characteristics of the MLE}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteDepends{ggplot2}
-  %\VignetteDepends{tibble}
 ---
 
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
+  comment = "#>")
 options(digits = 3)
 options(scipen = 999)
+print_num <- function(x) print(sprintf("%.3f", x))
 ```
-
-
-
-<!-- 
-> If MLEs had different sampling distributions (e.g., depend on different kinds
-> of samples, like right-censored samples or different sized samples), we would
-> more optimally use a weighted average of the MLEs (see `mle_weighted`), but in this
-> case, the variance-covariance matrices are identical, so we can use the sample
-> of MLEs as an approximation of the sampling distribution of the MLEs and take
-> simple statistics of the sample of MLEs to get any desired estimate of the
-> population parameter vector $(\mu, \sigma^2)'$. -->
-
 
 
 <!-- badges: start -->

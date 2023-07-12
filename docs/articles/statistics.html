@@ -77,14 +77,6 @@
 
     
     
-<!-- 
-> If MLEs had different sampling distributions (e.g., depend on different kinds
-> of samples, like right-censored samples or different sized samples), we would
-> more optimally use a weighted average of the MLEs (see `mle_weighted`), but in this
-> case, the variance-covariance matrices are identical, so we can use the sample
-> of MLEs as an approximation of the sampling distribution of the MLEs and take
-> simple statistics of the sample of MLEs to get any desired estimate of the
-> population parameter vector $(\mu, \sigma^2)'$. -->
 <!-- badges: start -->
 <p><a href="https://github.com/queelius/algebraic.mle/blob/master/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a> <!-- badges: end --></p>
 <p><code>algebraic.mle</code> is an R package that provides an algebra over Maximum Likelihood Estimators (MLEs). These estimators possess many desirable, well-defined statistical properties which the package helps you manipulate and utilize.</p>
@@ -170,7 +162,7 @@
 </blockquote>
 <p>For a sufficiently large number of simulations <span class="math inline">\(B\)</span>, the empirical sampling distribution should be very close to the true sampling distribution. We can plot the empirical sampling distribution of the MLEs using the <code>plot</code> function on the <code>mles</code> matrix.</p>
 <div class="figure" style="text-align: center">
-<img src="reference/figures/README-unnamed-chunk-3-1.png" alt="Sampling distribution of the MLEs." width="100%"><p class="caption">
+<img src="statistics_files/figure-html/unnamed-chunk-3-1.png" alt="Sampling distribution of the MLEs." width="384"><p class="caption">
 Sampling distribution of the MLEs.
 </p>
 </div>
@@ -271,7 +263,7 @@ Sampling distribution of the MLEs.
 <span>    <span class="va">bias_var</span><span class="op">[</span><span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">vars</span><span class="op">)</span> <span class="op">-</span> <span class="va">var</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</details><p><img src="reference/figures/README-bias-plot-1.png" width="100%"><img src="reference/figures/README-bias-plot-2.png" width="100%"></p>
+</details><p><img src="statistics_files/figure-html/bias-plot-1.png" width="480"><img src="statistics_files/figure-html/bias-plot-2.png" width="480"></p>
 <div class="section level3">
 <h3 id="variance-covariance-matrix">Variance-covariance matrix<a class="anchor" aria-label="anchor" href="#variance-covariance-matrix"></a>
 </h3>
@@ -327,7 +319,7 @@ Sampling distribution of the MLEs.
 <span>    <span class="va">coverage_prob</span><span class="op">[</span><span class="va">j</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">count2</span> <span class="op">/</span> <span class="va">N</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</details><p><img src="reference/figures/README-cov-plot-1.png" width="100%"></p>
+</details><p><img src="statistics_files/figure-html/cov-plot-1.png" width="480"></p>
 <p>We see that the coverage probability is close to the nominal coverage probability, and converges to it as the sample size increases. This suggests that the confidence intervals are well-calibrated.</p>
 </div>
 </div>
@@ -402,7 +394,7 @@ Sampling distribution of the MLEs.
 <span>    <span class="va">mses.hat.hat</span><span class="op">[</span><span class="va">j</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="reference/figures/README-mse-plots-1.png" width="100%"><img src="reference/figures/README-mse-plots-2.png" width="100%"></p>
+<p><img src="statistics_files/figure-html/mse-plots-1.png" width="576"><img src="statistics_files/figure-html/mse-plots-2.png" width="576"></p>
 <p>These plots demonstrate that the asymptotic MSE is a good approximation to the “true” MSE, which is the MSE computed from the empirical sampling distribution of the MLE.</p>
 <p>It’s difficult to distinguish the estimated asymptotic MSE, where the true parameter <span class="math inline">\(\theta\)</span> is not known, from the asymptotic MSE, where the true parameter <span class="math inline">\(\theta\)</span> is known. This is because the bias is so small, and so the MSE is dominated by the variance.</p>
 </div>
@@ -514,7 +506,7 @@ They are all pretty close. Let’s generate the coverage probability for the Boo
 <span>    <span class="co">#cat("n = ", n, ", coverage = ", coverage_prob[j, ], "\n")</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</details><p><img src="reference/figures/README-cov-plot-boot-1.png" width="100%"></p>
+</details><p><img src="statistics_files/figure-html/cov-plot-boot-1.png" width="480"></p>
 </div>
 <div class="section level2">
 <h2 id="prediction-intervals">Prediction intervals<a class="anchor" aria-label="anchor" href="#prediction-intervals"></a>
