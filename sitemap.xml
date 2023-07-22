@@ -49,6 +49,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/confint_from_sigma.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/expectation.mle.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/index.html</loc>
   </url>
   <url>
@@ -62,6 +65,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/loglik_val.mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/marginal.mle.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle.html</loc>
