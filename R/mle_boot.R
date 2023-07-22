@@ -71,29 +71,21 @@ obs.mle_boot <- function(x) {
 #' @importFrom stats cov
 #' @export
 vcov.mle_boot <- function(x) {
-    cov(x$t) # (nobs(x) - 1) / nobs(x)
+    cov(x$t)
 }
 
 #' Computes the estimate of the MSE of a `boot` object.
 #'
 #' @param x the `boot` object to compute the MSE of.
-#' @param par if the true parameter value is known, you may provide it;
-#'            otherwise we use the MLE of `par`.
+#' @param par for the `mle_boot`, we ignore this parameter
 #' @param ... pass additional arguments (not used)
 #' @importFrom algebraic.dist params
 #' @export
 mse.mle_boot <- function(x, par = NULL, ...) {
-    if (is.null(par)) {
-        par <- params(x)
-    }
-    mean(rowSums(t(t(x$t) - as.vector(par))^2))
+    vcov(x) + bias(x) %*% t(bias(x))
 }
 
 #' Computes the estimate of the bias of a `mle_boot` object.
-#'
-#' Generally, we do not trust this to be a good estimate of the bias
-#' of the MLE estimator, but it is still useful for comparing different
-#' estimators.
 #'
 #' @param x the `mle_boot` object to compute the bias of.
 #' @param par for the `mle_boot`, we ignore this parameter.
@@ -101,6 +93,9 @@ mse.mle_boot <- function(x, par = NULL, ...) {
 #' @importFrom algebraic.dist params nparams
 #' @export
 bias.mle_boot <- function(x, par = NULL, ...) {
+    if (!is.null(par)) {
+        warning("We ignore the `par` argument for `mle_boot` objects.")
+    }
     if (length(params(x)) == 1) {
         return(mean(x$t) - params(x))
     } else {

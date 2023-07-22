@@ -9,8 +9,7 @@
 \arguments{
 \item{x}{the `boot` object to compute the MSE of.}
 
-\item{par}{if the true parameter value is known, you may provide it;
-otherwise we use the MLE of `par`.}
+\item{par}{for the `mle_boot`, we ignore this parameter}
 
 \item{...}{pass additional arguments (not used)}
 }

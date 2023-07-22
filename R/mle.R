@@ -1,5 +1,8 @@
 #' Constructor for making `mle` objects, which provides a common interface
 #' for maximum likelihood estimators.
+#' 
+#' This MLE makes the asymptotic assumption by default. Other MLEs,
+#' like `mle_boot`, may not make this assumption.
 #'
 #' @param theta.hat the MLE
 #' @param loglike the log-likelihood of `theta.hat` given the data
@@ -418,4 +421,80 @@ pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
     }
     colnames(PI) <- c("mean", "lower", "upper")
     PI
+}
+
+#' Expectation operator applied to `x` of type `mle`
+#' with respect to a function `g`. That is, `E(g(x))`.
+#' 
+#' Optionally, we use the CLT to construct a CI(`alpha`) for the
+#' estimate of the expectation. That is, we estimate `E(g(x))` with
+#' the sample mean and Var(g(x)) with the sigma^2/n, where sigma^2
+#' is the sample variance of g(x) and n is the number of samples.
+#' From these, we construct the CI.
+#'
+#' @param x `mle` object
+#' @param g characteristic function of interest, defaults to identity
+#' @param ... additional arguments to pass to `g`
+#' @param control a list of control parameters:
+#'  compute_stats - Whether to compute CIs for the expectations, defaults
+#'                  to FALSE
+#'  n             - The number of samples to use for the MC estimate,
+#'                  defaults to 10000
+#'  alpha         - The significance level for the confidence interval,
+#'                  defaults to 0.05
+#' @return If `compute_stats` is FALSE, then the estimate of the expectation,
+#'        otherwise a list with the following components:
+#'   value - The estimate of the expectation
+#'   ci    - The confidence intervals for each component of the expectation
+#'   n     - The number of samples
+#' @export
+expectation.mle <- function(
+    x,
+    g = function(t) t,
+    ...,
+    control = list()) {
+
+    defaults <- list(
+      compute_stats = FALSE,
+      n = 10000L,
+      alpha = 0.05)
+    control <- modifyList(defaults, control)
+
+    stopifnot(is.numeric(control$n), control$n > 0,
+      is.numeric(control$alpha), control$alpha > 0, control$alpha < 1)
+  
+    expectation_data(
+      data = sampler(x)(control$n),
+      g = g,
+      ...,
+      compute_stats = control$compute_stats,
+      alpha = control$alpha)
+  }
+
+#' Method for obtaining the marginal distribution of an MLE
+#' that is based on asymptotic assumptions:
+#' 
+#'  `x ~ MVN(params(x), inv(H)(x))`
+#' 
+#' where H is the (observed or expecation) Fisher information
+#' matrix.
+#' 
+#' @param x The distribution object.
+#' @param indices The indices of the marginal distribution to obtain.
+#' @export
+marginal.mle <- function(x, indices) {
+    if (length(indices) == 0) {
+        stop("indices must be non-empty")
+    }
+    else if (any(indices < 0) || any(indices > nparams(x))) {
+        stop("indices must be in [1, dim(x)]")
+    }
+    
+    mle(theta.hat = params(x)[indices],
+        sigma = vcov(x)[indices, indices],
+        loglike = NULL,
+        score = NULL,
+        info = NULL,
+        obs = obs(x),
+        nobs = nobs(x))
 }

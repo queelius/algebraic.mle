@@ -34,6 +34,6 @@ mle(
 \item{superclasses}{class (or classes) with `mle` as base}
 }
 \description{
-Constructor for making `mle` objects, which provides a common interface
-for maximum likelihood estimators.
+This MLE makes the asymptotic assumption by default. Other MLEs,
+like `mle_boot`, may not make this assumption.
 }

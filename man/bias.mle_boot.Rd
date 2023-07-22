@@ -14,7 +14,5 @@
 \item{...}{pass additional arguments (not used)}
 }
 \description{
-Generally, we do not trust this to be a good estimate of the bias
-of the MLE estimator, but it is still useful for comparing different
-estimators.
+Computes the estimate of the bias of a `mle_boot` object.
 }
