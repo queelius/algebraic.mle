@@ -78,7 +78,7 @@ maximum likelihood estimators from existing maximum likelihood estimators.</dd>
           
           <code><a href="bias.html">bias()</a></code> 
         </dt>
-        <dd>Computes the bias of an estimator object.</dd>
+        <dd>Generic method for computing the bias of an estimator object.</dd>
       </dl><dl><dt>
           
           <code><a href="bias.mle.html">bias(<i>&lt;mle&gt;</i>)</a></code> 
@@ -166,7 +166,7 @@ and combines them into a single estimator `mle_weighted`.</dd>
           
           <code><a href="mse.html">mse()</a></code> 
         </dt>
-        <dd>Generic function for obtaining the mean squared error (MSE) of an estimator,
+        <dd>Generic method for computing the mean squared error (MSE) of an estimator,
 `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.</dd>
       </dl><dl><dt>
           
@@ -214,8 +214,8 @@ an `mle`.</dd>
           
           <code><a href="observed_fim.html">observed_fim()</a></code> 
         </dt>
-        <dd>Generic method for obtaining the observed FIM
-matrix of an `mle` object.</dd>
+        <dd>Generic method for computing the observed FIM
+of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="observed_fim.mle.html">observed_fim(<i>&lt;mle&gt;</i>)</a></code> 
@@ -225,18 +225,13 @@ matrix of an `mle` object.</dd>
           
           <code><a href="orthogonal.html">orthogonal()</a></code> 
         </dt>
-        <dd>Method for determining the orthogonal parameters of an estimator.</dd>
+        <dd>Generic method for determining the orthogonal parameters of an estimator.</dd>
       </dl><dl><dt>
           
           <code><a href="orthogonal.mle.html">orthogonal(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for determining the orthogonal components of an `mle` object
 `x`.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="params.html">params()</a></code> 
-        </dt>
-        <dd>Generic method for obtaining the parameters of a fitted MLE object.</dd>
       </dl><dl><dt>
           
           <code><a href="params.mle.html">params(<i>&lt;mle&gt;</i>)</a></code> 
@@ -251,7 +246,7 @@ matrix of an `mle` object.</dd>
           
           <code><a href="pred.html">pred()</a></code> 
         </dt>
-        <dd>Compute the predictive confidence interval given an estimator object `x`.</dd>
+        <dd>Generic method for computing the predictive confidence interval given an estimator object `x`.</dd>
       </dl><dl><dt>
           
           <code><a href="pred.mle.html">pred(<i>&lt;mle&gt;</i>)</a></code> 
@@ -287,7 +282,9 @@ an `mle` object `x`.</dd>
           
           <code><a href="score_val.html">score_val()</a></code> 
         </dt>
-        <dd>score</dd>
+        <dd>Generic method for computing the score of an estimator
+object (gradient of its log-likelihood function evaluated
+at the MLE).</dd>
       </dl><dl><dt>
           
           <code><a href="score_val.mle.html">score_val(<i>&lt;mle&gt;</i>)</a></code> 
@@ -297,7 +294,7 @@ an `mle` object `x`.</dd>
           
           <code><a href="se.html">se()</a></code> 
         </dt>
-        <dd>Method for obtaining the standard error of an estimator.</dd>
+        <dd>Generic method for obtaining the standard errors of an estimator.</dd>
       </dl><dl><dt>
           
           <code><a href="se.mle.html">se(<i>&lt;mle&gt;</i>)</a></code> 
