@@ -120,7 +120,7 @@ loglik_val.mle <- function(x, ...) {
 #' @importFrom algebraic.dist params
 #' @export
 confint.mle <- function(object, parm = NULL, level = .95,
-    use_t_dist = TRUE, ...) {
+    use_t_dist = FALSE, ...) {
     stopifnot(is.numeric(level), level >= 0, level <= 1)
     V <- vcov(object)
     if (is.null(V)) stop("No variance-covariance matrix available.")

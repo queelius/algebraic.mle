@@ -7,16 +7,12 @@
           - [Hypothesis test and model
             selection](#hypothesis-test-and-model-selection)
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # R package: `algebraic.mle`
 
 <!-- badges: start -->
 
-[![License:
-MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/queelius/algebraic.mle/blob/master/LICENSE)
+[![GPL-3
+License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
 `algebraic.mle` is an R package that provides an algebra over Maximum
@@ -116,12 +112,15 @@ the model and then wrap it into an `mle` object using `mle_numerical`.
 
 ``` r
 library(algebraic.mle)
+#> Registered S3 method overwritten by 'algebraic.dist':
+#>   method     from 
+#>   print.dist stats
 
 # initial guess for the parameters
 par0 <- c(0, 0)
 names(par0) <- c("b0", "b1")
 
-sol <- mle_numerical(optim(par = par0,
+sol <- algebraic.mle::mle_numerical(optim(par = par0,
     fn = loglik(df, resp, rate),
     control = list(fnscale = -1),
     hessian = TRUE))
@@ -133,9 +132,11 @@ summary(sol)
 #> The standard error is  0.1167634 0.02145606 .
 #> The asymptotic 95% confidence interval of the parameters are given by:
 #>          2.5%       97.5%
-#> b0 -0.4174213 -0.03330395
-#> b1  0.4207972  0.49138139
-#> The MSE of the estimator is  0.01409405 .
+#> b0 -0.4542147 0.003489406
+#> b1  0.4140362 0.498142415
+#> The MSE of the individual componetns in a multivariate estimator is:
+#> [1] 0.0136336902 0.0004603623
+#> The MSE of the estimator is  0.01363369 0.0003746527 0.0003746527 0.0004603623 .
 #> The log-likelihood is  -119.6977 .
 #> The AIC is  243.3954 .
 ```
@@ -148,15 +149,15 @@ plot(df$x,df$y)
 
 # now overlay a plot of the conditional mean
 x <- seq(-10, 10, .1)
-b0.hat <- params(sol)[1]
-b1.hat <- params(sol)[2]
+b0.hat <- algebraic.mle::params(sol)[1]
+b1.hat <- algebraic.mle::params(sol)[2]
 y.hat <- 1/exp(b0.hat + b1.hat*x)
 y <- 1/exp(b0 + b1*x)
 lines(x, y, col = "green", lwd = 10)
 lines(x, y.hat, col = "blue", lwd = 10)
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 ### Hypothesis test and model selection
 
@@ -172,7 +173,7 @@ rate_b0_zero <- function(df, b1) exp(b1 * df$x)
 
 # initial guess for the parameters
 # fit the model under the null hypothesis
-sol2 <- mle_numerical(optim(par = 0,
+sol2 <- algebraic.mle::mle_numerical(optim(par = 0,
     fn = loglik(df, resp, rate_b0_zero),
     control = list(fnscale = -1),
     hessian = TRUE,
@@ -184,7 +185,8 @@ summary(sol2)
 #> The standard error is  0.01899941 .
 #> The asymptotic 95% confidence interval of the parameters are given by:
 #>             2.5%     97.5%
-#> param1 0.4304581 0.4929605
+#> param1 0.4244712 0.4989475
+#> The MSE of the estimator is  0.0003609774 .
 #> The MSE of the estimator is  0.0003609774 .
 #> The log-likelihood is  -121.7164 .
 #> The AIC is  245.4328 .
@@ -205,9 +207,9 @@ compatible with the null hypothesis `b0 = 0`.
 If we wanted to do model selection, we could use the AIC:
 
 ``` r
-aic(sol)
+algebraic.mle::aic(sol)
 #> [1] 243.3954
-aic(sol2)
+algebraic.mle::aic(sol2)
 #> [1] 245.4328
 ```
 
@@ -229,7 +231,7 @@ model, or just a standard exponential distribution.
 ``` r
 rate_b1_zero <- function(df, b0) exp(b0)
 # fit the model under the null hypothesis
-sol3 <- mle_numerical(optim(par = 0,
+sol3 <- algebraic.mle::mle_numerical(optim(par = 0,
     fn = loglik(df, resp, rate_b1_zero),
     control = list(fnscale = -1),
     hessian = TRUE,
@@ -250,8 +252,8 @@ CI <- confint(sol)
 # print the confidence interval
 print(CI)
 #>          2.5%       97.5%
-#> b0 -0.4174213 -0.03330395
-#> b1  0.4207972  0.49138139
+#> b0 -0.4542147 0.003489406
+#> b1  0.4140362 0.498142415
 ```
 
 We see that the 95% confidence interval for `b0` does not include zero,

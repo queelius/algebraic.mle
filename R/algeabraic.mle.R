@@ -117,3 +117,13 @@ orthogonal <- function(x, tol, ...) {
 pred <- function(x, samp = NULL, alpha = .05, ...) {
     UseMethod("pred", x)
 }
+
+
+#' Generic method for obtaining the parameters of a fitted MLE object.
+#' 
+#' @param x the object to obtain the parameters of
+#' @param ... additional arguments to pass
+#' @export
+params <- function(x, ...) {
+    UseMethod("params", x)
+}

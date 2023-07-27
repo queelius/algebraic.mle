@@ -133,7 +133,7 @@
 <span>    <span class="va">mles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">B</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="va">mles</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">mles</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mles</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"var"</span><span class="op">)</span></span>
 <span>    <span class="va">mles</span></span>
@@ -226,7 +226,7 @@ Sampling distribution of the MLEs.
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bias.mle_normal</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">par</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">par</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">par</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span>        <span class="va">par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fl">0</span>, var <span class="op">=</span> <span class="op">-</span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/nobs.html" class="external-link">nobs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -258,7 +258,7 @@ Sampling distribution of the MLEs.
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
-<span>        <span class="va">vars</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span>        <span class="va">vars</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span>    <span class="op">}</span></span>
 <span>    <span class="va">bias_var</span><span class="op">[</span><span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">vars</span><span class="op">)</span> <span class="op">-</span> <span class="va">var</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
@@ -291,8 +291,8 @@ Sampling distribution of the MLEs.
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      2.5% 97.5%</span></span>
-<span><span class="co">#&gt; mu  0.533  1.09</span></span>
-<span><span class="co">#&gt; var 0.892  1.80</span></span></code></pre></div>
+<span><span class="co">#&gt; mu  0.538  1.08</span></span>
+<span><span class="co">#&gt; var 0.900  1.79</span></span></code></pre></div>
 <p>A very important measure of the accuracy of an estimator is its coverage probability, which is the probability that the confidence interval for the parameter estimate contains the true value of the parameter. If the coverage probability for an <span class="math inline">\((1-\alpha) \%\)</span>-confidence interval is <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>well-calibrated</em>. If the coverage probability is less than <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>conservative</em>; if the coverage probability is greater than <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is said to be <em>anti-conservative</em>.</p>
 <p>We can estimate it by simulating a large number of samples from the population distribution and computing the proportion of times the confidence interval contains the true value of the parameter. We can do this for both the mean and variance of the normal distribution.</p>
 <details><p><summary>Click to show/hide R code</summary></p>
@@ -410,12 +410,12 @@ Sampling distribution of the MLEs.
 <span><span class="va">theta.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">data</span>,</span>
 <span>    statistic <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">ind</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">}</span>,</span>
 <span>    R <span class="op">=</span> <span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Let’s compute some statistics:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    mu   var </span></span>
 <span><span class="co">#&gt; 0.936 0.984</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
@@ -490,7 +490,7 @@ They are all pretty close. Let’s generate the coverage probability for the Boo
 <span>        <span class="va">fit.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span></span>
 <span>            data <span class="op">=</span> <span class="va">d</span>,</span>
 <span>            statistic <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">ind</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>                <span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="fu">fit_normal</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span>            <span class="op">}</span>,</span>
 <span>            R <span class="op">=</span> <span class="fl">250</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="va">ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit.boot</span><span class="op">)</span></span>
@@ -531,7 +531,7 @@ They are all pretty close. Let’s generate the coverage probability for the Boo
 <span><span class="co">#&gt; [1,] 0.803 -1.47  3.09</span></span></code></pre></div>
 <p>How does this compare to <span class="math inline">\(X_{n+1}|\hat\theta\)</span>?</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">par</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
 <span><span class="va">mu.hat</span> <span class="op">&lt;-</span> <span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">var.hat</span> <span class="op">&lt;-</span> <span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu.hat</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.025</span>,<span class="fl">.975</span><span class="op">)</span>, mean <span class="op">=</span> <span class="va">mu.hat</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var.hat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -562,7 +562,7 @@ They are all pretty close. Let’s generate the coverage probability for the Boo
 <span><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></span></code></pre></div>
 <p>We show the results in the following R code. First, we show the weighted MLE and its MSE:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.892 0.624</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                    [,1]               [,2]</span></span>
@@ -570,7 +570,7 @@ They are all pretty close. Let’s generate the coverage probability for the Boo
 <span><span class="co">#&gt; [2,] 0.0000000000000243 0.0089815176185350</span></span></code></pre></div>
 <p>The MLE for the total sample and its MSE is:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/params.html">params</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    mu   var </span></span>
 <span><span class="co">#&gt; 0.956 0.860</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>

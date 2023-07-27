@@ -143,6 +143,7 @@ confint.mle_boot <- function(object, parm = NULL, level = 0.95,
     type_long <- switch(type,
         norm = "normal",
         basic = "basic",
+        stud = "student",
         perc = "percent",
         bca = "bca")
 
@@ -151,6 +152,7 @@ confint.mle_boot <- function(object, parm = NULL, level = 0.95,
     CI <- matrix(NA, nrow = p, ncol = 2)
     colnames(CI) <- c(paste0(alpha / 2 * 100, "%"),
                       paste0((1 - alpha / 2) * 100, "%"))
+
     for (j in 1:p) {
         ci <- boot.ci(object, conf = level, type = type, index = j, ...)
         CI[j, ] <- tail(ci[[type_long]][1,], 2)

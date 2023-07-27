@@ -130,6 +130,9 @@
     <loc>https://queelius.github.io/algebraic.mle/reference/exp_score.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/expectation.mle.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/fim.html</loc>
   </url>
   <url>
@@ -173,6 +176,9 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/make_mle.html</loc>
+  </url>
+  <url>
+    <loc>https://queelius.github.io/algebraic.mle/reference/marginal.mle.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/mle.html</loc>

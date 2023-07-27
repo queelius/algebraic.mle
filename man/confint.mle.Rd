@@ -4,7 +4,7 @@
 \alias{confint.mle}
 \title{Function to compute the confidence intervals of `mle` objects.}
 \usage{
-\method{confint}{mle}(object, parm = NULL, level = 0.95, use_t_dist = TRUE, ...)
+\method{confint}{mle}(object, parm = NULL, level = 0.95, use_t_dist = FALSE, ...)
 }
 \arguments{
 \item{object}{the `mle` object to compute the confidence intervals for}

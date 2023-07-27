@@ -117,7 +117,7 @@ library(algebraic.mle)
 par0 <- c(0, 0)
 names(par0) <- c("b0", "b1")
 
-sol <- mle_numerical(optim(par = par0,
+sol <- algebraic.mle::mle_numerical(optim(par = par0,
     fn = loglik(df, resp, rate),
     control = list(fnscale = -1),
     hessian = TRUE))
@@ -131,8 +131,8 @@ plot(df$x,df$y)
 
 # now overlay a plot of the conditional mean
 x <- seq(-10, 10, .1)
-b0.hat <- point(sol)[1]
-b1.hat <- point(sol)[2]
+b0.hat <- algebraic.mle::params(sol)[1]
+b1.hat <- algebraic.mle::params(sol)[2]
 y.hat <- 1/exp(b0.hat + b1.hat*x)
 y <- 1/exp(b0 + b1*x)
 lines(x, y, col = "green", lwd = 10)
@@ -154,7 +154,7 @@ rate_b0_zero <- function(df, b1) exp(b1 * df$x)
 
 # initial guess for the parameters
 # fit the model under the null hypothesis
-sol2 <- mle_numerical(optim(par = 0,
+sol2 <- algebraic.mle::mle_numerical(optim(par = 0,
     fn = loglik(df, resp, rate_b0_zero),
     control = list(fnscale = -1),
     hessian = TRUE,
@@ -164,7 +164,7 @@ summary(sol2)
 
 Let's compute the likelihood ratio test statistic and p-value:
 ```{r}
-(lrt.sol2 <- -2 * (loglike(sol2) - loglike(sol)))
+(lrt.sol2 <- -2 * (loglik_val(sol2) - loglik_val(sol)))
 pchisq(lrt.sol2, df = 1, lower.tail = FALSE) # compute the p-value
 ```
 
@@ -173,8 +173,8 @@ compatible with the null hypothesis `b0 = 0`.
 
 If we wanted to do model selection, we could use the AIC:
 ```{r}
-aic(sol)
-aic(sol2)
+algebraic.mle::aic(sol)
+algebraic.mle::aic(sol2)
 ```
 
 By the AIC measure, since the full model has an AIC less than the null model,
@@ -192,12 +192,12 @@ or just a standard exponential distribution.
 ```{r nullb1, warning = FALSE, message = FALSE}
 rate_b1_zero <- function(df, b0) exp(b0)
 # fit the model under the null hypothesis
-sol3 <- mle_numerical(optim(par = 0,
+sol3 <- algebraic.mle::mle_numerical(optim(par = 0,
     fn = loglik(df, resp, rate_b1_zero),
     control = list(fnscale = -1),
     hessian = TRUE,
     method = "BFGS"))
-(lrt.sol3 <- -2 * (loglike(sol3) - loglike(sol)))
+(lrt.sol3 <- -2 * (loglik_val(sol3) - loglik_val(sol)))
 pchisq(lrt.sol3, df = 1, lower.tail = FALSE) # compute the p-value
 ```
 
