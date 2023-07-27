@@ -2,7 +2,7 @@
 % Please edit documentation in R/algeabraic.mle.R
 \name{bias}
 \alias{bias}
-\title{Computes the bias of an estimator object.}
+\title{Generic method for computing the bias of an estimator object.}
 \usage{
 bias(x, theta, ...)
 }
@@ -19,5 +19,5 @@ The bias of the estimator. The return type depends on the specific
         method.
 }
 \description{
-Computes the bias of an estimator object.
+Generic method for computing the bias of an estimator object.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/algeabraic.mle.R
 \name{pred}
 \alias{pred}
-\title{Compute the predictive confidence interval given an estimator object `x`.}
+\title{Generic method for computing the predictive confidence interval given an estimator object `x`.}
 \usage{
 pred(x, samp = NULL, alpha = 0.05, ...)
 }
@@ -16,5 +16,5 @@ pred(x, samp = NULL, alpha = 0.05, ...)
 \item{...}{additional arguments to pass}
 }
 \description{
-Compute the predictive confidence interval given an estimator object `x`.
+Generic method for computing the predictive confidence interval given an estimator object `x`.
 }

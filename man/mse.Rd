@@ -2,7 +2,7 @@
 % Please edit documentation in R/algeabraic.mle.R
 \name{mse}
 \alias{mse}
-\title{Generic function for obtaining the mean squared error (MSE) of an estimator,
+\title{Generic method for computing the mean squared error (MSE) of an estimator,
 `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.}
 \usage{
 mse(x, theta)
@@ -13,6 +13,6 @@ mse(x, theta)
 \item{theta}{the true parameter value}
 }
 \description{
-Generic function for obtaining the mean squared error (MSE) of an estimator,
+Generic method for computing the mean squared error (MSE) of an estimator,
 `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.
 }

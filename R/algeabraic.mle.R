@@ -33,8 +33,8 @@ aic <- function(x) {
     UseMethod("aic", x)
 }
 
-#' Generic method for obtaining the observed FIM
-#' matrix of an `mle` object.
+#' Generic method for computing the observed FIM
+#' of an `mle` object.
 #'
 #' Fisher information is a way of measuring the amount of
 #' information that an observable random variable `X`
@@ -44,6 +44,10 @@ aic <- function(x) {
 #' The inverse of the Fisher information matrix
 #' is the variance-covariance of the MLE for
 #' `theta`.
+#' 
+#' Some MLE objects do not have an observed FIM,
+#' e.g., if the MLE's sampling distribution was
+#' bootstrapped.
 #'
 #' @param x the object to obtain the fisher information of
 #' @param ... additional arguments to pass
@@ -52,7 +56,7 @@ observed_fim <- function(x, ...) {
     UseMethod("observed_fim", x)
 }
 
-#' Generic function for obtaining the mean squared error (MSE) of an estimator,
+#' Generic method for computing the mean squared error (MSE) of an estimator,
 #' `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.
 #'
 #' @param x the object to compute the MSE of
@@ -62,7 +66,7 @@ mse <- function(x, theta) {
     UseMethod("mse", x)
 }
 
-#' Computes the bias of an estimator object.
+#' Generic method for computing the bias of an estimator object.
 #'
 #' @param x the object to compute the bias of.
 #' @param theta true parameter value. usually, this is unknown (NULL), in which
@@ -75,10 +79,9 @@ bias <- function(x, theta, ...) {
     UseMethod("bias", x)
 }
 
-#' score
-#' 
-#' Generic function for computing the score of an estimator
-#' object with respect to its log-likelihood.
+#' Generic method for computing the score of an estimator
+#' object (gradient of its log-likelihood function evaluated
+#' at the MLE).
 #'
 #' @param x the object to compute the score of.
 #' @param ... pass additional arguments
@@ -88,7 +91,7 @@ score_val <- function(x, ...) {
     UseMethod("score_val", x)
 }
 
-#' Method for obtaining the standard error of an estimator.
+#' Generic method for obtaining the standard errors of an estimator.
 #'
 #' @param x the estimator
 #' @param ... additional arguments to pass
@@ -97,7 +100,7 @@ se <- function(x, ...) {
     UseMethod("se", x)
 }
 
-#' Method for determining the orthogonal parameters of an estimator.
+#' Generic method for determining the orthogonal parameters of an estimator.
 #'
 #' @param x the estimator
 #' @param tol the tolerance for determining if a number is close enough to zero
@@ -107,7 +110,7 @@ orthogonal <- function(x, tol, ...) {
     UseMethod("orthogonal", x)
 }
 
-#' Compute the predictive confidence interval given an estimator object `x`.
+#' Generic method for computing the predictive confidence interval given an estimator object `x`.
 #'
 #' @param x the estimator object
 #' @param alpha (1-alpha)/2 confidence interval
@@ -118,12 +121,3 @@ pred <- function(x, samp = NULL, alpha = .05, ...) {
     UseMethod("pred", x)
 }
 
-
-#' Generic method for obtaining the parameters of a fitted MLE object.
-#' 
-#' @param x the object to obtain the parameters of
-#' @param ... additional arguments to pass
-#' @export
-params <- function(x, ...) {
-    UseMethod("params", x)
-}

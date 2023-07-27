@@ -2,8 +2,8 @@
 % Please edit documentation in R/algeabraic.mle.R
 \name{observed_fim}
 \alias{observed_fim}
-\title{Generic method for obtaining the observed FIM
-matrix of an `mle` object.}
+\title{Generic method for computing the observed FIM
+of an `mle` object.}
 \usage{
 observed_fim(x, ...)
 }
@@ -22,4 +22,8 @@ upon which the probability of `X` depends.
 The inverse of the Fisher information matrix
 is the variance-covariance of the MLE for
 `theta`.
+
+Some MLE objects do not have an observed FIM,
+e.g., if the MLE's sampling distribution was
+bootstrapped.
 }

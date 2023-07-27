@@ -2,7 +2,7 @@
 % Please edit documentation in R/algeabraic.mle.R
 \name{se}
 \alias{se}
-\title{Method for obtaining the standard error of an estimator.}
+\title{Generic method for obtaining the standard errors of an estimator.}
 \usage{
 se(x, ...)
 }
@@ -12,5 +12,5 @@ se(x, ...)
 \item{...}{additional arguments to pass}
 }
 \description{
-Method for obtaining the standard error of an estimator.
+Generic method for obtaining the standard errors of an estimator.
 }

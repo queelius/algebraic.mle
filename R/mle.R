@@ -338,7 +338,8 @@ orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
 #' If reguarlity conditions are satisfied, it should be zero (or approximately,
 #' if rounding errors occur).
 #'
-#' @inheritParams score_val
+#' @param x the `mle` object to compute the score of.
+#' @param ... additional arguments to pass (not used)
 #' @export
 score_val.mle <- function(x, ...) {
     x$score

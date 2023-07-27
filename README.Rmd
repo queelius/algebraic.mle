@@ -28,9 +28,10 @@ helps you manipulate and utilize.
 
 `algebraic.mle` can be installed from GitHub by using the devtools package
 in R:
-``` r
+```{r}
 install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
+library(algebraic.mle)
 ```
 
 ## Purpose
@@ -111,8 +112,6 @@ Let's fit the model. We'll use the `optim` function in `stats` to fit the model
 and then wrap it into an `mle` object using `mle_numerical`.
 
 ```{r}
-library(algebraic.mle)
-
 # initial guess for the parameters
 par0 <- c(0, 0)
 names(par0) <- c("b0", "b1")
@@ -131,8 +130,8 @@ plot(df$x,df$y)
 
 # now overlay a plot of the conditional mean
 x <- seq(-10, 10, .1)
-b0.hat <- algebraic.mle::params(sol)[1]
-b1.hat <- algebraic.mle::params(sol)[2]
+b0.hat <- params(sol)[1]
+b1.hat <- params(sol)[2]
 y.hat <- 1/exp(b0.hat + b1.hat*x)
 y <- 1/exp(b0 + b1*x)
 lines(x, y, col = "green", lwd = 10)
@@ -154,7 +153,7 @@ rate_b0_zero <- function(df, b1) exp(b1 * df$x)
 
 # initial guess for the parameters
 # fit the model under the null hypothesis
-sol2 <- algebraic.mle::mle_numerical(optim(par = 0,
+sol2 <- mle_numerical(optim(par = 0,
     fn = loglik(df, resp, rate_b0_zero),
     control = list(fnscale = -1),
     hessian = TRUE,
@@ -173,8 +172,8 @@ compatible with the null hypothesis `b0 = 0`.
 
 If we wanted to do model selection, we could use the AIC:
 ```{r}
-algebraic.mle::aic(sol)
-algebraic.mle::aic(sol2)
+aic(sol)
+aic(sol2)
 ```
 
 By the AIC measure, since the full model has an AIC less than the null model,
@@ -207,9 +206,9 @@ that `b1 = 0`.
 Let's compare the confidence intervals for each of these models.
 
 ```{r}
-CI <- confint(sol)
-# print the confidence interval
-print(CI)
+print(confint(sol))
+print(confint(sol2))
+print(confint(sol3))
 ```
 
 We see that the 95% confidence interval for `b0` does not include zero, so we

@@ -2,7 +2,7 @@
 % Please edit documentation in R/algeabraic.mle.R
 \name{orthogonal}
 \alias{orthogonal}
-\title{Method for determining the orthogonal parameters of an estimator.}
+\title{Generic method for determining the orthogonal parameters of an estimator.}
 \usage{
 orthogonal(x, tol, ...)
 }
@@ -14,5 +14,5 @@ orthogonal(x, tol, ...)
 \item{...}{additional arguments to pass}
 }
 \description{
-Method for determining the orthogonal parameters of an estimator.
+Generic method for determining the orthogonal parameters of an estimator.
 }

@@ -7,9 +7,9 @@
 \method{score_val}{mle}(x, ...)
 }
 \arguments{
-\item{x}{the object to compute the score of.}
+\item{x}{the `mle` object to compute the score of.}
 
-\item{...}{pass additional arguments}
+\item{...}{additional arguments to pass (not used)}
 }
 \description{
 If reguarlity conditions are satisfied, it should be zero (or approximately,

@@ -2,7 +2,9 @@
 % Please edit documentation in R/algeabraic.mle.R
 \name{score_val}
 \alias{score_val}
-\title{score}
+\title{Generic method for computing the score of an estimator
+object (gradient of its log-likelihood function evaluated
+at the MLE).}
 \usage{
 score_val(x, ...)
 }
@@ -12,6 +14,7 @@ score_val(x, ...)
 \item{...}{pass additional arguments}
 }
 \description{
-Generic function for computing the score of an estimator
-object with respect to its log-likelihood.
+Generic method for computing the score of an estimator
+object (gradient of its log-likelihood function evaluated
+at the MLE).
 }
