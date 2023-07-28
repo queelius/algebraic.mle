@@ -29,8 +29,9 @@ helps you manipulate and utilize.
 `algebraic.mle` can be installed from GitHub by using the devtools package
 in R:
 ```{r}
-install.packages("devtools")
-devtools::install_github("queelius/algebraic.mle")
+#install.packages("devtools")
+#devtools::install_github("queelius/algebraic.mle")
+#library(algebraic.dist)
 library(algebraic.mle)
 ```
 

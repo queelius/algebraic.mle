@@ -5,7 +5,7 @@
 \title{Expectation operator applied to `x` of type `mle`
 with respect to a function `g`. That is, `E(g(x))`.}
 \usage{
-expectation.mle(x, g = function(t) t, ..., control = list())
+\method{expectation}{mle}(x, g = function(t) t, ..., control = list())
 }
 \arguments{
 \item{x}{`mle` object}

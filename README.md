@@ -26,8 +26,18 @@ manipulate and utilize.
 package in R:
 
 ``` r
-install.packages("devtools")
-devtools::install_github("queelius/algebraic.mle")
+#install.packages("devtools")
+#devtools::install_github("queelius/algebraic.mle")
+#library(algebraic.dist)
+library(algebraic.mle)
+#> Loading required package: algebraic.dist
+#> Registered S3 method overwritten by 'algebraic.dist':
+#>   method     from 
+#>   print.dist stats
+#> Loading required package: boot
+#> Loading required package: mvtnorm
+#> Loading required package: MASS
+#> Loading required package: numDeriv
 ```
 
 ## Purpose
@@ -111,11 +121,6 @@ Let’s fit the model. We’ll use the `optim` function in `stats` to fit
 the model and then wrap it into an `mle` object using `mle_numerical`.
 
 ``` r
-library(algebraic.mle)
-#> Registered S3 method overwritten by 'algebraic.dist':
-#>   method     from 
-#>   print.dist stats
-
 # initial guess for the parameters
 par0 <- c(0, 0)
 names(par0) <- c("b0", "b1")
@@ -149,15 +154,15 @@ plot(df$x,df$y)
 
 # now overlay a plot of the conditional mean
 x <- seq(-10, 10, .1)
-b0.hat <- algebraic.mle::params(sol)[1]
-b1.hat <- algebraic.mle::params(sol)[2]
+b0.hat <- params(sol)[1]
+b1.hat <- params(sol)[2]
 y.hat <- 1/exp(b0.hat + b1.hat*x)
 y <- 1/exp(b0 + b1*x)
 lines(x, y, col = "green", lwd = 10)
 lines(x, y.hat, col = "blue", lwd = 10)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 ### Hypothesis test and model selection
 
@@ -173,7 +178,7 @@ rate_b0_zero <- function(df, b1) exp(b1 * df$x)
 
 # initial guess for the parameters
 # fit the model under the null hypothesis
-sol2 <- algebraic.mle::mle_numerical(optim(par = 0,
+sol2 <- mle_numerical(optim(par = 0,
     fn = loglik(df, resp, rate_b0_zero),
     control = list(fnscale = -1),
     hessian = TRUE,
@@ -207,9 +212,9 @@ compatible with the null hypothesis `b0 = 0`.
 If we wanted to do model selection, we could use the AIC:
 
 ``` r
-algebraic.mle::aic(sol)
+aic(sol)
 #> [1] 243.3954
-algebraic.mle::aic(sol2)
+aic(sol2)
 #> [1] 245.4328
 ```
 
@@ -248,12 +253,16 @@ hypothesis that `b1 = 0`.
 Let’s compare the confidence intervals for each of these models.
 
 ``` r
-CI <- confint(sol)
-# print the confidence interval
-print(CI)
+print(confint(sol))
 #>          2.5%       97.5%
 #> b0 -0.4542147 0.003489406
 #> b1  0.4140362 0.498142415
+print(confint(sol2))
+#>             2.5%     97.5%
+#> param1 0.4244712 0.4989475
+print(confint(sol3))
+#>             2.5%     97.5%
+#> param1 -2.722463 -2.269829
 ```
 
 We see that the 95% confidence interval for `b0` does not include zero,

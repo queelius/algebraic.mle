@@ -89,8 +89,18 @@
 </h2>
 <p><code>algebraic.mle</code> can be installed from GitHub by using the devtools package in R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"queelius/algebraic.mle"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#install.packages("devtools")</span></span>
+<span><span class="co">#devtools::install_github("queelius/algebraic.mle")</span></span>
+<span><span class="co">#library(algebraic.dist)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: algebraic.dist</span></span>
+<span><span class="co">#&gt; Registered S3 method overwritten by 'algebraic.dist':</span></span>
+<span><span class="co">#&gt;   method     from </span></span>
+<span><span class="co">#&gt;   print.dist stats</span></span>
+<span><span class="co">#&gt; Loading required package: boot</span></span>
+<span><span class="co">#&gt; Loading required package: mvtnorm</span></span>
+<span><span class="co">#&gt; Loading required package: MASS</span></span>
+<span><span class="co">#&gt; Loading required package: numDeriv</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
@@ -138,12 +148,7 @@
 <span><span class="op">}</span></span></code></pre></div>
 <p>Let’s fit the model. We’ll use the <code>optim</code> function in <code>stats</code> to fit the model and then wrap it into an <code>mle</code> object using <code>mle_numerical</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Registered S3 method overwritten by 'algebraic.dist':</span></span>
-<span><span class="co">#&gt;   method     from </span></span>
-<span><span class="co">#&gt;   print.dist stats</span></span>
-<span></span>
-<span><span class="co"># initial guess for the parameters</span></span>
+<code class="sourceCode R"><span><span class="co"># initial guess for the parameters</span></span>
 <span><span class="va">par0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">par0</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b0"</span>, <span class="st">"b1"</span><span class="op">)</span></span>
 <span></span>
@@ -173,13 +178,13 @@
 <span></span>
 <span><span class="co"># now overlay a plot of the conditional mean</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">.1</span><span class="op">)</span></span>
-<span><span class="va">b0.hat</span> <span class="op">&lt;-</span> <span class="fu">algebraic.mle</span><span class="fu">::</span><span class="fu"><a href="reference/params.html">params</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="va">b1.hat</span> <span class="op">&lt;-</span> <span class="fu">algebraic.mle</span><span class="fu">::</span><span class="fu"><a href="reference/params.html">params</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">b0.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">b1.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">y.hat</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0.hat</span> <span class="op">+</span> <span class="va">b1.hat</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">b0</span> <span class="op">+</span> <span class="va">b1</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, col <span class="op">=</span> <span class="st">"green"</span>, lwd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y.hat</span>, col <span class="op">=</span> <span class="st">"blue"</span>, lwd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
 <div class="section level3">
 <h3 id="hypothesis-test-and-model-selection">Hypothesis test and model selection<a class="anchor" aria-label="anchor" href="#hypothesis-test-and-model-selection"></a>
 </h3>
@@ -190,7 +195,7 @@
 <span></span>
 <span><span class="co"># initial guess for the parameters</span></span>
 <span><span class="co"># fit the model under the null hypothesis</span></span>
-<span><span class="va">sol2</span> <span class="op">&lt;-</span> <span class="fu">algebraic.mle</span><span class="fu">::</span><span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fl">0</span>,</span>
+<span><span class="va">sol2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_numerical.html">mle_numerical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>    fn <span class="op">=</span> <span class="fu">loglik</span><span class="op">(</span><span class="va">df</span>, <span class="va">resp</span>, <span class="va">rate_b0_zero</span><span class="op">)</span>,</span>
 <span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -216,9 +221,9 @@
 <p>We see that the <code>p &lt; 0.05</code>, but just barely, so we say the data is not compatible with the null hypothesis <code>b0 = 0</code>.</p>
 <p>If we wanted to do model selection, we could use the AIC:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">algebraic.mle</span><span class="fu">::</span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 243.3954</span></span>
-<span><span class="fu">algebraic.mle</span><span class="fu">::</span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 245.4328</span></span></code></pre></div>
 <p>By the AIC measure, since the full model has an AIC less than the null model, we would choose the full model. We actually know the DGP and both models are reasonable approximations, but the full model is a closer approximation.</p>
 <p>“All models are wrong, but some are useful.” - George Box</p>
@@ -239,12 +244,16 @@
 <p>This has a <code>p</code>-value of essentially zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
 <p>Let’s compare the confidence intervals for each of these models.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">CI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
-<span><span class="co"># print the confidence interval</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">CI</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          2.5%       97.5%</span></span>
 <span><span class="co">#&gt; b0 -0.4542147 0.003489406</span></span>
-<span><span class="co">#&gt; b1  0.4140362 0.498142415</span></span></code></pre></div>
+<span><span class="co">#&gt; b1  0.4140362 0.498142415</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;             2.5%     97.5%</span></span>
+<span><span class="co">#&gt; param1 0.4244712 0.4989475</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">sol3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;             2.5%     97.5%</span></span>
+<span><span class="co">#&gt; param1 -2.722463 -2.269829</span></span></code></pre></div>
 <p>We see that the 95% confidence interval for <code>b0</code> does not include zero, so we reject the null hypothesis that <code>b0 = 0</code>. The 95% confidence interval for <code>b1</code> does not include zero, so we reject the null hypothesis that <code>b1 = 0</code>.</p>
 <p>You can see tutorials for more examples of using the package in the <a href="https://queelius.github.io/algebraic.mle/articles/index.html">vignettes</a>.</p>
 </div>

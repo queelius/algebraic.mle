@@ -4,7 +4,7 @@
 \alias{rmap.mle}
 \title{Computes the distribution of `g(x)` where `x` is an `mle` object.}
 \usage{
-rmap.mle(x, g, ..., n = 1000L, method = c("mc", "delta"))
+\method{rmap}{mle}(x, g, ..., n = 1000L, method = c("mc", "delta"))
 }
 \arguments{
 \item{x}{an `mle` object}

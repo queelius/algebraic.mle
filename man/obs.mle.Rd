@@ -4,7 +4,7 @@
 \alias{obs.mle}
 \title{Method for obtaining the observations used by the `mle` object `x`.}
 \usage{
-obs.mle(x)
+\method{obs}{mle}(x)
 }
 \arguments{
 \item{x}{the `mle` object to obtain the number of observations for}

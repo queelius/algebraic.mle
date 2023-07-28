@@ -46,6 +46,7 @@ library(MASS)
 library(ggplot2)
 library(tibble)
 library(mvtnorm)
+set.seed(1234)
 ```
 
 ## Normal distribution
@@ -120,7 +121,7 @@ set.seed(913254)
 n <- 70
 mu <- 1
 var <- 1
-B <- 10000
+B <- 1000
 theta <- c(mu, var)
 mles <- theta_samp_mc(n = n, theta = theta, B = B)
 head(mles)
@@ -276,7 +277,7 @@ Let's see how the bias of the variance changes as the sample size increases.
 <summary>Click to show/hide R code</summary>
 ```{r bias-code, cache = TRUE}
 N <- 1000
-ns <- seq(10, 200, 10)
+ns <- seq(20, 200, 20)
 bias_var <- numeric(length(ns))
 j <- 1
 for (n in ns) {
@@ -357,7 +358,7 @@ variance of the normal distribution.
 <summary>Click to show/hide R code</summary>
 ```{r covearge-prob, cache = TRUE}
 N <- 1000
-ns <- seq(10, 1000, 10)
+ns <- seq(50, 1000, 50)
 coverage_prob <- matrix(NA, nrow=length(ns), ncol=2)
 j <- 1
 for (n in ns) {
@@ -479,7 +480,7 @@ MC MSE (`mse.mc`) will converge to the same value. In fact, let's run a little
 experiment to show this:
 
 ```{r mse-sample-size, cache = TRUE}
-ns <- seq(10, 200, 10)
+ns <- seq(20, 200, 20)
 mses.mc <- matrix(NA, nrow = length(ns), ncol = 2)
 mses.hat <- matrix(NA, nrow = length(ns), ncol = 2)
 mses.hat.hat <- matrix(NA, nrow = length(ns), ncol = 2)
@@ -618,7 +619,7 @@ Bootstrapped CIs:
 <summary>Click to show/hide R code</summary>
 ```{r coverage-prob-boot, cache = TRUE}
 N <- 100
-ns <- seq(20, 140, 20)
+ns <- c(50, 100)
 coverage_prob <- matrix(NA, nrow=length(ns), ncol=2)
 j <- 1
 for (n in ns) {

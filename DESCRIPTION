@@ -14,15 +14,13 @@ ByteCompile: true
 LazyData: true
 Remotes:
     github::queelius/algebraic.dist
-Imports:
+Depends:
     algebraic.dist,
-    CDFt,
-    zoo,
+    stats,
+    boot,
     mvtnorm,
     MASS,
-    stats,
     numDeriv,
-    boot
 RoxygenNote: 7.2.3
 URL: https://github.com/queelius/algebraic.mle,
     https://queelius.github.io/algebraic.mle/

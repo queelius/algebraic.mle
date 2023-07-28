@@ -5,7 +5,7 @@
 \title{Method for obtaining the marginal distribution of an MLE
 that is based on asymptotic assumptions:}
 \usage{
-marginal.mle(x, indices)
+\method{marginal}{mle}(x, indices)
 }
 \arguments{
 \item{x}{The distribution object.}
