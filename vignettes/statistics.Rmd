@@ -243,7 +243,7 @@ $$
     \end{array}\right).
 $$
 Plugging in the true value of $\sigma^2 = `r var`$ and the sample size $n = `r n`$,
-we get $(0, 0.02857143)'$. We may also provide an appropriate implementation of the
+we get $(0, `r var/n`)$. We may also provide an appropriate implementation of the
 `bias` method in `algebraic.mle` for `mle_normal` (which is what we called our
 the object that we returned from `fit_normal`):
 ```{r}
@@ -277,7 +277,7 @@ Let's see how the bias of the variance changes as the sample size increases.
 <summary>Click to show/hide R code</summary>
 ```{r bias-code, cache = TRUE}
 N <- 1000
-ns <- seq(20, 200, 20)
+ns <- seq(25, 200, 25)
 bias_var <- numeric(length(ns))
 j <- 1
 for (n in ns) {
@@ -358,7 +358,7 @@ variance of the normal distribution.
 <summary>Click to show/hide R code</summary>
 ```{r covearge-prob, cache = TRUE}
 N <- 1000
-ns <- seq(50, 1000, 50)
+ns <- c(seq(50, 200, 50), 300, 600, 1000)
 coverage_prob <- matrix(NA, nrow=length(ns), ncol=2)
 j <- 1
 for (n in ns) {
@@ -480,7 +480,7 @@ MC MSE (`mse.mc`) will converge to the same value. In fact, let's run a little
 experiment to show this:
 
 ```{r mse-sample-size, cache = TRUE}
-ns <- seq(20, 200, 20)
+ns <- seq(25, 200, 25)
 mses.mc <- matrix(NA, nrow = length(ns), ncol = 2)
 mses.hat <- matrix(NA, nrow = length(ns), ncol = 2)
 mses.hat.hat <- matrix(NA, nrow = length(ns), ncol = 2)

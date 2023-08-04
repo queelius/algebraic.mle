@@ -3,8 +3,9 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   dgp: dgp.html
+  fitting-common-dist: fitting-common-dist.html
   statistics: statistics.html
-last_built: 2023-07-28T00:28Z
+last_built: 2023-08-04T07:15Z
 urls:
   reference: https://queelius.github.io/algebraic.mle/reference
   article: https://queelius.github.io/algebraic.mle/articles

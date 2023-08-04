@@ -4,10 +4,10 @@
 \alias{print.summary_mle}
 \title{Function for printing a `summary` object for an `mle` object.}
 \usage{
-\method{print}{summary_mle}(object, ...)
+\method{print}{summary_mle}(x, ...)
 }
 \arguments{
-\item{object}{the `summary_mle` object}
+\item{x}{the `summary_mle` object}
 
 \item{...}{pass additional arguments}
 }

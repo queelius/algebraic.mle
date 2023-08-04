@@ -20,7 +20,7 @@
 #'               "delta" or "mc".
 #' @importFrom stats cov vcov nobs
 #' @importFrom numDeriv jacobian
-#' @importFrom algebraic.dist sampler params
+#' @importFrom algebraic.dist rmap sampler params
 #' @importFrom MASS ginv
 #' @export
 rmap.mle <- function(x, g, ...,

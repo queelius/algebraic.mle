@@ -4,14 +4,14 @@
 \alias{mse.mle_boot}
 \title{Computes the estimate of the MSE of a `boot` object.}
 \usage{
-\method{mse}{mle_boot}(x, par = NULL, ...)
+\method{mse}{mle_boot}(x, theta = NULL, ...)
 }
 \arguments{
 \item{x}{the `boot` object to compute the MSE of.}
 
-\item{par}{for the `mle_boot`, we ignore this parameter}
+\item{theta}{true parameter value (not used for `mle_boot`)}
 
-\item{...}{pass additional arguments (not used)}
+\item{...}{pass additional arguments into `vcov`}
 }
 \description{
 Computes the estimate of the MSE of a `boot` object.

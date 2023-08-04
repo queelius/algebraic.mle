@@ -3,6 +3,7 @@
 #' 
 #' @param sol the output of `optim` or `newton_raphson`
 #' @param options list, options for things like sigma and FIM
+#' @param superclasses list, superclasses to add to the `mle_numerical` object
 #' @return a `numerical_mle` object.
 #' @importFrom MASS ginv
 #' @export

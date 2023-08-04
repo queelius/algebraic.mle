@@ -13,8 +13,6 @@ of the parameter estimator}
 \item{theta}{the point estimate}
 
 \item{level}{confidence level, defaults to 0.95 (alpha=.05)}
-
-\item{...}{additional arguments to pass}
 }
 \description{
 Function to compute the confidence intervals from a variance-covariance matrix

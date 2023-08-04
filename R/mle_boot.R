@@ -29,6 +29,7 @@ is_mle_boot <- function(x) inherits(x, "mle_boot")
 #' Method for obtaining the parameters of an `boot` object.
 #'
 #' @param x the `boot` object to obtain the parameters of.
+#' @importFrom algebraic.dist params
 #' @export
 params.mle_boot <- function(x) {
     x$t0
@@ -37,6 +38,7 @@ params.mle_boot <- function(x) {
 #' Method for obtaining the number of parameters of an `boot` object.
 #'
 #' @param x the `boot` object to obtain the number of parameters of
+#' @importFrom algebraic.dist nparams
 #' @export
 nparams.mle_boot <- function(x) {
     length(x$t0)
@@ -45,56 +47,60 @@ nparams.mle_boot <- function(x) {
 #' Method for obtaining the number of observations in the sample used by
 #' an `mle`.
 #'
-#' @param x the `mle` object to obtain the number of observations for
+#' @param object the `mle` object to obtain the number of observations for
+#' @param ... additional arguments to pass (not used)
+#' @importFrom stats nobs
 #' @export
-nobs.mle_boot <- function(x) {
-    if (is.matrix(x$data) || is.data.frame(x$data)) {
-        return(nrow(x$data))
+nobs.mle_boot <- function(object, ...) {
+    if (is.matrix(object$data) || is.data.frame(object$data)) {
+        return(nrow(object$data))
     } else {
-        length(x$data)
+        length(object$data)
     }
 }
 
 #' Method for obtaining the observations used by the `mle`.
 #'
 #' @param x the `mle` object to obtain the number of observations for
+#' @importFrom algebraic.dist obs
 #' @export
 obs.mle_boot <- function(x) {
     x$data
 }
 
 #' Computes the variance-covariance matrix of `boot` object.
+#' Note: This impelements the `vcov` method defined in `stats`.
 #'
 #' @param object the `boot` object to obtain the variance-covariance of
-#' @param ... additional arguments to pass
-#'
-#' @importFrom stats cov
+#' @param ... additional arguments to pass into `stats::cov`
+#' @importFrom stats vcov cov
 #' @export
-vcov.mle_boot <- function(x) {
-    cov(x$t)
+vcov.mle_boot <- function(object, ...) {
+    cov(object$t, ...)
 }
 
 #' Computes the estimate of the MSE of a `boot` object.
 #'
 #' @param x the `boot` object to compute the MSE of.
-#' @param par for the `mle_boot`, we ignore this parameter
-#' @param ... pass additional arguments (not used)
+#' @param theta true parameter value (not used for `mle_boot`)
+#' @param ... pass additional arguments into `vcov`
 #' @importFrom algebraic.dist params
+#' @importFrom stats vcov
 #' @export
-mse.mle_boot <- function(x, par = NULL, ...) {
-    vcov(x) + bias(x) %*% t(bias(x))
+mse.mle_boot <- function(x, theta = NULL, ...) {
+    vcov(x, ...) + bias(x, theta) %*% t(bias(x, theta))
 }
 
 #' Computes the estimate of the bias of a `mle_boot` object.
 #'
 #' @param x the `mle_boot` object to compute the bias of.
-#' @param par for the `mle_boot`, we ignore this parameter.
+#' @param theta true parameter value (not used for `mle_boot`).
 #' @param ... pass additional arguments (not used)
 #' @importFrom algebraic.dist params nparams
 #' @export
-bias.mle_boot <- function(x, par = NULL, ...) {
-    if (!is.null(par)) {
-        warning("We ignore the `par` argument for `mle_boot` objects.")
+bias.mle_boot <- function(x, theta = NULL, ...) {
+    if (!is.null(theta)) {
+        warning("We ignore the `theta` argument for `mle_boot` objects.")
     }
     if (length(params(x)) == 1) {
         return(mean(x$t) - params(x))
@@ -130,11 +136,17 @@ sampler.mle_boot <- function(x, ...) {
 }
 
 #' Method for obtained the confidence interval of an `mle_boot` object.
+#' Note: This impelements the `vcov` method defined in `stats`.
+#'
 #' @param object the `mle_boot` object to obtain the confidence interval of
 #' @param parm the parameter to obtain the confidence interval of (not used)
 #' @param level the confidence level
-#' @param ... additional arguments to pass
+#' @param type the type of confidence interval to compute
+#' @param ... additional arguments to pass into `boot.ci`
 #' @importFrom boot boot.ci
+#' @importFrom stats confint
+#' @importFrom algebraic.dist nparams
+#' @importFrom utils tail
 #' @export
 confint.mle_boot <- function(object, parm = NULL, level = 0.95,
     type = c("norm", "basic", "perc", "bca"), ...) {

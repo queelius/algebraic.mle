@@ -4,12 +4,12 @@
 \alias{bias.mle_boot}
 \title{Computes the estimate of the bias of a `mle_boot` object.}
 \usage{
-\method{bias}{mle_boot}(x, par = NULL, ...)
+\method{bias}{mle_boot}(x, theta = NULL, ...)
 }
 \arguments{
 \item{x}{the `mle_boot` object to compute the bias of.}
 
-\item{par}{for the `mle_boot`, we ignore this parameter.}
+\item{theta}{true parameter value (not used for `mle_boot`).}
 
 \item{...}{pass additional arguments (not used)}
 }

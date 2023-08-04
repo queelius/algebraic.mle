@@ -4,7 +4,6 @@
 #'              of the parameter estimator
 #' @param theta the point estimate
 #' @param level confidence level, defaults to 0.95 (alpha=.05)
-#' @param ... additional arguments to pass
 #' @importFrom stats qnorm
 #' @export
 confint_from_sigma <- function(sigma, theta, level = .95) {

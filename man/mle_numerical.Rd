@@ -11,6 +11,8 @@ mle_numerical(sol, options = list(), superclasses = NULL)
 \item{sol}{the output of `optim` or `newton_raphson`}
 
 \item{options}{list, options for things like sigma and FIM}
+
+\item{superclasses}{list, superclasses to add to the `mle_numerical` object}
 }
 \value{
 a `numerical_mle` object.

@@ -2,7 +2,8 @@
 % Please edit documentation in R/mle_boot.R
 \name{confint.mle_boot}
 \alias{confint.mle_boot}
-\title{Method for obtained the confidence interval of an `mle_boot` object.}
+\title{Method for obtained the confidence interval of an `mle_boot` object.
+Note: This impelements the `vcov` method defined in `stats`.}
 \usage{
 \method{confint}{mle_boot}(
   object,
@@ -19,8 +20,11 @@
 
 \item{level}{the confidence level}
 
-\item{...}{additional arguments to pass}
+\item{type}{the type of confidence interval to compute}
+
+\item{...}{additional arguments to pass into `boot.ci`}
 }
 \description{
 Method for obtained the confidence interval of an `mle_boot` object.
+Note: This impelements the `vcov` method defined in `stats`.
 }

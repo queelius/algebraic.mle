@@ -67,7 +67,7 @@ params.mle <- function(x) {
 #' Method for obtaining the number of parameters of an `mle` object.
 #' 
 #' @param x the `mle` object to obtain the number of parameters of
-#' @importFrom algebraic.dist params
+#' @importFrom algebraic.dist params nparams
 #' @export
 nparams.mle <- function(x) { 
     length(params(x))
@@ -87,6 +87,7 @@ aic.mle <- function(x) {
 #'
 #' @param object the `mle` object to obtain the number of observations for
 #' @param ... additional arguments to pass (not used)
+#' @importFrom stats nobs
 #' @export
 nobs.mle <- function(object, ...) {
     object$nobs
@@ -115,6 +116,8 @@ loglik_val.mle <- function(x, ...) {
 #' @param object the `mle` object to compute the confidence intervals for
 #' @param parm the parameters to compute the confidence intervals for (not used)
 #' @param level confidence level, defaults to 0.95 (alpha=.05)
+#' @param use_t_dist logical, whether to use the t-distribution to compute
+#'                   the confidence intervals.
 #' @param ... additional arguments to pass
 #' @importFrom stats qt qnorm vcov nobs
 #' @importFrom algebraic.dist params
@@ -255,33 +258,32 @@ summary.mle <- function(object, ...) {
 
 #' Function for printing a `summary` object for an `mle` object.
 #'
-#' @param object the `summary_mle` object
+#' @param x the `summary_mle` object
 #' @param ... pass additional arguments
 #' @importFrom stats vcov
 #' @importFrom algebraic.dist nparams params
 #' @export
-print.summary_mle <- function(object, ...) {
-    cat("Maximum likelihood estimator of type", class(object$x)[1], "is normally distributed.\n")
+print.summary_mle <- function(x, ...) {
+    cat("Maximum likelihood estimator of type", class(x$x)[1], "is normally distributed.\n")
     cat("The estimates of the parameters are given by:\n")
-    print(params(object$x))
+    print(params(x$x))
 
-    SE <- se(object$x)
+    SE <- se(x$x)
     if (!is.null(SE))
     {
         cat("The standard error is ", SE, ".\n")        
         cat("The asymptotic 95% confidence interval of the parameters are given by:\n")
-        print(confint(object$x))
+        print(confint(x$x))
     }
-    if (nparams(object$x) == 1L) {
-        cat("The MSE of the estimator is ", mse(object$x), ".\n")
+    if (nparams(x$x) == 1L) {
+        cat("The MSE of the estimator is ", mse(x$x), ".\n")
     } else {
-        cat("The MSE of the individual componetns in a multivariate estimator is:\n")
-        print(diag(mse(object$x)))
+        cat("The MSE of the individual components in a multivariate estimator is:\n")
+        print(mse(x$x))
     }
-    cat("The MSE of the estimator is ", mse(object$x), ".\n")
-    if (!is.null(loglik_val(object$x))) {
-        cat("The log-likelihood is ", loglik_val(object$x), ".\n")
-        cat("The AIC is ", aic(object$x), ".\n")
+    if (!is.null(loglik_val(x$x))) {
+        cat("The log-likelihood is ", loglik_val(x$x), ".\n")
+        cat("The AIC is ", aic(x$x), ".\n")
     }
 }
 
@@ -400,12 +402,12 @@ pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 
     thetas <- NULL
     if (length(theta) == 1) {
-        thetas <- matrix(rnorm(n = R, mu = theta, sd = sqrt(sigma)), nrow = R)
+        thetas <- matrix(rnorm(n = R, mean = theta, sd = sqrt(sigma)), nrow = R)
     } else {
         thetas <- rmvnorm(n = R, mean = theta, sigma = sigma)
     }
 
-    ob <- samp(n = 1, par = theta, ...)
+    ob <- samp(n = 1, theta, ...)
     p <- length(ob)
 
     data <- matrix(NA, nrow = R, ncol = p)
@@ -448,6 +450,8 @@ pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 #'   value - The estimate of the expectation
 #'   ci    - The confidence intervals for each component of the expectation
 #'   n     - The number of samples
+#' @importFrom algebraic.dist expectation_data expectation
+#' @importFrom utils modifyList
 #' @export
 expectation.mle <- function(
     x,
@@ -482,6 +486,8 @@ expectation.mle <- function(
 #' 
 #' @param x The distribution object.
 #' @param indices The indices of the marginal distribution to obtain.
+#' @importFrom algebraic.dist marginal params obs
+#' @importFrom stats vcov nobs
 #' @export
 marginal.mle <- function(x, indices) {
     if (length(indices) == 0) {

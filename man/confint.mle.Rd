@@ -13,6 +13,9 @@
 
 \item{level}{confidence level, defaults to 0.95 (alpha=.05)}
 
+\item{use_t_dist}{logical, whether to use the t-distribution to compute
+the confidence intervals.}
+
 \item{...}{additional arguments to pass}
 }
 \description{

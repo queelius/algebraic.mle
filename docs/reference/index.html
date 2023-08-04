@@ -25,6 +25,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
+    <a class="dropdown-item" href="../articles/fitting-common-dist.html">Fitting Common Distributions to a DGP</a>
     <a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a>
   </div>
 </li>
@@ -78,7 +79,7 @@ maximum likelihood estimators from existing maximum likelihood estimators.</dd>
           
           <code><a href="bias.html">bias()</a></code> 
         </dt>
-        <dd>Computes the bias of an estimator object.</dd>
+        <dd>Generic method for computing the bias of an estimator object.</dd>
       </dl><dl><dt>
           
           <code><a href="bias.mle.html">bias(<i>&lt;mle&gt;</i>)</a></code> 
@@ -100,7 +101,8 @@ In this case, the bias is zero (or zero vector).</dd>
           
           <code><a href="confint.mle_boot.html">confint(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Method for obtained the confidence interval of an `mle_boot` object.</dd>
+        <dd>Method for obtained the confidence interval of an `mle_boot` object.
+Note: This impelements the `vcov` method defined in `stats`.</dd>
       </dl><dl><dt>
           
           <code><a href="confint_from_sigma.html">confint_from_sigma()</a></code> 
@@ -108,7 +110,7 @@ In this case, the bias is zero (or zero vector).</dd>
         <dd>Function to compute the confidence intervals from a variance-covariance matrix</dd>
       </dl><dl><dt>
           
-          <code><a href="expectation.mle.html">expectation.mle()</a></code> 
+          <code><a href="expectation.mle.html">expectation(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Expectation operator applied to `x` of type `mle`
 with respect to a function `g`. That is, `E(g(x))`.</dd>
@@ -135,7 +137,7 @@ object.</dd>
         <dd>Method for obtaining the log-likelihood of an `mle` object.</dd>
       </dl><dl><dt>
           
-          <code><a href="marginal.mle.html">marginal.mle()</a></code> 
+          <code><a href="marginal.mle.html">marginal(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the marginal distribution of an MLE
 that is based on asymptotic assumptions:</dd>
@@ -166,7 +168,7 @@ and combines them into a single estimator `mle_weighted`.</dd>
           
           <code><a href="mse.html">mse()</a></code> 
         </dt>
-        <dd>Generic function for obtaining the mean squared error (MSE) of an estimator,
+        <dd>Generic method for computing the mean squared error (MSE) of an estimator,
 `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.</dd>
       </dl><dl><dt>
           
@@ -202,20 +204,20 @@ an `mle`.</dd>
         <dd>Method for obtaining the number of parameters of an `boot` object.</dd>
       </dl><dl><dt>
           
-          <code><a href="obs.mle.html">obs.mle()</a></code> 
+          <code><a href="obs.mle.html">obs(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the observations used by the `mle` object `x`.</dd>
       </dl><dl><dt>
           
-          <code><a href="obs.mle_boot.html">obs.mle_boot()</a></code> 
+          <code><a href="obs.mle_boot.html">obs(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
         <dd>Method for obtaining the observations used by the `mle`.</dd>
       </dl><dl><dt>
           
           <code><a href="observed_fim.html">observed_fim()</a></code> 
         </dt>
-        <dd>Generic method for obtaining the observed FIM
-matrix of an `mle` object.</dd>
+        <dd>Generic method for computing the observed FIM
+of an `mle` object.</dd>
       </dl><dl><dt>
           
           <code><a href="observed_fim.mle.html">observed_fim(<i>&lt;mle&gt;</i>)</a></code> 
@@ -225,18 +227,13 @@ matrix of an `mle` object.</dd>
           
           <code><a href="orthogonal.html">orthogonal()</a></code> 
         </dt>
-        <dd>Method for determining the orthogonal parameters of an estimator.</dd>
+        <dd>Generic method for determining the orthogonal parameters of an estimator.</dd>
       </dl><dl><dt>
           
           <code><a href="orthogonal.mle.html">orthogonal(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Method for determining the orthogonal components of an `mle` object
 `x`.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="params.html">params()</a></code> 
-        </dt>
-        <dd>Generic method for obtaining the parameters of a fitted MLE object.</dd>
       </dl><dl><dt>
           
           <code><a href="params.mle.html">params(<i>&lt;mle&gt;</i>)</a></code> 
@@ -251,7 +248,7 @@ matrix of an `mle` object.</dd>
           
           <code><a href="pred.html">pred()</a></code> 
         </dt>
-        <dd>Compute the predictive confidence interval given an estimator object `x`.</dd>
+        <dd>Generic method for computing the predictive confidence interval given an estimator object `x`.</dd>
       </dl><dl><dt>
           
           <code><a href="pred.mle.html">pred(<i>&lt;mle&gt;</i>)</a></code> 
@@ -270,7 +267,7 @@ an `mle` object `x`.</dd>
         <dd>Function for printing a `summary` object for an `mle` object.</dd>
       </dl><dl><dt>
           
-          <code><a href="rmap.mle.html">rmap.mle()</a></code> 
+          <code><a href="rmap.mle.html">rmap(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Computes the distribution of `g(x)` where `x` is an `mle` object.</dd>
       </dl><dl><dt>
@@ -287,7 +284,9 @@ an `mle` object `x`.</dd>
           
           <code><a href="score_val.html">score_val()</a></code> 
         </dt>
-        <dd>score</dd>
+        <dd>Generic method for computing the score of an estimator
+object (gradient of its log-likelihood function evaluated
+at the MLE).</dd>
       </dl><dl><dt>
           
           <code><a href="score_val.mle.html">score_val(<i>&lt;mle&gt;</i>)</a></code> 
@@ -297,26 +296,13 @@ an `mle` object `x`.</dd>
           
           <code><a href="se.html">se()</a></code> 
         </dt>
-        <dd>Method for obtaining the standard error of an estimator.</dd>
+        <dd>Generic method for obtaining the standard errors of an estimator.</dd>
       </dl><dl><dt>
           
           <code><a href="se.mle.html">se(<i>&lt;mle&gt;</i>)</a></code> 
         </dt>
         <dd>Function for obtaining an estimate of the standard error of the MLE
 object `x`.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sim_anneal.html">sim_anneal()</a></code> 
-        </dt>
-        <dd>This function implements the simulated annealing algorithm,
-which is a global optimization algorithm that is useful for
-finding a good starting point for a local optimization algorithm.
-We do not return this as an MLE object because, to be a good
-estimate of the MLE, the gradient of `f` evaluated
-at its solution should be close to zero, assuming the MLE
-is interior to the domain of `f`. However, since this algorithm
-is not guided by gradient information, it is not sensitive to
-the gradient of `f` and instead only seeks to maximize `f`.</dd>
       </dl><dl><dt>
           
           <code><a href="summary.mle.html">summary(<i>&lt;mle&gt;</i>)</a></code> 
@@ -332,7 +318,8 @@ the gradient of `f` and instead only seeks to maximize `f`.</dd>
           
           <code><a href="vcov.mle_boot.html">vcov(<i>&lt;mle_boot&gt;</i>)</a></code> 
         </dt>
-        <dd>Computes the variance-covariance matrix of `boot` object.</dd>
+        <dd>Computes the variance-covariance matrix of `boot` object.
+Note: This impelements the `vcov` method defined in `stats`.</dd>
       </dl></div>
   </main></div>
 
