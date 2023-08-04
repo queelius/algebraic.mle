@@ -10,6 +10,9 @@
     <loc>https://queelius.github.io/algebraic.mle/articles/dgp.html</loc>
   </url>
   <url>
+    <loc>https://queelius.github.io/algebraic.mle/articles/fitting-common-dist.html</loc>
+  </url>
+  <url>
     <loc>https://queelius.github.io/algebraic.mle/articles/index.html</loc>
   </url>
   <url>
@@ -158,9 +161,6 @@
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/se.mle.html</loc>
-  </url>
-  <url>
-    <loc>https://queelius.github.io/algebraic.mle/reference/sim_anneal.html</loc>
   </url>
   <url>
     <loc>https://queelius.github.io/algebraic.mle/reference/summary.mle.html</loc>

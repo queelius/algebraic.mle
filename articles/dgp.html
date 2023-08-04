@@ -42,6 +42,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
+    <a class="dropdown-item" href="../articles/fitting-common-dist.html">Fitting Common Distributions to a DGP</a>
     <a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a>
   </div>
 </li>
@@ -191,9 +192,10 @@ model.</p>
 <span><span class="co">#&gt;          2.5%       97.5%</span></span>
 <span><span class="co">#&gt; b0 -0.4542147 0.003489406</span></span>
 <span><span class="co">#&gt; b1  0.4140362 0.498142415</span></span>
-<span><span class="co">#&gt; The MSE of the individual componetns in a multivariate estimator is:</span></span>
-<span><span class="co">#&gt; [1] 0.0136336902 0.0004603623</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.01363369 0.0003746527 0.0003746527 0.0004603623 .</span></span>
+<span><span class="co">#&gt; The MSE of the individual components in a multivariate estimator is:</span></span>
+<span><span class="co">#&gt;              [,1]         [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.0136336902 0.0003746527</span></span>
+<span><span class="co">#&gt; [2,] 0.0003746527 0.0004603623</span></span>
 <span><span class="co">#&gt; The log-likelihood is  -119.6977 .</span></span>
 <span><span class="co">#&gt; The AIC is  243.3954 .</span></span></code></pre></div>
 <p>Let’s plot it:</p>
@@ -239,7 +241,6 @@ ratio test. We can use the LRT because this null model is a special case
 <span><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
 <span><span class="co">#&gt;             2.5%     97.5%</span></span>
 <span><span class="co">#&gt; param1 0.4244712 0.4989475</span></span>
-<span><span class="co">#&gt; The MSE of the estimator is  0.0003609774 .</span></span>
 <span><span class="co">#&gt; The MSE of the estimator is  0.0003609774 .</span></span>
 <span><span class="co">#&gt; The log-likelihood is  -121.7164 .</span></span>
 <span><span class="co">#&gt; The AIC is  245.4328 .</span></span></code></pre></div>
