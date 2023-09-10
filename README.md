@@ -1,13 +1,29 @@
+---
+output: 
+  md_document:
+    variant: markdown_github
+    pandoc_args: "--webtex"
+    preserve_yaml: true
+---
 
-  - [R package: `algebraic.mle`](#r-package-algebraicmle)
-      - [Installation](#installation)
-      - [Purpose](#purpose)
-      - [API Overview](#api-overview)
-      - [Fitting exponential models](#fitting-exponential-models)
-          - [Hypothesis test and model
-            selection](#hypothesis-test-and-model-selection)
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    }
+  });
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 
-# R package: `algebraic.mle`
+R package: `algebraic.mle`
+==========================
 
 <!-- badges: start -->
 
@@ -20,7 +36,8 @@ Likelihood Estimators (MLEs). These estimators possess many desirable,
 well-defined statistical properties which the package helps you
 manipulate and utilize.
 
-## Installation
+Installation
+------------
 
 `algebraic.mle` can be installed from GitHub by using the devtools
 package in R:
@@ -35,18 +52,16 @@ library(algebraic.dist)
 library(algebraic.mle)
 ```
 
-## Purpose
+Purpose
+-------
 
-The primary focus of this package is the likelihood and the
-log-likelihood, fundamental statistical concepts for a parametric model.
-They are integral to both Bayesian and frequentist statistics, as well
-as for those who prioritize likelihood. The algebraic.mle package
-enables easy handling of MLEs, which, under certain conditions and
-assumptions (such as independence and identical distribution (iid) for a
-sample), present numerous advantages, including asymptotic normality and
-being the uniformly minimum variance unbiased estimator of theta.
+The likelihood function is a fundamental concept in statistics and
+parametric models. The `algebraic.mle` package enables you to manipulate
+and utilize MLEs in a way that is consistent with the underlying
+statistical theory and according to a powerful, well-defined interface.
 
-## API Overview
+API Overview
+------------
 
 The main object in the `algebraic.mle` package is the `mle` object,
 which represents a fitted model. The package provides a number of
@@ -55,12 +70,13 @@ functions is available in the [function
 reference](https://queelius.github.io/algebraic.mle/reference/index.html)
 for `algebraic.mle`.
 
-## Fitting exponential models
+Fitting exponential models
+--------------------------
 
 Here is an example of fitting a conditional exponential model to some
-data using `algebraic.mle`. The true DGP is given by `Y | x ~ X(x) + W$`
-where `X(x) ~ EXP(rate(x))`, `W ~ N(0, 1e-3)`, and `rate(x) = exp(b0 +
-b1 * x)`.
+data using `algebraic.mle`. The true DGP is given by `Y | x ~ X(x) + W`
+where `X(x) ~ EXP(rate(x))`, `W ~ N(0, 1e-3)`, and
+`rate(x) = exp(b0 + b1 * x)`.
 
 In this analysis, we do not care how `x` is distributed, and we take it
 to be an observable exogenous variable. We are interested in the
@@ -81,10 +97,14 @@ b0 <- -.1
 b1 <- 0.5
 
 dgp <- function(n, x) {
+    # rate is the expected value of X
     rate <- exp(b0 + b1 * x)
     X <- rexp(n, rate)
+    # W is the random error
     W <- rnorm(n, 0, 1e-3)
-    return(X + W)
+    # Y | x is the observed value
+    Y <- X + W
+    return(Y)
 }
 ```
 
@@ -95,14 +115,16 @@ n <- 75 # number of observations
 set.seed(1231) # for reproducibility
 df <- data.frame(x = rep(NA, n), y = rep(NA, n))
 for (i in 1:n) {
+    # We do not care how x is distributed, so we take it to be an observable
+    # exogenous variable that impacts the conditional mean of Y.
     x <- runif(1, -10, 10)
     y <- dgp(n = 1, x = x)
     df[i, ] <- c(x, y)
 }
 ```
 
-Now, we define two functions, `resp`, `rate`, and `loglik` function
-which will be used to define the model.
+Now, we define three functions, `resp`, `rate`, and `loglik`, which will
+be used to define the model.
 
 ``` r
 resp <- function(df) df$y
@@ -164,9 +186,9 @@ lines(x, y.hat, col = "blue", lwd = 10)
 
 Let’s test the hypothesis that `b0 = 0` using a likelihood ratio test.
 We can use the LRT because this null model is a special case (nested) of
-the full model. The null model is `Y | x ~ EXP(rate(x))` where `rate(x)
-= exp(b1*x)`, while the full model is `Y | x ~ EXP(rate(x))` where
-`rate(x) = exp(b0 + b1*x)`.
+the full model. The null model is `Y | x ~ EXP(rate(x))` where
+`rate(x) = exp(b1*x)`, while the full model is `Y | x ~ EXP(rate(x))`
+where `rate(x) = exp(b0 + b1*x)`.
 
 ``` r
 # construct null model where b1 = 0
