@@ -1,11 +1,3 @@
----
-output: 
-  md_document:
-    variant: markdown_github
-    pandoc_args: "--webtex"
-    preserve_yaml: true
----
-
 R package: `algebraic.mle`
 ==========================
 
