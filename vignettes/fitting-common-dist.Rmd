@@ -12,6 +12,7 @@ vignette: >
   %\VignetteDepends{tibble}
   %\VignetteDepends{algebraic.mle}
   %\VignetteDepends{boot}
+  %\VignetteDepends{CDFt}
   %\VignetteKeyword{normal}
   %\VignetteKeyword{weibull}
   %\VignetteKeyword{DGP}

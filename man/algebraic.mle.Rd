@@ -2,6 +2,7 @@
 % Please edit documentation in R/algebraic.mle.R
 \docType{package}
 \name{algebraic.mle}
+\alias{algebraic.mle-package}
 \alias{algebraic.mle}
 \title{`algebraic.mle`: A package for algebraically operating on and generating
 maximum likelihood estimators from existing maximum likelihood estimators.}
@@ -12,4 +13,17 @@ likelihood estimator of the model with respect to observed data.
 \details{
 It has a relatively rich API for working with these objects to help you
 understand your MLE estimator.#'
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/queelius/algebraic.mle}
+  \item \url{https://queelius.github.io/algebraic.mle/}
+  \item Report bugs at \url{https://github.com/queelius/algebraic.mle/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Alexander Towell \email{lex@metafunctor.com} (\href{https://orcid.org/0000-0001-6443-9897}{ORCID})
+
 }

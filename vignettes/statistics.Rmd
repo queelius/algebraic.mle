@@ -273,11 +273,9 @@ expectation(theta.mc, function(x) x - theta) # mean(theta.mc) - theta
 The asymptotic bias and the empirical bias are pretty close.
 Let's see how the bias of the variance changes as the sample size increases.
 
-<details>
-<summary>Click to show/hide R code</summary>
 ```{r bias-code, cache = TRUE}
 N <- 1000
-ns <- seq(25, 200, 25)
+ns <- seq(10, 500, 10)
 bias_var <- numeric(length(ns))
 j <- 1
 for (n in ns) {
@@ -291,20 +289,13 @@ for (n in ns) {
     j <- j + 1
 }
 ```
-</details>
 
-```{r bias-plot, echo=FALSE, fig.height=4, fig.width=5}
-plot(ns[1:10], bias_var[1:10], type = "l",
-    xlab = "Sample size", ylab = "Bias")
+```{r bias-plot, echo=FALSE, fig.height=4, fig.width=6}
+plot(ns, bias_var, type = "l",
+    xlab = "Sample size", ylab = "Bias(Var)")
 # plot the asymptotic bias
-lines(ns[1:10], -(1 / ns[1:10]) * var, lty = 2)
-
-# plot the rest
-plot(ns[11:length(ns)], bias_var[11:length(ns)], type = "l",
-    xlab = "Sample size", ylab = "Bias")
-lines(ns[11:length(ns)], -(1 / ns[11:length(ns)]) * var, lty = 2)
+lines(ns, -(1 / ns) * var, lty = 2)
 ```
-
 
 ### Variance-covariance matrix
 

@@ -127,7 +127,7 @@ summary(sol)
 ```
 
 Let's plot it:
-```{r plot-model-1}
+```{r plot-model-1, fig.width = 6, fig.height = 6, fig.align = "center"}
 # plot the x-y points from the data frame
 plot(df$x,df$y)
 
