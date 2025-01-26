@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Fitting Common Distributions to a DGP</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Fitting Common Distributions to a DGP</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#data-simulation">Data Simulation</a></li>
+<li><a href="#visualizing-data">Visualizing Data</a></li>
+<li><a href="#parametrically-modeling-the-data">Parametrically Modeling the Data</a></li>
+<li><a href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a>
+<ul>
+<li><a href="#performance-measures-of-the-mle">Performance Measures of the MLE</a></li>
+</ul></li>
+<li><a href="#invariance-property-of-the-mle">Invariance Property of the MLE</a>
+<ul>
+<li><a href="#delta-method">Delta Method</a></li>
+<li><a href="#monte-carlo-method">Monte-Carlo Method</a></li>
+<li><a href="#example-1">Example 1</a></li>
+</ul></li>
+<li><a href="#weighted-mle-a-weighted-sum-of-mles">Weighted MLE: A Weighted Sum of MLEs</a>
+<ul>
+<li><a href="#example-2">Example 2</a></li>
+</ul></li>
+<li><a href="#bootstrapping-the-mles">Bootstrapping the MLEs</a></li>
+<li><a href="#goodness-of-fit">Goodness-of-Fit</a></li>
+<li><a href="#prediction-intervals">Prediction Intervals</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(algebraic.mle)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">library</span>(algebraic.dist)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">library</span>(boot)</span></code></pre></div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The goal of this vignette is to demonstrate using the R package <code>algebraic.mle</code> for inference on maximum likelihood estimators (MLEs). We will simulate a dataset whose true data generating process (DGP) is a mixture of Weibull and Normal distributions. However, we will fit Weibull and Normal distributions separately to the data to explore which provides a better fit.</p>
+</div>
+<div id="data-simulation" class="section level2">
+<h2>Data Simulation</h2>
+<p>First, here are the simulation parameters:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>n &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>err &lt;-<span class="st"> </span><span class="fl">0.1</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>shape &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>scale &lt;-<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>theta =<span class="st"> </span><span class="kw">c</span>(shape, scale)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">142334</span>)</span></code></pre></div>
+<p>We simulate a sample of size <span class="math inline">\(n = 100\)</span> from the DGP: <span class="math display">\[
+    T_i = W_i + \epsilon_i
+\]</span> where <span class="math display">\[
+    W_i \sim \operatorname{Weibull}(k = 2, \lambda = 10)
+\]</span> and <span class="math display">\[
+    \epsilon_i \sim \operatorname{normal}(\mu = 0, \sigma = 0.1).
+\]</span></p>
+<p>We can simulate a sample from this DGP mixture distribution using the <code>rweibull</code> and <code>rnorm</code> functions:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>x &lt;-<span class="st"> </span><span class="kw">rweibull</span>(<span class="dt">n =</span> n, <span class="dt">shape =</span> shape, <span class="dt">scale =</span> scale) <span class="op">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">rnorm</span>(<span class="dt">n =</span> n, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> err)</span></code></pre></div>
+</div>
+<div id="visualizing-data" class="section level2">
+<h2>Visualizing Data</h2>
+<p>Here are some observations:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">head</span>(x, <span class="dt">n =</span> <span class="dv">4</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="co">#&gt; [1]  6.69  2.96 13.05  5.34</span></span></code></pre></div>
+<p>Visualizing the data is a good first step in the analysis of the data. If the data is univariate or bivariate, we can plot a histogram of the data pretty easily. We show a histogram of the simulated data below: <img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+</div>
+<div id="parametrically-modeling-the-data" class="section level2">
+<h2>Parametrically Modeling the Data</h2>
+<p>If we only had this sample, what might we conclude? This can be a very difficult problem.</p>
+<p>If we were only interested in, say, <em>prediction</em>, and we had a sufficiently large sample, we could use a non-parametric methods and “let the data speak for itself.” However, if we are interested in inference (e.g., explaining the data) or the sample was small, then we usually need to make some assumptions about the data.</p>
+<p>In this case, we will assume that the data is drawn from a parametric distribution. There are many well-known, named parametric distributions, e.g., Pareto, Weibull, and Normal, to name a few. We will fit the Weibull and the Normal distributions, and compare the results.</p>
+</div>
+<div id="maximum-likelihood-estimation" class="section level2">
+<h2>Maximum Likelihood Estimation</h2>
+<p>We will use maximum likelihood estimation (MLE) to estimate the parameters of both the Weibull and the Normal, and then wrap these estimates into an <code>mle</code> object provided by <code>algebraic.mle</code> package:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>fit_normal &lt;-<span class="st"> </span><span class="cf">function</span>(data) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>    loglik &lt;-<span class="st"> </span><span class="cf">function</span>(theta) {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>        <span class="kw">sum</span>(<span class="kw">dnorm</span>(data, <span class="dt">mean =</span> theta[<span class="dv">1</span>], <span class="dt">sd =</span> <span class="kw">sqrt</span>(theta[<span class="dv">2</span>]), <span class="dt">log =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>    }</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>    mu.hat &lt;-<span class="st"> </span><span class="kw">mean</span>(data)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>    sigma2.hat &lt;-<span class="st"> </span><span class="kw">mean</span>((data <span class="op">-</span><span class="st"> </span>mu.hat)<span class="op">^</span><span class="dv">2</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>    H &lt;-<span class="st"> </span><span class="op">-</span>numDeriv<span class="op">::</span><span class="kw">hessian</span>(loglik, <span class="kw">c</span>(mu.hat, sigma2.hat))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>    <span class="kw">mle</span>(<span class="dt">theta.hat =</span> <span class="kw">c</span>(mu.hat, sigma2.hat),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>        <span class="dt">loglike =</span> <span class="kw">loglik</span>(<span class="kw">c</span>(mu.hat, sigma2.hat)),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>        <span class="dt">score =</span> numDeriv<span class="op">::</span><span class="kw">grad</span>(loglik, <span class="kw">c</span>(mu.hat, sigma2.hat)),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>        <span class="dt">sigma =</span> MASS<span class="op">::</span><span class="kw">ginv</span>(H),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>        <span class="dt">info =</span> H,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>        <span class="dt">obs =</span> data,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a>        <span class="dt">nobs =</span> <span class="kw">length</span>(data),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>        <span class="dt">superclasses =</span> <span class="kw">c</span>(<span class="st">&quot;mle_normal&quot;</span>))</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a>}</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a>fit_weibull &lt;-<span class="st"> </span><span class="cf">function</span>(data) {</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a>    loglik &lt;-<span class="st"> </span><span class="cf">function</span>(theta) {</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a>        <span class="kw">sum</span>(<span class="kw">dweibull</span>(data, <span class="dt">shape =</span> theta[<span class="dv">1</span>], <span class="dt">scale =</span> theta[<span class="dv">2</span>], <span class="dt">log =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a>    }</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a>    sol &lt;-<span class="st"> </span>stats<span class="op">::</span><span class="kw">optim</span>(</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a>        <span class="dt">par =</span> <span class="kw">c</span>(shape, scale),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a>        <span class="dt">fn =</span> loglik,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a>        <span class="dt">hessian =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a>        <span class="dt">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a>        <span class="dt">lower =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true"></a>        <span class="co">#method = &quot;Nelder-Mead&quot;,</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true"></a>        <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">maxit =</span> <span class="dv">10000</span>, <span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true"></a>    <span class="kw">mle</span>(<span class="dt">theta.hat =</span> sol<span class="op">$</span>par,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true"></a>        <span class="dt">loglike =</span> sol<span class="op">$</span>value,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true"></a>        <span class="dt">sigma =</span> MASS<span class="op">::</span><span class="kw">ginv</span>(<span class="op">-</span>sol<span class="op">$</span>hessian),</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true"></a>        <span class="dt">info =</span> <span class="op">-</span>sol<span class="op">$</span>hessian,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true"></a>        <span class="dt">obs =</span> data,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true"></a>        <span class="dt">nobs =</span> <span class="kw">length</span>(data),</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true"></a>        <span class="dt">superclasses =</span> <span class="kw">c</span>(<span class="st">&quot;mle_weibull&quot;</span>))</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true"></a>}</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true"></a></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true"></a>bias.mle_normal &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">theta =</span> <span class="ot">NULL</span>) {</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true"></a>    <span class="cf">if</span> (<span class="kw">is.null</span>(theta))</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true"></a>        theta &lt;-<span class="st"> </span><span class="kw">params</span>(x)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true"></a>    <span class="kw">c</span>(<span class="dv">0</span>, <span class="op">-</span>theta[<span class="dv">2</span>] <span class="op">/</span><span class="st"> </span><span class="kw">nobs</span>(x))</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true"></a>}</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true"></a></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true"></a>theta.hat &lt;-<span class="st"> </span><span class="kw">fit_normal</span>(x)</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true"></a><span class="kw">summary</span>(theta.hat)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true"></a><span class="co">#&gt; Maximum likelihood estimator of type mle_normal is normally distributed.</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true"></a><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true"></a><span class="co">#&gt; [1]  8.23 19.11</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true"></a><span class="co">#&gt; The standard error is  0.437 2.7 .</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true"></a><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true"></a><span class="co">#&gt;         2.5% 97.5%</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true"></a><span class="co">#&gt; param1  7.37  9.09</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true"></a><span class="co">#&gt; param2 13.82 24.41</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true"></a><span class="co">#&gt; The MSE of the individual components in a multivariate estimator is:</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true"></a><span class="co">#&gt;                  [,1]             [,2]</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.19112701130551 0.00000000000607</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.00000000000607 7.34243642454061</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true"></a><span class="co">#&gt; The log-likelihood is  -289 .</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true"></a><span class="co">#&gt; The AIC is  583 .</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true"></a></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true"></a>theta.weibull &lt;-<span class="st"> </span><span class="kw">fit_weibull</span>(x)</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true"></a><span class="kw">summary</span>(theta.weibull)</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true"></a><span class="co">#&gt; Maximum likelihood estimator of type mle_weibull is normally distributed.</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true"></a><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true"></a><span class="co">#&gt; [1] 1.95 9.27</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true"></a><span class="co">#&gt; The standard error is  0.153 0.5 .</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true"></a><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true"></a><span class="co">#&gt;        2.5% 97.5%</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true"></a><span class="co">#&gt; param1 1.65  2.25</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true"></a><span class="co">#&gt; param2 8.29 10.25</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true"></a><span class="co">#&gt; The MSE of the individual components in a multivariate estimator is:</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true"></a><span class="co">#&gt;        [,1]   [,2]</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.0235 0.0237</span></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.0237 0.2497</span></span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true"></a><span class="co">#&gt; The log-likelihood is  -284 .</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true"></a><span class="co">#&gt; The AIC is  573 .</span></span></code></pre></div>
+<p>Let’s plot the pdfs of the Weibull and normal distributions: <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAIAAAArpSLoAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nOzdeWBU5bk4/uec2fd9yTJZISFhCYvsi1irIiAqLq1aq3LrpdaCS/0KVgWtFmkVJWqt3FuvP6poS6XaqgWVRUAEKgRCyEI2EpLMTGYy+ySzneX3x4vTmIQkzExmJvH9/HXmbPPMMHl4z7sSLMsChmFYKpCpDgDDsO8vnIAwDEsZnIAwDEsZnIAwDEsZnIAwDEsZnIAwDEuZsZCAysvLiV4EAsGsWbMeeeQRj8eThHcvKSm577770Pbnn3++cePGhL/FtGnTbrvttuGcOUIBYNgIGQsJCHnkkUdeeumll1566fHHH9fr9a+++uoVV1xRX18/0u+bk5Oj1+vR9uHDh19++eWRfsdBpDwADLss3FQHkDD33HNPWVlZ9OUXX3yxcuXKtWvX7tmz57LuQ9M0QRAkOdzU/Nlnn13W/QdHURSXO3b+UTBscGOnBNTHNddc88ADD3z22WfHjh2L7jx9+vSyZcv0er1Op7vtttt6l4/mzp27Zs2aTZs2KZVKHo9XWFj42muvRY/a7fYHHnggLy9PLBZPnDjxzTffjB6aPHkyegRbuHDh888/7/f7CYLYsmXLM888w+VynU5n9Mz33nuPIIgjR470CdXj8RAEsXPnzptvvpnP56tUqiVLllRWVl7qo33xxReLFy9WqVTjxo1btWpV9C36BBDjF4dhycSOflu3bgWA06dP99lfV1cHAL/73e/Qy4MHDwoEgpkzZ77yyiubNm3Kzs5WqVQNDQ3o6Jw5c3JycpRK5ebNm9999925c+cCwJ49e9DRefPmKZXKX/7yly+//PKiRYsAYOfOnejQpEmT7r33XvR2q1atEolEJ06csFqtFRUVAPDuu+9G41m5cmV2djbDMH3idLvdAKDVajMyMp555plnnnkmMzNTIpFUVlaiE6ZOnXrrrbei7Z07d5IkOXv27K1bt/7617+WyWS5ubk+n69/AAn6djFsBI3lBBQMBgmCWL16NXo5ffr0WbNmURSFXlosFqVSeeedd6KXc+bMAYBDhw6hl3a7nSTJJ554gmXZtrY2AHjllVfQIbfbXVpaum7dOvQymoBYln3qqaekUmk0gJycnNtvvx1t+/1+kUj06KOP9o8fJSCBQNDU1IT2XLhwQSqVrly5Er2MJqBIJFJQUHDFFVeEQiF06KuvvgKATZs2DRgAhqW5MfsIBgACgUChUJjNZgCwWCwVFRU///nPORwOOmo0Gq+//voDBw5Ez58wYcLChQvRtlar1Wq1gUAA3YcgiI8++qi1tRUAFApFdXX15s2bhwzgxhtv3LNnTzgcBoB//etfgUDgRz/60aVOvuWWWwoKCtC2yWT6yU9+8umnn7LfHSpcV1fX3Nz8y1/+ks/noz3z58+fNWvW7t27h/ulYFg6GcsJKBwOezyezMxMAGhoaACAVatW9W6wf//997u6uqLn5+Xl9b48Wg+t0+meffbZw4cPFxQUzJkz59e//nVVVdVwArjpppu8Xu/BgwcB4IMPPsjPz581a9alTi4tLe39cvLkyaFQCGXPqObmZgAoKSnpvbOkpATtx7BRZywnoJaWFpZlUbFCKBQCwB//+McT33X06NHo+YM0Pz399NN1dXW//e1vJRLJli1bysrKhtPavWjRIpVK9fHHHwcCgU8//XSQ4g8AEATR+yUqqUUikd472YHmTiFJkqKoIYPBsDQ0lhPQ22+/DQDoqQqlIYIgZvTicDgcDseQ93G5XNXV1bm5uevXr9+3b19ra+vMmTOffvpphmEGv5DL5S5btuyf//zn7t27u7u7B09AtbW1vV9WV1fzeDyTydR7J/oU586d672zrq6usLBwyE+BYWlozCagAwcO/OEPf7juuutQe5ZWq50/f355eTmq8QWAU6dOLV26dN++fUPe6vjx45MmTYrWsxiNxpkzZ5IkOWB5pM/OG2+8sbW19Te/+U1RUdHUqVMHeZcPPvgA1TEBgNls3r59+zXXXBOtsUImTJiQl5f3+uuvR0tGR48ePXr06JIlSy4VAIals7HT523Hjh1ffvklAHg8nlOnTn388cf5+fmvvvpq9IQXXnjhmmuuWbBgwU9/+lMej1deXq7VateuXTvknefPn5+VlbVq1ao1a9ZkZGQcOXLk/fffv//++/tkBwCQSCTd3d1vvfXWokWLxo8fDwBLliwRCASVlZVPP/304O8ikUgWLFjwwAMPAMCbb74ZiUSef/75PufweLzNmzffcccdV1111R133GGz2bZu3Zqbm/vII49cKgAMS2upbIJLENQMH8Xn82fMmLF27Vq3293nzBMnTlx77bUajcZgMNx6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yXN3ugmCwCWg5HvxxRerqqriuUNGRsbvfve7RMWTfEMkoDvvvPP9999/6qmn5s2bd9ddd91+++0ajSY5kX0fOBwO+HYcxsU2+BGbjLWPbI32i7NVLMtm5eSyLCtVSXEJKPn27t175N9HMsdnxna5rdVmUBrGcgJ68sknn3zyyerq6r/85S8vv/zyQw89tGTJkrvuumvFihUiUTL+TsY2VAJCj2B5+mJAk7GO2ExAvZk02lAo6OyyZ+fkAoBYIcYJKCVKF5Ru+HhDbNduW7Ot/vP6xMaTZMMq6k+cOPG55547efLkQw899K9//evHP/6xwWC477770HxuWMyiI1GdTufFyVhHeCBYFJqd3mrukMkVcoWSy+PiBIQl39AJyG63/9///d/y5cv1ev0777xz//3379279913321ubr7yyivxPDLxcDgcYoGAR5J+v18ukQOA3+cfifUI+0Mt8eaONgAw5eYzNBOdZQbDkmaIR7DFixd/9dVXRqNx5cqVn3/++YIFC0iSjB5SKBTNzc3jx48f+TjHpq6uLp1C4fV6WZaVS1XhcCQYDIqT8ggm4vO1MjlqCMvKyW0/3uz2uVmWRXM7YFhyDJGApk+fvmnTprlz5/b/XUokkmPHjhUWFvbZX11d/eabb3q93oULF65atSqasAY5+thjj9XXX3yUXbZsGZpJYPD7jA0Oh0MtlaJxGEqZ8mInoBEeCh+V/W1LfJYpx7fbx9CMw+HQarXJeXcMgyEfwWpra+fNm9c7+7jd7ltvvRW+nb+2T16gaXrLli3333//tm3bGhoa+szXf6mjnZ2dO3bs2LVr165du372s58NeZ8xo6urCzWBAYBUovCO8GSsfZg0Wov54ph4hmYAdwUaQzo6OgiCePfdd6N7tmzZsmbNmhF6u5MnT86dOzeGCwcuAfn9frQkyJ49e7Zs2dL7UHNz8yALV1dWVmq1WjSb5A033LB3797eax4NeBStviaTyYZ/nzGjq6srXy5HJSCFVGnraASAJPRCREwa7e7KCoZhsky5aE97e/u0adOS8+7YSONyuY8//vjy5csvawrEcDjceznWkTZwAgoEAh999BHajm4gJEkO0u/AZrOZTCa0bTKZUDPz4EetVisArF271uFwlJSUPPjggyqVavD7RLEsyzDMIB+PZVmWZeOpKUeXx1wzgsK7VABOp3PG+PEu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" style="display: block; margin: auto;" /></p>
+<p>In purple, we have the true density (DGP). In red, we have the Weibull density. In green, we have the normal density. From the plot, it’s hard to tell which distribution is a better fit to the DGP.</p>
+<p>Interestingly, the tails of the true distribution seem a bit heavier than the tails of the Weibull and Normal. This may suggest that a heavier-tailed model may be a better fit, such as the lognormal distribution, but we will not pursue this.</p>
+<div id="performance-measures-of-the-mle" class="section level3">
+<h3>Performance Measures of the MLE</h3>
+<p>A nice property of MLEs is that, asymptotically, given some regularity conditions, they are normally distributed with a mean given by the true true parameter and a variance-covariance given by the inverse of the FIM evaluated at <span class="math inline">\(\theta\)</span>.</p>
+<p>We do not know <span class="math inline">\(\theta\)</span>, but we have have estimates, and thus we may approximate the sampling distribution of <span class="math inline">\(\hat\theta\)</span> with <span class="math inline">\(\mathcal{N}(\hat\theta,I^{-1}(\hat\theta))\)</span>.</p>
+<p>Let <span class="math inline">\(F\)</span> denote the true distribution function such that <span class="math inline">\(X_j \sim F\)</span> for all <span class="math inline">\(j\)</span>. Suppose we have some population parameter <span class="math inline">\(\theta = t(F)\)</span> and an estimator of <span class="math inline">\(\theta\)</span> given by <span class="math inline">\(\hat\theta = s(\{X_1,\ldots,X_n\})\)</span>. A reasonable requirement for an estimator <span class="math inline">\(\hat\theta\)</span> is that it converges to the true parameter value <span class="math inline">\(\theta\)</span> as we collect more and more data. In particular, we say that it is a consistent estimator of <span class="math inline">\(\theta\)</span> if <span class="math inline">\(\hat\theta\)</span> converges in probability to <span class="math inline">\(\theta\)</span>, denoted by <span class="math inline">\(\hat\theta \overset{p}{\mapsto} \theta\)</span>.</p>
+<p>If the regularity conditions hold for the MLE, then <span class="math inline">\(\hat\theta\)</span> is a consistent estimator of <span class="math inline">\(\theta\)</span>. However, for finite sample sizes, the estimator may be biased. The bias of <span class="math inline">\(\hat\theta\)</span> with respect to <span class="math inline">\(\theta\)</span> is defined as <span class="math display">\[
+    \operatorname{bias}(\hat\theta,\theta) = E(\hat\theta) - \theta,
+\]</span> where <span class="math inline">\(\operatorname{bias}(\hat\theta,\theta) = 0\)</span> indicates that <span class="math inline">\(\hat\theta\)</span> is an <em>unbiased</em> estimator of <span class="math inline">\(\theta\)</span>.</p>
+<p>As a function of the true distribution <span class="math inline">\(F\)</span>, the bias is unknown and is not a statistic. However, in the case of the normal, <span class="math inline">\(\hat\mu\)</span> is unbiased and, analytically, the bias of <span class="math inline">\(\hat\sigma^2\)</span> is given by <span class="math inline">\(-\frac{1}{n} \sigma^2\)</span>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">bias</span>(theta.hat,theta)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="co">#&gt; [1]  0.0 -0.1</span></span></code></pre></div>
+<p>If <span class="math inline">\(\sigma^2\)</span> is not known, we may estimate it by using replacing <span class="math inline">\(\hat\sigma^2\)</span> instead:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">bias</span>(theta.hat)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="co">#&gt; [1]  0.000 -0.191</span></span></code></pre></div>
+<p>This is pretty far off from the true bias. This may be the first indication that the DGP is far from being normal.</p>
+<p>If we wanted to estimate the bias for the Weibull, we could bootstrap it or something else, but we don’t attempt to do that here.</p>
+<p>The mean squared error (MSE) is another performance measure of an estimator. It is given by <span class="math display">\[
+    \operatorname{mse}(\hat\theta) = E\bigl\{(\hat\theta - \theta)^T(\hat\theta - \theta)\bigr\},
+\]</span> Another way to compute the MSE is given by <span class="math display">\[
+    \operatorname{mse}(\hat\theta) =
+        \operatorname{trace}(\operatorname{cov}(\hat\theta) +
+        \operatorname{bias}(\hat\theta)^T
+        \operatorname{bias}(\hat\theta).
+\]</span></p>
+<p>Here’s R code to compute the MSE of <span class="math inline">\(\hat\theta\)</span>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">round</span>(<span class="kw">mse</span>(theta.hat), <span class="dt">digits=</span><span class="dv">3</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="co">#&gt;       [,1] [,2]</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.191 0.00</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.000 7.34</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a><span class="kw">round</span>(<span class="kw">mse</span>(theta.weibull), <span class="dt">digits=</span><span class="dv">3</span>)  <span class="co"># true MSE</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.023 0.024</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.024 0.250</span></span></code></pre></div>
+<p>The normal distribution has significant MSE compared to the Weibull.</p>
+</div>
+</div>
+<div id="invariance-property-of-the-mle" class="section level2">
+<h2>Invariance Property of the MLE</h2>
+<p>An interesting property of an MLE <span class="math inline">\(\hat\theta\)</span> is that the MLE of <span class="math inline">\(f(\theta)\)</span> is given by <span class="math inline">\(f(\hat\theta)\)</span>. What is the distribution of <span class="math inline">\(f(\hat\theta)\)</span>? Asymptotically, it is normally distributed with a mean given by <span class="math inline">\(f(\theta)\)</span> and a variace-covariance given by the covariance of the sampling distribution of <span class="math inline">\(f(\hat\theta)\)</span>.</p>
+<p>We provide two methods to compute the variance-covariance.</p>
+<div id="delta-method" class="section level3">
+<h3>Delta Method</h3>
+<p>If <span class="math inline">\(f\)</span> is differentiable, the variance-covariance is given by <span class="math display">\[
+\operatorname{var}(f(\hat\theta)) = \operatorname{E}\bigl\{
+    \bigl(f(\hat\theta) - f(\theta)\bigr)^2\bigr\} =
+    \operatorname{E}\bigl\{J_f(\hat\theta) I(\hat\theta)^{-1} J_f(\hat\theta)^T\bigr\}.
+\]</span> Here, <span class="math inline">\(J_f(\hat\theta)\)</span> is the Jacobian of <span class="math inline">\(f\)</span> evaluated at <span class="math inline">\(\hat\theta\)</span>.</p>
+</div>
+<div id="monte-carlo-method" class="section level3">
+<h3>Monte-Carlo Method</h3>
+<p>The delta method requires that <span class="math inline">\(f\)</span> be differentiable, but we may use the Monte-carlo method to estimate the distribution of <span class="math inline">\(f(\hat\theta)\)</span> for any function <span class="math inline">\(f\)</span>. We simply sample from the MLE of <span class="math inline">\(\hat\theta\)</span> and apply <span class="math inline">\(f\)</span> to its estimates and take the covariance of the sample.</p>
+<p>Next, we show how to compute the sampling distribution of <span class="math inline">\(g(\hat\theta)\)</span> for some function <span class="math inline">\(g\)</span> and some MLE <span class="math inline">\(\hat\theta\)</span> using both the delta and mc methods.</p>
+</div>
+<div id="example-1" class="section level3">
+<h3>Example 1</h3>
+<p>For this example, we use the Weibull fit. Let <span class="math inline">\(g(\theta) = A \theta + b\)</span> for some matrix <span class="math inline">\(A\)</span> and vector <span class="math inline">\(b\)</span>. (This is a simple linear transformation of <span class="math inline">\(\theta\)</span>.) We can define <span class="math inline">\(g\)</span> in R with:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>A &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>),<span class="dt">nrow=</span><span class="dv">2</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>b &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>g &lt;-<span class="st"> </span><span class="cf">function</span>(x) A <span class="op">%*%</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>b</span></code></pre></div>
+<p>We compute the variance-covariance of the MLE of <span class="math inline">\(g(\theta)\)</span> using both methods:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>g.mc &lt;-<span class="st"> </span><span class="kw">rmap</span>(theta.weibull,g,<span class="dt">n=</span>100000L)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>g.delta &lt;-<span class="st"> </span><span class="kw">rmap</span>(theta.weibull,g,<span class="dt">method=</span><span class="st">&quot;delta&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="kw">round</span>(<span class="kw">vcov</span>(g.mc), <span class="dt">digits=</span><span class="dv">3</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a><span class="co">#&gt;       [,1]  [,2]  [,3]  [,4]</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.095 0.142 0.095 0.143</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.142 0.213 0.143 0.214</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a><span class="co">#&gt; [3,] 0.095 0.143 1.003 1.504</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a><span class="co">#&gt; [4,] 0.143 0.214 1.504 2.256</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a><span class="kw">round</span>(<span class="kw">vcov</span>(g.delta), <span class="dt">digits=</span><span class="dv">3</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true"></a><span class="co">#&gt;       [,1]  [,2]  [,3]  [,4]</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.094 0.141 0.095 0.142</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.141 0.211 0.142 0.213</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true"></a><span class="co">#&gt; [3,] 0.095 0.142 0.999 1.498</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true"></a><span class="co">#&gt; [4,] 0.142 0.213 1.498 2.247</span></span></code></pre></div>
+<p>They are pretty close.</p>
+</div>
+</div>
+<div id="weighted-mle-a-weighted-sum-of-mles" class="section level2">
+<h2>Weighted MLE: A Weighted Sum of MLEs</h2>
+<p>Since the variance-covariance of an MLE is inversely proportional to the Fisher information that the MLE is defined with respect to, we can combine multiple MLEs of <span class="math inline">\(\theta\)</span>, each of which may be defined with respect to a different kind of sample, to arrive at the MLE that incorporates the Fisher information in all of those samples.</p>
+<p>Consider <span class="math inline">\(k\)</span> mutually independent MLEs of parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span>, where <span class="math inline">\(\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))\)</span>. Then, the sampling MLE of <span class="math inline">\(\theta\)</span> that incorporates all of the data in <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span> is given by the inverse-variance weighted mean, <span class="math display">\[
+    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
+\]</span> which, asymptotically, has an expected value of <span class="math inline">\(\theta\)</span> and a variance-covariance of <span class="math inline">\(\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}\)</span>.</p>
+<div id="example-2" class="section level3">
+<h3>Example 2</h3>
+<p>For this example, we use the normal fit.</p>
+<p>To evaluate the performance of the weighted MLE, we generate a sample of <span class="math inline">\(N=1000\)</span> observations from <span class="math inline">\(\mathcal{N}(\theta)\)</span> and compute the MLE for the observed sample, denoted by <span class="math inline">\(\hat\theta\)</span>.</p>
+<p>We then divide the observed sample into <span class="math inline">\(r=5\)</span> sub-samples, each of size <span class="math inline">\(N/r=100\)</span>, and compute the MLE for each sub-sampled, denoted by <span class="math inline">\(\theta^{(1)},\ldots,\theta^{(r)}\)</span>.</p>
+<p>Finally, we do a weighted combination these MLEs to form the weighted MLE, denoted by <span class="math inline">\(\theta_w\)</span>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>N &lt;-<span class="st"> </span><span class="dv">500</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>r &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>samp &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N, <span class="dt">mean =</span> theta[<span class="dv">1</span>], <span class="dt">sd =</span> <span class="kw">sqrt</span>(theta[<span class="dv">2</span>]))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>samp.sub &lt;-<span class="st"> </span><span class="kw">matrix</span>(samp, <span class="dt">nrow =</span> r)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>mles.sub &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">length =</span> r)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>r)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a>    mles.sub[[i]] &lt;-<span class="st"> </span><span class="kw">fit_normal</span>(samp.sub[i,])</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true"></a>mle.wt &lt;-<span class="st"> </span><span class="kw">mle_weighted</span>(mles.sub)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true"></a>mle &lt;-<span class="st"> </span><span class="kw">fit_normal</span>(samp)</span></code></pre></div>
+<p>We show the results in the following R code. First, we show the weighted MLE and its MSE:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">params</span>(mle.wt)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="co">#&gt; [1] 1.98 8.71</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="kw">round</span>(<span class="kw">mse</span>(mle.wt), <span class="dt">digits=</span><span class="dv">3</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.018 0.000</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.000 0.313</span></span></code></pre></div>
+<p>The MLE for the total sample and its MSE is:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">params</span>(mle)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="co">#&gt; [1] 1.98 9.28</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="kw">round</span>(<span class="kw">mse</span>(mle), <span class="dt">digits=</span><span class="dv">3</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.019 0.000</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.000 0.345</span></span></code></pre></div>
+<p>We see that <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\hat\theta_w\)</span> model approximately the same sampling distribution.</p>
+</div>
+</div>
+<div id="bootstrapping-the-mles" class="section level2">
+<h2>Bootstrapping the MLEs</h2>
+<p>Let’s compare the earlier results that relied on the large sampling assumption with the bootstrapped MLE using <code>mle_boot</code>. First, <code>mle_boot</code> is just a wrapper for <code>boot</code> objects or objects like <code>boot</code>. Thus to use <code>mle_boot</code>, we first need to call <code>boot</code> to bootstrap our MLE for the Weibull fit.</p>
+<p>We just need to wrap it in a function that takes the data as input and returns the MLE of the parameters and then pass it to <code>mle_boot</code> constructor:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>theta.boot &lt;-<span class="st"> </span><span class="kw">mle_boot</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>    <span class="kw">boot</span>(<span class="dt">data =</span> x,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>         <span class="dt">statistic =</span> <span class="cf">function</span>(x, i) <span class="kw">params</span>(<span class="kw">fit_weibull</span>(x[i])),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>         <span class="dt">R =</span> <span class="dv">1000</span>))</span></code></pre></div>
+<p>We already printed out the <code>theta.boot</code> object, which provided a lot of information about it, but we can obtain specified statistics from the Bootstrap MLE using the standard interface in <code>algorithmic.mle</code>, e.g.:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">print</span>(theta.boot)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="co">#&gt; Maximum likelihood estimator of type mle_boot is normally distributed.</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a><span class="co">#&gt; [1] 1.95 9.27</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a><span class="co">#&gt; The standard error is  0.153 0.501 .</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a><span class="co">#&gt; The asymptotic 95% confidence interval of the parameters are given by:</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a><span class="co">#&gt;        2.5% 97.5%</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a><span class="co">#&gt; param1 1.64  2.23</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true"></a><span class="co">#&gt; param2 8.31 10.28</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true"></a><span class="co">#&gt; The MSE of the individual components in a multivariate estimator is:</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true"></a><span class="co">#&gt;        [,1]   [,2]</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true"></a><span class="co">#&gt; [1,] 0.0235 0.0283</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.0283 0.2519</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true"></a><span class="kw">bias</span>(theta.boot)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true"></a><span class="co">#&gt; [1]  0.0159 -0.0228</span></span></code></pre></div>
+<p>We see that, for the most part, the results are similar to those obtained using the large sampling assumption.</p>
+</div>
+<div id="goodness-of-fit" class="section level2">
+<h2>Goodness-of-Fit</h2>
+<p>We are fitting a model to the data that does not precisely capture the generative model <span class="math inline">\(W\)</span>. So, how good of a fit is it?</p>
+<p>We will conduct a goodness of fit test, <span class="math display">\[\begin{align}
+  H_0 &amp;: \text{the data is compatible with the Weibull distribution}\\
+  H_A &amp;: \text{the data is not compatible with the Weibull distribution}.
+\end{align}\]</span></p>
+<p>To perform this test, we will use the Cramer-von Mises test. This test is based on the Cramer-von Mises statistic, which is a measure of the distance between the empirical distribution function of the data and the distribution function of the model. The Cramer-von Mises statistic is given by <span class="math display">\[
+  \hat D_n^2 = \frac{1}{n}\sum_{i=1}^n \left(\hat F_n(x_i) - F(x_i)\right)^2
+\]</span> where <span class="math inline">\(\hat F_n\)</span> is the empirical distribution function of the data and <span class="math inline">\(F\)</span> is the distribution function of the model.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>cramer.test &lt;-<span class="st"> </span><span class="cf">function</span>(obs.dat,ref.dat)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>{</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>  stat &lt;-<span class="st"> </span>CDFt<span class="op">::</span><span class="kw">CramerVonMisesTwoSamples</span>(obs.dat,ref.dat)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>  <span class="kw">list</span>(<span class="dt">p.value=</span><span class="kw">exp</span>(<span class="op">-</span>stat)<span class="op">/</span><span class="fl">6.0</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>       <span class="dt">cramer.stat=</span>stat,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>       <span class="dt">obs.size=</span><span class="kw">length</span>(obs.dat),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>       <span class="dt">ref.size=</span><span class="kw">length</span>(ref.dat))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a>}</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a>wei.shape &lt;-<span class="st"> </span><span class="kw">params</span>(theta.weibull)[<span class="dv">1</span>]</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true"></a>wei.scale &lt;-<span class="st"> </span><span class="kw">params</span>(theta.weibull)[<span class="dv">2</span>]</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true"></a>ref.dat &lt;-<span class="st"> </span><span class="kw">rweibull</span>(<span class="dv">1000000</span>, <span class="dt">shape =</span> wei.shape, <span class="dt">scale =</span> wei.scale)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true"></a><span class="kw">cramer.test</span>(x, ref.dat)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true"></a><span class="co">#&gt; $p.value</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true"></a><span class="co">#&gt; [1] 0.16</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true"></a><span class="co">#&gt; $cramer.stat</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true"></a><span class="co">#&gt; [1] 0.042</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true"></a><span class="co">#&gt; $obs.size</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true"></a><span class="co">#&gt; [1] 100</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true"></a><span class="co">#&gt; $ref.size</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true"></a><span class="co">#&gt; [1] 1000000</span></span></code></pre></div>
+<p>Looking at the <span class="math inline">\(p\)</span>-value, we see that the data is compatible with the Weibull distribution. Now, let’s do the same for the normal distribution:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>norm.mu &lt;-<span class="st"> </span><span class="kw">params</span>(theta.hat)[<span class="dv">1</span>]</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>norm.var &lt;-<span class="st"> </span><span class="kw">params</span>(theta.hat)[<span class="dv">2</span>]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>ref.dat &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000000</span>, <span class="dt">mean =</span> norm.mu, <span class="dt">sd =</span> <span class="kw">sqrt</span>(norm.var))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a><span class="kw">cramer.test</span>(x, ref.dat)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a><span class="co">#&gt; $p.value</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a><span class="co">#&gt; [1] 0.149</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a><span class="co">#&gt; $cramer.stat</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a><span class="co">#&gt; [1] 0.112</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true"></a><span class="co">#&gt; $obs.size</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true"></a><span class="co">#&gt; [1] 100</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true"></a><span class="co">#&gt; $ref.size</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true"></a><span class="co">#&gt; [1] 1000000</span></span></code></pre></div>
+<p>They are both compatible with the data. However, the Weibull distribution has a larger <span class="math inline">\(p\)</span>-value, which may suggest it is a better fit. We also have the AIC measure of goodness of fit. The AIC is given by <span class="math display">\[
+  \text{AIC} = -2\log L + 2k,
+\]</span> where <span class="math inline">\(L\)</span> is the likelihood of the model and <span class="math inline">\(k\)</span> is the number of parameters in the model. The AIC is a measure of the tradeoff between the goodness of fit and the complexity of the model.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="kw">aic</span>(theta.weibull)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="co">#&gt; [1] 573</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a><span class="kw">aic</span>(theta.hat)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a><span class="co">#&gt; [1] 583</span></span></code></pre></div>
+<p>A lower AIC value indicates a better fit. Thus, according to this measure, the Weibull distribution is the better fit.</p>
+</div>
+<div id="prediction-intervals" class="section level2">
+<h2>Prediction Intervals</h2>
+<p>Frequently, we are actually interested in predicting the outcome of the random variable (or vector) that we are estimating the parameters of.</p>
+<p>We observed a sample <span class="math inline">\(\mathcal{D} = \{T_i\}_{i=1}^n\)</span> where <span class="math inline">\(T_i \sim N(\mu,\sigma^2)\)</span>, <span class="math inline">\(\theta = (\mu,\sigma^2)^T\)</span> is not known. We compute the MLE of <span class="math inline">\(\theta\)</span>, which, asymptotically, is normally distributed with a mean <span class="math inline">\(\theta\)</span> and a variance-covariance <span class="math inline">\(I^{-1}(\theta)/n\)</span>.</p>
+<p>We wish to model the uncertainty of a new observation, <span class="math inline">\(\hat{T}_{n+1}|\mathcal{D}\)</span>. We do so by considering both the uncertainty inherent to the Normal distribution and the uncertainty of our estimate <span class="math inline">\(\hat\theta\)</span> of <span class="math inline">\(\theta\)</span>. In particular, we let <span class="math inline">\(\hat{T}_{n+1}|\hat\theta \sim N(\hat\mu,\hat\sigma^2)\)</span> and <span class="math inline">\(\hat\theta \sim N(\theta,I^{-1}(\theta)/n)\)</span> (the sampling distribution of the MLE). Then, the joint distribution of <span class="math inline">\(\hat{T}_{n+1}\)</span> and <span class="math inline">\(\hat\theta\)</span> has the pdf given by <span class="math display">\[
+    f(t,\theta) = f_{\hat{T}|\hat\theta}(t|\theta=(\mu,\sigma^2)) f_{\hat\theta}(\theta),
+\]</span> and thus to find <span class="math inline">\(f(t)\)</span>, we marginalize over <span class="math inline">\(\theta\)</span>, obtaining <span class="math display">\[
+    f(t) = \int_{-\infty}^\infty \int_{-\infty}^{\infty} f_{\hat{T}_{n+1},\hat\mu,\hat\sigma^2}(t,\mu,\sigma^2) d\mu d\sigma^2.
+\]</span></p>
+<p>Given the information in the sample, the uncertainty in the new observation is characterized by the distribution <span class="math display">\[
+    \hat{T}_{n+1} \sim f(t).
+\]</span></p>
+<p>It has greater variance than <span class="math inline">\(T_{n+1}|\hat\theta\)</span> because, as stated earlier, we do not know <span class="math inline">\(\theta\)</span>, we only have an uncertain estimate <span class="math inline">\(\hat\theta\)</span>.</p>
+<p>In <code>pred</code>, we compute the predictive interval (PI) of the distribution of <span class="math inline">\(\hat{T}_{n+1}\)</span> using Monte Carlo simulation, where we replace the integral with a sum over a large number of draws from the joint distribution of <span class="math inline">\(\hat{T}_{n+1}\)</span> and <span class="math inline">\(\hat\theta\)</span> and then compute the empirical quantiles.</p>
+<p>The function <code>pred</code> takes as arguments <code>x</code>, in this case an <code>mle</code> object, and a sampler for the distribution of the random variable of interest, in this case <code>rweibull</code> (the sampler for the normal distribution). The sampler must be compatible with the output of <code>point(x)</code>, whether that output be a scalar or a vector. Here is how we compute the PI for <span class="math inline">\(\hat{T}_{n+1}\)</span>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="kw">pred</span>(<span class="dt">x=</span>theta.hat, <span class="dt">samp=</span><span class="cf">function</span>(<span class="dt">n=</span><span class="dv">1</span>, theta) <span class="kw">rnorm</span>(n,theta[<span class="dv">1</span>],theta[<span class="dv">2</span>]))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a><span class="co">#&gt;      mean lower upper</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a><span class="co">#&gt; [1,] 8.39 -29.8  46.6</span></span></code></pre></div>
+<p>In general, it will return a <span class="math inline">\(p\)</span>-by-<span class="math inline">\(3\)</span> matrix, where <span class="math inline">\(p\)</span> is the dimension of <span class="math inline">\(T\)</span> and the columns are the mean, lower quantile, and upper quantile of the predictive distribution.</p>
+<p>How does this compare to <span class="math inline">\(T_{n+1}|\hat\theta\)</span>? We can compute the 95% quantile interval for <span class="math inline">\(T_{n+1}|\hat\theta\)</span> using the <code>qnorm</code> function:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>mu &lt;-<span class="st"> </span><span class="kw">params</span>(theta.hat)[<span class="dv">1</span>]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>sd &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">params</span>(theta.hat)[<span class="dv">2</span>])</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a><span class="kw">c</span>(<span class="dt">mean=</span>mu,<span class="dt">lower=</span><span class="kw">qnorm</span>(.<span class="dv">025</span>,<span class="dt">mean=</span>mu, <span class="dt">sd=</span>sd),<span class="dt">upper=</span><span class="kw">qnorm</span>(.<span class="dv">975</span>,<span class="dt">mean=</span>mu, <span class="dt">sd=</span>sd))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a><span class="co">#&gt;   mean  lower  upper </span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a><span class="co">#&gt;  8.230 -0.338 16.799</span></span></code></pre></div>
+<p>We see that the 95% quantile interval for <span class="math inline">\(T_{n+1}|\hat\theta\)</span> is smaller than <span class="math inline">\(\hat{T}_{n+1}\)</span>, which is what we expected. After all, there is uncertainty about the parameter value <span class="math inline">\(\theta\)</span>.</p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>In this vignette, we demonstrated how to use the <code>algebraic.mle</code> package to estimate the sampling distribution of the MLE using the large sampling assumption and the Bootstrap method. The package provides various functions for obtaining statistics of the MLE, allowing for a deeper understanding of the properties of your estimator.</p>
+<p>We showed how to fit Weibull and Normal distributions to a simulated dataset whose true distribution, while known, does not have a common name.</p>
+<p>We have shown how to compare the two models using the Cramer-von Mises test and the AIC measure of goodness of fit. We came to no definitive conclusion about which model is better, but the Weibull distribution has a larger <span class="math inline">\(p\)</span>-value from the Cramer-von Mises test, and a lower AIC value, which serves as some evidence that it is a better fit. We saw the true DGP is visually different from both the Weibull and the normal distributions. Notably, the DGP has longer tails than both, suggesting that an even better fit may be a long-tail distribution like the log-normal or the Pareto distribution.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
