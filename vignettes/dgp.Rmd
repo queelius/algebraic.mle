@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 <!-- badges: start -->
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/queelius/algebraic.mle/blob/master/LICENSE)
+[![GPL-3 License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
 `algebraic.mle` is an R package that provides an algebra over

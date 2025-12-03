@@ -21,7 +21,7 @@ print_num <- function(x) print(sprintf("%.3f", x))
 
 
 <!-- badges: start -->
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/queelius/algebraic.mle/blob/master/LICENSE)
+[![GPL-3 License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
 `algebraic.mle` is an R package that provides an algebra over
@@ -478,8 +478,10 @@ mses.hat.hat <- matrix(NA, nrow = length(ns), ncol = 2)
 j <- 1
 for (n in ns) {
     theta.n <- empirical_dist(theta_samp_mc(n = n, theta = theta, B = B))
-    mse.mu.n <- expectation(theta.n, function(x) (x[1] - mu)^2)
-    mse.var.n <- expectation(theta.n, function(x) (x[2] - var)^2)
+    # Use mean() on the sampled distribution for MSE calculation
+    samples <- obs(theta.n)
+    mse.mu.n <- mean((samples[, 1] - mu)^2)
+    mse.var.n <- mean((samples[, 2] - var)^2)
     data <- rnorm(n = n, mean = mu, sd = sqrt(var))
     fit <- fit_normal(data)
     mses.mc[j, ] <- c(mse.mu.n, mse.var.n)

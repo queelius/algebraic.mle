@@ -429,7 +429,7 @@ $$
 where $\hat F_n$ is the empirical distribution function of the data and
 $F$ is the distribution function of the model.
 
-```{r}
+```{r, eval = requireNamespace("CDFt", quietly = TRUE)}
 cramer.test <- function(obs.dat,ref.dat)
 {
   stat <- CDFt::CramerVonMisesTwoSamples(obs.dat,ref.dat)
@@ -448,7 +448,7 @@ cramer.test(x, ref.dat)
 Looking at the $p$-value, we see that the data is compatible with the
 Weibull distribution.
 Now, let's do the same for the normal distribution:
-```{r}
+```{r, eval = requireNamespace("CDFt", quietly = TRUE)}
 norm.mu <- params(theta.hat)[1]
 norm.var <- params(theta.hat)[2]
 ref.dat <- rnorm(1000000, mean = norm.mu, sd = sqrt(norm.var))
