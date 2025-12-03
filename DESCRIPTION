@@ -21,7 +21,7 @@ Imports:
     mvtnorm,
     MASS,
     numDeriv
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
 URL: https://github.com/queelius/algebraic.mle,
     https://queelius.github.io/algebraic.mle/
 BugReports: https://github.com/queelius/algebraic.mle/issues

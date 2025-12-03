@@ -6,11 +6,30 @@
 #'
 #' It has a relatively rich API for working with these objects to help you
 #' understand your MLE estimator.#'
-#' 
+#'
 #' @docType package
 #' @name algebraic.mle
 NULL
 #> NULL
+
+#' @importFrom algebraic.dist params nparams obs sampler rmap expectation
+#' @export
+params
+
+#' @export
+nparams
+
+#' @export
+obs
+
+#' @export
+sampler
+
+#' @export
+rmap
+
+#' @export
+expectation
 
 
 #' Generic method for obtaining the log-likelihood value of a fitted MLE
