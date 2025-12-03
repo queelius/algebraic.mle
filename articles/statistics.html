@@ -5,63 +5,49 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="algebraic.mle">
 <title>Statistics and characteristics of the MLE • algebraic.mle</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Statistics and characteristics of the MLE">
-<meta property="og:description" content="algebraic.mle">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Statistics and characteristics of the MLE">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a>
-    <a class="dropdown-item" href="../articles/fitting-common-dist.html">Fitting Common Distributions to a DGP</a>
-    <a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a></li>
+    <li><a class="dropdown-item" href="../articles/fitting-common-dist.html">Fitting Common Distributions to a DGP</a></li>
+    <li><a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a></li>
+  </ul>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/queelius/algebraic.mle/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/queelius/algebraic.mle/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -70,17 +56,18 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Statistics and characteristics of the MLE</h1>
+
+      <h1>Statistics and characteristics of the MLE</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/queelius/algebraic.mle/blob/HEAD/vignettes/statistics.Rmd" class="external-link"><code>vignettes/statistics.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/queelius/algebraic.mle/blob/master/vignettes/statistics.Rmd" class="external-link"><code>vignettes/statistics.Rmd</code></a></small>
       <div class="d-none name"><code>statistics.Rmd</code></div>
     </div>
 
     
     
 <!-- badges: start -->
-<p><a href="https://github.com/queelius/algebraic.mle/blob/master/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a> <!-- badges: end --></p>
+<p><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/license-GPL--3-blue.svg" alt="GPL-3 License"></a> <!-- badges: end --></p>
 <p><code>algebraic.mle</code> is an R package that provides an algebra
 over Maximum Likelihood Estimators (MLEs). These estimators possess many
 desirable, well-defined statistical properties which the package helps
@@ -179,8 +166,12 @@ the mean and the second column is the MLE of the variance.</p>
 <span><span class="co">#&gt; [6,] 0.986 0.904</span></span></code></pre></div>
 <p>The matrix <code>mles</code> is a sample of MLEs from the sampling
 distribution of the MLE. It is an <em>empirical distribution</em> of the
-MLE <span class="math inline">\((\mu, \sigma^2)'\)</span> from
-samples of size <span class="math inline">\(n\)</span> <span class="math inline">\(X_i \sim N(\mu, \sigma^2)\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span>.</p>
+MLE
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi></mrow><annotation encoding="application/x-tex">(\mu, \sigma^2)'</annotation></semantics></math>
+from samples of size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">X_i \sim N(\mu, \sigma^2)</annotation></semantics></math>
+for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">i=1,\ldots,n</annotation></semantics></math>.</p>
 <p>This particular example is Monte Carlo simulation of the sampling
 distribution, since we are simulating the sampling distribution by
 repeatedly sampling from the population distribution and computing the
@@ -191,12 +182,14 @@ population, but with a large enough sample, the two will produce nearly
 identical results. See the bootstrap section for more details, where
 we’ll compare the two.</p>
 </blockquote>
-<p>For a sufficiently large number of simulations <span class="math inline">\(B\)</span>, the empirical sampling distribution
-should be very close to the true sampling distribution. We can plot the
-empirical sampling distribution of the MLEs using the <code>plot</code>
-function on the <code>mles</code> matrix.</p>
+<p>For a sufficiently large number of simulations
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>,
+the empirical sampling distribution should be very close to the true
+sampling distribution. We can plot the empirical sampling distribution
+of the MLEs using the <code>plot</code> function on the
+<code>mles</code> matrix.</p>
 <div class="figure" style="text-align: center">
-<img src="statistics_files/figure-html/unnamed-chunk-3-1.png" alt="Sampling distribution of the MLEs." width="384"><p class="caption">
+<img src="statistics_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="Sampling distribution of the MLEs." width="384"><p class="caption">
 Sampling distribution of the MLEs.
 </p>
 </div>
@@ -207,11 +200,15 @@ distribution by giving it the sample of MLEs previously generated:</p>
 <code class="sourceCode R"><span><span class="va">theta.mc</span> <span class="op">&lt;-</span> <span class="fu">algebraic.dist</span><span class="fu">::</span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/empirical_dist.html" class="external-link">empirical_dist</a></span><span class="op">(</span><span class="va">mles</span><span class="op">)</span></span></code></pre></div>
 <p>In general, for any MLE and assuming the the regularity conditions
 hold, the asymptotic sampling distribution of the MLE is normal with
-mean <span class="math inline">\(\theta\)</span> and variance-covariance
-matrix <span class="math inline">\(\Sigma = I^{-1}(\theta)_n\)</span>,
-where <span class="math inline">\(I\)</span> is the Fisher information
-matrix and <span class="math inline">\(n\)</span> is the sample size.
-However, in general:</p>
+mean
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+and variance-covariance matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><msup><mi>I</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">\Sigma = I^{-1}(\theta)_n</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math>
+is the Fisher information matrix and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+is the sample size. However, in general:</p>
 <ol style="list-style-type: decimal">
 <li>We don’t know when the asymptotic sampling distribution is a good
 approximation to the true sampling distribution. In these cases, the
@@ -232,9 +229,10 @@ the MLE for the normal distribution. First, let’s look at the mean:</p>
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">mu.mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    mu   var </span></span>
 <span><span class="co">#&gt; 0.995 0.982</span></span></code></pre></div>
-<p>The mean looks pretty close to the true parameter vector <span class="math display">\[
+<p>The mean looks pretty close to the true parameter vector
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>μ</mi><mo>=</mo><mn>1</mn><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
     \theta = (\mu = 1, \sigma^2 = 1)'.
-\]</span></p>
+</annotation></semantics></math></p>
 <p>We can actually compute any parameter, since <code>theta.mc</code>,
 models the concept of a distribution. In particular, it models a
 distribution in <code>algebraic.dist</code>, and thus the API exposed by
@@ -276,26 +274,38 @@ that here.</p>
 measures how far its average value is from the true value being
 estimated. Formally, it is defined as the difference between the
 expected value of the estimator and the true value of the parameter,
-i.e., <span class="math display">\[
+i.e.,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>Bias</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>E</mi><mover><mi>θ</mi><mo accent="true">̂</mo></mover></msub><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>θ</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \operatorname{Bias}(\hat\theta) = E_{\hat\theta}(\hat\theta) - \theta,
-\]</span> where <span class="math inline">\(E_{\hat\theta}\)</span>
+</annotation></semantics></math> where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>E</mi><mover><mi>θ</mi><mo accent="true">̂</mo></mover></msub><annotation encoding="application/x-tex">E_{\hat\theta}</annotation></semantics></math>
 denotes the expectation operator with respect to the sampling
-distribution of <span class="math inline">\(\hat\theta\)</span>.
+distribution of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>.
 (Normally, we drop the subscript in the expectation operator and write
-<span class="math inline">\(E\)</span> instead of <span class="math inline">\(E_{\hat\theta}\)</span> unless it’s not clear from
-context which expectation operator we are using.)</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
+instead of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>E</mi><mover><mi>θ</mi><mo accent="true">̂</mo></mover></msub><annotation encoding="application/x-tex">E_{\hat\theta}</annotation></semantics></math>
+unless it’s not clear from context which expectation operator we are
+using.)</p>
 <p>When the bias is zero, the estimator is <em>unbiased</em>, otherwise
 it is <em>biased</em>. Analytically, the asymptotic bias of the MLE for
-the parameters of the normal distribution is <span class="math display">\[
+the parameters of the normal distribution is
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>Bias</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mo>−</mo><mfrac><msup><mi>σ</mi><mn>2</mn></msup><mi>n</mi></mfrac></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
     \operatorname{Bias}(\hat\theta) = \left(\begin{array}{c}
         0 \\
         -\frac{\sigma^2}{n}
     \end{array}\right).
-\]</span> Plugging in the true value of <span class="math inline">\(\sigma^2 = 1\)</span> and the sample size <span class="math inline">\(n = 70\)</span>, we get <span class="math inline">\((0, 0.014)\)</span>. We may also provide an
-appropriate implementation of the <code>bias</code> method in
-<code>algebraic.mle</code> for <code>mle_normal</code> (which is what we
-called our the object that we returned from
-<code>fit_normal</code>):</p>
+</annotation></semantics></math> Plugging in the true value of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>σ</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma^2 = 1</annotation></semantics></math>
+and the sample size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>70</mn></mrow><annotation encoding="application/x-tex">n = 70</annotation></semantics></math>,
+we get
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0.014</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0, 0.014)</annotation></semantics></math>.
+We may also provide an appropriate implementation of the
+<code>bias</code> method in <code>algebraic.mle</code> for
+<code>mle_normal</code> (which is what we called our the object that we
+returned from <code>fit_normal</code>):</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bias.mle_normal</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">par</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">par</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -323,11 +333,9 @@ the bias provided by the <code>bias.mle_emp</code>:</p>
 <p>The asymptotic bias and the empirical bias are pretty close. Let’s
 see how the bias of the variance changes as the sample size
 increases.</p>
-<details><summary>
-Click to show/hide R code
-</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">200</span>, <span class="fl">25</span><span class="op">)</span></span>
+<span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">500</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">bias_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ns</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">j</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">ns</span><span class="op">)</span> <span class="op">{</span></span>
@@ -340,7 +348,7 @@ Click to show/hide R code
 <span>    <span class="va">bias_var</span><span class="op">[</span><span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">vars</span><span class="op">)</span> <span class="op">-</span> <span class="va">var</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</details><p><img src="statistics_files/figure-html/bias-plot-1.png" width="480"><img src="statistics_files/figure-html/bias-plot-2.png" width="480"></p>
+<p><img src="statistics_files/figure-html/bias-plot-1.png" class="r-plt" width="576"></p>
 <div class="section level3">
 <h3 id="variance-covariance-matrix">Variance-covariance matrix<a class="anchor" aria-label="anchor" href="#variance-covariance-matrix"></a>
 </h3>
@@ -348,19 +356,28 @@ Click to show/hide R code
 statistical measures of an estimator of a parameter vector. It
 quantities both the variability of the individual parameter estimates
 and how they co-vary with each other.</p>
-<p>The variance-covariance matrix of a parameter vector <span class="math inline">\(\theta = (\theta_1, \ldots,
-\theta_p)'\)</span> is an <span class="math inline">\(n \times
-n\)</span> matrix defined as <span class="math display">\[
-\operatorname{Var}(\hat\theta) = E_{\hat\theta}\!\bigl[(\hat\theta -
-E_{\hat\theta}(\hat\theta))
+<p>The variance-covariance matrix of a parameter vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>θ</mi><mi>p</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi></mrow><annotation encoding="application/x-tex">\theta = (\theta_1, \ldots, \theta_p)'</annotation></semantics></math>
+is an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>×</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">n \times n</annotation></semantics></math>
+matrix defined as
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>Var</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>E</mi><mover><mi>θ</mi><mo accent="true">̂</mo></mover></msub><mspace width="-0.167em"></mspace><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">[</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><msub><mi>E</mi><mover><mi>θ</mi><mo accent="true">̂</mo></mover></msub><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><msub><mi>E</mi><mover><mi>θ</mi><mo accent="true">̂</mo></mover></msub><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">]</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\operatorname{Var}(\hat\theta) = E_{\hat\theta}\!\bigl[(\hat\theta - E_{\hat\theta}(\hat\theta))
     (\hat\theta - E_{\hat\theta}(\hat\theta))'\bigr].
-\]</span></p>
-<p>The <span class="math inline">\((i, j)\)</span>th element of the
-variance-covariance matrix is the covariance between the <span class="math inline">\(i\)</span>th and <span class="math inline">\(j\)</span>th elements of the parameter vector,
-respectively <span class="math inline">\(\theta_i\)</span> and <span class="math inline">\(\theta_j\)</span>. Thus, the diagonal elements of
-the variance-covariance matrix are the variances of the individual
-parameter estimates, and the off-diagonal elements are the covariances
-between the parameter estimates.</p>
+</annotation></semantics></math></p>
+<p>The
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i, j)</annotation></semantics></math>th
+element of the variance-covariance matrix is the covariance between the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>th
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>th
+elements of the parameter vector, respectively
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\theta_j</annotation></semantics></math>.
+Thus, the diagonal elements of the variance-covariance matrix are the
+variances of the individual parameter estimates, and the off-diagonal
+elements are the covariances between the parameter estimates.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span>, digits<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       [,1]  [,2]</span></span>
@@ -370,9 +387,10 @@ between the parameter estimates.</p>
 <span><span class="co">#&gt;        mu   var</span></span>
 <span><span class="co">#&gt; mu  0.014 0.000</span></span>
 <span><span class="co">#&gt; var 0.000 0.028</span></span></code></pre></div>
-<p>They look reasonably close, suggesting at <span class="math inline">\(n = 200\)</span>, the asymptotic sampling
-distribution is a good approximation to the “true” sampling distribution
-of the MLE.</p>
+<p>They look reasonably close, suggesting at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">n = 500</annotation></semantics></math>,
+the asymptotic sampling distribution is a good approximation to the
+“true” sampling distribution of the MLE.</p>
 </div>
 <div class="section level3">
 <h3 id="confidence-intervals">Confidence intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals"></a>
@@ -387,13 +405,18 @@ function:</p>
 <p>A very important measure of the accuracy of an estimator is its
 coverage probability, which is the probability that the confidence
 interval for the parameter estimate contains the true value of the
-parameter. If the coverage probability for an <span class="math inline">\((1-\alpha) \%\)</span>-confidence interval is
-<span class="math inline">\(1-\alpha\)</span>, then the confidence
-interval is said to be <em>well-calibrated</em>. If the coverage
-probability is less than <span class="math inline">\(1-\alpha\)</span>,
+parameter. If the coverage probability for an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>%</mi></mrow><annotation encoding="application/x-tex">(1-\alpha) \%</annotation></semantics></math>-confidence
+interval is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math>,
+then the confidence interval is said to be <em>well-calibrated</em>. If
+the coverage probability is less than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math>,
 then the confidence interval is said to be <em>conservative</em>; if the
-coverage probability is greater than <span class="math inline">\(1-\alpha\)</span>, then the confidence interval is
-said to be <em>anti-conservative</em>.</p>
+coverage probability is greater than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math>,
+then the confidence interval is said to be
+<em>anti-conservative</em>.</p>
 <p>We can estimate it by simulating a large number of samples from the
 population distribution and computing the proportion of times the
 confidence interval contains the true value of the parameter. We can do
@@ -423,7 +446,7 @@ Click to show/hide R code
 <span>    <span class="va">coverage_prob</span><span class="op">[</span><span class="va">j</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">count2</span> <span class="op">/</span> <span class="va">N</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</details><p><img src="statistics_files/figure-html/cov-plot-1.png" width="480"></p>
+</details><p><img src="statistics_files/figure-html/cov-plot-1.png" class="r-plt" width="480"></p>
 <p>We see that the coverage probability is close to the nominal coverage
 probability, and converges to it as the sample size increases. This
 suggests that the confidence intervals are well-calibrated.</p>
@@ -433,25 +456,33 @@ suggests that the confidence intervals are well-calibrated.</p>
 <h2 id="mean-squared-error-matrix">Mean squared error matrix<a class="anchor" aria-label="anchor" href="#mean-squared-error-matrix"></a>
 </h2>
 <p>The mean squared error (MSE) of an estimator of a parameter vector
-<span class="math inline">\(\theta\)</span> is defined as <span class="math display">\[
-\operatorname{MSE}(\hat\theta) = E\bigl[(\hat\theta - \theta)(\hat\theta
-- \theta)'\bigr],
-\]</span> where <span class="math inline">\(\hat\theta - \theta\)</span>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+is defined as
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>MSE</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">[</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">]</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\operatorname{MSE}(\hat\theta) = E\bigl[(\hat\theta - \theta)(\hat\theta - \theta)'\bigr],
+</annotation></semantics></math> where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">\hat\theta - \theta</annotation></semantics></math>
 is a column vector of differences between the estimator and the true
-parameter and <span class="math inline">\((\hat\theta -
-\theta)'\)</span> is a row vector of the same differences, and we
-are performing a standard matrix multiplication between the two vectors.
-The MSE is a measure of the average squared error of the estimator. It
-is a function of the true parameter value <span class="math inline">\(\theta\)</span>.</p>
+parameter and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi></mrow><annotation encoding="application/x-tex">(\hat\theta - \theta)'</annotation></semantics></math>
+is a row vector of the same differences, and we are performing a
+standard matrix multiplication between the two vectors. The MSE is a
+measure of the average squared error of the estimator. It is a function
+of the true parameter value
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
 <p>This MSE is a <em>matrix</em>. It is very similar to the
-variance-covariance matrix, which is defined as <span class="math display">\[
+variance-covariance matrix, which is defined as
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>Var</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">[</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">]</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \operatorname{Var}(\hat\theta) = E\bigl[(\hat\theta - E(\hat\theta))
     (\hat\theta - E(\hat\theta))'\bigr],
-\]</span> where we replace the true paramater <span class="math inline">\(\theta\)</span> with the expected value of the
-estimator <span class="math inline">\(\hat\theta\)</span>. If the
-estimator is unbiased, then <span class="math inline">\(E(\hat\theta) =
-\theta\)</span> and <span class="math inline">\(\operatorname{Var}(\hat\theta) =
-\operatorname{MSE}(\hat\theta)\)</span>.</p>
+</annotation></semantics></math> where we replace the true paramater
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+with the expected value of the estimator
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>.
+If the estimator is unbiased, then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">E(\hat\theta) = \theta</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>Var</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>MSE</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\operatorname{Var}(\hat\theta) = \operatorname{MSE}(\hat\theta)</annotation></semantics></math>.</p>
 <p>We not only need to consider the estimation error for each parameter
 individually, but also how these errors might relate to each other. For
 instance, it could be the case that when we overestimate one parameter,
@@ -460,8 +491,10 @@ errors in estimating different parameters can be captured by the
 off-diagonal elements of the MSE matrix, which represent the covariances
 between errors.</p>
 <p>The diagonal elements of the MSE represent the MSE of the individual
-parameter estimators, e.g., the <span class="math inline">\(i\)</span>th
-diagonal element represents <span class="math inline">\(\operatorname{MSE}(\hat\theta_j)\)</span>.</p>
+parameter estimators, e.g., the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>th
+diagonal element represents
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>MSE</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\operatorname{MSE}(\hat\theta_j)</annotation></semantics></math>.</p>
 <p>The <em>trace</em> of the MSE, the sum of the diagonal elements,
 represents the total MSE across all parameters. As a single summary
 statistic, it may be useful for comparing different estimators.</p>
@@ -473,11 +506,10 @@ value of the estimator and the true parameter value, and</li>
 </ol>
 <p>The MSE is then computed as the sum of the bias outer product and the
 variance-covariance matrix:</p>
-<p><span class="math display">\[
-\operatorname{MSE}(\hat\theta) =
-\operatorname{Bias}(\hat\theta)\operatorname{Bias}(\hat\theta)'
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>MSE</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>Bias</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>Bias</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi><mo>+</mo><mo>Var</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\operatorname{MSE}(\hat\theta) = \operatorname{Bias}(\hat\theta)\operatorname{Bias}(\hat\theta)'
     + \operatorname{Var}(\hat\theta).
-\]</span></p>
+</annotation></semantics></math></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mse.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">theta.hat</span>, <span class="va">theta</span><span class="op">)</span></span>
 <span><span class="va">mse.mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>,</span>
@@ -495,7 +527,8 @@ variance-covariance matrix:</p>
 variance-covariance matrices reported previously, which is not
 surprising, since the bias is relatively small and so the MSE is
 dominated by the variance.</p>
-<p>Let’s take a closer look at the variance and MSE of the mean <span class="math inline">\(\hat\mu\)</span>:</p>
+<p>Let’s take a closer look at the variance and MSE of the mean
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>μ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\mu</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># temporarily show more digits in the numbers/outputs for this code block</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
@@ -525,8 +558,10 @@ run a little experiment to show this:</p>
 <span><span class="va">j</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">ns</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">theta.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/empirical_dist.html" class="external-link">empirical_dist</a></span><span class="op">(</span><span class="fu">theta_samp_mc</span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, theta <span class="op">=</span> <span class="va">theta</span>, B <span class="op">=</span> <span class="va">B</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="va">mse.mu.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.n</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
-<span>    <span class="va">mse.var.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.n</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">var</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="co"># Use mean() on the sampled distribution for MSE calculation</span></span>
+<span>    <span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/obs.html" class="external-link">obs</a></span><span class="op">(</span><span class="va">theta.n</span><span class="op">)</span></span>
+<span>    <span class="va">mse.mu.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">samples</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="va">mse.var.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">samples</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">var</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span>    <span class="va">mses.mc</span><span class="op">[</span><span class="va">j</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mse.mu.n</span>, <span class="va">mse.var.n</span><span class="op">)</span></span>
@@ -534,14 +569,17 @@ run a little experiment to show this:</p>
 <span>    <span class="va">mses.hat.hat</span><span class="op">[</span><span class="va">j</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="../reference/mse.html">mse</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="statistics_files/figure-html/mse-plots-1.png" width="576"><img src="statistics_files/figure-html/mse-plots-2.png" width="576"></p>
+<p><img src="statistics_files/figure-html/mse-plots-1.png" class="r-plt" width="576"><img src="statistics_files/figure-html/mse-plots-2.png" class="r-plt" width="576"></p>
 <p>These plots demonstrate that the asymptotic MSE is a good
 approximation to the “true” MSE, which is the MSE computed from the
 empirical sampling distribution of the MLE.</p>
 <p>It’s difficult to distinguish the estimated asymptotic MSE, where the
-true parameter <span class="math inline">\(\theta\)</span> is not known,
-from the asymptotic MSE, where the true parameter <span class="math inline">\(\theta\)</span> is known. This is because the bias
-is so small, and so the MSE is dominated by the variance.</p>
+true parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+is not known, from the asymptotic MSE, where the true parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+is known. This is because the bias is so small, and so the MSE is
+dominated by the variance.</p>
 </div>
 <div class="section level2">
 <h2 id="bootstrap-of-the-sampling-distribution-of-the-mle">Bootstrap of the sampling distribution of the MLE<a class="anchor" aria-label="anchor" href="#bootstrap-of-the-sampling-distribution-of-the-mle"></a>
@@ -573,11 +611,11 @@ empirical sampling distribution of the MLE.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   mu  var </span></span>
-<span><span class="co">#&gt; 1.17 1.16</span></span>
+<span><span class="co">#&gt; 1.09 1.01</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      2.5% 97.5%</span></span>
-<span><span class="co">#&gt; mu  1.017  1.32</span></span>
-<span><span class="co">#&gt; var 0.948  1.38</span></span></code></pre></div>
+<span><span class="co">#&gt; mu  0.952  1.22</span></span>
+<span><span class="co">#&gt; var 0.825  1.20</span></span></code></pre></div>
 <p>Let’s use these Bootstrapped MLEs to generate an aproximation of the
 empirical sampling distribution:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
@@ -591,26 +629,26 @@ results:</p>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="co"># mean</span></span>
 <span><span class="op">(</span><span class="va">mu.b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">theta.b</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.17 1.16</span></span>
+<span><span class="co">#&gt; [1] 1.08 1.01</span></span>
 <span><span class="co"># variance of (mu, var)</span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.00593 0.01206</span></span>
+<span><span class="co">#&gt; [1] 0.00471 0.00937</span></span>
 <span><span class="co"># kurtosis of (mu, var) </span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">)</span><span class="op">^</span><span class="fl">4</span><span class="op">)</span> <span class="op">/</span></span>
 <span>    <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
-<span><span class="co">#&gt; [1] 2.87 3.20</span></span>
+<span><span class="co">#&gt; [1] 2.84 2.91</span></span>
 <span><span class="co"># skewness of mu and var -- should be (0, 0)</span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">)</span> <span class="op">/</span> <span class="va">theta</span><span class="op">)</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.0000276  0.0001810</span></span>
+<span><span class="co">#&gt; [1] 0.0000123 0.0001203</span></span>
 <span><span class="co"># covariance of (mu, var) -- should be around 0</span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu.b</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.000997</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.000795</span></span></code></pre></div>
 <p>These are not too bad.</p>
 <p>Let’s compute the bias and compare it to the previous results:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/bias.html">bias</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        mu       var </span></span>
-<span><span class="co">#&gt;  0.000873 -0.003245</span></span>
+<span><span class="co">#&gt;       mu      var </span></span>
+<span><span class="co">#&gt; -0.00144 -0.00459</span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation</a></span><span class="op">(</span><span class="va">theta.mc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span> <span class="va">theta</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       mu      var </span></span>
 <span><span class="co">#&gt; -0.00507 -0.01768</span></span>
@@ -620,24 +658,25 @@ results:</p>
 <p>We see that the <code>bias</code> function for <code>mle_boot</code>
 is not too bad. Note that the <code>bias</code> is an expectation w.r.t.
 the sampling distribution of the MLE. In general, we can have a better
-estimator if we use <span class="math display">\[
+estimator if we use
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>*</mo></msup><mo>=</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>−</mo><mo>Bias</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
     \hat\theta^* = \hat\theta - \operatorname{Bias}(\hat\theta),
-\]</span> assuming the bias estimate is accurate. In this particular
-example that transformation makes it worse, which is fine, the bias of
-the transformed estimator would be less in theory. Howevever, in
-practice, we don’t trust the bias reported by the Bootstrap, except as
-evidence that our estimator is biased or not. The analytic bias,
-<code>bias.mle_normal</code>, is more accurate, and will generally
-produce estimators with less bias (although by the bias-variance
-trade-off, it may have more variance).</p>
+</annotation></semantics></math> assuming the bias estimate is accurate.
+In this particular example that transformation makes it worse, which is
+fine, the bias of the transformed estimator would be less in theory.
+Howevever, in practice, we don’t trust the bias reported by the
+Bootstrap, except as evidence that our estimator is biased or not. The
+analytic bias, <code>bias.mle_normal</code>, is more accurate, and will
+generally produce estimators with less bias (although by the
+bias-variance trade-off, it may have more variance).</p>
 <p>Let’s compare the variance-covariance matrix of the Bootstrapped
 sampling distribution of the MLE to the “true” sampling distribution and
 the asymptotic sampling distribution:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.b</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        [,1]   [,2]</span></span>
-<span><span class="co">#&gt; [1,]  0.006 -0.001</span></span>
-<span><span class="co">#&gt; [2,] -0.001  0.012</span></span>
+<span><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.005 0.001</span></span>
+<span><span class="co">#&gt; [2,] 0.001 0.009</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">theta.mc</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        mu   var</span></span>
 <span><span class="co">#&gt; mu  0.014 0.000</span></span>
@@ -679,7 +718,7 @@ Click to show/hide R code
 <span>    <span class="co">#cat("n = ", n, ", coverage = ", coverage_prob[j, ], "\n")</span></span>
 <span>    <span class="va">j</span> <span class="op">&lt;-</span> <span class="va">j</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</details><p><img src="statistics_files/figure-html/cov-plot-boot-1.png" width="480"></p>
+</details><p><img src="statistics_files/figure-html/cov-plot-boot-1.png" class="r-plt" width="480"></p>
 </div>
 <div class="section level2">
 <h2 id="prediction-intervals">Prediction intervals<a class="anchor" aria-label="anchor" href="#prediction-intervals"></a>
@@ -687,53 +726,77 @@ Click to show/hide R code
 <p>Frequently, we are actually interested in predicting the outcome of
 the random variable (or vector) that we are estimating the parameters
 of.</p>
-<p>We observed a sample <span class="math inline">\(\mathcal{D} =
-\{X_i\}_{i=1}^n\)</span> where <span class="math inline">\(X_i \sim
-\operatorname{Normal}(\mu, \sigma)\)</span>, <span class="math inline">\(\theta = (\mu, \sigma)\)</span> not known. To
-estimate <span class="math inline">\(\theta\)</span>, we solved the MLE
-which, asymptotically, is normally distributed with a mean <span class="math inline">\(\theta\)</span> and a variance-covariance given by
-the inverse of the FIM (or, using the Bootstrap, by estimating the
-covariance of the sampling distribution of the Bootstrapped MLEs).</p>
-<p>We wish to model the uncertainty of a new observation, <span class="math inline">\(\hat{X}_{n+1}|\mathcal{D}\)</span>. We do so by
-considering both the uncertainty inherent to the Normal distribution and
-the uncertainty of our estimate <span class="math inline">\(\hat\theta\)</span>. In particular, we let <span class="math inline">\(\hat{X}_{n+1}|\hat\theta \sim
-\operatorname{Normal}(\hat\theta)\)</span> and <span class="math inline">\(\hat\theta \sim
-\operatorname{MVN}(\theta,I^{-1}(\theta)/n)\)</span>. Then, the joint
-distribution of <span class="math inline">\(\hat{X}_{n+1}\)</span> and
-<span class="math inline">\(\hat\theta\)</span> has the pdf given by
-<span class="math display">\[
-    f(t,\theta) = f_{\hat{X}|\hat\theta}(x|\theta)
-f_{\hat\theta}(\theta),
-\]</span> and thus to find <span class="math inline">\(f(t)\)</span>, we
-marginalize over <span class="math inline">\(\theta\)</span>, obtaining
-<span class="math display">\[
+<p>We observed a sample
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒟</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>X</mi><mi>i</mi></msub><msubsup><mo stretchy="false" form="postfix">}</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup></mrow><annotation encoding="application/x-tex">\mathcal{D} = \{X_i\}_{i=1}^n</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>∼</mo><mo>Normal</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>μ</mi><mo>,</mo><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">X_i \sim \operatorname{Normal}(\mu, \sigma)</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>μ</mi><mo>,</mo><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta = (\mu, \sigma)</annotation></semantics></math>
+not known. To estimate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
+we solved the MLE which, asymptotically, is normally distributed with a
+mean
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+and a variance-covariance given by the inverse of the FIM (or, using the
+Bootstrap, by estimating the covariance of the sampling distribution of
+the Bootstrapped MLEs).</p>
+<p>We wish to model the uncertainty of a new observation,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="prefix">|</mo><mi>𝒟</mi></mrow><annotation encoding="application/x-tex">\hat{X}_{n+1}|\mathcal{D}</annotation></semantics></math>.
+We do so by considering both the uncertainty inherent to the Normal
+distribution and the uncertainty of our estimate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>.
+In particular, we let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="prefix">|</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>∼</mo><mo>Normal</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{X}_{n+1}|\hat\theta \sim \operatorname{Normal}(\hat\theta)</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo>∼</mo><mo>MVN</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>,</mo><msup><mi>I</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat\theta \sim \operatorname{MVN}(\theta,I^{-1}(\theta)/n)</annotation></semantics></math>.
+Then, the joint distribution of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{X}_{n+1}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>
+has the pdf given by
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>f</mi><mrow><mover><mi>X</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">|</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>f</mi><mover><mi>θ</mi><mo accent="true">̂</mo></mover></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+    f(t,\theta) = f_{\hat{X}|\hat\theta}(x|\theta) f_{\hat\theta}(\theta),
+</annotation></semantics></math> and thus to find
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(t)</annotation></semantics></math>,
+we marginalize over
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
+obtaining
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mo>∫</mo><msup><mi>R</mi><mn>2</mn></msup></msub><msub><mi>f</mi><mrow><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi><mi>θ</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
     f(x) = \int_{R^2} f_{\hat{X}_{n+1},\hat\theta}(x,\theta) d\theta.
-\]</span></p>
+</annotation></semantics></math></p>
 <p>Given the information in the sample, the uncertainty in the new
-observation is characterized by the distribution <span class="math display">\[
+observation is characterized by the distribution
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∼</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
     \hat{X}_{n+1} \sim f(x).
-\]</span></p>
-<p>It has greater variance than <span class="math inline">\(X_{n+1}|\hat\theta\)</span> because, as stated
-earlier, we do not know <span class="math inline">\(\theta\)</span>, we
-only have an uncertain estimate <span class="math inline">\(\hat\theta\)</span>.</p>
+</annotation></semantics></math></p>
+<p>It has greater variance than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="prefix">|</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">X_{n+1}|\hat\theta</annotation></semantics></math>
+because, as stated earlier, we do not know
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
+we only have an uncertain estimate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>.</p>
 <p>In <code>pred</code>, we compute the predictive interval (PI) of the
-distribution of <span class="math inline">\(\hat{X}_{n+1}\)</span> using
-Monte Carlo integration, i.e., sum over a large number of draws from the
-joint distribution of <span class="math inline">\(\hat{X}_{n+1}\)</span>
-and <span class="math inline">\(\hat\theta\)</span> and then compute the
-empirical quantiles.</p>
+distribution of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{X}_{n+1}</annotation></semantics></math>
+using Monte Carlo integration, i.e., sum over a large number of draws
+from the joint distribution of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{X}_{n+1}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>
+and then compute the empirical quantiles.</p>
 <p>The function <code>pred</code> takes as arguments <code>x</code>, in
 this case an <code>mle</code> object, and a sampler for the distribution
 of the random variable of interest, in this case <code>rnorm</code> (the
 sampler for the normal distribution). The sampler must be compatible
 with the parameter value of <code>x</code> (i.e.,
-<code>params(x)</code>). Here is how we compute the PI for <span class="math inline">\(\hat{X}_{n+1}\)</span>:</p>
+<code>params(x)</code>). Here is how we compute the PI for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{X}_{n+1}</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">samp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">par</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pred.html">pred</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">theta.hat</span>, samp <span class="op">=</span> <span class="va">samp</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       mean  lower upper</span></span>
-<span><span class="co">#&gt; [1,] 0.931 -0.821  2.67</span></span></code></pre></div>
-<p>How does this compare to <span class="math inline">\(X_{n+1}|\hat\theta\)</span>?</p>
+<span><span class="co">#&gt; [1,] 0.933 -0.824   2.7</span></span></code></pre></div>
+<p>How does this compare to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="prefix">|</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">X_{n+1}|\hat\theta</annotation></semantics></math>?</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">par</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
 <span><span class="va">mu.hat</span> <span class="op">&lt;-</span> <span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
@@ -741,37 +804,58 @@ with the parameter value of <code>x</code> (i.e.,
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu.hat</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.025</span>,<span class="fl">.975</span><span class="op">)</span>, mean <span class="op">=</span> <span class="va">mu.hat</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">var.hat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     mu               </span></span>
 <span><span class="co">#&gt;  0.931 -0.801  2.663</span></span></code></pre></div>
-<p>We see that the 95% quantile interval for <span class="math inline">\(X_{n+1}|\hat\theta\)</span> is a bit smaller than
-<span class="math inline">\(\hat{X}_{n+1}\)</span>, which is what we
-expected. Of course, for sufficiently large sample sizes, they will
-converge to the same quantiles.</p>
+<p>We see that the 95% quantile interval for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="prefix">|</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">X_{n+1}|\hat\theta</annotation></semantics></math>
+is a bit smaller than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{X}_{n+1}</annotation></semantics></math>,
+which is what we expected. Of course, for sufficiently large sample
+sizes, they will converge to the same quantiles.</p>
 </div>
 <div class="section level2">
 <h2 id="weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators">Weighted MLE: a weighted sum of maximum likelihood estimators<a class="anchor" aria-label="anchor" href="#weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators"></a>
 </h2>
 <p>Since the variance-covariance of an MLE is inversely proportional to
 the FIM that the MLE is defined with respect to, we can combine multiple
-MLEs of <span class="math inline">\(\theta\)</span>, each of which may
-be defined with respect to a different kind of sample, to arrive at the
-MLE that incorporates the Fisher information in all of those
-samples.</p>
-<p>Consider <span class="math inline">\(k\)</span> mutually independent
-MLEs of parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span>, where
-<span class="math inline">\(\hat\theta_j \sim
-N(\theta,I_j^{-1}(\theta))\)</span>. Then, the sampling MLE of <span class="math inline">\(\theta\)</span> that incorporates all of the data
-in <span class="math inline">\(\hat\theta_1,\ldots,\hat\theta_k\)</span>
-is given by the inverse-variance weighted mean, <span class="math display">\[
-    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1}
-\left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
-\]</span> which, asymptotically, has an expected value of <span class="math inline">\(\theta\)</span> and a variance-covariance of <span class="math inline">\(\left(\sum_{j=1}^k
-I_j(\theta)\right)^{-1}\)</span>.</p>
+MLEs of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
+each of which may be defined with respect to a different kind of sample,
+to arrive at the MLE that incorporates the Fisher information in all of
+those samples.</p>
+<p>Consider
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+mutually independent MLEs of parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\hat\theta_1,\ldots,\hat\theta_k</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mi>j</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>,</mo><msubsup><mi>I</mi><mi>j</mi><mrow><mo>−</mo><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))</annotation></semantics></math>.
+Then, the sampling MLE of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+that incorporates all of the data in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\hat\theta_1,\ldots,\hat\theta_k</annotation></semantics></math>
+is given by the inverse-variance weighted mean,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mi>w</mi></msub><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></munderover><msub><mi>I</mi><mi>j</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></munderover><msub><mi>I</mi><mi>j</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
+</annotation></semantics></math> which, asymptotically, has an expected
+value of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+and a variance-covariance of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></msubsup><msub><mi>I</mi><mi>j</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}</annotation></semantics></math>.</p>
 <p>To evaluate the performance of the weighted MLE, we generate a sample
-of <span class="math inline">\(N=1000\)</span> observations from <span class="math inline">\(\mathcal{N}(\theta)\)</span> and compute the MLE
-for the observed sample, denoted by <span class="math inline">\(\hat\theta\)</span>.</p>
-<p>We then divide the observed sample into <span class="math inline">\(r=5\)</span> sub-samples, each of size <span class="math inline">\(N/r=100\)</span>, and compute the MLE for each
-sub-sampled, denoted by <span class="math inline">\(\theta^{(1)},\ldots,\theta^{(r)}\)</span>.</p>
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>1000</mn></mrow><annotation encoding="application/x-tex">N=1000</annotation></semantics></math>
+observations from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{N}(\theta)</annotation></semantics></math>
+and compute the MLE for the observed sample, denoted by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>.</p>
+<p>We then divide the observed sample into
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">r=5</annotation></semantics></math>
+sub-samples, each of size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>/</mi><mi>r</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">N/r=100</annotation></semantics></math>,
+and compute the MLE for each sub-sampled, denoted by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msup><mo>,</mo><mi>…</mi><mo>,</mo><msup><mi>θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\theta^{(1)},\ldots,\theta^{(r)}</annotation></semantics></math>.</p>
 <p>Finally, we do a weighted combination these MLEs to form the weighted
-MLE, denoted by <span class="math inline">\(\theta_w\)</span>:</p>
+MLE, denoted by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>w</mi></msub><annotation encoding="application/x-tex">\theta_w</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
@@ -787,53 +871,54 @@ MLE, denoted by <span class="math inline">\(\theta_w\)</span>:</p>
 weighted MLE and its MSE:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.956 0.874</span></span>
+<span><span class="co">#&gt; [1] 1.221 0.778</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                    [,1]               [,2]</span></span>
-<span><span class="co">#&gt; [1,] 0.0092125971136169 0.0000000000000222</span></span>
-<span><span class="co">#&gt; [2,] 0.0000000000000222 0.0161117644454432</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 0.0080147769950214 0.0000000000000257</span></span>
+<span><span class="co">#&gt; [2,] 0.0000000000000257 0.0124697701682341</span></span></code></pre></div>
 <p>The MLE for the total sample and its MSE is:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    mu   var </span></span>
-<span><span class="co">#&gt; 0.993 1.003</span></span>
+<span><span class="co">#&gt; 1.210 0.864</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">mle</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                    [,1]               [,2]</span></span>
-<span><span class="co">#&gt; [1,] 0.0100260496091190 0.0000000000000282</span></span>
-<span><span class="co">#&gt; [2,] 0.0000000000000282 0.0201043341530873</span></span></code></pre></div>
-<p>Unfortuantely, <span class="math inline">\(\hat\theta\)</span> is a
-much better estimator of <span class="math inline">\(\theta\)</span>
-than <span class="math inline">\(\hat\theta_w\)</span>. According to
-theory, they should be identical, but in practice, there may be issues
-like numerical instability that cause the weighted MLE to perform
-poorly.</p>
+<span><span class="co">#&gt; [1,] 0.0086408549278714 0.0000000000000244</span></span>
+<span><span class="co">#&gt; [2,] 0.0000000000000244 0.0149328747769700</span></span></code></pre></div>
+<p>Unfortuantely,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>
+is a much better estimator of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mi>w</mi></msub><annotation encoding="application/x-tex">\hat\theta_w</annotation></semantics></math>.
+According to theory, they should be identical, but in practice, there
+may be issues like numerical instability that cause the weighted MLE to
+perform poorly.</p>
 <p>We are in fact using numerical differentiation to compute the FIM,
 which may be a source of error. We can try to improve the accuracy of
 the FIM by using a more accurate method of computing the FIM, such as an
 analytical solution or a more accurate numerical approximation.</p>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Alexander Towell.</p>
+  <p>Developed by Alexander Towell.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
