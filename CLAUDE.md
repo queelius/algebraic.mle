@@ -98,8 +98,9 @@ The package uses an S3 class hierarchy with `mle` as the base type:
 ### Generic Methods
 
 All MLE types support these methods (defined in R/mle.R unless noted): -
-`params()`, `nparams()`: Extract parameters -
-[`vcov()`](https://rdrr.io/r/stats/vcov.html),
+[`params()`](https://queelius.github.io/algebraic.dist/reference/params.html),
+[`nparams()`](https://queelius.github.io/algebraic.dist/reference/nparams.html):
+Extract parameters - [`vcov()`](https://rdrr.io/r/stats/vcov.html),
 [`se()`](https://queelius.github.io/algebraic.mle/reference/se.md):
 Variance-covariance and standard errors -
 [`confint()`](https://rdrr.io/r/stats/confint.html): Confidence
@@ -109,17 +110,22 @@ intervals (asymptotic or bootstrap) -
 Model fit statistics -
 [`bias()`](https://queelius.github.io/algebraic.mle/reference/bias.md),
 [`mse()`](https://queelius.github.io/algebraic.mle/reference/mse.md):
-Bias and mean squared error - `sampler()`: Generate sampling function
-from MLE distribution - `obs()`,
+Bias and mean squared error -
+[`sampler()`](https://queelius.github.io/algebraic.dist/reference/sampler.html):
+Generate sampling function from MLE distribution -
+[`obs()`](https://queelius.github.io/algebraic.dist/reference/obs.html),
 [`nobs()`](https://rdrr.io/r/stats/nobs.html): Access original data -
 [`observed_fim()`](https://queelius.github.io/algebraic.mle/reference/observed_fim.md):
 Fisher information matrix -
 [`score_val()`](https://queelius.github.io/algebraic.mle/reference/score_val.md):
 Score function at MLE -
 [`pred()`](https://queelius.github.io/algebraic.mle/reference/pred.md):
-Predictive intervals using Monte Carlo - `expectation()`: Expected
-values via simulation - `marginal()`: Marginal distributions for
-parameter subsets - `rmap()`: Transformations (invariance property)
+Predictive intervals using Monte Carlo -
+[`expectation()`](https://queelius.github.io/algebraic.dist/reference/expectation.html):
+Expected values via simulation - `marginal()`: Marginal distributions
+for parameter subsets -
+[`rmap()`](https://queelius.github.io/algebraic.dist/reference/rmap.html):
+Transformations (invariance property)
 
 ### Typical Workflow
 
