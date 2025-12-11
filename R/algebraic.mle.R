@@ -13,23 +13,7 @@ NULL
 #> NULL
 
 #' @importFrom algebraic.dist params nparams obs sampler rmap expectation
-#' @export
-params
-
-#' @export
-nparams
-
-#' @export
-obs
-
-#' @export
-sampler
-
-#' @export
-rmap
-
-#' @export
-expectation
+NULL
 
 
 #' Generic method for obtaining the log-likelihood value of a fitted MLE
