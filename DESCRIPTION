@@ -6,7 +6,7 @@ Authors@R:
     person("Alexander", "Towell", , "lex@metafunctor.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6443-9897"))
 Maintainer: Alexander Towell <lex@metafunctor.com>
 Description: We define an algebra over maximum likelihood estimators by
-    defining a set of operators that are closed over maximum likelhood estimators
+    defining a set of operators that are closed over maximum likelihood estimators
     in addition to various other informative functions.
 License: GPL (>= 3)
 Encoding: UTF-8
