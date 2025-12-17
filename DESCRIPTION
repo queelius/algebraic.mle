@@ -12,8 +12,6 @@ License: GPL (>= 3)
 Encoding: UTF-8
 ByteCompile: true
 LazyData: true
-Remotes:
-    github::queelius/algebraic.dist
 Imports:
     algebraic.dist,
     stats,
