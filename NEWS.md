@@ -1,4 +1,4 @@
-# algebraic.mle 0.9.0
+# algebraic.mle 1.0.0
 
 * Initial CRAN release
 * Core MLE class (`mle`) with methods for:
