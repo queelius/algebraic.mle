@@ -8,16 +8,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/queelius/algebraic.mle/blob/master/DESCRIPTION)
+[`inst/CITATION`](https://github.com/queelius/algebraic.mle/blob/master/inst/CITATION)
 
 Towell A (2025). *algebraic.mle: Algebraic Maximum Likelihood
 Estimators*. R package version 0.9.0,
-<https://github.com/queelius/algebraic.mle>.
+<https://cran.r-project.org/package=algebraic.mle>.
 
     @Manual{,
       title = {algebraic.mle: Algebraic Maximum Likelihood Estimators},
       author = {Alexander Towell},
       year = {2025},
       note = {R package version 0.9.0},
-      url = {https://github.com/queelius/algebraic.mle},
+      url = {https://cran.r-project.org/package=algebraic.mle},
     }

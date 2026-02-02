@@ -14,3 +14,7 @@ params(x)
 - x:
 
   the \`mle\` object to obtain the parameters of
+
+## Value
+
+Numeric vector of parameter estimates.

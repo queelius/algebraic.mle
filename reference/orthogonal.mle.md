@@ -23,3 +23,8 @@ orthogonal(x, tol = sqrt(.Machine$double.eps), ...)
 - ...:
 
   pass additional arguments
+
+## Value
+
+Logical matrix indicating which off-diagonal FIM elements are
+approximately zero (orthogonal parameters), or NULL if FIM unavailable.

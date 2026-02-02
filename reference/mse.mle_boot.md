@@ -22,3 +22,7 @@ mse(x, theta = NULL, ...)
 - ...:
 
   pass additional arguments into \`vcov\`
+
+## Value
+
+The MSE matrix estimated from bootstrap variance and bias.

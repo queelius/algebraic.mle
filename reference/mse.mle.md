@@ -24,6 +24,10 @@ mse(x, theta = NULL)
   then we let the bias method deal with it. Maybe it has a nice way of
   estimating the bias.
 
+## Value
+
+The MSE as a scalar (univariate) or matrix (multivariate).
+
 ## Details
 
 Since \`x\` is not typically known, we normally must estimate the bias.

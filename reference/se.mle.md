@@ -23,3 +23,8 @@ se(x, se.matrix = FALSE, ...)
 - ...:
 
   additional arguments to pass (not used)
+
+## Value
+
+Vector of standard errors, or matrix if `se.matrix = TRUE`, or NULL if
+variance-covariance is not available.

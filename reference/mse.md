@@ -19,3 +19,7 @@ mse(x, theta)
 - theta:
 
   the true parameter value
+
+## Value
+
+The mean squared error (matrix or scalar).

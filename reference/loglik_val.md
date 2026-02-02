@@ -18,3 +18,7 @@ loglik_val(x, ...)
 - ...:
 
   additional arguments to pass
+
+## Value
+
+The log-likelihood value (numeric).

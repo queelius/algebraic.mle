@@ -20,6 +20,10 @@ observed_fim(x, ...)
 
   additional arguments to pass
 
+## Value
+
+The observed Fisher Information Matrix.
+
 ## Details
 
 The inverse of the Fisher information matrix is the variance-covariance

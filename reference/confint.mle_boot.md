@@ -37,3 +37,8 @@ confint(
 - ...:
 
   additional arguments to pass into \`boot.ci\`
+
+## Value
+
+Matrix of bootstrap confidence intervals with columns for lower and
+upper bounds.

@@ -14,3 +14,7 @@ aic(x)
 - x:
 
   the \`mle\` object to obtain the AIC of
+
+## Value
+
+Numeric AIC value.

@@ -26,3 +26,7 @@ pred(x, samp = NULL, alpha = 0.05, ...)
 - ...:
 
   additional arguments to pass
+
+## Value
+
+Matrix of predictive confidence intervals.

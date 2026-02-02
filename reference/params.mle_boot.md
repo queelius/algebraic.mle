@@ -14,3 +14,7 @@ params(x)
 - x:
 
   the \`boot\` object to obtain the parameters of.
+
+## Value
+
+Numeric vector of parameter estimates (the original MLE).

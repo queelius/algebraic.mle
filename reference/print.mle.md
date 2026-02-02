@@ -1,7 +1,6 @@
-# Method for obtaining the number of observations in the sample used by an \`mle\` object \`x\`.
+# Print method for \`mle\` objects.
 
-Method for obtaining the number of observations in the sample used by an
-\`mle\` object \`x\`.
+Print method for \`mle\` objects.
 
 ## Usage
 
@@ -19,3 +18,7 @@ print(x, ...)
 - ...:
 
   additional arguments to pass
+
+## Value
+
+Invisibly returns `x`.

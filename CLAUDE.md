@@ -122,8 +122,9 @@ Score function at MLE -
 [`pred()`](https://queelius.github.io/algebraic.mle/reference/pred.md):
 Predictive intervals using Monte Carlo -
 [`expectation()`](https://queelius.github.io/algebraic.dist/reference/expectation.html):
-Expected values via simulation - `marginal()`: Marginal distributions
-for parameter subsets -
+Expected values via simulation -
+[`marginal()`](https://queelius.github.io/algebraic.dist/reference/marginal.html):
+Marginal distributions for parameter subsets -
 [`rmap()`](https://queelius.github.io/algebraic.dist/reference/rmap.html):
 Transformations (invariance property)
 

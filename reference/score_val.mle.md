@@ -19,3 +19,7 @@ score_val(x, ...)
 - ...:
 
   additional arguments to pass (not used)
+
+## Value
+
+The score vector evaluated at the MLE, or NULL if not available.

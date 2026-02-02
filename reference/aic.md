@@ -14,3 +14,7 @@ aic(x)
 - x:
 
   the object to obtain the AIC of
+
+## Value
+
+The Akaike Information Criterion value (numeric).

@@ -446,7 +446,7 @@ $\widehat{\mu}$:
 
 ``` r
 # temporarily show more digits in the numbers/outputs for this code block
-options(digits = 12)
+op <- options(digits = 12)
 # mse(mu)
 expectation(theta.mc, function(x) (x[1] - mu)^2)
 #> [1] 0.013651619343
@@ -457,7 +457,7 @@ b <- expectation(theta.mc, function(x) x[1] - mu)
 # mse = bias^2 + variance
 b^2 + mu.var
 #> [1] 0.013651619343
-options(digits = 3)
+options(op)
 ```
 
 They are very close, since the bias is so small.

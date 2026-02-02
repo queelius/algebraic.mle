@@ -22,3 +22,8 @@ bias(x, theta = NULL, ...)
 - ...:
 
   pass additional arguments (not used)
+
+## Value
+
+Numeric vector of estimated bias (mean of bootstrap replicates minus
+original estimate).

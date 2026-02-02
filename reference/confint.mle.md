@@ -31,3 +31,7 @@ confint(object, parm = NULL, level = 0.95, use_t_dist = FALSE, ...)
 - ...:
 
   additional arguments to pass
+
+## Value
+
+Matrix of confidence intervals with columns for lower and upper bounds.

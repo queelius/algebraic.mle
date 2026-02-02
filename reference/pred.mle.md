@@ -38,6 +38,11 @@ pred(x, samp, alpha = 0.05, R = 50000, ...)
 
   additional arguments to pass into \`samp\`.
 
+## Value
+
+Matrix with columns for mean, lower, and upper bounds of the predictive
+interval.
+
 ## Details
 
 1\. Sample from MVN \`x\` 2. Compute \`f(t,x)\` for each sample 3. Take

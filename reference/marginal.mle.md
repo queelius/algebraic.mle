@@ -19,6 +19,11 @@ marginal(x, indices)
 
   The indices of the marginal distribution to obtain.
 
+## Value
+
+An `mle` object representing the marginal distribution for the selected
+parameter indices.
+
 ## Details
 
 where H is the (observed or expecation) Fisher information matrix.

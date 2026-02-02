@@ -24,3 +24,8 @@ bias(x, theta = NULL, ...)
 - ...:
 
   additional arguments to pass
+
+## Value
+
+Numeric vector of zeros (asymptotic bias is zero under regularity
+conditions).

@@ -19,3 +19,7 @@ vcov(object, ...)
 - ...:
 
   additional arguments to pass into \`stats::cov\`
+
+## Value
+
+The variance-covariance matrix estimated from bootstrap replicates.

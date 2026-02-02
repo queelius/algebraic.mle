@@ -19,3 +19,7 @@ nobs(object, ...)
 - ...:
 
   additional arguments to pass (not used)
+
+## Value
+
+Integer number of observations, or NULL if not available.

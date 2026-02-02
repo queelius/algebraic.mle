@@ -19,3 +19,7 @@ summary(object, ...)
 - ...:
 
   pass additional arguments
+
+## Value
+
+An object of class `summary_mle`.

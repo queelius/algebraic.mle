@@ -18,3 +18,7 @@ score_val(x, ...)
 - ...:
 
   pass additional arguments
+
+## Value
+
+The score vector evaluated at the MLE.

@@ -14,3 +14,7 @@ obs(x)
 - x:
 
   the \`mle\` object to obtain the number of observations for
+
+## Value
+
+The original data used for bootstrapping.

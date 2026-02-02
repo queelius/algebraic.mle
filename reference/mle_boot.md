@@ -18,7 +18,7 @@ mle_boot(x)
 
 ## Value
 
-an \`mle_boot\` object (wrapper for \`boot\` object)
+An `mle_boot` object (wrapper for `boot` object).
 
 ## Details
 
@@ -30,3 +30,30 @@ object, which is the sampling distribution of an MLE, and wrap it in an
 \`mle_boot\` object that satisfies the concept of an \`mle\` object.
 
 Look up the \`boot\` package for more information on the bootstrap.
+
+## Examples
+
+``` r
+# Bootstrap MLE for mean of exponential distribution
+set.seed(123)
+x <- rexp(50, rate = 2)
+
+# Statistic function: MLE of rate parameter
+rate_mle <- function(data, indices) {
+  d <- data[indices]
+  1 / mean(d)  # MLE of rate is 1/mean
+}
+
+# Run bootstrap
+boot_result <- boot::boot(data = x, statistic = rate_mle, R = 200)
+
+# Wrap in mle_boot
+fit <- mle_boot(boot_result)
+params(fit)
+#> [1] 1.769331
+bias(fit)
+#> [1] 0.04782478
+confint(fit)
+#>            2.5%    97.5%
+#> param1 1.196127 2.246885
+```

@@ -21,8 +21,8 @@ mle_weighted(mles)
 
 ## Value
 
-An object of type \`mle_weighted\` (which inherits from \`mle\`) that is
-the weighted sum of the \`mle\` objects.
+An object of type `mle_weighted` (which inherits from `mle`) that is the
+weighted sum of the `mle` objects.
 
 ## Details
 
@@ -34,3 +34,36 @@ the log-likelihood function. The \`mle\` objects should also have a
 
 We assume that the observations used to estimate each of the MLE objects
 in \`mles\` are independent.
+
+## Examples
+
+``` r
+# Combine three independent estimates of mean
+set.seed(123)
+
+# Three independent samples
+x1 <- rnorm(50, mean = 10, sd = 2)
+x2 <- rnorm(30, mean = 10, sd = 2)
+x3 <- rnorm(70, mean = 10, sd = 2)
+
+# Create MLE objects for each sample
+make_mean_mle <- function(x) {
+  n <- length(x)
+  s2 <- var(x)
+  mle(theta.hat = mean(x),
+      sigma = matrix(s2/n),
+      info = matrix(n/s2),
+      nobs = n)
+}
+
+fit1 <- make_mean_mle(x1)
+fit2 <- make_mean_mle(x2)
+fit3 <- make_mean_mle(x3)
+
+# Combine using inverse-variance weighting
+combined <- mle_weighted(list(fit1, fit2, fit3))
+params(combined)
+#> [1] 9.956678
+se(combined)
+#> [1] 0.1556693
+```

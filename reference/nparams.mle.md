@@ -14,3 +14,7 @@ nparams(x)
 - x:
 
   the \`mle\` object to obtain the number of parameters of
+
+## Value
+
+Integer number of parameters.

@@ -100,8 +100,7 @@
   : Estimate of predictive interval of \`T\|data\` using Monte Carlo
   integration.
 - [`print(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/print.mle.md)
-  : Method for obtaining the number of observations in the sample used
-  by an \`mle\` object \`x\`.
+  : Print method for \`mle\` objects.
 - [`print(`*`<summary_mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/print.summary_mle.md)
   : Function for printing a \`summary\` object for an \`mle\` object.
 - [`rmap(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/rmap.mle.md)

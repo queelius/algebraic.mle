@@ -18,3 +18,7 @@ observed_fim(x, ...)
 - ...:
 
   pass additional arguments
+
+## Value
+
+The observed Fisher Information Matrix, or NULL if not available.

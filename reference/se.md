@@ -17,3 +17,7 @@ se(x, ...)
 - ...:
 
   additional arguments to pass
+
+## Value
+
+Vector of standard errors for each parameter.

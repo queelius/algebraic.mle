@@ -22,3 +22,7 @@ orthogonal(x, tol, ...)
 - ...:
 
   additional arguments to pass
+
+## Value
+
+Logical vector or matrix indicating which parameters are orthogonal.

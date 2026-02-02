@@ -21,6 +21,11 @@ sampler(x, ...)
 
   additional arguments to pass (not used)
 
+## Value
+
+A function that takes parameter `n` and returns `n` samples drawn from
+the bootstrap replicates.
+
 ## Details
 
 Unlike the \`sampler\` method for the more general \`mle\` objects, for

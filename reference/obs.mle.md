@@ -14,3 +14,7 @@ obs(x)
 - x:
 
   the \`mle\` object to obtain the number of observations for
+
+## Value
+
+The observation data used to fit the MLE, or NULL if not stored.

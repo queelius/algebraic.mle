@@ -20,3 +20,8 @@ sampler(x, ...)
 - ...:
 
   additional arguments to pass
+
+## Value
+
+A function that takes parameter `n` and returns `n` samples from the
+asymptotic distribution of the MLE.
