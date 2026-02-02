@@ -9,6 +9,9 @@
 \arguments{
 \item{x}{the `boot` object to obtain the number of parameters of}
 }
+\value{
+Integer number of parameters.
+}
 \description{
 Method for obtaining the number of parameters of an `boot` object.
 }

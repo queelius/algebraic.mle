@@ -13,6 +13,10 @@
 
 \item{...}{pass additional arguments (not used)}
 }
+\value{
+Numeric vector of estimated bias (mean of bootstrap replicates minus
+  original estimate).
+}
 \description{
 Computes the estimate of the bias of a `mle_boot` object.
 }

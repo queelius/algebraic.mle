@@ -24,6 +24,10 @@ Note: This impelements the `vcov` method defined in `stats`.}
 
 \item{...}{additional arguments to pass into `boot.ci`}
 }
+\value{
+Matrix of bootstrap confidence intervals with columns for lower and
+  upper bounds.
+}
 \description{
 Method for obtained the confidence interval of an `mle_boot` object.
 Note: This impelements the `vcov` method defined in `stats`.

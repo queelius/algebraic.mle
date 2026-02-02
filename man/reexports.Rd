@@ -9,6 +9,7 @@
 \alias{sampler}
 \alias{rmap}
 \alias{expectation}
+\alias{marginal}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -16,5 +17,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{algebraic.dist}{\code{\link[algebraic.dist]{params}}, \code{\link[algebraic.dist]{nparams}}, \code{\link[algebraic.dist]{obs}}, \code{\link[algebraic.dist]{sampler}}, \code{\link[algebraic.dist]{rmap}}, \code{\link[algebraic.dist]{expectation}}}
+  \item{algebraic.dist}{\code{\link[algebraic.dist]{expectation}}, \code{\link[algebraic.dist]{marginal}}, \code{\link[algebraic.dist]{nparams}}, \code{\link[algebraic.dist]{obs}}, \code{\link[algebraic.dist]{params}}, \code{\link[algebraic.dist]{rmap}}, \code{\link[algebraic.dist]{sampler}}}
 }}
+

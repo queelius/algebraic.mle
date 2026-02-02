@@ -11,6 +11,9 @@ se(x, ...)
 
 \item{...}{additional arguments to pass}
 }
+\value{
+Vector of standard errors for each parameter.
+}
 \description{
 Generic method for obtaining the standard errors of an estimator.
 }

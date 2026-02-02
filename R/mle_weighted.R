@@ -17,8 +17,35 @@
 #' in `mles` are independent.
 #'
 #' @param mles A list of `mle` objects, all for the same parameter.
-#' @return An object of type `mle_weighted` (which inherits from
-#'         `mle`) that is the weighted sum of the `mle` objects.
+#' @return An object of type \code{mle_weighted} (which inherits from
+#'         \code{mle}) that is the weighted sum of the \code{mle} objects.
+#' @examples
+#' # Combine three independent estimates of mean
+#' set.seed(123)
+#'
+#' # Three independent samples
+#' x1 <- rnorm(50, mean = 10, sd = 2)
+#' x2 <- rnorm(30, mean = 10, sd = 2)
+#' x3 <- rnorm(70, mean = 10, sd = 2)
+#'
+#' # Create MLE objects for each sample
+#' make_mean_mle <- function(x) {
+#'   n <- length(x)
+#'   s2 <- var(x)
+#'   mle(theta.hat = mean(x),
+#'       sigma = matrix(s2/n),
+#'       info = matrix(n/s2),
+#'       nobs = n)
+#' }
+#'
+#' fit1 <- make_mean_mle(x1)
+#' fit2 <- make_mean_mle(x2)
+#' fit3 <- make_mean_mle(x3)
+#'
+#' # Combine using inverse-variance weighting
+#' combined <- mle_weighted(list(fit1, fit2, fit3))
+#' params(combined)
+#' se(combined)
 #' @importFrom MASS ginv
 #' @export
 mle_weighted <- function(mles) {

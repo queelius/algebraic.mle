@@ -1,0 +1,55 @@
+{
+  "title": "algebraic.mle: Algebraic Maximum Likelihood Estimators",
+  "description": "Defines an algebra over maximum likelihood estimators (MLEs) by providing operators that are closed over MLEs, along with various statistical functions for inference.",
+  "license": {
+    "id": "GPL-3.0-or-later"
+  },
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Towell, Alexander",
+      "orcid": "0000-0001-6443-9897",
+      "affiliation": "Southern Illinois University Edwardsville"
+    }
+  ],
+  "keywords": [
+    "maximum-likelihood-estimation",
+    "statistics",
+    "R",
+    "bootstrap",
+    "delta-method",
+    "fisher-information"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://cran.r-project.org/package=algebraic.mle",
+      "relation": "isIdenticalTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/queelius/algebraic.mle",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "references": [
+    {
+      "type": "book",
+      "title": "Statistical Inference",
+      "creators": [
+        {"name": "Casella, George"},
+        {"name": "Berger, Roger L."}
+      ],
+      "publication_date": "2002"
+    },
+    {
+      "type": "book",
+      "title": "Theory of Point Estimation",
+      "creators": [
+        {"name": "Lehmann, E. L."},
+        {"name": "Casella, George"}
+      ],
+      "publication_date": "1998"
+    }
+  ]
+}

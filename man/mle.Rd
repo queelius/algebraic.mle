@@ -33,7 +33,33 @@ mle(
 
 \item{superclasses}{class (or classes) with `mle` as base}
 }
+\value{
+An object of class \code{mle}.
+}
 \description{
 This MLE makes the asymptotic assumption by default. Other MLEs,
 like `mle_boot`, may not make this assumption.
+}
+\examples{
+# MLE for normal distribution (mean and variance)
+set.seed(123)
+x <- rnorm(100, mean = 5, sd = 2)
+n <- length(x)
+mu_hat <- mean(x)
+var_hat <- mean((x - mu_hat)^2)  # MLE of variance
+
+# Asymptotic variance-covariance of MLE
+# For normal: Var(mu_hat) = sigma^2/n, Var(var_hat) = 2*sigma^4/n
+sigma_matrix <- diag(c(var_hat/n, 2*var_hat^2/n))
+
+fit <- mle(
+  theta.hat = c(mu = mu_hat, var = var_hat),
+  sigma = sigma_matrix,
+  loglike = sum(dnorm(x, mu_hat, sqrt(var_hat), log = TRUE)),
+  nobs = n
+)
+
+params(fit)
+vcov(fit)
+confint(fit)
 }

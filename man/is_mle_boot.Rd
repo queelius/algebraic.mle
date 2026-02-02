@@ -9,6 +9,16 @@ is_mle_boot(x)
 \arguments{
 \item{x}{the object to test}
 }
+\value{
+Logical TRUE if \code{x} is an \code{mle_boot} object, FALSE otherwise.
+}
 \description{
 Determine if an object is an `mle_boot` object.
+}
+\examples{
+# Create a simple mle object (not bootstrap)
+fit_mle <- mle(theta.hat = 5, sigma = matrix(0.1))
+is_mle_boot(fit_mle)  # FALSE
+
+# Bootstrap example would return TRUE
 }

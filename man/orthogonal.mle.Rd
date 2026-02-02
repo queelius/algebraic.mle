@@ -14,6 +14,10 @@
 
 \item{...}{pass additional arguments}
 }
+\value{
+Logical matrix indicating which off-diagonal FIM elements are
+  approximately zero (orthogonal parameters), or NULL if FIM unavailable.
+}
 \description{
 Method for determining the orthogonal components of an `mle` object
 `x`.

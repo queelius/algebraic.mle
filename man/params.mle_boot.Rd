@@ -9,6 +9,9 @@
 \arguments{
 \item{x}{the `boot` object to obtain the parameters of.}
 }
+\value{
+Numeric vector of parameter estimates (the original MLE).
+}
 \description{
 Method for obtaining the parameters of an `boot` object.
 }

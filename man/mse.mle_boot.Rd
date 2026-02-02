@@ -13,6 +13,9 @@
 
 \item{...}{pass additional arguments into `vcov`}
 }
+\value{
+The MSE matrix estimated from bootstrap variance and bias.
+}
 \description{
 Computes the estimate of the MSE of a `boot` object.
 }

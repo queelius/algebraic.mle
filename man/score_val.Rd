@@ -13,6 +13,9 @@ score_val(x, ...)
 
 \item{...}{pass additional arguments}
 }
+\value{
+The score vector evaluated at the MLE.
+}
 \description{
 Generic method for computing the score of an estimator
 object (gradient of its log-likelihood function evaluated

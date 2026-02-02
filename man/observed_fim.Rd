@@ -12,6 +12,9 @@ observed_fim(x, ...)
 
 \item{...}{additional arguments to pass}
 }
+\value{
+The observed Fisher Information Matrix.
+}
 \description{
 Fisher information is a way of measuring the amount of
 information that an observable random variable `X`

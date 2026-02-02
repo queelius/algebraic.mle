@@ -12,6 +12,10 @@ that is based on asymptotic assumptions:}
 
 \item{indices}{The indices of the marginal distribution to obtain.}
 }
+\value{
+An \code{mle} object representing the marginal distribution for the
+  selected parameter indices.
+}
 \description{
 `x ~ MVN(params(x), inv(H)(x))`
 }

@@ -18,6 +18,9 @@ the confidence intervals.}
 
 \item{...}{additional arguments to pass}
 }
+\value{
+Matrix of confidence intervals with columns for lower and upper bounds.
+}
 \description{
 Function to compute the confidence intervals of `mle` objects.
 }

@@ -12,6 +12,9 @@ Note: This impelements the `vcov` method defined in `stats`.}
 
 \item{...}{additional arguments to pass into `stats::cov`}
 }
+\value{
+The variance-covariance matrix estimated from bootstrap replicates.
+}
 \description{
 Computes the variance-covariance matrix of `boot` object.
 Note: This impelements the `vcov` method defined in `stats`.

@@ -11,6 +11,10 @@
 
 \item{...}{additional arguments to pass (not used)}
 }
+\value{
+A function that takes parameter \code{n} and returns \code{n} samples
+  drawn from the bootstrap replicates.
+}
 \description{
 It creates a sampler for the `mle_boot` object. It returns a function
 that accepts a single parameter `n` denoting the number of samples

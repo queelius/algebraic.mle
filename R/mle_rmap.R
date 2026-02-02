@@ -18,6 +18,25 @@
 #'         `method == "mc"`.
 #' @param method method to use to estimate distribution of `g(x)`,
 #'               "delta" or "mc".
+#' @return An \code{mle} object of class \code{rmap_mle} representing the
+#'   transformed MLE with variance estimated by the specified method.
+#' @examples
+#' # MLE for normal distribution
+#' set.seed(123)
+#' x <- rnorm(100, mean = 5, sd = 2)
+#' n <- length(x)
+#' fit <- mle(
+#'   theta.hat = c(mu = mean(x), var = var(x)),
+#'   sigma = diag(c(var(x)/n, 2*var(x)^2/n)),
+#'   nobs = n
+#' )
+#'
+#' # Transform: compute MLE of standard deviation (sqrt of variance)
+#' # Using delta method
+#' g <- function(theta) sqrt(theta[2])
+#' sd_mle <- rmap(fit, g, method = "delta")
+#' params(sd_mle)
+#' se(sd_mle)
 #' @importFrom stats cov vcov nobs
 #' @importFrom numDeriv jacobian
 #' @importFrom algebraic.dist rmap sampler params

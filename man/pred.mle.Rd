@@ -19,6 +19,10 @@ Defaults to 50000.}
 
 \item{...}{additional arguments to pass into `samp`.}
 }
+\value{
+Matrix with columns for mean, lower, and upper bounds of the
+  predictive interval.
+}
 \description{
 Let
   `T|x ~ f(t|x)``

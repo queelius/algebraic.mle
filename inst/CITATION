@@ -1,0 +1,10 @@
+bibentry(
+  bibtype  = "Manual",
+  title    = "algebraic.mle: Algebraic Maximum Likelihood Estimators",
+  author   = person("Alexander", "Towell",
+                     email = "lex@metafunctor.com",
+                     comment = c(ORCID = "0000-0001-6443-9897")),
+  year     = "2025",
+  note     = "R package version 0.9.0",
+  url      = "https://cran.r-project.org/package=algebraic.mle"
+)

@@ -9,6 +9,9 @@
 \arguments{
 \item{x}{the `mle` object to obtain the parameters of}
 }
+\value{
+Numeric vector of parameter estimates.
+}
 \description{
 Method for obtaining the parameters of an `mle` object.
 }

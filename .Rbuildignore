@@ -9,6 +9,10 @@
 ^README\.md$
 ^README\.Rmd$
 ^CLAUDE\.md$
+^AGENTS\.md$
 ^_pkgdown\.yml$
 ^vignettes/.*_cache$
 ^vignettes/.*_files$
+^cran-comments\.md$
+^\.zenodo\.json$
+^CITATION\.cff$

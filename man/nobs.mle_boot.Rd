@@ -12,6 +12,9 @@ an `mle`.}
 
 \item{...}{additional arguments to pass (not used)}
 }
+\value{
+Integer number of observations in the original sample.
+}
 \description{
 Method for obtaining the number of observations in the sample used by
 an `mle`.

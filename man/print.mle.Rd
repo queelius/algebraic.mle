@@ -2,8 +2,7 @@
 % Please edit documentation in R/mle.R
 \name{print.mle}
 \alias{print.mle}
-\title{Method for obtaining the number of observations in the sample used by
-an `mle` object `x`.}
+\title{Print method for `mle` objects.}
 \usage{
 \method{print}{mle}(x, ...)
 }
@@ -12,7 +11,9 @@ an `mle` object `x`.}
 
 \item{...}{additional arguments to pass}
 }
+\value{
+Invisibly returns \code{x}.
+}
 \description{
-Method for obtaining the number of observations in the sample used by
-an `mle` object `x`.
+Print method for `mle` objects.
 }

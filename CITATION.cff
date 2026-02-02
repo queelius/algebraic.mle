@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "algebraic.mle: Algebraic Maximum Likelihood Estimators"
+version: "0.9.0"
+date-released: "2025-01-01"
+license: GPL-3.0
+repository-code: "https://github.com/queelius/algebraic.mle"
+url: "https://cran.r-project.org/package=algebraic.mle"
+abstract: >-
+  Defines an algebra over maximum likelihood estimators (MLEs) by
+  providing operators that are closed over MLEs, along with various
+  statistical functions for inference.
+keywords:
+  - maximum-likelihood-estimation
+  - statistics
+  - r-package
+  - bootstrap
+  - delta-method
+  - fisher-information
+authors:
+  - family-names: "Towell"
+    given-names: "Alexander"
+    email: "lex@metafunctor.com"
+    orcid: "https://orcid.org/0000-0001-6443-9897"
+    affiliation: "Southern Illinois University Edwardsville"

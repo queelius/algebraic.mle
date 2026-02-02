@@ -12,8 +12,33 @@
 NULL
 #> NULL
 
-#' @importFrom algebraic.dist params nparams obs sampler rmap expectation
-NULL
+#' @importFrom algebraic.dist params
+#' @export
+algebraic.dist::params
+
+#' @importFrom algebraic.dist nparams
+#' @export
+algebraic.dist::nparams
+
+#' @importFrom algebraic.dist obs
+#' @export
+algebraic.dist::obs
+
+#' @importFrom algebraic.dist sampler
+#' @export
+algebraic.dist::sampler
+
+#' @importFrom algebraic.dist rmap
+#' @export
+algebraic.dist::rmap
+
+#' @importFrom algebraic.dist expectation
+#' @export
+algebraic.dist::expectation
+
+#' @importFrom algebraic.dist marginal
+#' @export
+algebraic.dist::marginal
 
 
 #' Generic method for obtaining the log-likelihood value of a fitted MLE
@@ -21,7 +46,7 @@ NULL
 #'
 #' @param x the object to obtain the log-likelihood of
 #' @param ... additional arguments to pass
-#'
+#' @return The log-likelihood value (numeric).
 #' @export
 loglik_val <- function(x, ...) {
     UseMethod("loglik_val", x)
@@ -30,7 +55,7 @@ loglik_val <- function(x, ...) {
 #' Generic method for obtaining the AIC of a fitted distribution object fit.
 #'
 #' @param x the object to obtain the AIC of
-#'
+#' @return The Akaike Information Criterion value (numeric).
 #' @export
 aic <- function(x) {
     UseMethod("aic", x)
@@ -54,6 +79,7 @@ aic <- function(x) {
 #'
 #' @param x the object to obtain the fisher information of
 #' @param ... additional arguments to pass
+#' @return The observed Fisher Information Matrix.
 #' @export
 observed_fim <- function(x, ...) {
     UseMethod("observed_fim", x)
@@ -64,6 +90,7 @@ observed_fim <- function(x, ...) {
 #'
 #' @param x the object to compute the MSE of
 #' @param theta the true parameter value
+#' @return The mean squared error (matrix or scalar).
 #' @export
 mse <- function(x, theta) {
     UseMethod("mse", x)
@@ -88,7 +115,7 @@ bias <- function(x, theta, ...) {
 #'
 #' @param x the object to compute the score of.
 #' @param ... pass additional arguments
-#'
+#' @return The score vector evaluated at the MLE.
 #' @export
 score_val <- function(x, ...) {
     UseMethod("score_val", x)
@@ -98,6 +125,7 @@ score_val <- function(x, ...) {
 #'
 #' @param x the estimator
 #' @param ... additional arguments to pass
+#' @return Vector of standard errors for each parameter.
 #' @export
 se <- function(x, ...) {
     UseMethod("se", x)
@@ -108,6 +136,7 @@ se <- function(x, ...) {
 #' @param x the estimator
 #' @param tol the tolerance for determining if a number is close enough to zero
 #' @param ... additional arguments to pass
+#' @return Logical vector or matrix indicating which parameters are orthogonal.
 #' @export
 orthogonal <- function(x, tol, ...) {
     UseMethod("orthogonal", x)
@@ -119,6 +148,7 @@ orthogonal <- function(x, tol, ...) {
 #' @param alpha (1-alpha)/2 confidence interval
 #' @param samp a sampler for random variable that is parameterized by mle `x`
 #' @param ... additional arguments to pass
+#' @return Matrix of predictive confidence intervals.
 #' @export
 pred <- function(x, samp = NULL, alpha = .05, ...) {
     UseMethod("pred", x)

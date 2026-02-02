@@ -13,6 +13,9 @@ orthogonal(x, tol, ...)
 
 \item{...}{additional arguments to pass}
 }
+\value{
+Logical vector or matrix indicating which parameters are orthogonal.
+}
 \description{
 Generic method for determining the orthogonal parameters of an estimator.
 }

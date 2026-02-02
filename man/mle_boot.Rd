@@ -10,7 +10,7 @@ mle_boot(x)
 \item{x}{the `boot` return value}
 }
 \value{
-an `mle_boot` object (wrapper for `boot` object)
+An \code{mle_boot} object (wrapper for \code{boot} object).
 }
 \description{
 Sometimes, the large sample asymptotic theory of MLEs is not applicable.
@@ -26,4 +26,24 @@ and then provide a number of methods for the `mle_boot` object that satisfies
 the concept of an `mle` object.
 
 Look up the `boot` package for more information on the bootstrap.
+}
+\examples{
+# Bootstrap MLE for mean of exponential distribution
+set.seed(123)
+x <- rexp(50, rate = 2)
+
+# Statistic function: MLE of rate parameter
+rate_mle <- function(data, indices) {
+  d <- data[indices]
+  1 / mean(d)  # MLE of rate is 1/mean
+}
+
+# Run bootstrap
+boot_result <- boot::boot(data = x, statistic = rate_mle, R = 200)
+
+# Wrap in mle_boot
+fit <- mle_boot(boot_result)
+params(fit)
+bias(fit)
+confint(fit)
 }

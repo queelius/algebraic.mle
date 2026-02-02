@@ -9,6 +9,9 @@
 \arguments{
 \item{x}{the `mle` object to obtain the number of observations for}
 }
+\value{
+The original data used for bootstrapping.
+}
 \description{
 Method for obtaining the observations used by the `mle`.
 }

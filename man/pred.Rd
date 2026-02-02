@@ -15,6 +15,9 @@ pred(x, samp = NULL, alpha = 0.05, ...)
 
 \item{...}{additional arguments to pass}
 }
+\value{
+Matrix of predictive confidence intervals.
+}
 \description{
 Generic method for computing the predictive confidence interval given an estimator object `x`.
 }

@@ -12,6 +12,9 @@ mse(x, theta)
 
 \item{theta}{the true parameter value}
 }
+\value{
+The mean squared error (matrix or scalar).
+}
 \description{
 Generic method for computing the mean squared error (MSE) of an estimator,
 `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.

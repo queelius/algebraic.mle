@@ -14,6 +14,10 @@ object `x`.}
 
 \item{...}{additional arguments to pass (not used)}
 }
+\value{
+Vector of standard errors, or matrix if \code{se.matrix = TRUE}, or
+  NULL if variance-covariance is not available.
+}
 \description{
 Function for obtaining an estimate of the standard error of the MLE
 object `x`.

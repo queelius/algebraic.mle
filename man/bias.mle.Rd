@@ -16,6 +16,10 @@ we estimate the bias (say, using bootstrap)}
 
 \item{...}{additional arguments to pass}
 }
+\value{
+Numeric vector of zeros (asymptotic bias is zero under regularity
+  conditions).
+}
 \description{
 This is not a good estimate of the bias in general, but it's
 arguably better than returning `NULL`.

@@ -25,8 +25,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-options(digits=3)
-options(scipen=999)
+oldopts <- options(digits = 3, scipen = 999)
 ```
 
 
@@ -557,3 +556,7 @@ is visually different from both the Weibull and the normal distributions.
 Notably, the DGP has longer tails than both, suggesting that an even better
 fit may be a long-tail distribution like the log-normal or
 the Pareto distribution.
+
+```{r, include = FALSE}
+options(oldopts)
+```

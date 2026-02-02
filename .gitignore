@@ -7,3 +7,5 @@
 .RData
 .vscode
 /doc/
+*.Rcheck/
+*.tar.gz

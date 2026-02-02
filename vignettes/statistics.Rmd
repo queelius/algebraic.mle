@@ -14,8 +14,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>")
-options(digits = 3)
-options(scipen = 999)
+oldopts <- options(digits = 3, scipen = 999)
 print_num <- function(x) print(sprintf("%.3f", x))
 ```
 
@@ -451,7 +450,7 @@ small and so the MSE is dominated by the variance.
 Let's take a closer look at the variance and MSE of the mean $\hat\mu$:
 ```{r}
 # temporarily show more digits in the numbers/outputs for this code block
-options(digits = 12)
+op <- options(digits = 12)
 # mse(mu)
 expectation(theta.mc, function(x) (x[1] - mu)^2)
 # variance(mu)
@@ -459,7 +458,7 @@ expectation(theta.mc, function(x) (x[1] - mu)^2)
 b <- expectation(theta.mc, function(x) x[1] - mu)
 # mse = bias^2 + variance
 b^2 + mu.var
-options(digits = 3)
+options(op)
 ```
 
 They are very close, since the bias is so small.
@@ -772,5 +771,9 @@ the weighted MLE to perform poorly.
 
 We are in fact using numerical differentiation to compute the FIM, which may be
 a source of error. We can try to improve the accuracy of the FIM by using
-a more accurate method of computing the FIM, such as an analytical solution 
+a more accurate method of computing the FIM, such as an analytical solution
 or a more accurate numerical approximation.
+
+```{r, include = FALSE}
+options(oldopts)
+```

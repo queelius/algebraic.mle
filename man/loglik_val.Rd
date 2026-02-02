@@ -12,6 +12,9 @@ loglik_val(x, ...)
 
 \item{...}{additional arguments to pass}
 }
+\value{
+The log-likelihood value (numeric).
+}
 \description{
 Generic method for obtaining the log-likelihood value of a fitted MLE
 object.

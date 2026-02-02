@@ -11,6 +11,9 @@
 
 \item{...}{pass additional arguments}
 }
+\value{
+The observed Fisher Information Matrix, or NULL if not available.
+}
 \description{
 Function for obtaining the observed FIM of an `mle` object.
 }

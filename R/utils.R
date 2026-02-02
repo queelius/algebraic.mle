@@ -4,6 +4,15 @@
 #'              of the parameter estimator
 #' @param theta the point estimate
 #' @param level confidence level, defaults to 0.95 (alpha=.05)
+#' @return Matrix of confidence intervals with rows for each parameter and
+#'   columns for lower and upper bounds.
+#' @examples
+#' # Compute CI for a bivariate parameter
+#' theta <- c(mu = 5.2, sigma2 = 4.1)
+#' vcov_matrix <- diag(c(0.1, 0.5))  # Variance of estimators
+#'
+#' confint_from_sigma(vcov_matrix, theta)
+#' confint_from_sigma(vcov_matrix, theta, level = 0.99)
 #' @importFrom stats qnorm
 #' @export
 confint_from_sigma <- function(sigma, theta, level = .95) {

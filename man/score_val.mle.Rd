@@ -11,6 +11,9 @@
 
 \item{...}{additional arguments to pass (not used)}
 }
+\value{
+The score vector evaluated at the MLE, or NULL if not available.
+}
 \description{
 If reguarlity conditions are satisfied, it should be zero (or approximately,
 if rounding errors occur).

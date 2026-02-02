@@ -9,6 +9,9 @@
 \arguments{
 \item{x}{the `mle` object to obtain the number of observations for}
 }
+\value{
+The observation data used to fit the MLE, or NULL if not stored.
+}
 \description{
 Method for obtaining the observations used by the `mle` object `x`.
 }

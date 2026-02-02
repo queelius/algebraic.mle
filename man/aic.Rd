@@ -9,6 +9,9 @@ aic(x)
 \arguments{
 \item{x}{the object to obtain the AIC of}
 }
+\value{
+The Akaike Information Criterion value (numeric).
+}
 \description{
 Generic method for obtaining the AIC of a fitted distribution object fit.
 }

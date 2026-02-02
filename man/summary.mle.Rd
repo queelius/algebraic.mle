@@ -12,6 +12,9 @@
 
 \item{...}{pass additional arguments}
 }
+\value{
+An object of class \code{summary_mle}.
+}
 \description{
 Function for obtaining a summary of `object`, which is a fitted
 `mle` object.

@@ -11,6 +11,9 @@
 
 \item{...}{pass additional arguments}
 }
+\value{
+Invisibly returns \code{x}.
+}
 \description{
 Function for printing a `summary` object for an `mle` object.
 }

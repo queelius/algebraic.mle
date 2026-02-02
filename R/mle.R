@@ -12,6 +12,29 @@
 #' @param obs observation (sample) data
 #' @param nobs number of observations in `obs`
 #' @param superclasses class (or classes) with `mle` as base
+#' @return An object of class \code{mle}.
+#' @examples
+#' # MLE for normal distribution (mean and variance)
+#' set.seed(123)
+#' x <- rnorm(100, mean = 5, sd = 2)
+#' n <- length(x)
+#' mu_hat <- mean(x)
+#' var_hat <- mean((x - mu_hat)^2)  # MLE of variance
+#'
+#' # Asymptotic variance-covariance of MLE
+#' # For normal: Var(mu_hat) = sigma^2/n, Var(var_hat) = 2*sigma^4/n
+#' sigma_matrix <- diag(c(var_hat/n, 2*var_hat^2/n))
+#'
+#' fit <- mle(
+#'   theta.hat = c(mu = mu_hat, var = var_hat),
+#'   sigma = sigma_matrix,
+#'   loglike = sum(dnorm(x, mu_hat, sqrt(var_hat), log = TRUE)),
+#'   nobs = n
+#' )
+#'
+#' params(fit)
+#' vcov(fit)
+#' confint(fit)
 #' @export
 mle <- function(theta.hat,
                 loglike = NULL,
@@ -35,11 +58,11 @@ mle <- function(theta.hat,
     )
 }
 
-#' Method for obtaining the number of observations in the sample used by
-#' an `mle` object `x`.
+#' Print method for `mle` objects.
 #'
 #' @param x the `mle` object to print
 #' @param ... additional arguments to pass
+#' @return Invisibly returns \code{x}.
 #' @export
 print.mle <- function(x, ...) {
     print(summary(x, ...))
@@ -57,16 +80,18 @@ vcov.mle <- function(object, ...) {
 
 
 #' Method for obtaining the parameters of an `mle` object.
-#' 
+#'
 #' @param x the `mle` object to obtain the parameters of
+#' @return Numeric vector of parameter estimates.
 #' @export
 params.mle <- function(x) {
     x$theta.hat
 }
 
 #' Method for obtaining the number of parameters of an `mle` object.
-#' 
+#'
 #' @param x the `mle` object to obtain the number of parameters of
+#' @return Integer number of parameters.
 #' @importFrom algebraic.dist params nparams
 #' @export
 nparams.mle <- function(x) { 
@@ -76,6 +101,7 @@ nparams.mle <- function(x) {
 #' Method for obtaining the AIC of an `mle` object.
 #'
 #' @param x the `mle` object to obtain the AIC of
+#' @return Numeric AIC value.
 #' @importFrom algebraic.dist nparams
 #' @export
 aic.mle <- function(x) {
@@ -87,6 +113,7 @@ aic.mle <- function(x) {
 #'
 #' @param object the `mle` object to obtain the number of observations for
 #' @param ... additional arguments to pass (not used)
+#' @return Integer number of observations, or NULL if not available.
 #' @importFrom stats nobs
 #' @export
 nobs.mle <- function(object, ...) {
@@ -96,6 +123,7 @@ nobs.mle <- function(object, ...) {
 #' Method for obtaining the observations used by the `mle` object `x`.
 #'
 #' @param x the `mle` object to obtain the number of observations for
+#' @return The observation data used to fit the MLE, or NULL if not stored.
 #' @export
 obs.mle <- function(x) {
     x$obs
@@ -119,6 +147,7 @@ loglik_val.mle <- function(x, ...) {
 #' @param use_t_dist logical, whether to use the t-distribution to compute
 #'                   the confidence intervals.
 #' @param ... additional arguments to pass
+#' @return Matrix of confidence intervals with columns for lower and upper bounds.
 #' @importFrom stats qt qnorm vcov nobs
 #' @importFrom algebraic.dist params
 #' @export
@@ -172,6 +201,8 @@ confint.mle <- function(object, parm = NULL, level = .95,
 #'
 #' @param x the `mle` object to create sampler for
 #' @param ... additional arguments to pass
+#' @return A function that takes parameter \code{n} and returns \code{n} samples
+#'   from the asymptotic distribution of the MLE.
 #' @importFrom stats rnorm vcov
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom algebraic.dist params nparams
@@ -215,6 +246,7 @@ sampler.mle <- function(x, ...) {
 #' @param theta true parameter value, defaults to `NULL` for unknown. If `NULL`,
 #'             then we let the bias method deal with it. Maybe it has a nice way
 #'             of estimating the bias.
+#' @return The MSE as a scalar (univariate) or matrix (multivariate).
 #' @importFrom algebraic.dist nparams
 #' @importFrom stats vcov
 #' @export
@@ -241,6 +273,7 @@ mse.mle <- function(x, theta = NULL) {
 #'
 #' @param x the `mle` object to obtain the FIM of.
 #' @param ... pass additional arguments
+#' @return The observed Fisher Information Matrix, or NULL if not available.
 #' @export
 observed_fim.mle <- function(x, ...) {
     x$info
@@ -251,6 +284,7 @@ observed_fim.mle <- function(x, ...) {
 #'
 #' @param object the `mle` object
 #' @param ... pass additional arguments
+#' @return An object of class \code{summary_mle}.
 #' @export
 summary.mle <- function(object, ...) {
     structure(list(x = object), class = c("summary_mle", "summary"))
@@ -260,6 +294,7 @@ summary.mle <- function(object, ...) {
 #'
 #' @param x the `summary_mle` object
 #' @param ... pass additional arguments
+#' @return Invisibly returns \code{x}.
 #' @importFrom stats vcov
 #' @importFrom algebraic.dist nparams params
 #' @export
@@ -289,10 +324,12 @@ print.summary_mle <- function(x, ...) {
 
 #' Function for obtaining an estimate of the standard error of the MLE
 #' object `x`.
-#' 
+#'
 #' @param x the MLE object
 #' @param se.matrix if `TRUE`, return the square root of the variance-covariance
 #' @param ... additional arguments to pass (not used)
+#' @return Vector of standard errors, or matrix if \code{se.matrix = TRUE}, or
+#'   NULL if variance-covariance is not available.
 #' @importFrom stats vcov
 #' @export
 se.mle <- function(x, se.matrix = FALSE, ...) {
@@ -314,6 +351,11 @@ se.mle <- function(x, se.matrix = FALSE, ...) {
 #' Determine if an object `x` is an `mle` object.
 #'
 #' @param x the object to test
+#' @return Logical TRUE if \code{x} is an \code{mle} object, FALSE otherwise.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+#' is_mle(fit)       # TRUE
+#' is_mle(list(a=1)) # FALSE
 #' @export
 is_mle <- function(x) {
     inherits(x, "mle")
@@ -325,6 +367,8 @@ is_mle <- function(x) {
 #' @param x the `mle` object
 #' @param tol the tolerance for determining if a number is close enough to zero
 #' @param ... pass additional arguments
+#' @return Logical matrix indicating which off-diagonal FIM elements are
+#'   approximately zero (orthogonal parameters), or NULL if FIM unavailable.
 #' @export
 orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
     I <- observed_fim(x, ...)
@@ -342,6 +386,7 @@ orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
 #'
 #' @param x the `mle` object to compute the score of.
 #' @param ... additional arguments to pass (not used)
+#' @return The score vector evaluated at the MLE, or NULL if not available.
 #' @export
 score_val.mle <- function(x, ...) {
     x$score
@@ -350,7 +395,7 @@ score_val.mle <- function(x, ...) {
 #' Computes the bias of an `mle` object assuming the large sample
 #' approximation is valid and the MLE regularity conditions are satisfied.
 #' In this case, the bias is zero (or zero vector).
-#' 
+#'
 #' This is not a good estimate of the bias in general, but it's
 #' arguably better than returning `NULL`.
 #'
@@ -358,6 +403,8 @@ score_val.mle <- function(x, ...) {
 #' @param theta true parameter value. normally, unknown (NULL), in which case
 #'              we estimate the bias (say, using bootstrap)
 #' @param ... additional arguments to pass
+#' @return Numeric vector of zeros (asymptotic bias is zero under regularity
+#'   conditions).
 #' @importFrom algebraic.dist nparams
 #' @export
 bias.mle <- function(x, theta = NULL, ...) {
@@ -391,6 +438,8 @@ bias.mle <- function(x, theta = NULL, ...) {
 #' @param R number of samples to draw from the sampling distribution of `x`.
 #'          Defaults to 50000.
 #' @param ... additional arguments to pass into `samp`.
+#' @return Matrix with columns for mean, lower, and upper bounds of the
+#'   predictive interval.
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom stats vcov quantile rnorm
 #' @importFrom algebraic.dist params
@@ -486,6 +535,8 @@ expectation.mle <- function(
 #' 
 #' @param x The distribution object.
 #' @param indices The indices of the marginal distribution to obtain.
+#' @return An \code{mle} object representing the marginal distribution for the
+#'   selected parameter indices.
 #' @importFrom algebraic.dist marginal params obs
 #' @importFrom stats vcov nobs
 #' @export

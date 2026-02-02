@@ -13,6 +13,9 @@
 then we let the bias method deal with it. Maybe it has a nice way
 of estimating the bias.}
 }
+\value{
+The MSE as a scalar (univariate) or matrix (multivariate).
+}
 \description{
 The MSE of an estimator is just the expected sum of squared differences,
 e.g., if the true parameter value is `x` and we have an estimator `x.hat`,

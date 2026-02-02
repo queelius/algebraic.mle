@@ -9,6 +9,14 @@ is_mle(x)
 \arguments{
 \item{x}{the object to test}
 }
+\value{
+Logical TRUE if \code{x} is an \code{mle} object, FALSE otherwise.
+}
 \description{
 Determine if an object `x` is an `mle` object.
+}
+\examples{
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+is_mle(fit)       # TRUE
+is_mle(list(a=1)) # FALSE
 }
