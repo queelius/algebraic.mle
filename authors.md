@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/queelius/algebraic.mle/blob/v1.0.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/queelius/algebraic.mle/blob/master/inst/CITATION)
 
 Towell A (2025). *algebraic.mle: Algebraic Maximum Likelihood
 Estimators*. R package version 1.0.0,

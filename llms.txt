@@ -277,6 +277,8 @@ You can see tutorials for more examples of using the package in the
   satisfied. In this case, the bias is zero (or zero vector).
 - [`bias(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/bias.mle_boot.md)
   : Computes the estimate of the bias of a \`mle_boot\` object.
+- [`coef(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/coef.mle.md)
+  : Extract coefficients from an \`mle\` object.
 - [`confint(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/confint.mle.md)
   : Function to compute the confidence intervals of \`mle\` objects.
 - [`confint(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/confint.mle_boot.md)
@@ -293,6 +295,8 @@ You can see tutorials for more examples of using the package in the
   : Determine if an object \`x\` is an \`mle\` object.
 - [`is_mle_boot()`](https://queelius.github.io/algebraic.mle/reference/is_mle_boot.md)
   : Determine if an object is an \`mle_boot\` object.
+- [`logLik(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/logLik.mle.md)
+  : Extract log-likelihood from an \`mle\` object.
 - [`loglik_val()`](https://queelius.github.io/algebraic.mle/reference/loglik_val.md)
   : Generic method for obtaining the log-likelihood value of a fitted
   MLE object.

@@ -16,6 +16,7 @@
 <url><loc>https://queelius.github.io/algebraic.mle/reference/bias.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/bias.mle.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/bias.mle_boot.html</loc></url>
+<url><loc>https://queelius.github.io/algebraic.mle/reference/coef.mle.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/confint.mle.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/confint.mle_boot.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/confint_from_sigma.html</loc></url>
@@ -23,6 +24,7 @@
 <url><loc>https://queelius.github.io/algebraic.mle/reference/index.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/is_mle.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/is_mle_boot.html</loc></url>
+<url><loc>https://queelius.github.io/algebraic.mle/reference/logLik.mle.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/loglik_val.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/loglik_val.mle.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/marginal.mle.html</loc></url>
