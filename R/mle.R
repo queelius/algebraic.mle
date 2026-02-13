@@ -88,6 +88,20 @@ params.mle <- function(x) {
     x$theta.hat
 }
 
+#' Extract coefficients from an `mle` object.
+#'
+#' Provides compatibility with the standard R \code{coef()} generic.
+#' Returns the same values as \code{params(x)}.
+#'
+#' @param object the `mle` object
+#' @param ... additional arguments (not used)
+#' @return Named numeric vector of parameter estimates.
+#' @importFrom stats coef
+#' @export
+coef.mle <- function(object, ...) {
+    params(object)
+}
+
 #' Method for obtaining the number of parameters of an `mle` object.
 #'
 #' @param x the `mle` object to obtain the number of parameters of
@@ -137,6 +151,29 @@ obs.mle <- function(x) {
 #' @export
 loglik_val.mle <- function(x, ...) {
     x$loglike
+}
+
+#' Extract log-likelihood from an `mle` object.
+#'
+#' Provides compatibility with the standard R \code{logLik()} generic.
+#' The returned object has class \code{"logLik"} with attributes \code{df}
+#' (number of estimated parameters) and \code{nobs} (number of observations),
+#' enabling automatic \code{AIC()} and \code{BIC()} support.
+#'
+#' @param object the `mle` object
+#' @param ... additional arguments (not used)
+#' @return An object of class \code{"logLik"}, or \code{NULL} if the
+#'   log-likelihood is not available.
+#' @importFrom stats logLik nobs
+#' @importFrom algebraic.dist nparams
+#' @export
+logLik.mle <- function(object, ...) {
+    val <- loglik_val(object)
+    if (is.null(val)) return(NULL)
+    structure(val,
+              df = nparams(object),
+              nobs = nobs(object),
+              class = "logLik")
 }
 
 #' Function to compute the confidence intervals of `mle` objects.
