@@ -9,7 +9,7 @@ variance-covariance of \`f(x)\`
 
 ``` r
 # S3 method for class 'mle'
-rmap(x, g, ..., n = 1000L, method = c("mc", "delta"))
+rmap(x, g, ..., n = 1000, method = c("mc", "delta"))
 ```
 
 ## Arguments

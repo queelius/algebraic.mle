@@ -1,5 +1,18 @@
 # Changelog
 
+## algebraic.mle 1.1.0
+
+- Add [`coef()`](https://rdrr.io/r/stats/coef.html) S3 method for base R
+  compatibility (delegates to
+  [`params()`](https://queelius.github.io/algebraic.dist/reference/params.html))
+- Add [`logLik()`](https://rdrr.io/r/stats/logLik.html) S3 method
+  returning proper `logLik` object with `df` and `nobs` attributes,
+  enabling automatic [`AIC()`](https://rdrr.io/r/stats/AIC.html) and
+  [`BIC()`](https://rdrr.io/r/stats/AIC.html) support from base R
+- Fix
+  [`rmap()`](https://queelius.github.io/algebraic.dist/reference/rmap.html)
+  to accept numeric `n` parameter (previously required integer)
+
 ## algebraic.mle 1.0.0
 
 - Initial CRAN release

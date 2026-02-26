@@ -7,17 +7,16 @@ manipulate and utilize.
 
 ## Installation
 
-`algebraic.mle` can be installed from GitHub by using the devtools
-package in R:
+Install from CRAN:
 
 ``` r
-#devtools::install_github("queelius/algebraic.mle")
-#devtools::install_github("queelius/algebraic.dist")
-library(algebraic.dist)
-#> Registered S3 method overwritten by 'algebraic.dist':
-#>   method     from 
-#>   print.dist stats
-library(algebraic.mle)
+install.packages("algebraic.mle")
+```
+
+Or install the development version from GitHub:
+
+``` r
+devtools::install_github("queelius/algebraic.mle")
 ```
 
 ## Purpose
