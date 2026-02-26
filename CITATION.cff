@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "algebraic.mle: Algebraic Maximum Likelihood Estimators"
-version: "1.0.0"
+version: "1.1.0"
 date-released: "2026-02-02"
 license: GPL-3.0
 repository-code: "https://github.com/queelius/algebraic.mle"

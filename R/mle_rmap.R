@@ -43,9 +43,9 @@
 #' @importFrom MASS ginv
 #' @export
 rmap.mle <- function(x, g, ...,
-    n = 1000L, method = c("mc", "delta"))
+    n = 1000, method = c("mc", "delta"))
 {
-    stopifnot(is.integer(n), n > 0, is_mle(x), is.function(g))
+    stopifnot(is.numeric(n), n > 0, is_mle(x), is.function(g))
 
     method <- match.arg(method)
     if (method == "mc") {

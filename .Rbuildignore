@@ -16,3 +16,8 @@
 ^cran-comments\.md$
 ^\.zenodo\.json$
 ^CITATION\.cff$
+^CODE_OF_CONDUCT\.md$
+^CONTRIBUTING\.md$
+^paper\.md$
+^paper\.bib$
+^\.joss-audit-report\.md$

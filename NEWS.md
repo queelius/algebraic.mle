@@ -1,3 +1,10 @@
+# algebraic.mle 1.1.0
+
+* Add `coef()` S3 method for base R compatibility (delegates to `params()`)
+* Add `logLik()` S3 method returning proper `logLik` object with `df` and `nobs`
+  attributes, enabling automatic `AIC()` and `BIC()` support from base R
+* Fix `rmap()` to accept numeric `n` parameter (previously required integer)
+
 # algebraic.mle 1.0.0
 
 * Initial CRAN release
