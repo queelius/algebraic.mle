@@ -48,6 +48,7 @@ rmap.mle <- function(x, g, ...,
     stopifnot(is.numeric(n), n > 0, is_mle(x), is.function(g))
 
     method <- match.arg(method)
+    theta <- unname(params(x))
     if (method == "mc") {
         mle.samp <- as.matrix(sampler(x)(n), nrow = n)
         p <- length(g(mle.samp[1, ], ...))
@@ -58,11 +59,11 @@ rmap.mle <- function(x, g, ...,
         g.sigma <- cov(g.mle.samp)
     }
     else { # method == "delta"
-        J <- jacobian(func = g, x = params(x), ...)
+        J <- jacobian(func = g, x = theta, ...)
         g.sigma <- J %*% vcov(x) %*% t(J)
     }
 
-    mle(theta.hat=g(params(x)),
+    mle(theta.hat=g(theta),
         loglike=NULL,
         score=NULL,
         sigma=g.sigma,
