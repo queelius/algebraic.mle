@@ -1,21 +1,30 @@
 Package: algebraic.mle
 Type: Package
 Title: Algebraic Maximum Likelihood Estimators
-Version: 1.1.0
+Version: 1.2.0
 Authors@R: 
     person("Alexander", "Towell", , "lex@metafunctor.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6443-9897"))
 Maintainer: Alexander Towell <lex@metafunctor.com>
-Description: Defines an algebra over maximum likelihood estimators (MLEs) by
-    providing operators that are closed over MLEs, along with various statistical
-    functions for inference. For background on maximum likelihood estimation,
-    see Casella and Berger (2002, ISBN:978-0534243128). For the delta method
-    and variance estimation, see Lehmann and Casella (1998, ISBN:978-0387985022).
+Description: The maximum likelihood estimator (MLE) is a technology: under
+    regularity conditions, any MLE is asymptotically normal with variance given
+    by the inverse Fisher information. This package exploits that structure by
+    defining an algebra over MLEs. Compose independent estimators into joint
+    MLEs via block-diagonal covariance ('joint'), optimally combine repeated
+    estimates via inverse-variance weighting ('combine'), propagate
+    transformations via the delta method ('rmap'), and bridge to distribution
+    algebra via conversion to normal or multivariate normal objects ('as_dist').
+    Supports asymptotic ('mle', 'mle_numerical') and bootstrap ('mle_boot')
+    estimators with a unified interface for inference: confidence intervals,
+    standard errors, AIC, Fisher information, and predictive intervals.
+    For background on maximum likelihood estimation, see Casella and Berger
+    (2002, ISBN:978-0534243128). For the delta method and variance estimation,
+    see Lehmann and Casella (1998, ISBN:978-0387985022).
 License: GPL (>= 3)
 Encoding: UTF-8
 ByteCompile: true
 LazyData: true
 Imports:
-    algebraic.dist,
+    algebraic.dist (>= 0.9.1),
     stats,
     boot,
     mvtnorm,
