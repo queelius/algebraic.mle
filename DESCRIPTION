@@ -4,7 +4,6 @@ Title: Algebraic Maximum Likelihood Estimators
 Version: 1.2.0
 Authors@R: 
     person("Alexander", "Towell", , "lex@metafunctor.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6443-9897"))
-Maintainer: Alexander Towell <lex@metafunctor.com>
 Description: The maximum likelihood estimator (MLE) is a technology: under
     regularity conditions, any MLE is asymptotically normal with variance given
     by the inverse Fisher information. This package exploits that structure by
@@ -22,7 +21,6 @@ Description: The maximum likelihood estimator (MLE) is a technology: under
 License: GPL (>= 3)
 Encoding: UTF-8
 ByteCompile: true
-LazyData: true
 Imports:
     algebraic.dist (>= 0.9.1),
     stats,
@@ -37,7 +35,6 @@ BugReports: https://github.com/queelius/algebraic.mle/issues
 Suggests:
     testthat (>= 3.0.0),
     rmarkdown,
-    dplyr,
     knitr,
     ggplot2,
     tibble,

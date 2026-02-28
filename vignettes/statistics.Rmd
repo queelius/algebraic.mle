@@ -7,6 +7,8 @@ vignette: >
   %\VignetteIndexEntry{Statistics and characteristics of the MLE}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{ggplot2}
+  %\VignetteDepends{tibble}
 ---
 
 
@@ -42,9 +44,13 @@ library(algebraic.dist)
 library(algebraic.mle)
 library(numDeriv)
 library(MASS)
-library(ggplot2)
-library(tibble)
 library(mvtnorm)
+has_ggplot2 <- requireNamespace("ggplot2", quietly = TRUE) &&
+               requireNamespace("tibble", quietly = TRUE)
+if (has_ggplot2) {
+  library(ggplot2)
+  library(tibble)
+}
 set.seed(1234)
 ```
 
@@ -143,7 +149,7 @@ distribution should be very close to the true sampling distribution. We can plot
 empirical sampling distribution of the MLEs using the `plot` function on the
 `mles` matrix.
 
-```{r fig.width=4, fig.height=4, echo=FALSE, fig.align="center", fig.cap="Sampling distribution of the MLEs.", warning=FALSE, cache=TRUE}
+```{r fig.width=4, fig.height=4, echo=FALSE, fig.align="center", fig.cap="Sampling distribution of the MLEs.", warning=FALSE, cache=TRUE, eval=has_ggplot2}
 tmp <- colMeans(mles)
 # countour plot of the sampling distribution `mles` and with the point of the
 # true mean and variance, theta = (mu, var), shown. label it "true parameter"

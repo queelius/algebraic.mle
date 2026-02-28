@@ -8,8 +8,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\VignetteDepends{ggplot2}
-  %\VignetteDepends{dplyr}
-  %\VignetteDepends{tibble}
   %\VignetteDepends{algebraic.mle}
   %\VignetteDepends{boot}
   %\VignetteDepends{CDFt}
@@ -26,6 +24,7 @@ knitr::opts_chunk$set(
 )
 
 oldopts <- options(digits = 3, scipen = 999)
+has_ggplot2 <- requireNamespace("ggplot2", quietly = TRUE)
 ```
 
 
@@ -84,7 +83,7 @@ Visualizing the data is a good first step in the analysis of the data.
 If the data is univariate or bivariate, we can plot a histogram of the data
 pretty easily.
 We show a histogram of the simulated data below:
-```{r histo, fig.align='center', echo=F}
+```{r histo, fig.align='center', echo=F, eval=has_ggplot2}
 library(ggplot2)
 ggplot(data.frame(x = x), aes(x = x)) +
     geom_histogram(color = "dark blue",
@@ -168,7 +167,7 @@ summary(theta.weibull)
 ```
 
 Let's plot the pdfs of the Weibull and normal distributions:
-```{r fig.align='center', fig.height=4, fig.width=4, echo=F}
+```{r fig.align='center', fig.height=4, fig.width=4, echo=F, eval=has_ggplot2}
 df1 <- data.frame(Value=rweibull(n=100000,
     shape=params(theta.weibull)[1],
     scale=params(theta.weibull)[2]), Group = "Weibull")

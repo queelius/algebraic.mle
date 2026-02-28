@@ -1,15 +1,16 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "algebraic.mle: Algebraic Maximum Likelihood Estimators"
-version: "1.1.0"
-date-released: "2026-02-02"
+version: "1.2.0"
+date-released: "2026-02-28"
 license: GPL-3.0
 repository-code: "https://github.com/queelius/algebraic.mle"
 url: "https://cran.r-project.org/package=algebraic.mle"
 abstract: >-
-  Defines an algebra over maximum likelihood estimators (MLEs) by
-  providing operators that are closed over MLEs, along with various
-  statistical functions for inference.
+  The maximum likelihood estimator (MLE) is a technology: under regularity
+  conditions, any MLE is asymptotically normal with variance given by the
+  inverse Fisher information. This package exploits that structure by defining
+  an algebra over MLEs with composition, transformation, and inference.
 keywords:
   - maximum-likelihood-estimation
   - statistics

@@ -21,3 +21,6 @@
 ^paper\.md$
 ^paper\.bib$
 ^\.joss-audit-report\.md$
+^\.claude$
+^algebraic\.mle.*\.tar\.gz$
+^algebraic\.mle\.Rcheck$

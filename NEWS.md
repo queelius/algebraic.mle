@@ -1,3 +1,28 @@
+# algebraic.mle 1.2.0
+
+## New features
+
+* `joint()` composes independent MLEs with disjoint parameter sets into a
+  joint MLE with block-diagonal covariance structure
+* `combine()` optimally weights independent MLEs for the same parameter via
+  inverse-variance (Fisher information) weighting
+* `as_dist()` converts MLE objects to their asymptotic normal distributions,
+  bridging to the `algebraic.dist` distribution algebra
+* Distribution methods on MLE objects: `density()`, `cdf()`, `inv_cdf()`,
+  `sup()`, `dim()`, `mean()`, `conditional()`
+
+## Documentation
+
+* Rewrote package Description around "MLE as technology" narrative
+* Rewrote README to lead with the algebra (joint, combine, rmap, as_dist)
+* Added "The Algebra of MLEs" vignette demonstrating the full composition
+  pipeline
+
+## Bug fixes
+
+* Fixed name-propagation issue in `rmap()` where `c()` merged parameter names
+  with transformation output names
+
 # algebraic.mle 1.1.0
 
 * Add `coef()` S3 method for base R compatibility (delegates to `params()`)
