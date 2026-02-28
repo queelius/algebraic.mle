@@ -64,8 +64,7 @@ fit <- mle(
 g <- function(theta) sqrt(theta[2])
 sd_mle <- rmap(fit, g, method = "delta")
 params(sd_mle)
-#>      var 
-#> 1.825632 
+#> [1] 1.825632
 se(sd_mle)
 #> [1] 0.1290917
 ```

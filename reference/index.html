@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a></li>
     <li><a class="dropdown-item" href="../articles/fitting-common-dist.html">Fitting Common Distributions to a DGP</a></li>
+    <li><a class="dropdown-item" href="../articles/mle-algebra.html">The Algebra of MLEs</a></li>
     <li><a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -70,6 +71,20 @@
 
         <dt>
 
+          <code><a href="as_dist.mle.html">as_dist(<i>&lt;mle&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Convert an MLE to a distribution object.</dd>
+
+        <dt>
+
+          <code><a href="as_dist.mle_boot.html">as_dist(<i>&lt;mle_boot&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Convert a bootstrap MLE to an empirical distribution.</dd>
+
+        <dt>
+
           <code><a href="bias.html">bias()</a></code>
 
         </dt>
@@ -91,10 +106,31 @@
 
         <dt>
 
+          <code><a href="cdf.mle.html">cdf(<i>&lt;mle&gt;</i>)</a></code>
+
+        </dt>
+        <dd>CDF of the asymptotic distribution of an MLE.</dd>
+
+        <dt>
+
           <code><a href="coef.mle.html">coef(<i>&lt;mle&gt;</i>)</a></code>
 
         </dt>
         <dd>Extract coefficients from an `mle` object.</dd>
+
+        <dt>
+
+          <code><a href="combine.html">combine()</a></code>
+
+        </dt>
+        <dd>Combine independent MLEs for the same parameter.</dd>
+
+        <dt>
+
+          <code><a href="conditional.mle.html">conditional(<i>&lt;mle&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Conditional distribution from an MLE.</dd>
 
         <dt>
 
@@ -119,10 +155,45 @@
 
         <dt>
 
+          <code><a href="density.mle.html">density(<i>&lt;mle&gt;</i>)</a></code>
+
+        </dt>
+        <dd>PDF of the asymptotic distribution of an MLE.</dd>
+
+        <dt>
+
+          <code><a href="density.mle_boot.html">density(<i>&lt;mle_boot&gt;</i>)</a></code>
+
+        </dt>
+        <dd>PDF of the empirical distribution of bootstrap replicates.</dd>
+
+        <dt>
+
+          <code><a href="dim.mle.html">dim(<i>&lt;mle&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Dimension (number of parameters) of an MLE.</dd>
+
+        <dt>
+
+          <code><a href="dim.mle_boot.html">dim(<i>&lt;mle_boot&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Dimension (number of parameters) of a bootstrap MLE.</dd>
+
+        <dt>
+
           <code><a href="expectation.mle.html">expectation(<i>&lt;mle&gt;</i>)</a></code>
 
         </dt>
         <dd>Expectation operator applied to `x` of type `mle` with respect to a function `g`. That is, `E(g(x))`.</dd>
+
+        <dt>
+
+          <code><a href="inv_cdf.mle.html">inv_cdf(<i>&lt;mle&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Quantile function of the asymptotic distribution of an MLE.</dd>
 
         <dt>
 
@@ -137,6 +208,13 @@
 
         </dt>
         <dd>Determine if an object is an `mle_boot` object.</dd>
+
+        <dt>
+
+          <code><a href="joint.html">joint()</a></code>
+
+        </dt>
+        <dd>Compose independent MLEs into a joint MLE.</dd>
 
         <dt>
 
@@ -165,6 +243,20 @@
 
         </dt>
         <dd>Method for obtaining the marginal distribution of an MLE that is based on asymptotic assumptions:</dd>
+
+        <dt>
+
+          <code><a href="mean.mle.html">mean(<i>&lt;mle&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Mean of the asymptotic distribution of an MLE.</dd>
+
+        <dt>
+
+          <code><a href="mean.mle_boot.html">mean(<i>&lt;mle_boot&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Mean of bootstrap replicates.</dd>
 
         <dt>
 
@@ -382,6 +474,13 @@
 
         </dt>
         <dd>Function for obtaining a summary of `object`, which is a fitted `mle` object.</dd>
+
+        <dt>
+
+          <code><a href="sup.mle.html">sup(<i>&lt;mle&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Support of the asymptotic distribution of an MLE.</dd>
 
         <dt>
 

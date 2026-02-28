@@ -15,7 +15,7 @@ where `sigma` is the variance-covariance of `f(x)`"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@ where `sigma` is the variance-covariance of `f(x)`"></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/dgp.html">Dynamic failure rate model</a></li>
     <li><a class="dropdown-item" href="../articles/fitting-common-dist.html">Fitting Common Distributions to a DGP</a></li>
+    <li><a class="dropdown-item" href="../articles/mle-algebra.html">The Algebra of MLEs</a></li>
     <li><a class="dropdown-item" href="../articles/statistics.html">Statistics and characteristics of the MLE</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -117,8 +118,7 @@ variance-covariance of `f(x)`:
 <span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sd_mle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">g</span>, method <span class="op">=</span> <span class="st">"delta"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">sd_mle</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      var </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1.825632 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.825632</span>
 <span class="r-in"><span><span class="fu"><a href="se.html">se</a></span><span class="op">(</span><span class="va">sd_mle</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1290917</span>
 </code></pre></div>

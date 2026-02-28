@@ -12,6 +12,10 @@
   : \`algebraic.mle\`: A package for algebraically operating on and
   generating maximum likelihood estimators from existing maximum
   likelihood estimators.
+- [`as_dist(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/as_dist.mle.md)
+  : Convert an MLE to a distribution object.
+- [`as_dist(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/as_dist.mle_boot.md)
+  : Convert a bootstrap MLE to an empirical distribution.
 - [`bias()`](https://queelius.github.io/algebraic.mle/reference/bias.md)
   : Generic method for computing the bias of an estimator object.
 - [`bias(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/bias.mle.md)
@@ -20,8 +24,14 @@
   satisfied. In this case, the bias is zero (or zero vector).
 - [`bias(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/bias.mle_boot.md)
   : Computes the estimate of the bias of a \`mle_boot\` object.
+- [`cdf(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/cdf.mle.md)
+  : CDF of the asymptotic distribution of an MLE.
 - [`coef(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/coef.mle.md)
   : Extract coefficients from an \`mle\` object.
+- [`combine()`](https://queelius.github.io/algebraic.mle/reference/combine.md)
+  : Combine independent MLEs for the same parameter.
+- [`conditional(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/conditional.mle.md)
+  : Conditional distribution from an MLE.
 - [`confint(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/confint.mle.md)
   : Function to compute the confidence intervals of \`mle\` objects.
 - [`confint(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/confint.mle_boot.md)
@@ -31,13 +41,25 @@
 - [`confint_from_sigma()`](https://queelius.github.io/algebraic.mle/reference/confint_from_sigma.md)
   : Function to compute the confidence intervals from a
   variance-covariance matrix
+- [`density(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/density.mle.md)
+  : PDF of the asymptotic distribution of an MLE.
+- [`density(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/density.mle_boot.md)
+  : PDF of the empirical distribution of bootstrap replicates.
+- [`dim(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/dim.mle.md)
+  : Dimension (number of parameters) of an MLE.
+- [`dim(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/dim.mle_boot.md)
+  : Dimension (number of parameters) of a bootstrap MLE.
 - [`expectation(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/expectation.mle.md)
   : Expectation operator applied to \`x\` of type \`mle\` with respect
   to a function \`g\`. That is, \`E(g(x))\`.
+- [`inv_cdf(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/inv_cdf.mle.md)
+  : Quantile function of the asymptotic distribution of an MLE.
 - [`is_mle()`](https://queelius.github.io/algebraic.mle/reference/is_mle.md)
   : Determine if an object \`x\` is an \`mle\` object.
 - [`is_mle_boot()`](https://queelius.github.io/algebraic.mle/reference/is_mle_boot.md)
   : Determine if an object is an \`mle_boot\` object.
+- [`joint()`](https://queelius.github.io/algebraic.mle/reference/joint.md)
+  : Compose independent MLEs into a joint MLE.
 - [`logLik(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/logLik.mle.md)
   : Extract log-likelihood from an \`mle\` object.
 - [`loglik_val()`](https://queelius.github.io/algebraic.mle/reference/loglik_val.md)
@@ -48,6 +70,10 @@
 - [`marginal(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/marginal.mle.md)
   : Method for obtaining the marginal distribution of an MLE that is
   based on asymptotic assumptions:
+- [`mean(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/mean.mle.md)
+  : Mean of the asymptotic distribution of an MLE.
+- [`mean(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/mean.mle_boot.md)
+  : Mean of bootstrap replicates.
 - [`mle()`](https://queelius.github.io/algebraic.mle/reference/mle.md) :
   Constructor for making \`mle\` objects, which provides a common
   interface for maximum likelihood estimators.
@@ -128,6 +154,8 @@
 - [`summary(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/summary.mle.md)
   : Function for obtaining a summary of \`object\`, which is a fitted
   \`mle\` object.
+- [`sup(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/sup.mle.md)
+  : Support of the asymptotic distribution of an MLE.
 - [`vcov(`*`<mle>`*`)`](https://queelius.github.io/algebraic.mle/reference/vcov.mle.md)
   : Computes the variance-covariance matrix of \`mle\` object.
 - [`vcov(`*`<mle_boot>`*`)`](https://queelius.github.io/algebraic.mle/reference/vcov.mle_boot.md)
