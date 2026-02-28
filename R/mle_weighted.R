@@ -62,7 +62,7 @@ mle_weighted <- function(mles) {
         stop("Invalid input: not a list of 'mle' objects.")
     }
 
-    if (!all(sapply(mles, is_mle))) {
+    if (!all(vapply(mles, is_mle, logical(1)))) {
         stop("Invalid input: not all elements are 'mle' objects.")
     }
 
@@ -82,7 +82,7 @@ mle_weighted <- function(mles) {
         sigma = cov.wt,
         info = info.wt,
         obs = NULL,
-        nobs = sum(sapply(mles, nobs)),
+        nobs = sum(vapply(mles, nobs, integer(1))),
         superclasses = c("mle_weighted")
     )
 }

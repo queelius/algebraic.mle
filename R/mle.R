@@ -212,20 +212,15 @@ confint.mle <- function(object, parm = NULL, level = .95,
     } else {
         q <- qnorm(1 - alpha)
     }
-    ci <- matrix(nrow = p, ncol = 2)
+    se <- sqrt(sigma)
+    ci <- cbind(theta - q * se, theta + q * se)
     colnames(ci) <- c(paste0(alpha * 100, "%"),
                       paste0((1 - alpha) * 100, "%"))
 
-    for (j in 1:p) {
-        ci[j, ] <- c(
-            theta[j] - q * sqrt(sigma[j]),
-            theta[j] + q * sqrt(sigma[j]))
-    }
-
     if (is.null(names(theta))) {
-        rownames(ci) <- paste0("param", 1:p)
+        rownames(ci) <- paste0("param", seq_len(p))
     } else {
-        rownames(ci) <- names(theta)[1:p]
+        rownames(ci) <- names(theta)[seq_len(p)]
     }
     ci
 }
@@ -245,15 +240,7 @@ confint.mle <- function(object, parm = NULL, level = .95,
 #' @importFrom algebraic.dist params nparams
 #' @export
 sampler.mle <- function(x, ...) {
-    V <- vcov(x)
-    mu <- params(x)
-
-    if (nparams(x) == 1L) {
-        stddev <- sqrt(V)
-        function(n = 1) rnorm(n, mean = mu, sd = stddev, ...)
-    } else {
-        function(n = 1) rmvnorm(n, mu, V, ...)
-    }
+    sampler(mle_to_dist(x), ...)
 }
 
 #' Computes the MSE of an `mle` object.
@@ -484,14 +471,7 @@ bias.mle <- function(x, theta = NULL, ...) {
 pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 
     theta <- params(x)
-    sigma <- vcov(x)
-
-    thetas <- NULL
-    if (length(theta) == 1) {
-        thetas <- matrix(rnorm(n = R, mean = theta, sd = sqrt(sigma)), nrow = R)
-    } else {
-        thetas <- rmvnorm(n = R, mean = theta, sigma = sigma)
-    }
+    thetas <- as.matrix(sampler(x)(R), nrow = R)
 
     ob <- samp(n = 1, theta, ...)
     p <- length(ob)
@@ -581,7 +561,7 @@ marginal.mle <- function(x, indices) {
     if (length(indices) == 0) {
         stop("indices must be non-empty")
     }
-    else if (any(indices < 0) || any(indices > nparams(x))) {
+    else if (any(indices < 1) || any(indices > nparams(x))) {
         stop("indices must be in [1, dim(x)]")
     }
     
@@ -592,4 +572,97 @@ marginal.mle <- function(x, indices) {
         info = NULL,
         obs = obs(x),
         nobs = nobs(x))
+}
+
+## ── Distribution methods (delegate to asymptotic normal/mvn) ──────────────
+
+#' PDF of the asymptotic distribution of an MLE.
+#'
+#' Returns a closure computing the probability density function of the
+#' asymptotic normal (univariate) or multivariate normal (multivariate)
+#' distribution of the MLE.
+#'
+#' @param x An \code{mle} object.
+#' @param ... Additional arguments (not used).
+#' @return A function computing the PDF at given points.
+#' @importFrom stats density
+#' @importFrom algebraic.dist normal mvn
+#' @export
+density.mle <- function(x, ...) {
+    density(mle_to_dist(x))
+}
+
+#' CDF of the asymptotic distribution of an MLE.
+#'
+#' @param x An \code{mle} object.
+#' @param ... Additional arguments (not used).
+#' @return A function computing the CDF at given points.
+#' @importFrom algebraic.dist cdf
+#' @export
+cdf.mle <- function(x, ...) {
+    cdf(mle_to_dist(x))
+}
+
+#' Quantile function of the asymptotic distribution of an MLE.
+#'
+#' @param x An \code{mle} object.
+#' @param ... Additional arguments (not used).
+#' @return A function computing quantiles for given probabilities.
+#' @importFrom algebraic.dist inv_cdf
+#' @export
+inv_cdf.mle <- function(x, ...) {
+    inv_cdf(mle_to_dist(x))
+}
+
+#' Support of the asymptotic distribution of an MLE.
+#'
+#' @param x An \code{mle} object.
+#' @return A support object (interval for normal distributions).
+#' @importFrom algebraic.dist sup
+#' @export
+sup.mle <- function(x) {
+    sup(mle_to_dist(x))
+}
+
+#' Dimension (number of parameters) of an MLE.
+#'
+#' @param x An \code{mle} object.
+#' @return Integer; the number of parameters.
+#' @export
+dim.mle <- function(x) {
+    nparams(x)
+}
+
+#' Mean of the asymptotic distribution of an MLE.
+#'
+#' Returns the parameter estimates, which are the mean of the asymptotic
+#' distribution.
+#'
+#' @param x An \code{mle} object.
+#' @param ... Additional arguments (not used).
+#' @return Numeric vector of parameter estimates.
+#' @export
+mean.mle <- function(x, ...) {
+    params(x)
+}
+
+#' Conditional distribution from an MLE.
+#'
+#' Computes the conditional distribution of a subset of parameters given
+#' observed values for other parameters. Uses the closed-form Schur complement
+#' for the multivariate normal. Returns a \code{dist} object (not an \code{mle}),
+#' since conditioning loses the MLE context.
+#'
+#' @param x An \code{mle} object with at least 2 parameters.
+#' @param P Optional predicate function for Monte Carlo fallback.
+#' @param ... Additional arguments forwarded to \code{P}.
+#' @param given_indices Integer vector of conditioned parameter indices.
+#' @param given_values Numeric vector of observed values.
+#' @return A \code{normal}, \code{mvn}, or \code{empirical_dist} object.
+#' @importFrom algebraic.dist conditional
+#' @export
+conditional.mle <- function(x, P = NULL, ...,
+                            given_indices = NULL, given_values = NULL) {
+    conditional(mle_to_dist(x), P = P, ...,
+                given_indices = given_indices, given_values = given_values)
 }

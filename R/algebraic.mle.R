@@ -40,6 +40,28 @@ algebraic.dist::expectation
 #' @export
 algebraic.dist::marginal
 
+#' @importFrom algebraic.dist as_dist
+#' @export
+algebraic.dist::as_dist
+
+#' @importFrom algebraic.dist cdf
+#' @export
+algebraic.dist::cdf
+
+#' @importFrom algebraic.dist conditional
+#' @export
+algebraic.dist::conditional
+
+#' @importFrom algebraic.dist inv_cdf
+#' @export
+algebraic.dist::inv_cdf
+
+#' @importFrom algebraic.dist sup
+#' @export
+algebraic.dist::sup
+
+#' @importFrom algebraic.dist normal mvn empirical_dist
+NULL
 
 #' Generic method for obtaining the log-likelihood value of a fitted MLE
 #' object.

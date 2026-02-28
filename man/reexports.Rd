@@ -10,6 +10,11 @@
 \alias{rmap}
 \alias{expectation}
 \alias{marginal}
+\alias{as_dist}
+\alias{cdf}
+\alias{conditional}
+\alias{inv_cdf}
+\alias{sup}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -17,6 +22,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{algebraic.dist}{\code{\link[algebraic.dist]{expectation}}, \code{\link[algebraic.dist]{marginal}}, \code{\link[algebraic.dist]{nparams}}, \code{\link[algebraic.dist]{obs}}, \code{\link[algebraic.dist]{params}}, \code{\link[algebraic.dist]{rmap}}, \code{\link[algebraic.dist]{sampler}}}
+  \item{algebraic.dist}{\code{\link[algebraic.dist]{as_dist}}, \code{\link[algebraic.dist]{cdf}}, \code{\link[algebraic.dist]{conditional}}, \code{\link[algebraic.dist]{expectation}}, \code{\link[algebraic.dist]{inv_cdf}}, \code{\link[algebraic.dist]{marginal}}, \code{\link[algebraic.dist]{nparams}}, \code{\link[algebraic.dist]{obs}}, \code{\link[algebraic.dist]{params}}, \code{\link[algebraic.dist]{rmap}}, \code{\link[algebraic.dist]{sampler}}, \code{\link[algebraic.dist]{sup}}}
 }}
 

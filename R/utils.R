@@ -23,21 +23,15 @@ confint_from_sigma <- function(sigma, theta, level = .95) {
     alpha <- (1 - level) / 2
     p <- length(theta)
     q <- stats::qnorm(1 - alpha)
-    ci <- matrix(nrow = p, ncol = 2)
+    se <- sqrt(sigma)
+    ci <- cbind(theta - q * se, theta + q * se)
     colnames(ci) <- c(paste0(alpha * 100, "%"),
                       paste0((1 - alpha) * 100, "%"))
 
-    for (j in 1:p) {
-        ci[j, ] <- c(
-            theta[j] - q * sqrt(sigma[j]),
-            theta[j] + q * sqrt(sigma[j])
-        )
-    }
-
     if (is.null(names(theta))) {
-        rownames(ci) <- paste0("param", 1:p)
+        rownames(ci) <- paste0("param", seq_len(p))
     } else {
-        rownames(ci) <- names(theta)[1:p]
+        rownames(ci) <- names(theta)[seq_len(p)]
     }
     ci
 }

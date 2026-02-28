@@ -216,3 +216,43 @@ confint.mle_boot <- function(object, parm = NULL, level = 0.95,
     }
     CI
 }
+
+## ── Distribution methods ──────────────────────────────────────────────────
+
+#' PDF of the empirical distribution of bootstrap replicates.
+#'
+#' @param x An \code{mle_boot} object.
+#' @param ... Additional arguments (not used).
+#' @return A function computing the empirical PMF at given points.
+#' @importFrom stats density
+#' @importFrom algebraic.dist empirical_dist
+#' @export
+density.mle_boot <- function(x, ...) {
+    density(empirical_dist(x$t))
+}
+
+#' Dimension (number of parameters) of a bootstrap MLE.
+#'
+#' @param x An \code{mle_boot} object.
+#' @return Integer; the number of parameters.
+#' @export
+dim.mle_boot <- function(x) {
+    nparams(x)
+}
+
+#' Mean of bootstrap replicates.
+#'
+#' Returns the empirical mean of the bootstrap replicates (which includes
+#' bootstrap bias). For the bias-corrected point estimate, use \code{params()}.
+#'
+#' @param x An \code{mle_boot} object.
+#' @param ... Additional arguments (not used).
+#' @return Numeric vector of column means of bootstrap replicates.
+#' @export
+mean.mle_boot <- function(x, ...) {
+    if (ncol(x$t) == 1L) {
+        mean(x$t)
+    } else {
+        colMeans(x$t)
+    }
+}
