@@ -140,7 +140,7 @@ mles.sub <- list(length = r)
 for (i in 1:r)
     mles.sub[[i]] <- fit_normal(samp.sub[i,])
 
-mle.wt <- mle_weighted(mles.sub)
+mle.wt <- combine(mles.sub)
 mle <- fit_normal(samp)
 
 ## -----------------------------------------------------------------------------

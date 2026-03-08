@@ -21,21 +21,19 @@ print_num <- function(x) print(sprintf("%.3f", x))
 ```
 
 
-<!-- badges: start -->
-[![GPL-3 License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-<!-- badges: end -->
-
-`algebraic.mle` is an R package that provides an algebra over
-Maximum Likelihood Estimators (MLEs). These estimators possess
-many desirable, well-defined statistical properties which the package
-helps you manipulate and utilize.
+`algebraic.mle` provides an algebra over maximum likelihood estimators (MLEs).
+Under regularity conditions, any MLE is asymptotically normal with variance
+given by the inverse Fisher information. The package exploits this structure
+with operations for composition (`joint`, `combine`), transformation (`rmap`),
+and bridging to distribution algebra (`as_dist`).
 
 ## Installation
 
-The R package `algebraic.mle` can be installed from GitHub by using the devtools package
-in R:
 ```{r install, eval = FALSE}
-install.packages("devtools")
+# From CRAN
+install.packages("algebraic.mle")
+
+# Development version from GitHub
 devtools::install_github("queelius/algebraic.mle")
 ```
 
@@ -94,9 +92,8 @@ fit_normal <- function(data) {
 ```
 
 As you can see, we return an `mle` object, and then we give it a sub-class
-`mle_normal` (it is also a subclass of `mle` and `algebraic.dist`'s `dist`)
-so we can specialize some of the methods for MLE of the normal distribution,
-e.g., `bias.mle_normal` which we show later.
+`mle_normal` so we can specialize some of the methods for MLE of the normal
+distribution, e.g., `bias.mle_normal` which we show later.
 
 ## Monte-carlo (MC) simulation of the sampling distribution of the MLE
 
@@ -754,7 +751,7 @@ mles.sub <- list(length = r)
 for (i in 1:r)
     mles.sub[[i]] <- fit_normal(samp.sub[i,])
 
-mle.wt <- mle_weighted(mles.sub)
+mle.wt <- combine(mles.sub)
 mle <- fit_normal(samp)
 ```
 

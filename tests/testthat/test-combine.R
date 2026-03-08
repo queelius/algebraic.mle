@@ -92,24 +92,3 @@ test_that("combine errors when no vcov or FIM available", {
   expect_error(combine(fit1, fit2), "variance-covariance|information")
 })
 
-## -- combine: matches mle_weighted -------------------------------------------
-
-test_that("combine matches mle_weighted for FIM-available inputs", {
-  set.seed(123)
-  make_mle <- function(mu, n) {
-    s2 <- 4
-    mle(theta.hat = mu, sigma = matrix(s2 / n),
-        info = matrix(n / s2), nobs = n)
-  }
-  fit1 <- make_mle(10, 50L)
-  fit2 <- make_mle(11, 30L)
-  fit3 <- make_mle(9.5, 70L)
-
-  comb <- combine(fit1, fit2, fit3)
-  weighted <- mle_weighted(list(fit1, fit2, fit3))
-
-  expect_equal(as.numeric(params(comb)), as.numeric(params(weighted)),
-               tolerance = 1e-10)
-  expect_equal(as.numeric(vcov(comb)), as.numeric(vcov(weighted)),
-               tolerance = 1e-10)
-})

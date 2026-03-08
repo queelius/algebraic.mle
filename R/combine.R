@@ -15,12 +15,10 @@
 #' When the Fisher information matrix is not directly available but the
 #' variance-covariance matrix is, the FIM is computed as \code{ginv(vcov)}.
 #'
-#' For the legacy interface that accepts a list, see \code{\link{mle_weighted}}.
-#'
 #' @param x An \code{mle} object, or a list of \code{mle} objects.
 #' @param ... Additional \code{mle} objects to combine.
 #' @return An \code{mle} object representing the optimally weighted combination.
-#' @seealso \code{\link{mle_weighted}}, \code{\link{joint}}
+#' @seealso \code{\link{joint}}
 #' @examples
 #' # Three independent estimates of the same rate
 #' fit1 <- mle(theta.hat = c(lambda = 2.1), sigma = matrix(0.04), nobs = 50L)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/algebraic.mle.R
 \name{aic}
 \alias{aic}
-\title{Generic method for obtaining the AIC of a fitted distribution object fit.}
+\title{Akaike Information Criterion.}
 \usage{
 aic(x)
 }
@@ -13,5 +13,15 @@ aic(x)
 The Akaike Information Criterion value (numeric).
 }
 \description{
-Generic method for obtaining the AIC of a fitted distribution object fit.
+Computes AIC = -2 * loglik + 2 * k, where k is the number of parameters.
+}
+\details{
+This package provides \code{aic()} rather than methods for \code{stats::AIC()}
+because our S3 class \code{"mle"} shares its name with the S4 class
+\code{stats4::mle}. When \pkg{stats4} is loaded, S4 dispatch intercepts
+calls to \code{AIC()} and \code{logLik()}, causing errors. The \code{aic()}
+generic avoids this conflict entirely.
+}
+\seealso{
+\code{\link{bic}}, \code{\link{loglik_val}}
 }

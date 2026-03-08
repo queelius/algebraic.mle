@@ -359,7 +359,7 @@ mles.sub <- list(length = r)
 for (i in 1:r)
     mles.sub[[i]] <- fit_normal(samp.sub[i,])
 
-mle.wt <- mle_weighted(mles.sub)
+mle.wt <- combine(mles.sub)
 mle <- fit_normal(samp)
 ```
 
@@ -397,7 +397,7 @@ theta.boot <- mle_boot(
 
 We already printed out the `theta.boot` object, which provided a lot of
 information about it, but we can obtain specified  statistics from the Bootstrap
-MLE using the standard interface in `algorithmic.mle`, e.g.:
+MLE using the standard interface in `algebraic.mle`, e.g.:
 ```{r}
 print(theta.boot)
 bias(theta.boot)

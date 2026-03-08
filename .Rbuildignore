@@ -4,7 +4,6 @@
 ^Meta$
 ^LICENSE\.md$
 ^docs$
-^fixing$
 ^\.github$
 ^README\.md$
 ^README\.Rmd$
@@ -24,3 +23,4 @@
 ^\.claude$
 ^algebraic\.mle.*\.tar\.gz$
 ^algebraic\.mle\.Rcheck$
+^CRAN-SUBMISSION$

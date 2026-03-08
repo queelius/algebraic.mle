@@ -36,8 +36,6 @@ The combined estimator has:
 
 When the Fisher information matrix is not directly available but the
 variance-covariance matrix is, the FIM is computed as \code{ginv(vcov)}.
-
-For the legacy interface that accepts a list, see \code{\link{mle_weighted}}.
 }
 \examples{
 # Three independent estimates of the same rate
@@ -50,5 +48,5 @@ params(comb)
 se(comb)
 }
 \seealso{
-\code{\link{mle_weighted}}, \code{\link{joint}}
+\code{\link{joint}}
 }
