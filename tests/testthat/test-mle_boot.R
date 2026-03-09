@@ -14,7 +14,7 @@ test_that("mle_boot wraps boot object correctly", {
 
   expect_true(is_mle(fit))
   expect_true(is_mle_boot(fit))
-  expect_true(inherits(fit, "mle_boot"))
+  expect_true(inherits(fit, "mle_fit_boot"))
 })
 
 test_that("is_mle_boot returns FALSE for non-boot objects", {

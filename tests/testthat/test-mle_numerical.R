@@ -18,7 +18,7 @@ test_that("mle_numerical wraps optim result correctly", {
   fit <- mle_numerical(result, options = list(nobs = length(x)))
 
   expect_true(is_mle(fit))
-  expect_true(inherits(fit, "mle_numerical"))
+  expect_true(inherits(fit, "mle_fit_numerical"))
   expect_true(fit$converged)
 
   # MLE of rate should be close to 1/mean(x)

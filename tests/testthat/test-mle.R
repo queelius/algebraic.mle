@@ -42,36 +42,20 @@ test_that("is_mle returns FALSE for non-mle objects", {
   expect_false(is_mle("hello"))
 })
 
-## ── coef and logLik (base R generics) ─────────────────────────────────────
+## ── bic ─────────────────────────────────────────────────────────────────
 
-test_that("coef.mle returns same as params", {
-  fit <- mle(theta.hat = c(a = 1, b = 2), sigma = diag(2))
-  expect_equal(coef(fit), params(fit))
-})
+## ── bic ─────────────────────────────────────────────────────────────────
 
-test_that("logLik.mle returns proper logLik object", {
+test_that("bic computes correctly", {
   fit <- mle(theta.hat = c(a = 1, b = 2), sigma = diag(2),
              loglike = -50, nobs = 100L)
-  ll <- logLik(fit)
-
-  expect_s3_class(ll, "logLik")
-  expect_equal(as.numeric(ll), -50)
-  expect_equal(attr(ll, "df"), 2)
-  expect_equal(attr(ll, "nobs"), 100L)
-})
-
-test_that("logLik.mle returns NULL when loglike is NULL", {
-  fit <- mle(theta.hat = c(x = 1))
-  expect_null(logLik(fit))
-})
-
-test_that("AIC and BIC work via logLik", {
-  fit <- mle(theta.hat = c(a = 1, b = 2), sigma = diag(2),
-             loglike = -50, nobs = 100L)
-  # AIC = -2*loglik + 2*k
-  expect_equal(AIC(fit), -2 * (-50) + 2 * 2)
   # BIC = -2*loglik + k*log(n)
-  expect_equal(BIC(fit), -2 * (-50) + 2 * log(100))
+  expect_equal(bic(fit), -2 * (-50) + 2 * log(100))
+})
+
+test_that("bic returns NA when nobs is NULL", {
+  fit <- mle(theta.hat = c(x = 1), loglike = -10)
+  expect_true(is.na(bic(fit)))
 })
 
 ## ── nparams ───────────────────────────────────────────────────────────────
@@ -223,7 +207,7 @@ test_that("sampler.mle multivariate returns matrix", {
 test_that("summary returns summary_mle object", {
   fit <- mle(theta.hat = c(x = 5), sigma = matrix(0.1), loglike = -20)
   s <- summary(fit)
-  expect_s3_class(s, "summary_mle")
+  expect_s3_class(s, "summary_mle_fit")
 })
 
 test_that("print does not error", {
@@ -235,6 +219,6 @@ test_that("print does not error", {
 
 test_that("superclasses are prepended to class vector", {
   fit <- mle(theta.hat = c(x = 1), superclasses = "my_custom_mle")
-  expect_equal(class(fit), c("my_custom_mle", "mle"))
+  expect_equal(class(fit), c("my_custom_mle", "mle_fit"))
   expect_true(is_mle(fit))
 })

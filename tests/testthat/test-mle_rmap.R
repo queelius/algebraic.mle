@@ -11,7 +11,7 @@ test_that("rmap delta method transforms point estimate", {
   sd_mle <- rmap(fit, g, method = "delta")
 
   expect_true(is_mle(sd_mle))
-  expect_true(inherits(sd_mle, "rmap_mle"))
+  expect_true(inherits(sd_mle, "mle_fit_rmap"))
   expect_equal(as.numeric(params(sd_mle)), 3, tolerance = 1e-6)
 })
 
