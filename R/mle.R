@@ -1,8 +1,8 @@
-#' Constructor for making `mle` objects, which provides a common interface
+#' Constructor for making `mle_fit` objects, which provides a common interface
 #' for maximum likelihood estimators.
-#' 
+#'
 #' This MLE makes the asymptotic assumption by default. Other MLEs,
-#' like `mle_boot`, may not make this assumption.
+#' like `mle_fit_boot`, may not make this assumption.
 #'
 #' @param theta.hat the MLE
 #' @param loglike the log-likelihood of `theta.hat` given the data
@@ -11,8 +11,8 @@
 #' @param info the information matrix of `theta.hat` given the data
 #' @param obs observation (sample) data
 #' @param nobs number of observations in `obs`
-#' @param superclasses class (or classes) with `mle` as base
-#' @return An object of class \code{mle}.
+#' @param superclasses class (or classes) with `mle_fit` as base
+#' @return An object of class \code{mle_fit}.
 #' @examples
 #' # MLE for normal distribution (mean and variance)
 #' set.seed(123)
@@ -54,131 +54,110 @@ mle <- function(theta.hat,
             obs = obs,
             nobs = nobs
         ),
-        class = unique(c(superclasses, "mle"))
+        class = unique(c(superclasses, "mle_fit"))
     )
 }
 
-#' Print method for `mle` objects.
+#' Print method for `mle_fit` objects.
 #'
-#' @param x the `mle` object to print
+#' @param x the `mle_fit` object to print
 #' @param ... additional arguments to pass
 #' @return Invisibly returns \code{x}.
 #' @export
-print.mle <- function(x, ...) {
+print.mle_fit <- function(x, ...) {
     print(summary(x, ...))
 }
 
-#' Computes the variance-covariance matrix of `mle` object.
-#' 
-#' @param object the `mle` object to obtain the variance-covariance of
+#' Computes the variance-covariance matrix of `mle_fit` object.
+#'
+#' @param object the `mle_fit` object to obtain the variance-covariance of
 #' @param ... additional arguments to pass (not used)
 #' @return the variance-covariance matrix
 #' @export
-vcov.mle <- function(object, ...) {
+vcov.mle_fit <- function(object, ...) {
     object$sigma
 }
 
 
-#' Method for obtaining the parameters of an `mle` object.
+#' Method for obtaining the parameters of an `mle_fit` object.
 #'
-#' @param x the `mle` object to obtain the parameters of
+#' @param x the `mle_fit` object to obtain the parameters of
 #' @return Numeric vector of parameter estimates.
 #' @export
-params.mle <- function(x) {
+params.mle_fit <- function(x) {
     x$theta.hat
 }
 
-#' Extract coefficients from an `mle` object.
-#'
-#' Provides compatibility with the standard R \code{coef()} generic.
-#' Returns the same values as \code{params(x)}.
-#'
-#' @param object the `mle` object
-#' @param ... additional arguments (not used)
-#' @return Named numeric vector of parameter estimates.
-#' @importFrom stats coef
-#' @export
-coef.mle <- function(object, ...) {
-    params(object)
-}
 
-#' Method for obtaining the number of parameters of an `mle` object.
+#' Method for obtaining the number of parameters of an `mle_fit` object.
 #'
-#' @param x the `mle` object to obtain the number of parameters of
+#' @param x the `mle_fit` object to obtain the number of parameters of
 #' @return Integer number of parameters.
 #' @importFrom algebraic.dist params nparams
 #' @export
-nparams.mle <- function(x) { 
+nparams.mle_fit <- function(x) {
     length(params(x))
 }
 
-#' Method for obtaining the AIC of an `mle` object.
+#' Method for obtaining the AIC of an `mle_fit` object.
 #'
-#' @param x the `mle` object to obtain the AIC of
+#' @param x the `mle_fit` object to obtain the AIC of
 #' @return Numeric AIC value.
 #' @importFrom algebraic.dist nparams
 #' @export
-aic.mle <- function(x) {
+aic.mle_fit <- function(x) {
     -2 * loglik_val(x) + 2 * nparams(x)
 }
 
-#' Method for obtaining the number of observations in the sample used by
-#' an `mle`.
+#' Method for obtaining the BIC of an `mle_fit` object.
 #'
-#' @param object the `mle` object to obtain the number of observations for
+#' @param x the `mle_fit` object to obtain the BIC of
+#' @return Numeric BIC value, or \code{NA_real_} if log-likelihood or
+#'   observation count is unavailable.
+#' @importFrom algebraic.dist nparams
+#' @importFrom stats nobs
+#' @export
+bic.mle_fit <- function(x) {
+    ll <- loglik_val(x)
+    n <- nobs(x)
+    if (is.null(ll) || is.null(n)) return(NA_real_)
+    -2 * ll + nparams(x) * log(n)
+}
+
+#' Method for obtaining the number of observations in the sample used by
+#' an `mle_fit`.
+#'
+#' @param object the `mle_fit` object to obtain the number of observations for
 #' @param ... additional arguments to pass (not used)
 #' @return Integer number of observations, or NULL if not available.
 #' @importFrom stats nobs
 #' @export
-nobs.mle <- function(object, ...) {
+nobs.mle_fit <- function(object, ...) {
     object$nobs
 }
 
-#' Method for obtaining the observations used by the `mle` object `x`.
+#' Method for obtaining the observations used by the `mle_fit` object `x`.
 #'
-#' @param x the `mle` object to obtain the number of observations for
+#' @param x the `mle_fit` object to obtain the number of observations for
 #' @return The observation data used to fit the MLE, or NULL if not stored.
 #' @export
-obs.mle <- function(x) {
+obs.mle_fit <- function(x) {
     x$obs
 }
 
-#' Method for obtaining the log-likelihood of an `mle` object.
+#' Method for obtaining the log-likelihood of an `mle_fit` object.
 #'
 #' @param x the log-likelihood `l` evaluated at `x`, `l(x)`.
 #' @param ... additional arguments to pass
-#' @return the log-likelihood of the fitted mle object `x`
+#' @return the log-likelihood of the fitted mle_fit object `x`
 #' @export
-loglik_val.mle <- function(x, ...) {
+loglik_val.mle_fit <- function(x, ...) {
     x$loglike
 }
 
-#' Extract log-likelihood from an `mle` object.
+#' Function to compute the confidence intervals of `mle_fit` objects.
 #'
-#' Provides compatibility with the standard R \code{logLik()} generic.
-#' The returned object has class \code{"logLik"} with attributes \code{df}
-#' (number of estimated parameters) and \code{nobs} (number of observations),
-#' enabling automatic \code{AIC()} and \code{BIC()} support.
-#'
-#' @param object the `mle` object
-#' @param ... additional arguments (not used)
-#' @return An object of class \code{"logLik"}, or \code{NULL} if the
-#'   log-likelihood is not available.
-#' @importFrom stats logLik nobs
-#' @importFrom algebraic.dist nparams
-#' @export
-logLik.mle <- function(object, ...) {
-    val <- loglik_val(object)
-    if (is.null(val)) return(NULL)
-    structure(val,
-              df = nparams(object),
-              nobs = nobs(object),
-              class = "logLik")
-}
-
-#' Function to compute the confidence intervals of `mle` objects.
-#'
-#' @param object the `mle` object to compute the confidence intervals for
+#' @param object the `mle_fit` object to compute the confidence intervals for
 #' @param parm the parameters to compute the confidence intervals for (not used)
 #' @param level confidence level, defaults to 0.95 (alpha=.05)
 #' @param use_t_dist logical, whether to use the t-distribution to compute
@@ -188,7 +167,7 @@ logLik.mle <- function(object, ...) {
 #' @importFrom stats qt qnorm vcov nobs
 #' @importFrom algebraic.dist params
 #' @export
-confint.mle <- function(object, parm = NULL, level = .95,
+confint.mle_fit <- function(object, parm = NULL, level = .95,
     use_t_dist = FALSE, ...) {
     stopifnot(is.numeric(level), level >= 0, level <= 1)
     V <- vcov(object)
@@ -225,13 +204,13 @@ confint.mle <- function(object, parm = NULL, level = .95,
     ci
 }
 
-#' Method for sampling from an `mle` object.
+#' Method for sampling from an `mle_fit` object.
 #'
-#' It creates a sampler for the `mle` object. It returns a function
+#' It creates a sampler for the `mle_fit` object. It returns a function
 #' that accepts a single parameter `n` denoting the number of samples
-#' to draw from the `mle` object.
+#' to draw from the `mle_fit` object.
 #'
-#' @param x the `mle` object to create sampler for
+#' @param x the `mle_fit` object to create sampler for
 #' @param ... additional arguments to pass
 #' @return A function that takes parameter \code{n} and returns \code{n} samples
 #'   from the asymptotic distribution of the MLE.
@@ -239,11 +218,11 @@ confint.mle <- function(object, parm = NULL, level = .95,
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom algebraic.dist params nparams
 #' @export
-sampler.mle <- function(x, ...) {
+sampler.mle_fit <- function(x, ...) {
     sampler(mle_to_dist(x), ...)
 }
 
-#' Computes the MSE of an `mle` object.
+#' Computes the MSE of an `mle_fit` object.
 #'
 #' The MSE of an estimator is just the expected sum of squared differences,
 #' e.g., if the true parameter value is `x` and we have an estimator `x.hat`,
@@ -266,7 +245,7 @@ sampler.mle <- function(x, ...) {
 #' repeat this process `B` times, and then average the differences to get an estimate
 #' of the bias.
 #'
-#' @param x the `mle` object to compute the MSE of.
+#' @param x the `mle_fit` object to compute the MSE of.
 #' @param theta true parameter value, defaults to `NULL` for unknown. If `NULL`,
 #'             then we let the bias method deal with it. Maybe it has a nice way
 #'             of estimating the bias.
@@ -274,7 +253,7 @@ sampler.mle <- function(x, ...) {
 #' @importFrom algebraic.dist nparams
 #' @importFrom stats vcov
 #' @export
-mse.mle <- function(x, theta = NULL) {
+mse.mle_fit <- function(x, theta = NULL) {
 
     if (!is.null(theta)) {
         stopifnot(length(theta) == nparams(x))
@@ -293,36 +272,36 @@ mse.mle <- function(x, theta = NULL) {
     res
 }
 
-#' Function for obtaining the observed FIM of an `mle` object.
+#' Function for obtaining the observed FIM of an `mle_fit` object.
 #'
-#' @param x the `mle` object to obtain the FIM of.
+#' @param x the `mle_fit` object to obtain the FIM of.
 #' @param ... pass additional arguments
 #' @return The observed Fisher Information Matrix, or NULL if not available.
 #' @export
-observed_fim.mle <- function(x, ...) {
+observed_fim.mle_fit <- function(x, ...) {
     x$info
 }
 
 #' Function for obtaining a summary of `object`, which is a fitted
-#' `mle` object.
+#' `mle_fit` object.
 #'
-#' @param object the `mle` object
+#' @param object the `mle_fit` object
 #' @param ... pass additional arguments
-#' @return An object of class \code{summary_mle}.
+#' @return An object of class \code{summary_mle_fit}.
 #' @export
-summary.mle <- function(object, ...) {
-    structure(list(x = object), class = c("summary_mle", "summary"))
+summary.mle_fit <- function(object, ...) {
+    structure(list(x = object), class = c("summary_mle_fit", "summary"))
 }
 
-#' Function for printing a `summary` object for an `mle` object.
+#' Function for printing a `summary` object for an `mle_fit` object.
 #'
-#' @param x the `summary_mle` object
+#' @param x the `summary_mle_fit` object
 #' @param ... pass additional arguments
 #' @return Invisibly returns \code{x}.
 #' @importFrom stats vcov
 #' @importFrom algebraic.dist nparams params
 #' @export
-print.summary_mle <- function(x, ...) {
+print.summary_mle_fit <- function(x, ...) {
     cat("Maximum likelihood estimator of type", class(x$x)[1], "is normally distributed.\n")
     cat("The estimates of the parameters are given by:\n")
     print(params(x$x))
@@ -356,7 +335,7 @@ print.summary_mle <- function(x, ...) {
 #'   NULL if variance-covariance is not available.
 #' @importFrom stats vcov
 #' @export
-se.mle <- function(x, se.matrix = FALSE, ...) {
+se.mle_fit <- function(x, se.matrix = FALSE, ...) {
 
     V <- vcov(x)
     if (is.null(V)) return(NULL)
@@ -372,29 +351,29 @@ se.mle <- function(x, se.matrix = FALSE, ...) {
     }
 }
 
-#' Determine if an object `x` is an `mle` object.
+#' Determine if an object `x` is an `mle_fit` object.
 #'
 #' @param x the object to test
-#' @return Logical TRUE if \code{x} is an \code{mle} object, FALSE otherwise.
+#' @return Logical TRUE if \code{x} is an \code{mle_fit} object, FALSE otherwise.
 #' @examples
 #' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
 #' is_mle(fit)       # TRUE
 #' is_mle(list(a=1)) # FALSE
 #' @export
 is_mle <- function(x) {
-    inherits(x, "mle")
+    inherits(x, "mle_fit")
 }
 
-#' Method for determining the orthogonal components of an `mle` object
+#' Method for determining the orthogonal components of an `mle_fit` object
 #' `x`.
 #'
-#' @param x the `mle` object
+#' @param x the `mle_fit` object
 #' @param tol the tolerance for determining if a number is close enough to zero
 #' @param ... pass additional arguments
 #' @return Logical matrix indicating which off-diagonal FIM elements are
 #'   approximately zero (orthogonal parameters), or NULL if FIM unavailable.
 #' @export
-orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
+orthogonal.mle_fit <- function(x, tol = sqrt(.Machine$double.eps), ...) {
     I <- observed_fim(x, ...)
     if(is.null(I)) {
         return(NULL)
@@ -403,27 +382,27 @@ orthogonal.mle <- function(x, tol = sqrt(.Machine$double.eps), ...) {
     abs(I) <= tol
 }
 
-#' Computes the score of an `mle` object (score evaluated at the MLE).
+#' Computes the score of an `mle_fit` object (score evaluated at the MLE).
 #'
 #' If reguarlity conditions are satisfied, it should be zero (or approximately,
 #' if rounding errors occur).
 #'
-#' @param x the `mle` object to compute the score of.
+#' @param x the `mle_fit` object to compute the score of.
 #' @param ... additional arguments to pass (not used)
 #' @return The score vector evaluated at the MLE, or NULL if not available.
 #' @export
-score_val.mle <- function(x, ...) {
+score_val.mle_fit <- function(x, ...) {
     x$score
 }
 
-#' Computes the bias of an `mle` object assuming the large sample
+#' Computes the bias of an `mle_fit` object assuming the large sample
 #' approximation is valid and the MLE regularity conditions are satisfied.
 #' In this case, the bias is zero (or zero vector).
 #'
 #' This is not a good estimate of the bias in general, but it's
 #' arguably better than returning `NULL`.
 #'
-#' @param x the `mle` object to compute the bias of.
+#' @param x the `mle_fit` object to compute the bias of.
 #' @param theta true parameter value. normally, unknown (NULL), in which case
 #'              we estimate the bias (say, using bootstrap)
 #' @param ... additional arguments to pass
@@ -431,7 +410,7 @@ score_val.mle <- function(x, ...) {
 #'   conditions).
 #' @importFrom algebraic.dist nparams
 #' @export
-bias.mle <- function(x, theta = NULL, ...) {
+bias.mle_fit <- function(x, theta = NULL, ...) {
     rep(0, nparams(x))
 }
 
@@ -455,7 +434,7 @@ bias.mle <- function(x, theta = NULL, ...) {
 #' The `samp` function is used to sample from the distribution of `T|x`. It should
 #' be designed to take 
 #'
-#' @param x an `mle` object.
+#' @param x an `mle_fit` object.
 #' @param samp The sampler for the distribution that is parameterized by the
 #'             MLE `x`, i.e., `T|x`.
 #' @param alpha (1-alpha)-predictive interval for `T|x`. Defaults to 0.05.
@@ -468,7 +447,7 @@ bias.mle <- function(x, theta = NULL, ...) {
 #' @importFrom stats vcov quantile rnorm
 #' @importFrom algebraic.dist params
 #' @export
-pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
+pred.mle_fit <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 
     theta <- params(x)
     thetas <- as.matrix(sampler(x)(R), nrow = R)
@@ -492,7 +471,7 @@ pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
     PI
 }
 
-#' Expectation operator applied to `x` of type `mle`
+#' Expectation operator applied to `x` of type `mle_fit`
 #' with respect to a function `g`. That is, `E(g(x))`.
 #' 
 #' Optionally, we use the CLT to construct a CI(`alpha`) for the
@@ -501,7 +480,7 @@ pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 #' is the sample variance of g(x) and n is the number of samples.
 #' From these, we construct the CI.
 #'
-#' @param x `mle` object
+#' @param x `mle_fit` object
 #' @param g characteristic function of interest, defaults to identity
 #' @param ... additional arguments to pass to `g`
 #' @param control a list of control parameters:
@@ -519,7 +498,7 @@ pred.mle <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 #' @importFrom algebraic.dist expectation_data expectation
 #' @importFrom utils modifyList
 #' @export
-expectation.mle <- function(
+expectation.mle_fit <- function(
     x,
     g = function(t) t,
     ...,
@@ -552,12 +531,12 @@ expectation.mle <- function(
 #' 
 #' @param x The distribution object.
 #' @param indices The indices of the marginal distribution to obtain.
-#' @return An \code{mle} object representing the marginal distribution for the
+#' @return An \code{mle_fit} object representing the marginal distribution for the
 #'   selected parameter indices.
 #' @importFrom algebraic.dist marginal params obs
 #' @importFrom stats vcov nobs
 #' @export
-marginal.mle <- function(x, indices) {
+marginal.mle_fit <- function(x, indices) {
     if (length(indices) == 0) {
         stop("indices must be non-empty")
     }
@@ -582,54 +561,54 @@ marginal.mle <- function(x, indices) {
 #' asymptotic normal (univariate) or multivariate normal (multivariate)
 #' distribution of the MLE.
 #'
-#' @param x An \code{mle} object.
+#' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return A function computing the PDF at given points.
 #' @importFrom stats density
 #' @importFrom algebraic.dist normal mvn
 #' @export
-density.mle <- function(x, ...) {
+density.mle_fit <- function(x, ...) {
     density(mle_to_dist(x))
 }
 
 #' CDF of the asymptotic distribution of an MLE.
 #'
-#' @param x An \code{mle} object.
+#' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return A function computing the CDF at given points.
 #' @importFrom algebraic.dist cdf
 #' @export
-cdf.mle <- function(x, ...) {
+cdf.mle_fit <- function(x, ...) {
     cdf(mle_to_dist(x))
 }
 
 #' Quantile function of the asymptotic distribution of an MLE.
 #'
-#' @param x An \code{mle} object.
+#' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return A function computing quantiles for given probabilities.
 #' @importFrom algebraic.dist inv_cdf
 #' @export
-inv_cdf.mle <- function(x, ...) {
+inv_cdf.mle_fit <- function(x, ...) {
     inv_cdf(mle_to_dist(x))
 }
 
 #' Support of the asymptotic distribution of an MLE.
 #'
-#' @param x An \code{mle} object.
+#' @param x An \code{mle_fit} object.
 #' @return A support object (interval for normal distributions).
 #' @importFrom algebraic.dist sup
 #' @export
-sup.mle <- function(x) {
+sup.mle_fit <- function(x) {
     sup(mle_to_dist(x))
 }
 
 #' Dimension (number of parameters) of an MLE.
 #'
-#' @param x An \code{mle} object.
+#' @param x An \code{mle_fit} object.
 #' @return Integer; the number of parameters.
 #' @export
-dim.mle <- function(x) {
+dim.mle_fit <- function(x) {
     nparams(x)
 }
 
@@ -638,11 +617,11 @@ dim.mle <- function(x) {
 #' Returns the parameter estimates, which are the mean of the asymptotic
 #' distribution.
 #'
-#' @param x An \code{mle} object.
+#' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return Numeric vector of parameter estimates.
 #' @export
-mean.mle <- function(x, ...) {
+mean.mle_fit <- function(x, ...) {
     params(x)
 }
 
@@ -650,10 +629,10 @@ mean.mle <- function(x, ...) {
 #'
 #' Computes the conditional distribution of a subset of parameters given
 #' observed values for other parameters. Uses the closed-form Schur complement
-#' for the multivariate normal. Returns a \code{dist} object (not an \code{mle}),
+#' for the multivariate normal. Returns a \code{dist} object (not an \code{mle_fit}),
 #' since conditioning loses the MLE context.
 #'
-#' @param x An \code{mle} object with at least 2 parameters.
+#' @param x An \code{mle_fit} object with at least 2 parameters.
 #' @param P Optional predicate function for Monte Carlo fallback.
 #' @param ... Additional arguments forwarded to \code{P}.
 #' @param given_indices Integer vector of conditioned parameter indices.
@@ -661,7 +640,7 @@ mean.mle <- function(x, ...) {
 #' @return A \code{normal}, \code{mvn}, or \code{empirical_dist} object.
 #' @importFrom algebraic.dist conditional
 #' @export
-conditional.mle <- function(x, P = NULL, ...,
+conditional.mle_fit <- function(x, P = NULL, ...,
                             given_indices = NULL, given_values = NULL) {
     conditional(mle_to_dist(x), P = P, ...,
                 given_indices = given_indices, given_values = given_values)

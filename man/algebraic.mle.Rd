@@ -7,7 +7,7 @@
 \title{`algebraic.mle`: A package for algebraically operating on and generating
 maximum likelihood estimators from existing maximum likelihood estimators.}
 \description{
-The object representing a fitted model is a type of `mle` object, the maximum
+The object representing a fitted model is a type of `mle_fit` object, the maximum
 likelihood estimator of the model with respect to observed data.
 }
 \details{

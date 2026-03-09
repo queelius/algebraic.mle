@@ -3,7 +3,7 @@
 \name{mle_numerical}
 \alias{mle_numerical}
 \title{This function takes the output of `optim`, `newton_raphson`, or `sim_anneal`
-and turns it into an `mle_numerical` (subclass of `mle`) object.}
+and turns it into an `mle_fit_numerical` (subclass of `mle_fit`) object.}
 \usage{
 mle_numerical(sol, options = list(), superclasses = NULL)
 }
@@ -12,14 +12,14 @@ mle_numerical(sol, options = list(), superclasses = NULL)
 
 \item{options}{list, options for things like sigma and FIM}
 
-\item{superclasses}{list, superclasses to add to the `mle_numerical` object}
+\item{superclasses}{list, superclasses to add to the `mle_fit_numerical` object}
 }
 \value{
-An object of class \code{mle_numerical} (subclass of \code{mle}).
+An object of class \code{mle_fit_numerical} (subclass of \code{mle_fit}).
 }
 \description{
 This function takes the output of `optim`, `newton_raphson`, or `sim_anneal`
-and turns it into an `mle_numerical` (subclass of `mle`) object.
+and turns it into an `mle_fit_numerical` (subclass of `mle_fit`) object.
 }
 \examples{
 # Fit exponential distribution using optim

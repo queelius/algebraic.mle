@@ -15,9 +15,9 @@
 #' When the Fisher information matrix is not directly available but the
 #' variance-covariance matrix is, the FIM is computed as \code{ginv(vcov)}.
 #'
-#' @param x An \code{mle} object, or a list of \code{mle} objects.
-#' @param ... Additional \code{mle} objects to combine.
-#' @return An \code{mle} object representing the optimally weighted combination.
+#' @param x An \code{mle_fit} object, or a list of \code{mle_fit} objects.
+#' @param ... Additional \code{mle_fit} objects to combine.
+#' @return An \code{mle_fit} object representing the optimally weighted combination.
 #' @seealso \code{\link{joint}}
 #' @examples
 #' # Three independent estimates of the same rate
@@ -47,19 +47,19 @@ combine.list <- function(x, ...) {
 #' @importFrom algebraic.dist params nparams
 #' @importFrom stats vcov nobs
 #' @export
-combine.mle <- function(x, ...) {
+combine.mle_fit <- function(x, ...) {
     dots <- list(...)
     if (length(dots) == 0L) return(x)
     combine_mles(c(list(x), dots))
 }
 
 #' Internal workhorse for combine.
-#' @param mles A list of mle objects.
-#' @return An mle object.
+#' @param mles A list of mle_fit objects.
+#' @return An mle_fit object.
 #' @keywords internal
 combine_mles <- function(mles) {
     if (!all(vapply(mles, is_mle, logical(1)))) {
-        stop("All arguments to combine() must be mle objects.")
+        stop("All arguments to combine() must be mle_fit objects.")
     }
     if (length(mles) == 1L) return(mles[[1L]])
 
@@ -70,7 +70,7 @@ combine_mles <- function(mles) {
         V <- vcov(m)
         if (is.null(V)) {
             stop("combine() requires either a Fisher information matrix or ",
-                 "variance-covariance matrix for each mle object.")
+                 "variance-covariance matrix for each mle_fit object.")
         }
         if (!is.matrix(V)) V <- matrix(V, 1, 1)
         ginv(V)

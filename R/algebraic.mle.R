@@ -1,7 +1,7 @@
 #' `algebraic.mle`: A package for algebraically operating on and generating
 #' maximum likelihood estimators from existing maximum likelihood estimators.
 #'
-#' The object representing a fitted model is a type of `mle` object, the maximum
+#' The object representing a fitted model is a type of `mle_fit` object, the maximum
 #' likelihood estimator of the model with respect to observed data.
 #'
 #' It has a relatively rich API for working with these objects to help you
@@ -74,17 +74,41 @@ loglik_val <- function(x, ...) {
     UseMethod("loglik_val", x)
 }
 
-#' Generic method for obtaining the AIC of a fitted distribution object fit.
+#' Akaike Information Criterion.
+#'
+#' Computes AIC = -2 * loglik + 2 * k, where k is the number of parameters.
+#'
+#' This package provides \code{aic()} rather than methods for \code{stats::AIC()}
+#' for a clean, lightweight generic that does not depend on the \code{logLik}
+#' infrastructure. The \code{aic()} generic avoids any potential conflicts with
+#' S4 dispatch from \pkg{stats4}.
 #'
 #' @param x the object to obtain the AIC of
 #' @return The Akaike Information Criterion value (numeric).
+#' @seealso \code{\link{bic}}, \code{\link{loglik_val}}
 #' @export
 aic <- function(x) {
     UseMethod("aic", x)
 }
 
+#' Bayesian Information Criterion.
+#'
+#' Computes BIC = -2 * loglik + k * log(n), where k is the number of
+#' parameters and n is the number of observations.
+#'
+#' See \code{\link{aic}} for why this package provides its own generics
+#' rather than methods for \code{stats::AIC()} and \code{stats::BIC()}.
+#'
+#' @param x the object to obtain the BIC of
+#' @return The Bayesian Information Criterion value (numeric).
+#' @seealso \code{\link{aic}}, \code{\link{loglik_val}}
+#' @export
+bic <- function(x) {
+    UseMethod("bic", x)
+}
+
 #' Generic method for computing the observed FIM
-#' of an `mle` object.
+#' of an `mle_fit` object.
 #'
 #' Fisher information is a way of measuring the amount of
 #' information that an observable random variable `X`

@@ -13,9 +13,9 @@
 #'   \item \code{nobs}: NULL (different experiments have no shared sample size)
 #' }
 #'
-#' @param x An \code{mle} object.
-#' @param ... Additional \code{mle} objects to join.
-#' @return An \code{mle} object representing the joint MLE.
+#' @param x An \code{mle_fit} object.
+#' @param ... Additional \code{mle_fit} objects to join.
+#' @return An \code{mle_fit} object representing the joint MLE.
 #' @examples
 #' # Two independent experiments
 #' fit_rate <- mle(theta.hat = c(lambda = 2.1), sigma = matrix(0.04), nobs = 50L)
@@ -40,14 +40,14 @@ joint <- function(x, ...) {
 #' @importFrom stats vcov nobs
 #' @importFrom MASS ginv
 #' @export
-joint.mle <- function(x, ...) {
+joint.mle_fit <- function(x, ...) {
     mles <- c(list(x), list(...))
 
     if (length(mles) < 2L) {
-        stop("joint() requires at least 2 mle objects.")
+        stop("joint() requires at least 2 mle_fit objects.")
     }
     if (!all(vapply(mles, is_mle, logical(1)))) {
-        stop("All arguments to joint() must be mle objects.")
+        stop("All arguments to joint() must be mle_fit objects.")
     }
 
     # Validate disjoint parameter names
@@ -61,7 +61,7 @@ joint.mle <- function(x, ...) {
     # All must have vcov
     vcovs <- lapply(mles, vcov)
     if (any(vapply(vcovs, is.null, logical(1)))) {
-        stop("All mle objects must have a variance-covariance matrix for joint().")
+        stop("All mle_fit objects must have a variance-covariance matrix for joint().")
     }
 
     # Concatenate parameters

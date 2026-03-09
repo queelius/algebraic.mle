@@ -2,20 +2,20 @@
 % Please edit documentation in R/joint.R
 \name{joint}
 \alias{joint}
-\alias{joint.mle}
+\alias{joint.mle_fit}
 \title{Compose independent MLEs into a joint MLE.}
 \usage{
 joint(x, ...)
 
-\method{joint}{mle}(x, ...)
+\method{joint}{mle_fit}(x, ...)
 }
 \arguments{
-\item{x}{An \code{mle} object.}
+\item{x}{An \code{mle_fit} object.}
 
-\item{...}{Additional \code{mle} objects to join.}
+\item{...}{Additional \code{mle_fit} objects to join.}
 }
 \value{
-An \code{mle} object representing the joint MLE.
+An \code{mle_fit} object representing the joint MLE.
 }
 \description{
 Given two or more independent MLEs with disjoint parameter sets, produces

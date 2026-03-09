@@ -7,10 +7,10 @@
 combine_mles(mles)
 }
 \arguments{
-\item{mles}{A list of mle objects.}
+\item{mles}{A list of mle_fit objects.}
 }
 \value{
-An mle object.
+An mle_fit object.
 }
 \description{
 Internal workhorse for combine.

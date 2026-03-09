@@ -1,6 +1,6 @@
-#' Computes the distribution of `g(x)` where `x` is an `mle` object.
+#' Computes the distribution of `g(x)` where `x` is an `mle_fit` object.
 #'
-#' By the invariance property of the MLE, if `x` is an `mle` object,
+#' By the invariance property of the MLE, if `x` is an `mle_fit` object,
 #' then under the right conditions, asymptotically, `g(x)` is normally
 #' distributed,
 #'     g(x) ~ normal(g(point(x)),sigma)
@@ -11,14 +11,14 @@
 #'     method = "delta" -> delta method
 #'     method = "mc" -> monte carlo method
 #'
-#' @param x an `mle` object
+#' @param x an `mle_fit` object
 #' @param g a function 
 #' @param ... additional arguments to pass to the `g` function
 #' @param n number of samples to take to estimate distribution of `g(x)` if
 #'         `method == "mc"`.
 #' @param method method to use to estimate distribution of `g(x)`,
 #'               "delta" or "mc".
-#' @return An \code{mle} object of class \code{rmap_mle} representing the
+#' @return An \code{mle_fit} object of class \code{mle_fit_rmap} representing the
 #'   transformed MLE with variance estimated by the specified method.
 #' @examples
 #' # MLE for normal distribution
@@ -42,7 +42,7 @@
 #' @importFrom algebraic.dist rmap sampler params
 #' @importFrom MASS ginv
 #' @export
-rmap.mle <- function(x, g, ...,
+rmap.mle_fit <- function(x, g, ...,
     n = 1000, method = c("mc", "delta"))
 {
     stopifnot(is.numeric(n), n > 0, is_mle(x), is.function(g))
@@ -70,5 +70,5 @@ rmap.mle <- function(x, g, ...,
         info=ginv(g.sigma),
         obs=NULL,
         nobs=nobs(x),
-        superclasses=c("rmap_mle"))
+        superclasses=c("mle_fit_rmap"))
 }

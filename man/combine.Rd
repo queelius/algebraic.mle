@@ -3,22 +3,22 @@
 \name{combine}
 \alias{combine}
 \alias{combine.list}
-\alias{combine.mle}
+\alias{combine.mle_fit}
 \title{Combine independent MLEs for the same parameter.}
 \usage{
 combine(x, ...)
 
 \method{combine}{list}(x, ...)
 
-\method{combine}{mle}(x, ...)
+\method{combine}{mle_fit}(x, ...)
 }
 \arguments{
-\item{x}{An \code{mle} object, or a list of \code{mle} objects.}
+\item{x}{An \code{mle_fit} object, or a list of \code{mle_fit} objects.}
 
-\item{...}{Additional \code{mle} objects to combine.}
+\item{...}{Additional \code{mle_fit} objects to combine.}
 }
 \value{
-An \code{mle} object representing the optimally weighted combination.
+An \code{mle_fit} object representing the optimally weighted combination.
 }
 \description{
 Given multiple independent MLEs that estimate the same parameter \eqn{\theta},

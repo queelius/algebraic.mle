@@ -1,10 +1,10 @@
 #' This function takes the output of `optim`, `newton_raphson`, or `sim_anneal`
-#' and turns it into an `mle_numerical` (subclass of `mle`) object.
+#' and turns it into an `mle_fit_numerical` (subclass of `mle_fit`) object.
 #'
 #' @param sol the output of `optim` or `newton_raphson`
 #' @param options list, options for things like sigma and FIM
-#' @param superclasses list, superclasses to add to the `mle_numerical` object
-#' @return An object of class \code{mle_numerical} (subclass of \code{mle}).
+#' @param superclasses list, superclasses to add to the `mle_fit_numerical` object
+#' @return An object of class \code{mle_fit_numerical} (subclass of \code{mle_fit}).
 #' @examples
 #' # Fit exponential distribution using optim
 #' set.seed(123)
@@ -51,7 +51,7 @@ mle_numerical <- function(sol, options = list(), superclasses = NULL) {
         info = if (is.null(options$hessian)) NULL else -options$hessian,
         obs = options$obs,
         nobs = options$nobs,
-        superclasses = c(superclasses, "mle_numerical"))
+        superclasses = c(superclasses, "mle_fit_numerical"))
     sol_mle$converged <- sol$convergence == 0
     sol_mle$sol <- sol
     sol_mle$sol$call <- match.call()

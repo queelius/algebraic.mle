@@ -3,7 +3,7 @@
 \name{observed_fim}
 \alias{observed_fim}
 \title{Generic method for computing the observed FIM
-of an `mle` object.}
+of an `mle_fit` object.}
 \usage{
 observed_fim(x, ...)
 }

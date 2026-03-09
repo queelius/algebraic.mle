@@ -4,17 +4,17 @@
 #' In such cases, we can use the bootstrap to estimate the sampling distribution
 #' of the MLE.
 #'
-#' This takes an approach similiar to the `mle_numerical` object, which is
+#' This takes an approach similiar to the `mle_fit_numerical` object, which is
 #' a wrapper for a `stats::optim` return value, or something that is compatible
 #' with the `optim` return value. Here, we take a `boot` object, which is
-#' the sampling distribution of an MLE, and wrap it in an `mle_boot` object
-#' and then provide a number of methods for the `mle_boot` object that satisfies
-#' the concept of an `mle` object.
+#' the sampling distribution of an MLE, and wrap it in an `mle_fit_boot` object
+#' and then provide a number of methods for the `mle_fit_boot` object that satisfies
+#' the concept of an `mle_fit` object.
 #'
 #' Look up the `boot` package for more information on the bootstrap.
 #'
 #' @param x the `boot` return value
-#' @return An \code{mle_boot} object (wrapper for \code{boot} object).
+#' @return An \code{mle_fit_boot} object (wrapper for \code{boot} object).
 #' @examples
 #' # Bootstrap MLE for mean of exponential distribution
 #' set.seed(123)
@@ -36,21 +36,21 @@
 #' confint(fit)
 #' @export
 mle_boot <- function(x) {
-    class(x) <- c("mle_boot", "mle", class(x))
+    class(x) <- c("mle_fit_boot", "mle_fit", class(x))
     x
 }
 
-#' Determine if an object is an `mle_boot` object.
+#' Determine if an object is an `mle_fit_boot` object.
 #' @param x the object to test
-#' @return Logical TRUE if \code{x} is an \code{mle_boot} object, FALSE otherwise.
+#' @return Logical TRUE if \code{x} is an \code{mle_fit_boot} object, FALSE otherwise.
 #' @examples
-#' # Create a simple mle object (not bootstrap)
+#' # Create a simple mle_fit object (not bootstrap)
 #' fit_mle <- mle(theta.hat = 5, sigma = matrix(0.1))
 #' is_mle_boot(fit_mle)  # FALSE
 #'
 #' # Bootstrap example would return TRUE
 #' @export
-is_mle_boot <- function(x) inherits(x, "mle_boot")
+is_mle_boot <- function(x) inherits(x, "mle_fit_boot")
 
 #' Method for obtaining the parameters of an `boot` object.
 #'
@@ -58,7 +58,7 @@ is_mle_boot <- function(x) inherits(x, "mle_boot")
 #' @return Numeric vector of parameter estimates (the original MLE).
 #' @importFrom algebraic.dist params
 #' @export
-params.mle_boot <- function(x) {
+params.mle_fit_boot <- function(x) {
     x$t0
 }
 
@@ -68,19 +68,19 @@ params.mle_boot <- function(x) {
 #' @return Integer number of parameters.
 #' @importFrom algebraic.dist nparams
 #' @export
-nparams.mle_boot <- function(x) {
+nparams.mle_fit_boot <- function(x) {
     length(x$t0)
 }
 
 #' Method for obtaining the number of observations in the sample used by
-#' an `mle`.
+#' an `mle_fit_boot`.
 #'
-#' @param object the `mle` object to obtain the number of observations for
+#' @param object the `mle_fit_boot` object to obtain the number of observations for
 #' @param ... additional arguments to pass (not used)
 #' @return Integer number of observations in the original sample.
 #' @importFrom stats nobs
 #' @export
-nobs.mle_boot <- function(object, ...) {
+nobs.mle_fit_boot <- function(object, ...) {
     if (is.matrix(object$data) || is.data.frame(object$data)) {
         return(nrow(object$data))
     } else {
@@ -88,13 +88,13 @@ nobs.mle_boot <- function(object, ...) {
     }
 }
 
-#' Method for obtaining the observations used by the `mle`.
+#' Method for obtaining the observations used by the `mle_fit_boot`.
 #'
-#' @param x the `mle` object to obtain the number of observations for
+#' @param x the `mle_fit_boot` object to obtain the number of observations for
 #' @return The original data used for bootstrapping.
 #' @importFrom algebraic.dist obs
 #' @export
-obs.mle_boot <- function(x) {
+obs.mle_fit_boot <- function(x) {
     x$data
 }
 
@@ -106,7 +106,7 @@ obs.mle_boot <- function(x) {
 #' @return The variance-covariance matrix estimated from bootstrap replicates.
 #' @importFrom stats vcov cov
 #' @export
-vcov.mle_boot <- function(object, ...) {
+vcov.mle_fit_boot <- function(object, ...) {
     cov(object$t, ...)
 }
 
@@ -119,22 +119,22 @@ vcov.mle_boot <- function(object, ...) {
 #' @importFrom algebraic.dist params
 #' @importFrom stats vcov
 #' @export
-mse.mle_boot <- function(x, theta = NULL, ...) {
+mse.mle_fit_boot <- function(x, theta = NULL, ...) {
     vcov(x, ...) + bias(x, theta) %*% t(bias(x, theta))
 }
 
-#' Computes the estimate of the bias of a `mle_boot` object.
+#' Computes the estimate of the bias of a `mle_fit_boot` object.
 #'
-#' @param x the `mle_boot` object to compute the bias of.
-#' @param theta true parameter value (not used for `mle_boot`).
+#' @param x the `mle_fit_boot` object to compute the bias of.
+#' @param theta true parameter value (not used for `mle_fit_boot`).
 #' @param ... pass additional arguments (not used)
 #' @return Numeric vector of estimated bias (mean of bootstrap replicates minus
 #'   original estimate).
 #' @importFrom algebraic.dist params nparams
 #' @export
-bias.mle_boot <- function(x, theta = NULL, ...) {
+bias.mle_fit_boot <- function(x, theta = NULL, ...) {
     if (!is.null(theta)) {
-        warning("We ignore the `theta` argument for `mle_boot` objects.")
+        warning("We ignore the `theta` argument for `mle_fit_boot` objects.")
     }
     if (length(params(x)) == 1) {
         return(mean(x$t) - params(x))
@@ -143,23 +143,23 @@ bias.mle_boot <- function(x, theta = NULL, ...) {
     }
 }
 
-#' Method for sampling from an `mle_boot` object.
+#' Method for sampling from an `mle_fit_boot` object.
 #'
-#' It creates a sampler for the `mle_boot` object. It returns a function
+#' It creates a sampler for the `mle_fit_boot` object. It returns a function
 #' that accepts a single parameter `n` denoting the number of samples
-#' to draw from the `mle_boot` object.
+#' to draw from the `mle_fit_boot` object.
 #'
-#' Unlike the `sampler` method for the more general `mle` objects,
-#' for `mle_boot` objects, we sample from the bootstrap replicates, which
+#' Unlike the `sampler` method for the more general `mle_fit` objects,
+#' for `mle_fit_boot` objects, we sample from the bootstrap replicates, which
 #' are more representative of the sampling distribution, particularly for
 #' small samples.
 #'
-#' @param x the `mle_boot` object to create sampler for
+#' @param x the `mle_fit_boot` object to create sampler for
 #' @param ... additional arguments to pass (not used)
 #' @return A function that takes parameter \code{n} and returns \code{n} samples
 #'   drawn from the bootstrap replicates.
 #' @export
-sampler.mle_boot <- function(x, ...) {
+sampler.mle_fit_boot <- function(x, ...) {
     if (length(x$t) == 1) {
         function(n) {
             x$t[sample.int(nrow(x$t), n, replace = TRUE)]
@@ -171,10 +171,10 @@ sampler.mle_boot <- function(x, ...) {
     }
 }
 
-#' Method for obtained the confidence interval of an `mle_boot` object.
+#' Method for obtained the confidence interval of an `mle_fit_boot` object.
 #' Note: This impelements the `vcov` method defined in `stats`.
 #'
-#' @param object the `mle_boot` object to obtain the confidence interval of
+#' @param object the `mle_fit_boot` object to obtain the confidence interval of
 #' @param parm the parameter to obtain the confidence interval of (not used)
 #' @param level the confidence level
 #' @param type the type of confidence interval to compute
@@ -186,7 +186,7 @@ sampler.mle_boot <- function(x, ...) {
 #' @importFrom algebraic.dist nparams
 #' @importFrom utils tail
 #' @export
-confint.mle_boot <- function(object, parm = NULL, level = 0.95,
+confint.mle_fit_boot <- function(object, parm = NULL, level = 0.95,
     type = c("norm", "basic", "perc", "bca"), ...) {
 
     type <- match.arg(type)
@@ -221,22 +221,22 @@ confint.mle_boot <- function(object, parm = NULL, level = 0.95,
 
 #' PDF of the empirical distribution of bootstrap replicates.
 #'
-#' @param x An \code{mle_boot} object.
+#' @param x An \code{mle_fit_boot} object.
 #' @param ... Additional arguments (not used).
 #' @return A function computing the empirical PMF at given points.
 #' @importFrom stats density
 #' @importFrom algebraic.dist empirical_dist
 #' @export
-density.mle_boot <- function(x, ...) {
+density.mle_fit_boot <- function(x, ...) {
     density(empirical_dist(x$t))
 }
 
 #' Dimension (number of parameters) of a bootstrap MLE.
 #'
-#' @param x An \code{mle_boot} object.
+#' @param x An \code{mle_fit_boot} object.
 #' @return Integer; the number of parameters.
 #' @export
-dim.mle_boot <- function(x) {
+dim.mle_fit_boot <- function(x) {
     nparams(x)
 }
 
@@ -245,11 +245,11 @@ dim.mle_boot <- function(x) {
 #' Returns the empirical mean of the bootstrap replicates (which includes
 #' bootstrap bias). For the bias-corrected point estimate, use \code{params()}.
 #'
-#' @param x An \code{mle_boot} object.
+#' @param x An \code{mle_fit_boot} object.
 #' @param ... Additional arguments (not used).
 #' @return Numeric vector of column means of bootstrap replicates.
 #' @export
-mean.mle_boot <- function(x, ...) {
+mean.mle_fit_boot <- function(x, ...) {
     if (ncol(x$t) == 1L) {
         mean(x$t)
     } else {

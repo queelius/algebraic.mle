@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle.R
 \name{is_mle}
 \alias{is_mle}
-\title{Determine if an object `x` is an `mle` object.}
+\title{Determine if an object `x` is an `mle_fit` object.}
 \usage{
 is_mle(x)
 }
@@ -10,10 +10,10 @@ is_mle(x)
 \item{x}{the object to test}
 }
 \value{
-Logical TRUE if \code{x} is an \code{mle} object, FALSE otherwise.
+Logical TRUE if \code{x} is an \code{mle_fit} object, FALSE otherwise.
 }
 \description{
-Determine if an object `x` is an `mle` object.
+Determine if an object `x` is an `mle_fit` object.
 }
 \examples{
 fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))

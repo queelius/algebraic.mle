@@ -2,7 +2,7 @@
 % Please edit documentation in R/mle.R
 \name{mle}
 \alias{mle}
-\title{Constructor for making `mle` objects, which provides a common interface
+\title{Constructor for making `mle_fit` objects, which provides a common interface
 for maximum likelihood estimators.}
 \usage{
 mle(
@@ -31,14 +31,14 @@ mle(
 
 \item{nobs}{number of observations in `obs`}
 
-\item{superclasses}{class (or classes) with `mle` as base}
+\item{superclasses}{class (or classes) with `mle_fit` as base}
 }
 \value{
-An object of class \code{mle}.
+An object of class \code{mle_fit}.
 }
 \description{
 This MLE makes the asymptotic assumption by default. Other MLEs,
-like `mle_boot`, may not make this assumption.
+like `mle_fit_boot`, may not make this assumption.
 }
 \examples{
 # MLE for normal distribution (mean and variance)

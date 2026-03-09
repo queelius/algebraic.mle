@@ -7,7 +7,7 @@
 mle_to_dist(x)
 }
 \arguments{
-\item{x}{An \code{mle} object with a non-NULL variance-covariance matrix.}
+\item{x}{An \code{mle_fit} object with a non-NULL variance-covariance matrix.}
 }
 \value{
 A \code{normal} or \code{mvn} distribution object.
@@ -15,6 +15,6 @@ A \code{normal} or \code{mvn} distribution object.
 \description{
 Internal helper that creates a \code{\link[algebraic.dist]{normal}} (univariate)
 or \code{\link[algebraic.dist]{mvn}} (multivariate) distribution from an
-\code{mle} object using the asymptotic normality of the MLE.
+\code{mle_fit} object using the asymptotic normality of the MLE.
 }
 \keyword{internal}

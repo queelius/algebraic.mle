@@ -2,9 +2,9 @@
 #'
 #' Internal helper that creates a \code{\link[algebraic.dist]{normal}} (univariate)
 #' or \code{\link[algebraic.dist]{mvn}} (multivariate) distribution from an
-#' \code{mle} object using the asymptotic normality of the MLE.
+#' \code{mle_fit} object using the asymptotic normality of the MLE.
 #'
-#' @param x An \code{mle} object with a non-NULL variance-covariance matrix.
+#' @param x An \code{mle_fit} object with a non-NULL variance-covariance matrix.
 #' @return A \code{normal} or \code{mvn} distribution object.
 #' @keywords internal
 mle_to_dist <- function(x) {
@@ -21,11 +21,11 @@ mle_to_dist <- function(x) {
 
 #' Convert an MLE to a distribution object.
 #'
-#' Converts an \code{mle} object to its asymptotic
+#' Converts an \code{mle_fit} object to its asymptotic
 #' \code{\link[algebraic.dist]{normal}} or \code{\link[algebraic.dist]{mvn}}
 #' distribution. The MLE must have a variance-covariance matrix available.
 #'
-#' @param x An \code{mle} object.
+#' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return A \code{normal} (univariate) or \code{mvn} (multivariate) distribution.
 #' @examples
@@ -39,17 +39,17 @@ mle_to_dist <- function(x) {
 #' mean(d2)  # c(1, 2)
 #' @importFrom algebraic.dist as_dist normal mvn
 #' @export
-as_dist.mle <- function(x, ...) {
+as_dist.mle_fit <- function(x, ...) {
     mle_to_dist(x)
 }
 
 #' Convert a bootstrap MLE to an empirical distribution.
 #'
-#' Converts an \code{mle_boot} object to an
+#' Converts an \code{mle_fit_boot} object to an
 #' \code{\link[algebraic.dist]{empirical_dist}} built from the bootstrap
 #' replicates.
 #'
-#' @param x An \code{mle_boot} object.
+#' @param x An \code{mle_fit_boot} object.
 #' @param ... Additional arguments (not used).
 #' @return An \code{empirical_dist} object.
 #' @examples
@@ -62,6 +62,6 @@ as_dist.mle <- function(x, ...) {
 #' mean(d)
 #' @importFrom algebraic.dist as_dist empirical_dist
 #' @export
-as_dist.mle_boot <- function(x, ...) {
+as_dist.mle_fit_boot <- function(x, ...) {
     empirical_dist(x$t)
 }
