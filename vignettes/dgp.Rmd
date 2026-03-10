@@ -16,21 +16,19 @@ knitr::opts_chunk$set(
   comment = "#>")
 ```
 
-<!-- badges: start -->
-[![GPL-3 License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-<!-- badges: end -->
-
-`algebraic.mle` is an R package that provides an algebra over
-Maximum Likelihood Estimators (MLEs). These estimators possess
-many desirable, well-defined statistical properties which the package
-helps you manipulate and utilize.
+`algebraic.mle` provides an algebra over maximum likelihood estimators (MLEs).
+Under regularity conditions, any MLE is asymptotically normal with variance
+given by the inverse Fisher information. The package exploits this structure
+with operations for composition (`joint`, `combine`), transformation (`rmap`),
+and bridging to distribution algebra (`as_dist`).
 
 ## Installation
 
-`algebraic.mle` can be installed from GitHub by using the devtools package
-in R:
-``` r
-install.packages("devtools")
+```r
+# From CRAN
+install.packages("algebraic.mle")
+
+# Development version from GitHub
 devtools::install_github("queelius/algebraic.mle")
 ```
 
@@ -47,9 +45,9 @@ unbiased estimator of theta.
 
 ## API Overview
 
-The main object in the `algebraic.mle` package is the `mle` object, which
+The main object in the `algebraic.mle` package is the `mle_fit` object, which
 represents a fitted model. The package provides a number of generic methods
-designed for `mle` objects. A comprehensive list of functions is available
+designed for `mle_fit` objects. A comprehensive list of functions is available
 in the [function reference](https://queelius.github.io/algebraic.mle/reference/index.html)
 for `algebraic.mle`.
 
@@ -87,7 +85,7 @@ dgp <- function(n, x) {
 }
 ```
 
-Let's generate some date:
+Let's generate some data:
 ```{r data-1}
 n <- 75 # number of observations
 set.seed(1231) # for reproducibility
@@ -110,7 +108,7 @@ loglik <- function(df, resp, rate) {
 ```
 
 Let's fit the model. We'll use the `optim` function in `stats` to fit the model
-and then wrap it into an `mle` object using `mle_numerical`.
+and then wrap it into an `mle_fit` object using `mle_numerical`.
 
 ```{r mle-1}
 library(algebraic.mle)
@@ -166,7 +164,7 @@ summary(sol2)
 
 Let's compute the likelihood ratio test statistic and p-value:
 ```{r}
-(lrt.sol2 <- -2 * (loglik_val(sol2) - loglik_val(sol)))
+(lrt.sol2 <- -2 * (as.numeric(logLik(sol2)) - as.numeric(logLik(sol))))
 pchisq(lrt.sol2, df = 1, lower.tail = FALSE) # compute the p-value
 ```
 
@@ -175,8 +173,8 @@ compatible with the null hypothesis `b0 = 0`.
 
 If we wanted to do model selection, we could use the AIC:
 ```{r}
-aic(sol)
-aic(sol2)
+AIC(sol)
+AIC(sol2)
 ```
 
 By the AIC measure, since the full model has an AIC less than the null model,
@@ -199,7 +197,7 @@ sol3 <- mle_numerical(optim(par = 0,
     control = list(fnscale = -1),
     hessian = TRUE,
     method = "BFGS"))
-(lrt.sol3 <- -2 * (loglik_val(sol2) - loglik_val(sol)))
+(lrt.sol3 <- -2 * (as.numeric(logLik(sol2)) - as.numeric(logLik(sol))))
 pchisq(lrt.sol3, df = 1, lower.tail = FALSE) # compute the p-value
 ```
 

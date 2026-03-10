@@ -110,7 +110,7 @@ We will fit the Weibull and the Normal distributions, and compare the results.
 
 ## Maximum Likelihood Estimation
 We will use maximum likelihood estimation (MLE) to estimate the parameters of
-both the Weibull and the Normal, and then wrap these estimates into an `mle`
+both the Weibull and the Normal, and then wrap these estimates into an `mle_fit`
 object provided by `algebraic.mle` package:
 ```{r}
 fit_normal <- function(data) {
@@ -463,8 +463,8 @@ where $L$ is the likelihood of the model and $k$ is the number of parameters
 in the model. The AIC is a measure of the tradeoff between the goodness of
 fit and the complexity of the model.
 ```{r}
-aic(theta.weibull)
-aic(theta.hat)
+AIC(theta.weibull)
+AIC(theta.hat)
 ```
 A lower AIC value indicates a better fit. Thus, according to this measure,
 the Weibull distribution is the better fit.
@@ -509,7 +509,7 @@ distribution of $\hat{T}_{n+1}$ using Monte Carlo simulation, where we replace
 the integral with a sum over a large number of draws from the joint distribution
 of $\hat{T}_{n+1}$ and $\hat\theta$ and then compute the empirical quantiles.
 
-The function `pred` takes as arguments `x`, in this case an `mle` object, 
+The function `pred` takes as arguments `x`, in this case an `mle_fit` object,
 and a sampler for the distribution of the random variable of interest, in this
 case `rweibull` (the sampler for the normal distribution). The sampler
 must be compatible with the output of `point(x)`, whether that output be

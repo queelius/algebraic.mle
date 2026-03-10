@@ -135,7 +135,7 @@ fit <- mle(
 
 confint(fit)
 se(fit)
-aic(fit)
+AIC(fit)
 ```
 
 Draw samples from the asymptotic distribution:
@@ -205,7 +205,7 @@ the bootstrap:
 ```{r}
 set.seed(42)
 x <- rexp(30, rate = 2)
-boot_fn <- function(data, idx) 1 / mean(data[idx])
+boot_fn <- function(data, idx) c(lambda = 1 / mean(data[idx]))
 b <- boot::boot(data = x, statistic = boot_fn, R = 999)
 fit_boot <- mle_boot(b)
 params(fit_boot)

@@ -44,7 +44,7 @@ library(algebraic.mle)
 
 The package provides three constructors for wrapping estimation results into the
 MLE algebra. Each produces an object that supports the full interface: `params()`,
-`vcov()`, `confint()`, `se()`, `aic()`, and the algebraic operations.
+`vcov()`, `confint()`, `se()`, `AIC()`, and the algebraic operations.
 
 ### Direct construction with `mle()`
 
@@ -100,7 +100,7 @@ y <- rexp(30, rate = 2)
 
 boot_result <- boot::boot(
   data = y,
-  statistic = function(d, i) 1 / mean(d[i]),
+  statistic = function(d, i) c(lambda = 1 / mean(d[i])),
   R = 999
 )
 
@@ -239,7 +239,8 @@ fit_rate <- mle(
 )
 
 # g: rate -> mean lifetime
-fit_lifetime <- rmap(fit_rate, function(theta) 1 / theta[1], method = "delta")
+fit_lifetime <- rmap(fit_rate, function(theta) c(mean_life = 1 / theta[1]),
+  method = "delta")
 params(fit_lifetime)
 se(fit_lifetime)
 confint(fit_lifetime)
@@ -261,10 +262,10 @@ fit_rates <- joint(
   mle(theta.hat = c(lambda2 = 0.05), sigma = matrix(0.003^2), nobs = 80L)
 )
 
-# System reliability at t = 100 hours
-t0 <- 100
+# System reliability at t = 10 hours
+t0 <- 10
 R_mle <- rmap(fit_rates,
-  function(theta) exp(-(theta[1] + theta[2]) * t0),
+  function(theta) c(R_t = exp(-(theta[1] + theta[2]) * t0)),
   method = "delta"
 )
 
@@ -289,12 +290,12 @@ d1
 ```
 
 This is useful when you want to reason about the sampling distribution of the
-MLE as a distribution object. For instance, you can compute probabilities that
-the true parameter exceeds a threshold:
+MLE as a distribution object. For instance, you can compute the probability that
+the true rate exceeds a regulatory threshold:
 
 ```{r as-dist-prob}
-# P(lambda > 0.025) under the asymptotic distribution
-1 - cdf(d1)(0.025)
+# P(lambda > 0.021) under the asymptotic distribution
+1 - cdf(d1)(0.021)
 ```
 
 For bootstrap MLEs, `as_dist()` returns an empirical distribution built from
@@ -311,7 +312,7 @@ Here is an end-to-end example tying together all the algebraic operations.
 
 **Scenario**: A series system has two independent components with exponential
 lifetimes. Separate accelerated life tests estimate each component's failure
-rate. We want to infer the system reliability at a mission time of $t = 500$
+rate. We want to infer the system reliability at a mission time of $t = 50$
 hours, including a confidence interval.
 
 ```{r pipeline-setup}
@@ -358,31 +359,31 @@ vcov(fit_system)
 ```
 
 ```{r pipeline-transform}
-# --- Step 3: Transform to system reliability at t = 500 ---
-mission_time <- 500
+# --- Step 3: Transform to system reliability at t = 50 ---
+mission_time <- 50
 R_system <- rmap(fit_system,
-  function(theta) exp(-(theta[1] + theta[2]) * mission_time),
+  function(theta) c(R_sys = exp(-(theta[1] + theta[2]) * mission_time)),
   method = "delta"
 )
 
-cat("System reliability R(500):", params(R_system), "\n")
-cat("SE of R(500):             ", se(R_system), "\n")
+cat("System reliability R(50):", params(R_system), "\n")
+cat("SE of R(50):             ", se(R_system), "\n")
 ```
 
 ```{r pipeline-inference}
 # --- Step 4: Inference ---
-cat("95% CI for R(500):\n")
+cat("95% CI for R(50):\n")
 confint(R_system)
 ```
 
 ```{r pipeline-dist}
 # --- Step 5: Bridge to distribution algebra ---
 R_dist <- as_dist(R_system)
-cat("Asymptotic distribution of R(500):", "\n")
+cat("Asymptotic distribution of R(50):", "\n")
 R_dist
 
-# Probability that system reliability exceeds 90%
-cat("P(R(500) > 0.90):", 1 - cdf(R_dist)(0.90), "\n")
+# Probability that system reliability exceeds 55%
+cat("P(R(50) > 0.55):", 1 - cdf(R_dist)(0.55), "\n")
 ```
 
 The pipeline reads as a chain of algebraic operations: two independent MLEs

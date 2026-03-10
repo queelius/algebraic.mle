@@ -91,7 +91,7 @@ fit_normal <- function(data) {
 }
 ```
 
-As you can see, we return an `mle` object, and then we give it a sub-class
+As you can see, we return an `mle_fit` object, and then we give it a sub-class
 `mle_normal` so we can specialize some of the methods for MLE of the normal
 distribution, e.g., `bias.mle_normal` which we show later.
 
@@ -691,7 +691,7 @@ distribution of $\hat{X}_{n+1}$ using Monte Carlo integration, i.e., sum over a
 large number of draws from the joint distribution of $\hat{X}_{n+1}$ and $\hat\theta$
 and then compute the empirical quantiles.
 
-The function `pred` takes as arguments `x`, in this case an `mle` object, 
+The function `pred` takes as arguments `x`, in this case an `mle_fit` object, 
 and a sampler for the distribution of the random variable of interest, in this
 case `rnorm` (the sampler for the normal distribution). The sampler
 must be compatible with the parameter value of `x` (i.e., `params(x)`).
