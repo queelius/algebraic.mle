@@ -99,29 +99,37 @@ nparams.mle_fit <- function(x) {
     length(params(x))
 }
 
-#' Method for obtaining the AIC of an `mle_fit` object.
+#' Log-likelihood of an \code{mle_fit} object.
 #'
-#' @param x the `mle_fit` object to obtain the AIC of
-#' @return Numeric AIC value.
-#' @importFrom algebraic.dist nparams
+#' Returns a \code{"logLik"} object with \code{df} (number of parameters) and
+#' \code{nobs} attributes, enabling \code{AIC()} and \code{BIC()} via
+#' \code{stats::AIC.default}.
+#'
+#' @param object the \code{mle_fit} object
+#' @param ... additional arguments (not used)
+#' @return A \code{"logLik"} object.
+#' @importFrom stats logLik
 #' @export
-aic.mle_fit <- function(x) {
-    -2 * loglik_val(x) + 2 * nparams(x)
+logLik.mle_fit <- function(object, ...) {
+    val <- object$loglike
+    if (is.null(val)) val <- NA_real_
+    structure(val,
+              df = nparams(object),
+              nobs = nobs(object),
+              class = "logLik")
 }
 
-#' Method for obtaining the BIC of an `mle_fit` object.
+#' Extract coefficients from an \code{mle_fit} object.
 #'
-#' @param x the `mle_fit` object to obtain the BIC of
-#' @return Numeric BIC value, or \code{NA_real_} if log-likelihood or
-#'   observation count is unavailable.
-#' @importFrom algebraic.dist nparams
-#' @importFrom stats nobs
+#' Delegates to \code{\link[algebraic.dist]{params}()}.
+#'
+#' @param object the \code{mle_fit} object
+#' @param ... additional arguments (not used)
+#' @return Named numeric vector of parameter estimates.
+#' @importFrom stats coef
 #' @export
-bic.mle_fit <- function(x) {
-    ll <- loglik_val(x)
-    n <- nobs(x)
-    if (is.null(ll) || is.null(n)) return(NA_real_)
-    -2 * ll + nparams(x) * log(n)
+coef.mle_fit <- function(object, ...) {
+    params(object)
 }
 
 #' Method for obtaining the number of observations in the sample used by
@@ -143,16 +151,6 @@ nobs.mle_fit <- function(object, ...) {
 #' @export
 obs.mle_fit <- function(x) {
     x$obs
-}
-
-#' Method for obtaining the log-likelihood of an `mle_fit` object.
-#'
-#' @param x the log-likelihood `l` evaluated at `x`, `l(x)`.
-#' @param ... additional arguments to pass
-#' @return the log-likelihood of the fitted mle_fit object `x`
-#' @export
-loglik_val.mle_fit <- function(x, ...) {
-    x$loglike
 }
 
 #' Function to compute the confidence intervals of `mle_fit` objects.
@@ -319,9 +317,10 @@ print.summary_mle_fit <- function(x, ...) {
         cat("The MSE of the individual components in a multivariate estimator is:\n")
         print(mse(x$x))
     }
-    if (!is.null(loglik_val(x$x))) {
-        cat("The log-likelihood is ", loglik_val(x$x), ".\n")
-        cat("The AIC is ", aic(x$x), ".\n")
+    ll <- logLik(x$x)
+    if (!is.na(as.numeric(ll))) {
+        cat("The log-likelihood is ", as.numeric(ll), ".\n")
+        cat("The AIC is ", AIC(x$x), ".\n")
     }
 }
 

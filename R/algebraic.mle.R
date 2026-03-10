@@ -63,50 +63,6 @@ algebraic.dist::sup
 #' @importFrom algebraic.dist normal mvn empirical_dist
 NULL
 
-#' Generic method for obtaining the log-likelihood value of a fitted MLE
-#' object.
-#'
-#' @param x the object to obtain the log-likelihood of
-#' @param ... additional arguments to pass
-#' @return The log-likelihood value (numeric).
-#' @export
-loglik_val <- function(x, ...) {
-    UseMethod("loglik_val", x)
-}
-
-#' Akaike Information Criterion.
-#'
-#' Computes AIC = -2 * loglik + 2 * k, where k is the number of parameters.
-#'
-#' This package provides \code{aic()} rather than methods for \code{stats::AIC()}
-#' for a clean, lightweight generic that does not depend on the \code{logLik}
-#' infrastructure. The \code{aic()} generic avoids any potential conflicts with
-#' S4 dispatch from \pkg{stats4}.
-#'
-#' @param x the object to obtain the AIC of
-#' @return The Akaike Information Criterion value (numeric).
-#' @seealso \code{\link{bic}}, \code{\link{loglik_val}}
-#' @export
-aic <- function(x) {
-    UseMethod("aic", x)
-}
-
-#' Bayesian Information Criterion.
-#'
-#' Computes BIC = -2 * loglik + k * log(n), where k is the number of
-#' parameters and n is the number of observations.
-#'
-#' See \code{\link{aic}} for why this package provides its own generics
-#' rather than methods for \code{stats::AIC()} and \code{stats::BIC()}.
-#'
-#' @param x the object to obtain the BIC of
-#' @return The Bayesian Information Criterion value (numeric).
-#' @seealso \code{\link{aic}}, \code{\link{loglik_val}}
-#' @export
-bic <- function(x) {
-    UseMethod("bic", x)
-}
-
 #' Generic method for computing the observed FIM
 #' of an `mle_fit` object.
 #'

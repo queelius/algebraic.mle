@@ -21,7 +21,7 @@ test_that("joint of two univariate MLEs produces correct structure", {
   expect_equal(vcov(j), expected_sigma)
 
   # Additive log-likelihood
-  expect_equal(loglik_val(j), -75)
+  expect_equal(as.numeric(logLik(j)), -75)
 
   # Block-diagonal FIM
   expected_info <- matrix(0, 2, 2)
@@ -73,7 +73,7 @@ test_that("joint with one missing loglike sets loglike to NULL", {
   fit2 <- mle(theta.hat = c(b = 2), sigma = matrix(0.2))
 
   j <- joint(fit1, fit2)
-  expect_null(loglik_val(j))
+  expect_true(is.na(as.numeric(logLik(j))))
 })
 
 test_that("joint with one missing vcov errors", {

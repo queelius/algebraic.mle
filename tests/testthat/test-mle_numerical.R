@@ -57,7 +57,7 @@ test_that("mle_numerical stores log-likelihood value", {
   )
 
   fit <- mle_numerical(result)
-  expect_equal(loglik_val(fit), -120.5)
+  expect_equal(as.numeric(logLik(fit)), -120.5)
 })
 
 test_that("mle_numerical stores observed FIM", {

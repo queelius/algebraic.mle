@@ -81,7 +81,7 @@ joint.mle_fit <- function(x, ...) {
     }
 
     # Sum log-likelihoods (NULL if any missing)
-    loglikes <- lapply(mles, loglik_val)
+    loglikes <- lapply(mles, function(m) m$loglike)
     loglike_joint <- if (any(vapply(loglikes, is.null, logical(1)))) {
         NULL
     } else {

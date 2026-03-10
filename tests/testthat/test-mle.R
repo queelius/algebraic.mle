@@ -16,7 +16,7 @@ test_that("mle constructor stores all fields", {
   expect_true(is_mle(fit))
   expect_equal(params(fit), theta)
   expect_equal(vcov(fit), sigma)
-  expect_equal(loglik_val(fit), -150.3)
+  expect_equal(as.numeric(logLik(fit)), -150.3)
   expect_equal(score_val(fit), c(0.001, -0.002))
   expect_equal(observed_fim(fit), solve(sigma))
   expect_equal(obs(fit), 1:100)
@@ -29,7 +29,7 @@ test_that("mle constructor handles NULL fields", {
   expect_true(is_mle(fit))
   expect_equal(params(fit), c(x = 1))
   expect_null(vcov(fit))
-  expect_null(loglik_val(fit))
+  expect_true(is.na(as.numeric(logLik(fit))))
   expect_null(score_val(fit))
   expect_null(observed_fim(fit))
   expect_null(obs(fit))
@@ -42,20 +42,46 @@ test_that("is_mle returns FALSE for non-mle objects", {
   expect_false(is_mle("hello"))
 })
 
-## ── bic ─────────────────────────────────────────────────────────────────
+## -- logLik -------------------------------------------------------------------
 
-## ── bic ─────────────────────────────────────────────────────────────────
-
-test_that("bic computes correctly", {
+test_that("logLik returns proper logLik object", {
   fit <- mle(theta.hat = c(a = 1, b = 2), sigma = diag(2),
              loglike = -50, nobs = 100L)
-  # BIC = -2*loglik + k*log(n)
-  expect_equal(bic(fit), -2 * (-50) + 2 * log(100))
+  ll <- logLik(fit)
+
+  expect_s3_class(ll, "logLik")
+  expect_equal(as.numeric(ll), -50)
+  expect_equal(attr(ll, "df"), 2)
+  expect_equal(attr(ll, "nobs"), 100L)
 })
 
-test_that("bic returns NA when nobs is NULL", {
-  fit <- mle(theta.hat = c(x = 1), loglike = -10)
-  expect_true(is.na(bic(fit)))
+test_that("logLik returns NA logLik when loglike is NULL", {
+  fit <- mle(theta.hat = c(x = 1))
+  ll <- logLik(fit)
+  expect_s3_class(ll, "logLik")
+  expect_true(is.na(as.numeric(ll)))
+})
+
+## -- AIC/BIC via logLik -------------------------------------------------------
+
+test_that("AIC computes correctly via logLik", {
+  fit <- mle(theta.hat = c(a = 1, b = 2), sigma = diag(2),
+             loglike = -50, nobs = 100L)
+  expect_equal(AIC(fit), -2 * (-50) + 2 * 2)
+})
+
+test_that("BIC computes correctly via logLik", {
+  fit <- mle(theta.hat = c(a = 1, b = 2), sigma = diag(2),
+             loglike = -50, nobs = 100L)
+  expect_equal(BIC(fit), -2 * (-50) + 2 * log(100))
+})
+
+## -- coef ---------------------------------------------------------------------
+
+test_that("coef delegates to params", {
+  fit <- mle(theta.hat = c(mu = 5, var = 4), sigma = diag(2))
+  expect_equal(coef(fit), params(fit))
+  expect_equal(names(coef(fit)), c("mu", "var"))
 })
 
 ## ── nparams ───────────────────────────────────────────────────────────────
@@ -66,14 +92,6 @@ test_that("nparams returns correct count", {
 
   expect_equal(nparams(fit1), 1)
   expect_equal(nparams(fit2), 3)
-})
-
-## ── aic ───────────────────────────────────────────────────────────────────
-
-test_that("aic computes correctly", {
-  fit <- mle(theta.hat = c(a = 1, b = 2), loglike = -50, sigma = diag(2))
-  # AIC = -2 * loglike + 2 * k
-  expect_equal(aic(fit), -2 * (-50) + 2 * 2)
 })
 
 ## ── se ────────────────────────────────────────────────────────────────────
