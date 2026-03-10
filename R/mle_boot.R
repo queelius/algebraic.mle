@@ -203,16 +203,16 @@ confint.mle_fit_boot <- function(object, parm = NULL, level = 0.95,
     colnames(CI) <- c(paste0(alpha / 2 * 100, "%"),
                       paste0((1 - alpha / 2) * 100, "%"))
 
-    for (j in 1:p) {
+    for (j in seq_len(p)) {
         ci <- boot.ci(object, conf = level, type = type, index = j, ...)
         CI[j, ] <- tail(ci[[type_long]][1,], 2)
     }
 
     theta <- params(object)
     if (is.null(names(theta))) {
-        rownames(CI) <- paste0("param", 1:p)
+        rownames(CI) <- paste0("param", seq_len(p))
     } else {
-        rownames(CI) <- names(theta)[1:p]
+        rownames(CI) <- names(theta)[seq_len(p)]
     }
     CI
 }

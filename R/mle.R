@@ -456,16 +456,13 @@ pred.mle_fit <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 
     data <- matrix(NA, nrow = R, ncol = p)
     data[1, ] <- ob
-    for (i in 2:R) {
+    for (i in seq_len(R)[-1]) {
         data[i, ] <- samp(1, thetas[i, ], ...)
     }
 
-    PI <- matrix(NA, nrow = p, ncol = 3)
-    for (j in 1:p) {
-        dj <- data[, j]
-        PI[j, ] <- c(mean(dj), quantile(
-            x = dj, probs = c(alpha / 2, 1 - alpha / 2)))
-    }
+    PI <- t(apply(data, 2, function(dj) {
+        c(mean(dj), quantile(x = dj, probs = c(alpha / 2, 1 - alpha / 2)))
+    }))
     colnames(PI) <- c("mean", "lower", "upper")
     PI
 }

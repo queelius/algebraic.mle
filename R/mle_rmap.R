@@ -46,6 +46,7 @@ rmap.mle_fit <- function(x, g, ...,
     n = 1000, method = c("mc", "delta"))
 {
     stopifnot(is.numeric(n), n > 0, is_mle(x), is.function(g))
+    n <- as.integer(n)
 
     method <- match.arg(method)
     theta <- unname(params(x))
@@ -54,7 +55,7 @@ rmap.mle_fit <- function(x, g, ...,
         p <- length(g(mle.samp[1, ], ...))
 
         g.mle.samp <- matrix(nrow=n,ncol=p)
-        for (i in 1:n)
+        for (i in seq_len(n))
             g.mle.samp[i,] <- g(mle.samp[i,], ...)
         g.sigma <- cov(g.mle.samp)
     }
