@@ -713,13 +713,12 @@ We see that the 95% quantile interval for $X_{n+1}|\hat\theta$ is a bit
 smaller than $\hat{X}_{n+1}$, which is what we expected. Of course, for
 sufficiently large sample sizes, they will converge to the same quantiles.
 
-## Weighted MLE: a weighted sum of maximum likelihood estimators
+## Combining Independent MLEs
 
 Since the variance-covariance of an MLE is inversely proportional to the
-FIM that the MLE is defined with respect to, we can combine
-multiple MLEs of $\theta$, each of which may be defined with respect to a
-different kind of sample, to arrive at the MLE that incorporates the Fisher
-information in all of those samples.
+FIM, we can combine multiple independent MLEs of the same $\theta$ — each
+estimated from a different sample — into a single MLE that incorporates the
+Fisher information from all samples.
 
 Consider $k$ mutually independent MLEs of parameter $\theta$,
 $\hat\theta_1,\ldots,\hat\theta_k$, where $\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))$.
@@ -732,16 +731,16 @@ $$
 which, asymptotically, has an expected value of $\theta$ and a variance-covariance
 of $\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}$.
 
-To evaluate the performance of the weighted MLE, we generate a sample of
-$N=1000$ observations from $\mathcal{N}(\theta)$ and compute the MLE
+To evaluate the performance of `combine()`, we generate a sample of
+$N=100$ observations from $\mathcal{N}(\theta)$ and compute the MLE
 for the observed sample, denoted by $\hat\theta$.
 
 We then divide the observed sample into $r=5$ sub-samples, each of size
-$N/r=100$, and compute the MLE for each sub-sampled, denoted by
+$N/r=20$, and compute the MLE for each sub-sample, denoted by
 $\theta^{(1)},\ldots,\theta^{(r)}$.
 
-Finally, we do a weighted combination these MLEs to form the weighted MLE,
-denoted by $\theta_w$:
+Finally, we combine these MLEs via inverse-variance weighting to form the
+combined MLE, denoted by $\theta_w$:
 ```{r}
 N <- 100
 r <- 5
@@ -756,7 +755,7 @@ mle <- fit_normal(samp)
 ```
 
 We show the results in the following R code.
-First, we show the weighted MLE and its MSE:
+First, we show the combined MLE and its variance-covariance:
 ```{r}
 params(mle.wt)
 vcov(mle.wt)
@@ -767,10 +766,10 @@ params(mle)
 vcov(mle)
 ```
 
-Unfortuantely, $\hat\theta$ is a much better estimator of $\theta$ than
+Unfortunately, $\hat\theta$ is a much better estimator of $\theta$ than
 $\hat\theta_w$. According to theory, they should be identical, but in
 practice, there may be issues like numerical instability that cause
-the weighted MLE to perform poorly.
+the combined MLE to perform poorly.
 
 We are in fact using numerical differentiation to compute the FIM, which may be
 a source of error. We can try to improve the accuracy of the FIM by using
