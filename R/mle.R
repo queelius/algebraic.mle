@@ -296,7 +296,7 @@ summary.mle_fit <- function(object, ...) {
 #' @param x the `summary_mle_fit` object
 #' @param ... pass additional arguments
 #' @return Invisibly returns \code{x}.
-#' @importFrom stats vcov
+#' @importFrom stats vcov AIC
 #' @importFrom algebraic.dist nparams params
 #' @export
 print.summary_mle_fit <- function(x, ...) {

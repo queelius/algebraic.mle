@@ -1,3 +1,32 @@
+# algebraic.mle 2.0.0
+
+## Breaking changes
+
+* S3 class renamed from `"mle"` to `"mle_fit"` to resolve name collision with
+  `stats4::mle` (S4 class). Subclasses follow: `"mle_fit_numerical"`,
+  `"mle_fit_boot"`, `"mle_fit_rmap"`. Constructor function names (`mle()`,
+  `mle_numerical()`, `mle_boot()`) are unchanged.
+
+* Removed `aic()`, `bic()`, and `loglik_val()` generics. Use standard R
+  generics `AIC()`, `BIC()`, and `logLik()` instead. `logLik()` returns a
+  proper `"logLik"` object with `df` and `nobs` attributes, so `AIC()` and
+  `BIC()` work automatically via `stats::AIC.default`.
+
+* Added `coef.mle_fit()` method delegating to `params()` for standard R
+  compatibility.
+
+* Removed `mle_weighted()` constructor and `"mle_weighted"` class. Use
+  `combine()` instead — same inverse-variance weighting with better error
+  handling and a variadic API.
+
+## Improvements
+
+* Replaced `1:n` patterns with `seq_len()` throughout to avoid edge-case bugs
+* Vectorized PI computation in `pred()`
+* Modernized package documentation (`"_PACKAGE"` sentinel)
+* Cleaned up `fixing/` directory (removed dead experimental code)
+* Integer coercion for `n` parameter in `rmap()`
+
 # algebraic.mle 1.2.0
 
 ## New features
@@ -37,7 +66,7 @@
   - Parameter extraction (`params`, `nparams`)
   - Variance-covariance (`vcov`, `se`)
   - Confidence intervals (`confint`)
-  - Model comparison (`aic`, `loglik_val`)
+  - Model comparison (`AIC`, `logLik`)
   - Bias and MSE estimation (`bias`, `mse`)
   - Fisher information (`observed_fim`)
   - Sampling from MLE distribution (`sampler`)
