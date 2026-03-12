@@ -8,7 +8,7 @@ produces a joint MLE with block-diagonal variance-covariance structure.
 ``` r
 joint(x, ...)
 
-# S3 method for class 'mle'
+# S3 method for class 'mle_fit'
 joint(x, ...)
 ```
 
@@ -16,15 +16,15 @@ joint(x, ...)
 
 - x:
 
-  An `mle` object.
+  An `mle_fit` object.
 
 - ...:
 
-  Additional `mle` objects to join.
+  Additional `mle_fit` objects to join.
 
 ## Value
 
-An `mle` object representing the joint MLE.
+An `mle_fit` object representing the joint MLE.
 
 ## Details
 
@@ -63,7 +63,7 @@ vcov(j)     # 3x3 block-diagonal
 
 # Existing algebra works on the joint:
 marginal(j, 2:3)   # recover shape params
-#> Maximum likelihood estimator of type mle is normally distributed.
+#> Maximum likelihood estimator of type mle_fit is normally distributed.
 #> The estimates of the parameters are given by:
 #>   k   s 
 #> 1.5 3.2 

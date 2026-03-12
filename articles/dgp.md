@@ -1,20 +1,19 @@
 # Dynamic failure rate model
 
-[![GPL-3
-License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-`algebraic.mle` is an R package that provides an algebra over Maximum
-Likelihood Estimators (MLEs). These estimators possess many desirable,
-well-defined statistical properties which the package helps you
-manipulate and utilize.
+`algebraic.mle` provides an algebra over maximum likelihood estimators
+(MLEs). Under regularity conditions, any MLE is asymptotically normal
+with variance given by the inverse Fisher information. The package
+exploits this structure with operations for composition (`joint`,
+`combine`), transformation (`rmap`), and bridging to distribution
+algebra (`as_dist`).
 
 ## Installation
 
-`algebraic.mle` can be installed from GitHub by using the devtools
-package in R:
-
 ``` r
-install.packages("devtools")
+# From CRAN
+install.packages("algebraic.mle")
+
+# Development version from GitHub
 devtools::install_github("queelius/algebraic.mle")
 ```
 
@@ -31,9 +30,9 @@ being the uniformly minimum variance unbiased estimator of theta.
 
 ## API Overview
 
-The main object in the `algebraic.mle` package is the `mle` object,
+The main object in the `algebraic.mle` package is the `mle_fit` object,
 which represents a fitted model. The package provides a number of
-generic methods designed for `mle` objects. A comprehensive list of
+generic methods designed for `mle_fit` objects. A comprehensive list of
 functions is available in the [function
 reference](https://queelius.github.io/algebraic.mle/reference/index.html)
 for `algebraic.mle`.
@@ -72,7 +71,7 @@ dgp <- function(n, x) {
 }
 ```
 
-Let’s generate some date:
+Let’s generate some data:
 
 ``` r
 n <- 75 # number of observations
@@ -97,7 +96,8 @@ loglik <- function(df, resp, rate) {
 ```
 
 Let’s fit the model. We’ll use the `optim` function in `stats` to fit
-the model and then wrap it into an `mle` object using `mle_numerical`.
+the model and then wrap it into an `mle_fit` object using
+`mle_numerical`.
 
 ``` r
 library(algebraic.mle)
@@ -111,7 +111,7 @@ sol <- mle_numerical(optim(par = par0,
     control = list(fnscale = -1),
     hessian = TRUE))
 summary(sol)
-#> Maximum likelihood estimator of type mle_numerical is normally distributed.
+#> Maximum likelihood estimator of type mle_fit_numerical is normally distributed.
 #> The estimates of the parameters are given by:
 #>         b0         b1 
 #> -0.2253626  0.4560893 
@@ -166,7 +166,7 @@ sol2 <- mle_numerical(optim(par = 0,
     hessian = TRUE,
     method = "BFGS"))
 summary(sol2)
-#> Maximum likelihood estimator of type mle_numerical is normally distributed.
+#> Maximum likelihood estimator of type mle_fit_numerical is normally distributed.
 #> The estimates of the parameters are given by:
 #> [1] 0.4617093
 #> The standard error is  0.01899941 .
@@ -181,7 +181,7 @@ summary(sol2)
 Let’s compute the likelihood ratio test statistic and p-value:
 
 ``` r
-(lrt.sol2 <- -2 * (loglik_val(sol2) - loglik_val(sol)))
+(lrt.sol2 <- -2 * (as.numeric(logLik(sol2)) - as.numeric(logLik(sol))))
 #> [1] 4.037435
 pchisq(lrt.sol2, df = 1, lower.tail = FALSE) # compute the p-value
 #> [1] 0.04450142
@@ -193,9 +193,9 @@ compatible with the null hypothesis `b0 = 0`.
 If we wanted to do model selection, we could use the AIC:
 
 ``` r
-aic(sol)
+AIC(sol)
 #> [1] 243.3954
-aic(sol2)
+AIC(sol2)
 #> [1] 245.4328
 ```
 
@@ -222,7 +222,7 @@ sol3 <- mle_numerical(optim(par = 0,
     control = list(fnscale = -1),
     hessian = TRUE,
     method = "BFGS"))
-(lrt.sol3 <- -2 * (loglik_val(sol2) - loglik_val(sol)))
+(lrt.sol3 <- -2 * (as.numeric(logLik(sol2)) - as.numeric(logLik(sol))))
 #> [1] 4.037435
 pchisq(lrt.sol3, df = 1, lower.tail = FALSE) # compute the p-value
 #> [1] 0.04450142

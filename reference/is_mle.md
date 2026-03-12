@@ -1,6 +1,6 @@
-# Determine if an object \`x\` is an \`mle\` object.
+# Determine if an object \`x\` is an \`mle_fit\` object.
 
-Determine if an object \`x\` is an \`mle\` object.
+Determine if an object \`x\` is an \`mle_fit\` object.
 
 ## Usage
 
@@ -16,7 +16,7 @@ is_mle(x)
 
 ## Value
 
-Logical TRUE if `x` is an `mle` object, FALSE otherwise.
+Logical TRUE if `x` is an `mle_fit` object, FALSE otherwise.
 
 ## Examples
 

@@ -12,8 +12,8 @@ combine_mles(mles)
 
 - mles:
 
-  A list of mle objects.
+  A list of mle_fit objects.
 
 ## Value
 
-An mle object.
+An mle_fit object.

@@ -1,7 +1,7 @@
-# Constructor for making \`mle\` objects, which provides a common interface for maximum likelihood estimators.
+# Constructor for making \`mle_fit\` objects, which provides a common interface for maximum likelihood estimators.
 
 This MLE makes the asymptotic assumption by default. Other MLEs, like
-\`mle_boot\`, may not make this assumption.
+\`mle_fit_boot\`, may not make this assumption.
 
 ## Usage
 
@@ -50,11 +50,11 @@ mle(
 
 - superclasses:
 
-  class (or classes) with \`mle\` as base
+  class (or classes) with \`mle_fit\` as base
 
 ## Value
 
-An object of class `mle`.
+An object of class `mle_fit`.
 
 ## Examples
 

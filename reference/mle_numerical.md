@@ -1,8 +1,8 @@
-# This function takes the output of \`optim\`, \`newton_raphson\`, or \`sim_anneal\` and turns it into an \`mle_numerical\` (subclass of \`mle\`) object.
+# This function takes the output of \`optim\`, \`newton_raphson\`, or \`sim_anneal\` and turns it into an \`mle_fit_numerical\` (subclass of \`mle_fit\`) object.
 
 This function takes the output of \`optim\`, \`newton_raphson\`, or
-\`sim_anneal\` and turns it into an \`mle_numerical\` (subclass of
-\`mle\`) object.
+\`sim_anneal\` and turns it into an \`mle_fit_numerical\` (subclass of
+\`mle_fit\`) object.
 
 ## Usage
 
@@ -22,11 +22,11 @@ mle_numerical(sol, options = list(), superclasses = NULL)
 
 - superclasses:
 
-  list, superclasses to add to the \`mle_numerical\` object
+  list, superclasses to add to the \`mle_fit_numerical\` object
 
 ## Value
 
-An object of class `mle_numerical` (subclass of `mle`).
+An object of class `mle_fit_numerical` (subclass of `mle_fit`).
 
 ## Examples
 

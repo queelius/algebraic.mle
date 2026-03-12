@@ -1,4 +1,4 @@
-# Generic method for computing the observed FIM of an \`mle\` object.
+# Generic method for computing the observed FIM of an \`mle_fit\` object.
 
 Fisher information is a way of measuring the amount of information that
 an observable random variable \`X\` carries about an unknown parameter

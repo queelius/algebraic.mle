@@ -11,7 +11,7 @@ information) weighting."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@ information) weighting.</p>
 <span><span class="co"># S3 method for class 'list'</span></span>
 <span><span class="fu">combine</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for class 'mle'</span></span>
+<span><span class="co"># S3 method for class 'mle_fit'</span></span>
 <span><span class="fu">combine</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -66,16 +66,16 @@ information) weighting.</p>
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>An <code>mle</code> object, or a list of <code>mle</code> objects.</p></dd>
+<dd><p>An <code>mle_fit</code> object, or a list of <code>mle_fit</code> objects.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional <code>mle</code> objects to combine.</p></dd>
+<dd><p>Additional <code>mle_fit</code> objects to combine.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An <code>mle</code> object representing the optimally weighted combination.</p>
+    <p>An <code>mle_fit</code> object representing the optimally weighted combination.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -85,11 +85,10 @@ information) weighting.</p>
 <li><p><code>nobs</code>: sum of individual sample sizes</p></li>
 </ul><p>When the Fisher information matrix is not directly available but the
 variance-covariance matrix is, the FIM is computed as <code>ginv(vcov)</code>.</p>
-<p>For the legacy interface that accepts a list, see <code><a href="mle_weighted.html">mle_weighted</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="mle_weighted.html">mle_weighted</a></code>, <code><a href="joint.html">joint</a></code></p></div>
+    <div class="dont-index"><p><code><a href="joint.html">joint</a></code></p></div>
     </div>
 
     <div class="section level2">

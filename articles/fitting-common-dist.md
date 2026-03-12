@@ -75,7 +75,7 @@ Weibull and the Normal distributions, and compare the results.
 
 We will use maximum likelihood estimation (MLE) to estimate the
 parameters of both the Weibull and the Normal, and then wrap these
-estimates into an `mle` object provided by `algebraic.mle` package:
+estimates into an `mle_fit` object provided by `algebraic.mle` package:
 
 ``` r
 fit_normal <- function(data) {
@@ -353,7 +353,7 @@ mles.sub <- list(length = r)
 for (i in 1:r)
     mles.sub[[i]] <- fit_normal(samp.sub[i,])
 
-mle.wt <- mle_weighted(mles.sub)
+mle.wt <- combine(mles.sub)
 mle <- fit_normal(samp)
 ```
 
@@ -404,11 +404,11 @@ theta.boot <- mle_boot(
 
 We already printed out the `theta.boot` object, which provided a lot of
 information about it, but we can obtain specified statistics from the
-Bootstrap MLE using the standard interface in `algorithmic.mle`, e.g.:
+Bootstrap MLE using the standard interface in `algebraic.mle`, e.g.:
 
 ``` r
 print(theta.boot)
-#> Maximum likelihood estimator of type mle_boot is normally distributed.
+#> Maximum likelihood estimator of type mle_fit_boot is normally distributed.
 #> The estimates of the parameters are given by:
 #> [1] 1.95 9.27
 #> The standard error is  0.153 0.501 .
@@ -504,9 +504,9 @@ measure of the tradeoff between the goodness of fit and the complexity
 of the model.
 
 ``` r
-aic(theta.weibull)
+AIC(theta.weibull)
 #> [1] 573
-aic(theta.hat)
+AIC(theta.hat)
 #> [1] 583
 ```
 
@@ -550,7 +550,7 @@ replace the integral with a sum over a large number of draws from the
 joint distribution of ${\widehat{T}}_{n + 1}$ and $\widehat{\theta}$ and
 then compute the empirical quantiles.
 
-The function `pred` takes as arguments `x`, in this case an `mle`
+The function `pred` takes as arguments `x`, in this case an `mle_fit`
 object, and a sampler for the distribution of the random variable of
 interest, in this case `rweibull` (the sampler for the normal
 distribution). The sampler must be compatible with the output of

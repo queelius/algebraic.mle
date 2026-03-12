@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,26 @@
       <small>Source: <a href="https://github.com/queelius/algebraic.mle/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0" id="algebraicmle-200">algebraic.mle 2.0.0<a class="anchor" aria-label="anchor" href="#algebraicmle-200"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-2-0-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-0-0"></a></h3>
+<ul><li><p>S3 class renamed from <code>"mle"</code> to <code>"mle_fit"</code> to resolve name collision with <code><a href="https://rdrr.io/r/stats4/mle.html" class="external-link">stats4::mle</a></code> (S4 class). Subclasses follow: <code>"mle_fit_numerical"</code>, <code>"mle_fit_boot"</code>, <code>"mle_fit_rmap"</code>. Constructor function names (<code><a href="../reference/mle.html">mle()</a></code>, <code><a href="../reference/mle_numerical.html">mle_numerical()</a></code>, <code><a href="../reference/mle_boot.html">mle_boot()</a></code>) are unchanged.</p></li>
+<li><p>Removed <code>aic()</code>, <code>bic()</code>, and <code>loglik_val()</code> generics. Use standard R generics <code><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC()</a></code>, <code><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">BIC()</a></code>, and <code><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik()</a></code> instead. <code><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik()</a></code> returns a proper <code>"logLik"</code> object with <code>df</code> and <code>nobs</code> attributes, so <code><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC()</a></code> and <code><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">BIC()</a></code> work automatically via <code>stats::AIC.default</code>.</p></li>
+<li><p>Added <code><a href="../reference/coef.mle_fit.html">coef.mle_fit()</a></code> method delegating to <code><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params()</a></code> for standard R compatibility.</p></li>
+<li><p>Removed <code>mle_weighted()</code> constructor and <code>"mle_weighted"</code> class. Use <code><a href="../reference/combine.html">combine()</a></code> instead — same inverse-variance weighting with better error handling and a variadic API.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-2-0-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-2-0-0"></a></h3>
+<ul><li>Replaced <code>1:n</code> patterns with <code><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len()</a></code> throughout to avoid edge-case bugs</li>
+<li>Vectorized PI computation in <code><a href="../reference/pred.html">pred()</a></code>
+</li>
+<li>Modernized package documentation (<code>"_PACKAGE"</code> sentinel)</li>
+<li>Cleaned up <code>fixing/</code> directory (removed dead experimental code)</li>
+<li>Integer coercion for <code>n</code> parameter in <code><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap()</a></code>
+</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.2.0" id="algebraicmle-120">algebraic.mle 1.2.0<a class="anchor" aria-label="anchor" href="#algebraicmle-120"></a></h2>
 <div class="section level3">
@@ -76,7 +96,7 @@
 <ul><li>Parameter extraction (<code>params</code>, <code>nparams</code>)</li>
 <li>Variance-covariance (<code>vcov</code>, <code>se</code>)</li>
 <li>Confidence intervals (<code>confint</code>)</li>
-<li>Model comparison (<code>aic</code>, <code>loglik_val</code>)</li>
+<li>Model comparison (<code>AIC</code>, <code>logLik</code>)</li>
 <li>Bias and MSE estimation (<code>bias</code>, <code>mse</code>)</li>
 <li>Fisher information (<code>observed_fim</code>)</li>
 <li>Sampling from MLE distribution (<code>sampler</code>)</li>

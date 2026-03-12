@@ -11,7 +11,7 @@ of the MLE."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,16 +65,16 @@ of the MLE.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An <code>mle_boot</code> object (wrapper for <code>boot</code> object).</p>
+    <p>An <code>mle_fit_boot</code> object (wrapper for <code>boot</code> object).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This takes an approach similiar to the `mle_numerical` object, which is
+    <p>This takes an approach similiar to the `mle_fit_numerical` object, which is
 a wrapper for a `stats::optim` return value, or something that is compatible
 with the `optim` return value. Here, we take a `boot` object, which is
-the sampling distribution of an MLE, and wrap it in an `mle_boot` object
-and then provide a number of methods for the `mle_boot` object that satisfies
-the concept of an `mle` object.</p>
+the sampling distribution of an MLE, and wrap it in an `mle_fit_boot` object
+and then provide a number of methods for the `mle_fit_boot` object that satisfies
+the concept of an `mle_fit` object.</p>
 <p>Look up the `boot` package for more information on the bootstrap.</p>
     </div>
 

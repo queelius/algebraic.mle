@@ -148,11 +148,11 @@ Draw samples from the asymptotic distribution:
 samp <- sampler(fit)
 head(samp(5))
 #>          [,1]     [,2]
-#> [1,] 4.881999 3.464467
-#> [2,] 5.199934 3.735020
-#> [3,] 5.067908 4.302101
-#> [4,] 4.964794 3.924047
-#> [5,] 5.059629 2.571551
+#> [1,] 5.093711 4.107842
+#> [2,] 5.218520 2.800113
+#> [3,] 4.850638 4.027942
+#> [4,] 5.116977 4.566037
+#> [5,] 5.187885 2.875202
 ```
 
 ## Creating MLE objects
@@ -244,14 +244,15 @@ bootstrap:
 ``` r
 set.seed(42)
 x <- rexp(30, rate = 2)
-boot_fn <- function(data, idx) 1 / mean(data[idx])
+boot_fn <- function(data, idx) c(lambda = 1 / mean(data[idx]))
 b <- boot::boot(data = x, statistic = boot_fn, R = 999)
 fit_boot <- mle_boot(b)
 params(fit_boot)
-#> [1] 2.019028
+#>   lambda 
+#> 2.019028
 confint(fit_boot, type = "perc")
 #>            2.5%    97.5%
-#> param1 1.367237 3.175378
+#> lambda 1.367237 3.175378
 ```
 
 ## Links

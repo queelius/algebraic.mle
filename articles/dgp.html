@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,19 +68,21 @@
 
     
     
-<!-- badges: start -->
-<p><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/license-GPL--3-blue.svg" alt="GPL-3 License"></a> <!-- badges: end --></p>
-<p><code>algebraic.mle</code> is an R package that provides an algebra
-over Maximum Likelihood Estimators (MLEs). These estimators possess many
-desirable, well-defined statistical properties which the package helps
-you manipulate and utilize.</p>
+<p><code>algebraic.mle</code> provides an algebra over maximum
+likelihood estimators (MLEs). Under regularity conditions, any MLE is
+asymptotically normal with variance given by the inverse Fisher
+information. The package exploits this structure with operations for
+composition (<code>joint</code>, <code>combine</code>), transformation
+(<code>rmap</code>), and bridging to distribution algebra
+(<code>as_dist</code>).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p><code>algebraic.mle</code> can be installed from GitHub by using the
-devtools package in R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># From CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"algebraic.mle"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Development version from GitHub</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"queelius/algebraic.mle"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -99,9 +101,10 @@ being the uniformly minimum variance unbiased estimator of theta.</p>
 <h2 id="api-overview">API Overview<a class="anchor" aria-label="anchor" href="#api-overview"></a>
 </h2>
 <p>The main object in the <code>algebraic.mle</code> package is the
-<code>mle</code> object, which represents a fitted model. The package
-provides a number of generic methods designed for <code>mle</code>
-objects. A comprehensive list of functions is available in the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function
+<code>mle_fit</code> object, which represents a fitted model. The
+package provides a number of generic methods designed for
+<code>mle_fit</code> objects. A comprehensive list of functions is
+available in the <a href="https://queelius.github.io/algebraic.mle/reference/index.html">function
 reference</a> for <code>algebraic.mle</code>.</p>
 </div>
 <div class="section level2">
@@ -135,7 +138,7 @@ generating process):</p>
 <span>    <span class="va">W</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">1e-3</span><span class="op">)</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">X</span> <span class="op">+</span> <span class="va">W</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Let’s generate some date:</p>
+<p>Let’s generate some data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">75</span> <span class="co"># number of observations</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1231</span><span class="op">)</span> <span class="co"># for reproducibility</span></span>
@@ -156,7 +159,7 @@ model.</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Let’s fit the model. We’ll use the <code>optim</code> function in
 <code>stats</code> to fit the model and then wrap it into an
-<code>mle</code> object using <code>mle_numerical</code>.</p>
+<code>mle_fit</code> object using <code>mle_numerical</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/queelius/algebraic.mle" class="external-link">algebraic.mle</a></span><span class="op">)</span></span>
 <span></span>
@@ -169,7 +172,7 @@ model.</p>
 <span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>    hessian <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Maximum likelihood estimator of type mle_numerical is normally distributed.</span></span>
+<span><span class="co">#&gt; Maximum likelihood estimator of type mle_fit_numerical is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
 <span><span class="co">#&gt;         b0         b1 </span></span>
 <span><span class="co">#&gt; -0.2253626  0.4560893 </span></span>
@@ -220,7 +223,7 @@ ratio test. We can use the LRT because this null model is a special case
 <span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Maximum likelihood estimator of type mle_numerical is normally distributed.</span></span>
+<span><span class="co">#&gt; Maximum likelihood estimator of type mle_fit_numerical is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
 <span><span class="co">#&gt; [1] 0.4617093</span></span>
 <span><span class="co">#&gt; The standard error is  0.01899941 .</span></span>
@@ -232,7 +235,7 @@ ratio test. We can use the LRT because this null model is a special case
 <span><span class="co">#&gt; The AIC is  245.4328 .</span></span></code></pre></div>
 <p>Let’s compute the likelihood ratio test statistic and p-value:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">lrt.sol2</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="../reference/loglik_val.html">loglik_val</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="../reference/loglik_val.html">loglik_val</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">lrt.sol2</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 4.037435</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.sol2</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
 <span><span class="co">#&gt; [1] 0.04450142</span></span></code></pre></div>
@@ -241,9 +244,9 @@ the data is not compatible with the null hypothesis
 <code>b0 = 0</code>.</p>
 <p>If we wanted to do model selection, we could use the AIC:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 243.3954</span></span>
-<span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 245.4328</span></span></code></pre></div>
 <p>By the AIC measure, since the full model has an AIC less than the
 null model, we would choose the full model. We actually know the DGP and
@@ -265,7 +268,7 @@ distribution.</p>
 <span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>    hessian <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"BFGS"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">(</span><span class="va">lrt.sol3</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="../reference/loglik_val.html">loglik_val</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="../reference/loglik_val.html">loglik_val</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">lrt.sol3</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 4.037435</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">lrt.sol3</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># compute the p-value</span></span>
 <span><span class="co">#&gt; [1] 0.04450142</span></span></code></pre></div>

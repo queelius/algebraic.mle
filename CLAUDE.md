@@ -104,10 +104,8 @@ Extract parameters - [`vcov()`](https://rdrr.io/r/stats/vcov.html),
 [`se()`](https://queelius.github.io/algebraic.mle/reference/se.md):
 Variance-covariance and standard errors -
 [`confint()`](https://rdrr.io/r/stats/confint.html): Confidence
-intervals (asymptotic or bootstrap) -
-[`loglik_val()`](https://queelius.github.io/algebraic.mle/reference/loglik_val.md),
-[`aic()`](https://queelius.github.io/algebraic.mle/reference/aic.md):
-Model fit statistics -
+intervals (asymptotic or bootstrap) - `loglik_val()`, `aic()`: Model fit
+statistics -
 [`bias()`](https://queelius.github.io/algebraic.mle/reference/bias.md),
 [`mse()`](https://queelius.github.io/algebraic.mle/reference/mse.md):
 Bias and mean squared error -
@@ -136,9 +134,7 @@ Transformations (invariance property)
 3.  Wrap result: `sol <- mle_numerical(optim(...))`
 4.  Use generic methods:
     [`summary()`](https://rdrr.io/r/base/summary.html),
-    [`confint()`](https://rdrr.io/r/stats/confint.html),
-    [`aic()`](https://queelius.github.io/algebraic.mle/reference/aic.md),
-    etc.
+    [`confint()`](https://rdrr.io/r/stats/confint.html), `aic()`, etc.
 5.  For small samples or non-asymptotic cases, use `mle_boot(boot(...))`
 
 ## Important Details
@@ -158,9 +154,7 @@ Transformations (invariance property)
 
 - Likelihood ratio tests for nested models:
   `LRT = -2 * (loglik_null - loglik_full)`
-- Compare models using
-  [`aic()`](https://queelius.github.io/algebraic.mle/reference/aic.md):
-  lower is better
+- Compare models using `aic()`: lower is better
 - Use [`confint()`](https://rdrr.io/r/stats/confint.html) for
   parameter-level inference
 

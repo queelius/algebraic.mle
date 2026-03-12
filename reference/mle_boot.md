@@ -18,16 +18,17 @@ mle_boot(x)
 
 ## Value
 
-An `mle_boot` object (wrapper for `boot` object).
+An `mle_fit_boot` object (wrapper for `boot` object).
 
 ## Details
 
-This takes an approach similiar to the \`mle_numerical\` object, which
-is a wrapper for a \`stats::optim\` return value, or something that is
-compatible with the \`optim\` return value. Here, we take a \`boot\`
-object, which is the sampling distribution of an MLE, and wrap it in an
-\`mle_boot\` object and then provide a number of methods for the
-\`mle_boot\` object that satisfies the concept of an \`mle\` object.
+This takes an approach similiar to the \`mle_fit_numerical\` object,
+which is a wrapper for a \`stats::optim\` return value, or something
+that is compatible with the \`optim\` return value. Here, we take a
+\`boot\` object, which is the sampling distribution of an MLE, and wrap
+it in an \`mle_fit_boot\` object and then provide a number of methods
+for the \`mle_fit_boot\` object that satisfies the concept of an
+\`mle_fit\` object.
 
 Look up the \`boot\` package for more information on the bootstrap.
 

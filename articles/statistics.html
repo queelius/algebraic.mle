@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,19 +68,21 @@
 
     
     
-<!-- badges: start -->
-<p><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/license-GPL--3-blue.svg" alt="GPL-3 License"></a> <!-- badges: end --></p>
-<p><code>algebraic.mle</code> is an R package that provides an algebra
-over Maximum Likelihood Estimators (MLEs). These estimators possess many
-desirable, well-defined statistical properties which the package helps
-you manipulate and utilize.</p>
+<p><code>algebraic.mle</code> provides an algebra over maximum
+likelihood estimators (MLEs). Under regularity conditions, any MLE is
+asymptotically normal with variance given by the inverse Fisher
+information. The package exploits this structure with operations for
+composition (<code>joint</code>, <code>combine</code>), transformation
+(<code>rmap</code>), and bridging to distribution algebra
+(<code>as_dist</code>).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The R package <code>algebraic.mle</code> can be installed from GitHub
-by using the devtools package in R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># From CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"algebraic.mle"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Development version from GitHub</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"queelius/algebraic.mle"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -120,12 +122,10 @@ distribution.</p>
 <span>        nobs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
 <span>        superclasses <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mle_normal"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>As you can see, we return an <code>mle</code> object, and then we
-give it a sub-class <code>mle_normal</code> (it is also a subclass of
-<code>mle</code> and <code>algebraic.dist</code>’s <code>dist</code>) so
-we can specialize some of the methods for MLE of the normal
-distribution, e.g., <code>bias.mle_normal</code> which we show
-later.</p>
+<p>As you can see, we return an <code>mle_fit</code> object, and then we
+give it a sub-class <code>mle_normal</code> so we can specialize some of
+the methods for MLE of the normal distribution, e.g.,
+<code>bias.mle_normal</code> which we show later.</p>
 </div>
 <div class="section level2">
 <h2 id="monte-carlo-mc-simulation-of-the-sampling-distribution-of-the-mle">Monte-carlo (MC) simulation of the sampling distribution of the
@@ -786,11 +786,11 @@ and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>
 and then compute the empirical quantiles.</p>
 <p>The function <code>pred</code> takes as arguments <code>x</code>, in
-this case an <code>mle</code> object, and a sampler for the distribution
-of the random variable of interest, in this case <code>rnorm</code> (the
-sampler for the normal distribution). The sampler must be compatible
-with the parameter value of <code>x</code> (i.e.,
-<code>params(x)</code>). Here is how we compute the PI for
+this case an <code>mle_fit</code> object, and a sampler for the
+distribution of the random variable of interest, in this case
+<code>rnorm</code> (the sampler for the normal distribution). The
+sampler must be compatible with the parameter value of <code>x</code>
+(i.e., <code>params(x)</code>). Here is how we compute the PI for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>X</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{X}_{n+1}</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">samp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">par</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">par</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
@@ -867,13 +867,14 @@ MLE, denoted by
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">r</span><span class="op">)</span></span>
 <span>    <span class="va">mles.sub</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp.sub</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_weighted.html">mle_weighted</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span></span>
+<span><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine.html">combine</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span></span>
 <span><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></span></code></pre></div>
 <p>We show the results in the following R code. First, we show the
 weighted MLE and its MSE:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.221 0.778</span></span>
+<span><span class="co">#&gt;    mu   var </span></span>
+<span><span class="co">#&gt; 1.221 0.778</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                    [,1]               [,2]</span></span>
 <span><span class="co">#&gt; [1,] 0.0080147769950214 0.0000000000000257</span></span>

@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,18 +176,18 @@
 <span><span class="co">#&gt; sigma2 2.744527 4.855473</span></span>
 <span><span class="fu"><a href="reference/se.html">se</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.2000000 0.5385165</span></span>
-<span><span class="fu"><a href="reference/aic.html">aic</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="fu">aic</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 312.6</span></span></code></pre></div>
 <p>Draw samples from the asymptotic distribution:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">samp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/sampler.html" class="external-link">sampler</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">samp</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          [,1]     [,2]</span></span>
-<span><span class="co">#&gt; [1,] 4.881999 3.464467</span></span>
-<span><span class="co">#&gt; [2,] 5.199934 3.735020</span></span>
-<span><span class="co">#&gt; [3,] 5.067908 4.302101</span></span>
-<span><span class="co">#&gt; [4,] 4.964794 3.924047</span></span>
-<span><span class="co">#&gt; [5,] 5.059629 2.571551</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 5.093711 4.107842</span></span>
+<span><span class="co">#&gt; [2,] 5.218520 2.800113</span></span>
+<span><span class="co">#&gt; [3,] 4.850638 4.027942</span></span>
+<span><span class="co">#&gt; [4,] 5.116977 4.566037</span></span>
+<span><span class="co">#&gt; [5,] 5.187885 2.875202</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="creating-mle-objects">Creating MLE objects<a class="anchor" aria-label="anchor" href="#creating-mle-objects"></a>
@@ -277,14 +277,15 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="fl">30</span>, rate <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">boot_fn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">idx</span><span class="op">)</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span><span class="va">idx</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">boot_fn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">idx</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lambda <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span><span class="va">idx</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu">boot</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">x</span>, statistic <span class="op">=</span> <span class="va">boot_fn</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
 <span><span class="va">fit_boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">fit_boot</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2.019028</span></span>
+<span><span class="co">#&gt;   lambda </span></span>
+<span><span class="co">#&gt; 2.019028</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit_boot</span>, type <span class="op">=</span> <span class="st">"perc"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            2.5%    97.5%</span></span>
-<span><span class="co">#&gt; param1 1.367237 3.175378</span></span></code></pre></div>
+<span><span class="co">#&gt; lambda 1.367237 3.175378</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

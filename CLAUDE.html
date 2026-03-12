@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,7 +126,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="generic-methods">Generic Methods<a class="anchor" aria-label="anchor" href="#generic-methods"></a></h3>
-<p>All MLE types support these methods (defined in R/mle.R unless noted): - <code><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params()</a></code>, <code><a href="https://queelius.github.io/algebraic.dist/reference/nparams.html" class="external-link">nparams()</a></code>: Extract parameters - <code><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov()</a></code>, <code><a href="reference/se.html">se()</a></code>: Variance-covariance and standard errors - <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>: Confidence intervals (asymptotic or bootstrap) - <code><a href="reference/loglik_val.html">loglik_val()</a></code>, <code><a href="reference/aic.html">aic()</a></code>: Model fit statistics - <code><a href="reference/bias.html">bias()</a></code>, <code><a href="reference/mse.html">mse()</a></code>: Bias and mean squared error - <code><a href="https://queelius.github.io/algebraic.dist/reference/sampler.html" class="external-link">sampler()</a></code>: Generate sampling function from MLE distribution - <code><a href="https://queelius.github.io/algebraic.dist/reference/obs.html" class="external-link">obs()</a></code>, <code><a href="https://rdrr.io/r/stats/nobs.html" class="external-link">nobs()</a></code>: Access original data - <code><a href="reference/observed_fim.html">observed_fim()</a></code>: Fisher information matrix - <code><a href="reference/score_val.html">score_val()</a></code>: Score function at MLE - <code><a href="reference/pred.html">pred()</a></code>: Predictive intervals using Monte Carlo - <code><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation()</a></code>: Expected values via simulation - <code><a href="https://queelius.github.io/algebraic.dist/reference/marginal.html" class="external-link">marginal()</a></code>: Marginal distributions for parameter subsets - <code><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap()</a></code>: Transformations (invariance property)</p>
+<p>All MLE types support these methods (defined in R/mle.R unless noted): - <code><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params()</a></code>, <code><a href="https://queelius.github.io/algebraic.dist/reference/nparams.html" class="external-link">nparams()</a></code>: Extract parameters - <code><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov()</a></code>, <code><a href="reference/se.html">se()</a></code>: Variance-covariance and standard errors - <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>: Confidence intervals (asymptotic or bootstrap) - <code>loglik_val()</code>, <code>aic()</code>: Model fit statistics - <code><a href="reference/bias.html">bias()</a></code>, <code><a href="reference/mse.html">mse()</a></code>: Bias and mean squared error - <code><a href="https://queelius.github.io/algebraic.dist/reference/sampler.html" class="external-link">sampler()</a></code>: Generate sampling function from MLE distribution - <code><a href="https://queelius.github.io/algebraic.dist/reference/obs.html" class="external-link">obs()</a></code>, <code><a href="https://rdrr.io/r/stats/nobs.html" class="external-link">nobs()</a></code>: Access original data - <code><a href="reference/observed_fim.html">observed_fim()</a></code>: Fisher information matrix - <code><a href="reference/score_val.html">score_val()</a></code>: Score function at MLE - <code><a href="reference/pred.html">pred()</a></code>: Predictive intervals using Monte Carlo - <code><a href="https://queelius.github.io/algebraic.dist/reference/expectation.html" class="external-link">expectation()</a></code>: Expected values via simulation - <code><a href="https://queelius.github.io/algebraic.dist/reference/marginal.html" class="external-link">marginal()</a></code>: Marginal distributions for parameter subsets - <code><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap()</a></code>: Transformations (invariance property)</p>
 </div>
 <div class="section level3">
 <h3 id="typical-workflow">Typical Workflow<a class="anchor" aria-label="anchor" href="#typical-workflow"></a></h3>
@@ -136,7 +136,7 @@
 </li>
 <li>Wrap result: <code>sol &lt;- mle_numerical(optim(...))</code>
 </li>
-<li>Use generic methods: <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>, <code><a href="reference/aic.html">aic()</a></code>, etc.</li>
+<li>Use generic methods: <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>, <code>aic()</code>, etc.</li>
 <li>For small samples or non-asymptotic cases, use <code>mle_boot(boot(...))</code>
 </li>
 </ol></div>
@@ -154,7 +154,7 @@
 <h3 id="hypothesis-testing">Hypothesis Testing<a class="anchor" aria-label="anchor" href="#hypothesis-testing"></a></h3>
 <ul><li>Likelihood ratio tests for nested models: <code>LRT = -2 * (loglik_null - loglik_full)</code>
 </li>
-<li>Compare models using <code><a href="reference/aic.html">aic()</a></code>: lower is better</li>
+<li>Compare models using <code>aic()</code>: lower is better</li>
 <li>Use <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code> for parameter-level inference</li>
 </ul></div>
 <div class="section level3">

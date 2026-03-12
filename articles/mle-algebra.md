@@ -43,8 +43,8 @@ interface:
 [`vcov()`](https://rdrr.io/r/stats/vcov.html),
 [`confint()`](https://rdrr.io/r/stats/confint.html),
 [`se()`](https://queelius.github.io/algebraic.mle/reference/se.md),
-[`aic()`](https://queelius.github.io/algebraic.mle/reference/aic.md),
-and the algebraic operations.
+[`AIC()`](https://rdrr.io/r/stats/AIC.html), and the algebraic
+operations.
 
 ### Direct construction with `mle()`
 
@@ -107,18 +107,19 @@ y <- rexp(30, rate = 2)
 
 boot_result <- boot::boot(
   data = y,
-  statistic = function(d, i) 1 / mean(d[i]),
+  statistic = function(d, i) c(lambda = 1 / mean(d[i])),
   R = 999
 )
 
 fit_boot <- mle_boot(boot_result)
 params(fit_boot)
-#> [1] 2.019
+#> lambda 
+#>  2.019
 se(fit_boot)
 #> [1] 0.4629
 confint(fit_boot, type = "perc")
 #>         2.5% 97.5%
-#> param1 1.367 3.175
+#> lambda 1.367 3.175
 ```
 
 ## Composing Independent MLEs
@@ -280,14 +281,16 @@ fit_rate <- mle(
 )
 
 # g: rate -> mean lifetime
-fit_lifetime <- rmap(fit_rate, function(theta) 1 / theta[1], method = "delta")
+fit_lifetime <- rmap(fit_rate, function(theta) c(mean_life = 1 / theta[1]),
+  method = "delta")
 params(fit_lifetime)
-#> [1] 50
+#> mean_life 
+#>        50
 se(fit_lifetime)
 #> [1] 2.5
 confint(fit_lifetime)
-#>        2.5% 97.5%
-#> param1 45.1  54.9
+#>           2.5% 97.5%
+#> mean_life 45.1  54.9
 ```
 
 ### Multivariate example: component rates to system reliability
@@ -304,20 +307,21 @@ fit_rates <- joint(
   mle(theta.hat = c(lambda2 = 0.05), sigma = matrix(0.003^2), nobs = 80L)
 )
 
-# System reliability at t = 100 hours
-t0 <- 100
+# System reliability at t = 10 hours
+t0 <- 10
 R_mle <- rmap(fit_rates,
-  function(theta) exp(-(theta[1] + theta[2]) * t0),
+  function(theta) c(R_t = exp(-(theta[1] + theta[2]) * t0)),
   method = "delta"
 )
 
 params(R_mle)
-#> [1] 0.0009119
+#>    R_t 
+#> 0.4966
 se(R_mle)
-#> [1] 0.0002884
+#> [1] 0.0157
 confint(R_mle)
-#>             2.5%    97.5%
-#> param1 0.0003467 0.001477
+#>       2.5%  97.5%
+#> R_t 0.4658 0.5274
 ```
 
 The delta method automatically computes the Jacobian via numerical
@@ -340,13 +344,13 @@ d1
 ```
 
 This is useful when you want to reason about the sampling distribution
-of the MLE as a distribution object. For instance, you can compute
-probabilities that the true parameter exceeds a threshold:
+of the MLE as a distribution object. For instance, you can compute the
+probability that the true rate exceeds a regulatory threshold:
 
 ``` r
-# P(lambda > 0.025) under the asymptotic distribution
-1 - cdf(d1)(0.025)
-#> [1] 2.867e-07
+# P(lambda > 0.021) under the asymptotic distribution
+1 - cdf(d1)(0.021)
+#> [1] 0.1587
 ```
 
 For bootstrap MLEs,
@@ -367,7 +371,7 @@ operations.
 **Scenario**: A series system has two independent components with
 exponential lifetimes. Separate accelerated life tests estimate each
 component’s failure rate. We want to infer the system reliability at a
-mission time of $t = 500$ hours, including a confidence interval.
+mission time of $t = 50$ hours, including a confidence interval.
 
 ``` r
 set.seed(123)
@@ -420,39 +424,39 @@ vcov(fit_system)
 ```
 
 ``` r
-# --- Step 3: Transform to system reliability at t = 500 ---
-mission_time <- 500
+# --- Step 3: Transform to system reliability at t = 50 ---
+mission_time <- 50
 R_system <- rmap(fit_system,
-  function(theta) exp(-(theta[1] + theta[2]) * mission_time),
+  function(theta) c(R_sys = exp(-(theta[1] + theta[2]) * mission_time)),
   method = "delta"
 )
 
-cat("System reliability R(500):", params(R_system), "\n")
-#> System reliability R(500): 0.004167
-cat("SE of R(500):             ", se(R_system), "\n")
-#> SE of R(500):              0.001542
+cat("System reliability R(50):", params(R_system), "\n")
+#> System reliability R(50): 0.5781
+cat("SE of R(50):             ", se(R_system), "\n")
+#> SE of R(50):              0.02139
 ```
 
 ``` r
 # --- Step 4: Inference ---
-cat("95% CI for R(500):\n")
-#> 95% CI for R(500):
+cat("95% CI for R(50):\n")
+#> 95% CI for R(50):
 confint(R_system)
-#>            2.5%    97.5%
-#> param1 0.001145 0.007188
+#>         2.5% 97.5%
+#> R_sys 0.5361  0.62
 ```
 
 ``` r
 # --- Step 5: Bridge to distribution algebra ---
 R_dist <- as_dist(R_system)
-cat("Asymptotic distribution of R(500):", "\n")
-#> Asymptotic distribution of R(500):
+cat("Asymptotic distribution of R(50):", "\n")
+#> Asymptotic distribution of R(50):
 R_dist
-#> Normal distribution (mu = 0.00416658, var = 2.3765e-06)
+#> Normal distribution (mu = 0.578067, var = 0.000457439)
 
-# Probability that system reliability exceeds 90%
-cat("P(R(500) > 0.90):", 1 - cdf(R_dist)(0.90), "\n")
-#> P(R(500) > 0.90): 0
+# Probability that system reliability exceeds 55%
+cat("P(R(50) > 0.55):", 1 - cdf(R_dist)(0.55), "\n")
+#> P(R(50) > 0.55): 0.9053
 ```
 
 The pipeline reads as a chain of algebraic operations: two independent

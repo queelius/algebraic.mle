@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,35 +50,14 @@
 
       <dl><dt>
 
-          <code><a href="aic.html">aic()</a></code>
-
-        </dt>
-        <dd>Generic method for obtaining the AIC of a fitted distribution object fit.</dd>
-
-        <dt>
-
-          <code><a href="aic.mle.html">aic(<i>&lt;mle&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Method for obtaining the AIC of an `mle` object.</dd>
-
-        <dt>
-
-          <code><a href="algebraic.mle.html">algebraic.mle-package</a></code> <code><a href="algebraic.mle.html">algebraic.mle</a></code>
-
-        </dt>
-        <dd>`algebraic.mle`: A package for algebraically operating on and generating maximum likelihood estimators from existing maximum likelihood estimators.</dd>
-
-        <dt>
-
-          <code><a href="as_dist.mle.html">as_dist(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="as_dist.mle_fit.html">as_dist(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Convert an MLE to a distribution object.</dd>
 
         <dt>
 
-          <code><a href="as_dist.mle_boot.html">as_dist(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="as_dist.mle_fit_boot.html">as_dist(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
         <dd>Convert a bootstrap MLE to an empirical distribution.</dd>
@@ -92,31 +71,31 @@
 
         <dt>
 
-          <code><a href="bias.mle.html">bias(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="bias.mle_fit.html">bias(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Computes the bias of an `mle` object assuming the large sample approximation is valid and the MLE regularity conditions are satisfied. In this case, the bias is zero (or zero vector).</dd>
+        <dd>Computes the bias of an `mle_fit` object assuming the large sample approximation is valid and the MLE regularity conditions are satisfied. In this case, the bias is zero (or zero vector).</dd>
 
         <dt>
 
-          <code><a href="bias.mle_boot.html">bias(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="bias.mle_fit_boot.html">bias(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
-        <dd>Computes the estimate of the bias of a `mle_boot` object.</dd>
+        <dd>Computes the estimate of the bias of a `mle_fit_boot` object.</dd>
 
         <dt>
 
-          <code><a href="cdf.mle.html">cdf(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="cdf.mle_fit.html">cdf(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>CDF of the asymptotic distribution of an MLE.</dd>
 
         <dt>
 
-          <code><a href="coef.mle.html">coef(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="coef.mle_fit.html">coef(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Extract coefficients from an `mle` object.</dd>
+        <dd>Extract coefficients from an <code>mle_fit</code> object.</dd>
 
         <dt>
 
@@ -127,24 +106,24 @@
 
         <dt>
 
-          <code><a href="conditional.mle.html">conditional(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="conditional.mle_fit.html">conditional(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Conditional distribution from an MLE.</dd>
 
         <dt>
 
-          <code><a href="confint.mle.html">confint(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="confint.mle_fit.html">confint(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Function to compute the confidence intervals of `mle` objects.</dd>
+        <dd>Function to compute the confidence intervals of `mle_fit` objects.</dd>
 
         <dt>
 
-          <code><a href="confint.mle_boot.html">confint(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="confint.mle_fit_boot.html">confint(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for obtained the confidence interval of an `mle_boot` object. Note: This impelements the `vcov` method defined in `stats`.</dd>
+        <dd>Method for obtained the confidence interval of an `mle_fit_boot` object. Note: This impelements the `vcov` method defined in `stats`.</dd>
 
         <dt>
 
@@ -155,42 +134,42 @@
 
         <dt>
 
-          <code><a href="density.mle.html">density(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="density.mle_fit.html">density(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>PDF of the asymptotic distribution of an MLE.</dd>
 
         <dt>
 
-          <code><a href="density.mle_boot.html">density(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="density.mle_fit_boot.html">density(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
         <dd>PDF of the empirical distribution of bootstrap replicates.</dd>
 
         <dt>
 
-          <code><a href="dim.mle.html">dim(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="dim.mle_fit.html">dim(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Dimension (number of parameters) of an MLE.</dd>
 
         <dt>
 
-          <code><a href="dim.mle_boot.html">dim(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="dim.mle_fit_boot.html">dim(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
         <dd>Dimension (number of parameters) of a bootstrap MLE.</dd>
 
         <dt>
 
-          <code><a href="expectation.mle.html">expectation(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="expectation.mle_fit.html">expectation(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Expectation operator applied to `x` of type `mle` with respect to a function `g`. That is, `E(g(x))`.</dd>
+        <dd>Expectation operator applied to `x` of type `mle_fit` with respect to a function `g`. That is, `E(g(x))`.</dd>
 
         <dt>
 
-          <code><a href="inv_cdf.mle.html">inv_cdf(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="inv_cdf.mle_fit.html">inv_cdf(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Quantile function of the asymptotic distribution of an MLE.</dd>
@@ -200,14 +179,14 @@
           <code><a href="is_mle.html">is_mle()</a></code>
 
         </dt>
-        <dd>Determine if an object `x` is an `mle` object.</dd>
+        <dd>Determine if an object `x` is an `mle_fit` object.</dd>
 
         <dt>
 
           <code><a href="is_mle_boot.html">is_mle_boot()</a></code>
 
         </dt>
-        <dd>Determine if an object is an `mle_boot` object.</dd>
+        <dd>Determine if an object is an `mle_fit_boot` object.</dd>
 
         <dt>
 
@@ -218,42 +197,28 @@
 
         <dt>
 
-          <code><a href="logLik.mle.html">logLik(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="logLik.mle_fit.html">logLik(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Extract log-likelihood from an `mle` object.</dd>
+        <dd>Log-likelihood of an <code>mle_fit</code> object.</dd>
 
         <dt>
 
-          <code><a href="loglik_val.html">loglik_val()</a></code>
-
-        </dt>
-        <dd>Generic method for obtaining the log-likelihood value of a fitted MLE object.</dd>
-
-        <dt>
-
-          <code><a href="loglik_val.mle.html">loglik_val(<i>&lt;mle&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Method for obtaining the log-likelihood of an `mle` object.</dd>
-
-        <dt>
-
-          <code><a href="marginal.mle.html">marginal(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="marginal.mle_fit.html">marginal(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Method for obtaining the marginal distribution of an MLE that is based on asymptotic assumptions:</dd>
 
         <dt>
 
-          <code><a href="mean.mle.html">mean(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="mean.mle_fit.html">mean(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Mean of the asymptotic distribution of an MLE.</dd>
 
         <dt>
 
-          <code><a href="mean.mle_boot.html">mean(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="mean.mle_fit_boot.html">mean(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
         <dd>Mean of bootstrap replicates.</dd>
@@ -263,7 +228,7 @@
           <code><a href="mle.html">mle()</a></code>
 
         </dt>
-        <dd>Constructor for making `mle` objects, which provides a common interface for maximum likelihood estimators.</dd>
+        <dd>Constructor for making `mle_fit` objects, which provides a common interface for maximum likelihood estimators.</dd>
 
         <dt>
 
@@ -277,14 +242,7 @@
           <code><a href="mle_numerical.html">mle_numerical()</a></code>
 
         </dt>
-        <dd>This function takes the output of `optim`, `newton_raphson`, or `sim_anneal` and turns it into an `mle_numerical` (subclass of `mle`) object.</dd>
-
-        <dt>
-
-          <code><a href="mle_weighted.html">mle_weighted()</a></code>
-
-        </dt>
-        <dd>Accepts a list of `mle` objects for some parameter, say `theta`, and combines them into a single estimator `mle_weighted`.</dd>
+        <dd>This function takes the output of `optim`, `newton_raphson`, or `sim_anneal` and turns it into an `mle_fit_numerical` (subclass of `mle_fit`) object.</dd>
 
         <dt>
 
@@ -295,73 +253,73 @@
 
         <dt>
 
-          <code><a href="mse.mle.html">mse(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="mse.mle_fit.html">mse(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Computes the MSE of an `mle` object.</dd>
+        <dd>Computes the MSE of an `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="mse.mle_boot.html">mse(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="mse.mle_fit_boot.html">mse(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
         <dd>Computes the estimate of the MSE of a `boot` object.</dd>
 
         <dt>
 
-          <code><a href="nobs.mle.html">nobs(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="nobs.mle_fit.html">nobs(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for obtaining the number of observations in the sample used by an `mle`.</dd>
+        <dd>Method for obtaining the number of observations in the sample used by an `mle_fit`.</dd>
 
         <dt>
 
-          <code><a href="nobs.mle_boot.html">nobs(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="nobs.mle_fit_boot.html">nobs(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for obtaining the number of observations in the sample used by an `mle`.</dd>
+        <dd>Method for obtaining the number of observations in the sample used by an `mle_fit_boot`.</dd>
 
         <dt>
 
-          <code><a href="nparams.mle.html">nparams(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="nparams.mle_fit.html">nparams(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for obtaining the number of parameters of an `mle` object.</dd>
+        <dd>Method for obtaining the number of parameters of an `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="nparams.mle_boot.html">nparams(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="nparams.mle_fit_boot.html">nparams(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
         <dd>Method for obtaining the number of parameters of an `boot` object.</dd>
 
         <dt>
 
-          <code><a href="obs.mle.html">obs(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="obs.mle_fit.html">obs(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for obtaining the observations used by the `mle` object `x`.</dd>
+        <dd>Method for obtaining the observations used by the `mle_fit` object `x`.</dd>
 
         <dt>
 
-          <code><a href="obs.mle_boot.html">obs(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="obs.mle_fit_boot.html">obs(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for obtaining the observations used by the `mle`.</dd>
+        <dd>Method for obtaining the observations used by the `mle_fit_boot`.</dd>
 
         <dt>
 
           <code><a href="observed_fim.html">observed_fim()</a></code>
 
         </dt>
-        <dd>Generic method for computing the observed FIM of an `mle` object.</dd>
+        <dd>Generic method for computing the observed FIM of an `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="observed_fim.mle.html">observed_fim(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="observed_fim.mle_fit.html">observed_fim(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Function for obtaining the observed FIM of an `mle` object.</dd>
+        <dd>Function for obtaining the observed FIM of an `mle_fit` object.</dd>
 
         <dt>
 
@@ -372,21 +330,21 @@
 
         <dt>
 
-          <code><a href="orthogonal.mle.html">orthogonal(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="orthogonal.mle_fit.html">orthogonal(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for determining the orthogonal components of an `mle` object `x`.</dd>
+        <dd>Method for determining the orthogonal components of an `mle_fit` object `x`.</dd>
 
         <dt>
 
-          <code><a href="params.mle.html">params(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="params.mle_fit.html">params(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for obtaining the parameters of an `mle` object.</dd>
+        <dd>Method for obtaining the parameters of an `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="params.mle_boot.html">params(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="params.mle_fit_boot.html">params(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
         <dd>Method for obtaining the parameters of an `boot` object.</dd>
@@ -400,45 +358,45 @@
 
         <dt>
 
-          <code><a href="pred.mle.html">pred(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="pred.mle_fit.html">pred(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Estimate of predictive interval of `T|data` using Monte Carlo integration.</dd>
 
         <dt>
 
-          <code><a href="print.mle.html">print(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="print.mle_fit.html">print(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Print method for `mle` objects.</dd>
+        <dd>Print method for `mle_fit` objects.</dd>
 
         <dt>
 
-          <code><a href="print.summary_mle.html">print(<i>&lt;summary_mle&gt;</i>)</a></code>
+          <code><a href="print.summary_mle_fit.html">print(<i>&lt;summary_mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Function for printing a `summary` object for an `mle` object.</dd>
+        <dd>Function for printing a `summary` object for an `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="rmap.mle.html">rmap(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="rmap.mle_fit.html">rmap(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Computes the distribution of `g(x)` where `x` is an `mle` object.</dd>
+        <dd>Computes the distribution of `g(x)` where `x` is an `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="sampler.mle.html">sampler(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="sampler.mle_fit.html">sampler(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for sampling from an `mle` object.</dd>
+        <dd>Method for sampling from an `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="sampler.mle_boot.html">sampler(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="sampler.mle_fit_boot.html">sampler(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
-        <dd>Method for sampling from an `mle_boot` object.</dd>
+        <dd>Method for sampling from an `mle_fit_boot` object.</dd>
 
         <dt>
 
@@ -449,10 +407,10 @@
 
         <dt>
 
-          <code><a href="score_val.mle.html">score_val(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="score_val.mle_fit.html">score_val(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Computes the score of an `mle` object (score evaluated at the MLE).</dd>
+        <dd>Computes the score of an `mle_fit` object (score evaluated at the MLE).</dd>
 
         <dt>
 
@@ -463,35 +421,35 @@
 
         <dt>
 
-          <code><a href="se.mle.html">se(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="se.mle_fit.html">se(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Function for obtaining an estimate of the standard error of the MLE object `x`.</dd>
 
         <dt>
 
-          <code><a href="summary.mle.html">summary(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="summary.mle_fit.html">summary(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Function for obtaining a summary of `object`, which is a fitted `mle` object.</dd>
+        <dd>Function for obtaining a summary of `object`, which is a fitted `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="sup.mle.html">sup(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="sup.mle_fit.html">sup(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
         <dd>Support of the asymptotic distribution of an MLE.</dd>
 
         <dt>
 
-          <code><a href="vcov.mle.html">vcov(<i>&lt;mle&gt;</i>)</a></code>
+          <code><a href="vcov.mle_fit.html">vcov(<i>&lt;mle_fit&gt;</i>)</a></code>
 
         </dt>
-        <dd>Computes the variance-covariance matrix of `mle` object.</dd>
+        <dd>Computes the variance-covariance matrix of `mle_fit` object.</dd>
 
         <dt>
 
-          <code><a href="vcov.mle_boot.html">vcov(<i>&lt;mle_boot&gt;</i>)</a></code>
+          <code><a href="vcov.mle_fit_boot.html">vcov(<i>&lt;mle_fit_boot&gt;</i>)</a></code>
 
         </dt>
         <dd>Computes the variance-covariance matrix of `boot` object. Note: This impelements the `vcov` method defined in `stats`.</dd>

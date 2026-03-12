@@ -12,7 +12,7 @@ combine(x, ...)
 # S3 method for class 'list'
 combine(x, ...)
 
-# S3 method for class 'mle'
+# S3 method for class 'mle_fit'
 combine(x, ...)
 ```
 
@@ -20,15 +20,15 @@ combine(x, ...)
 
 - x:
 
-  An `mle` object, or a list of `mle` objects.
+  An `mle_fit` object, or a list of `mle_fit` objects.
 
 - ...:
 
-  Additional `mle` objects to combine.
+  Additional `mle_fit` objects to combine.
 
 ## Value
 
-An `mle` object representing the optimally weighted combination.
+An `mle_fit` object representing the optimally weighted combination.
 
 ## Details
 
@@ -45,12 +45,8 @@ The combined estimator has:
 When the Fisher information matrix is not directly available but the
 variance-covariance matrix is, the FIM is computed as `ginv(vcov)`.
 
-For the legacy interface that accepts a list, see
-[`mle_weighted`](https://queelius.github.io/algebraic.mle/reference/mle_weighted.md).
-
 ## See also
 
-[`mle_weighted`](https://queelius.github.io/algebraic.mle/reference/mle_weighted.md),
 [`joint`](https://queelius.github.io/algebraic.mle/reference/joint.md)
 
 ## Examples

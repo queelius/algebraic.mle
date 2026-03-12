@@ -1,5 +1,51 @@
 # Changelog
 
+## algebraic.mle 2.0.0
+
+### Breaking changes
+
+- S3 class renamed from `"mle"` to `"mle_fit"` to resolve name collision
+  with [`stats4::mle`](https://rdrr.io/r/stats4/mle.html) (S4 class).
+  Subclasses follow: `"mle_fit_numerical"`, `"mle_fit_boot"`,
+  `"mle_fit_rmap"`. Constructor function names
+  ([`mle()`](https://queelius.github.io/algebraic.mle/reference/mle.md),
+  [`mle_numerical()`](https://queelius.github.io/algebraic.mle/reference/mle_numerical.md),
+  [`mle_boot()`](https://queelius.github.io/algebraic.mle/reference/mle_boot.md))
+  are unchanged.
+
+- Removed `aic()`, `bic()`, and `loglik_val()` generics. Use standard R
+  generics [`AIC()`](https://rdrr.io/r/stats/AIC.html),
+  [`BIC()`](https://rdrr.io/r/stats/AIC.html), and
+  [`logLik()`](https://rdrr.io/r/stats/logLik.html) instead.
+  [`logLik()`](https://rdrr.io/r/stats/logLik.html) returns a proper
+  `"logLik"` object with `df` and `nobs` attributes, so
+  [`AIC()`](https://rdrr.io/r/stats/AIC.html) and
+  [`BIC()`](https://rdrr.io/r/stats/AIC.html) work automatically via
+  `stats::AIC.default`.
+
+- Added
+  [`coef.mle_fit()`](https://queelius.github.io/algebraic.mle/reference/coef.mle_fit.md)
+  method delegating to
+  [`params()`](https://queelius.github.io/algebraic.dist/reference/params.html)
+  for standard R compatibility.
+
+- Removed `mle_weighted()` constructor and `"mle_weighted"` class. Use
+  [`combine()`](https://queelius.github.io/algebraic.mle/reference/combine.md)
+  instead — same inverse-variance weighting with better error handling
+  and a variadic API.
+
+### Improvements
+
+- Replaced `1:n` patterns with
+  [`seq_len()`](https://rdrr.io/r/base/seq.html) throughout to avoid
+  edge-case bugs
+- Vectorized PI computation in
+  [`pred()`](https://queelius.github.io/algebraic.mle/reference/pred.md)
+- Modernized package documentation (`"_PACKAGE"` sentinel)
+- Cleaned up `fixing/` directory (removed dead experimental code)
+- Integer coercion for `n` parameter in
+  [`rmap()`](https://queelius.github.io/algebraic.dist/reference/rmap.html)
+
 ## algebraic.mle 1.2.0
 
 ### New features
@@ -57,7 +103,7 @@
   - Parameter extraction (`params`, `nparams`)
   - Variance-covariance (`vcov`, `se`)
   - Confidence intervals (`confint`)
-  - Model comparison (`aic`, `loglik_val`)
+  - Model comparison (`AIC`, `logLik`)
   - Bias and MSE estimation (`bias`, `mse`)
   - Fisher information (`observed_fim`)
   - Sampling from MLE distribution (`sampler`)

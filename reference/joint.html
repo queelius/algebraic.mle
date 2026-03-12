@@ -9,7 +9,7 @@ a joint MLE with block-diagonal variance-covariance structure."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@ a joint MLE with block-diagonal variance-covariance structure.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">joint</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for class 'mle'</span></span>
+<span><span class="co"># S3 method for class 'mle_fit'</span></span>
 <span><span class="fu">joint</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -60,16 +60,16 @@ a joint MLE with block-diagonal variance-covariance structure.</p>
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>An <code>mle</code> object.</p></dd>
+<dd><p>An <code>mle_fit</code> object.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional <code>mle</code> objects to join.</p></dd>
+<dd><p>Additional <code>mle_fit</code> objects to join.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An <code>mle</code> object representing the joint MLE.</p>
+    <p>An <code>mle_fit</code> object representing the joint MLE.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -101,7 +101,7 @@ a joint MLE with block-diagonal variance-covariance structure.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Existing algebra works on the joint:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/marginal.html" class="external-link">marginal</a></span><span class="op">(</span><span class="va">j</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>   <span class="co"># recover shape params</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maximum likelihood estimator of type mle is normally distributed.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maximum likelihood estimator of type mle_fit is normally distributed.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> The estimates of the parameters are given by:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   k   s </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1.5 3.2 </span>

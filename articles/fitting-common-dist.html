@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -143,7 +143,7 @@ Weibull and the Normal distributions, and compare the results.</p>
 </h2>
 <p>We will use maximum likelihood estimation (MLE) to estimate the
 parameters of both the Weibull and the Normal, and then wrap these
-estimates into an <code>mle</code> object provided by
+estimates into an <code>mle_fit</code> object provided by
 <code>algebraic.mle</code> package:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_normal</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
@@ -497,7 +497,7 @@ MLE, denoted by
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">r</span><span class="op">)</span></span>
 <span>    <span class="va">mles.sub</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp.sub</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_weighted.html">mle_weighted</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span></span>
+<span><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine.html">combine</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span></span>
 <span><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></span></code></pre></div>
 <p>We show the results in the following R code. First, we show the
 weighted MLE and its MSE:</p>
@@ -543,10 +543,10 @@ and returns the MLE of the parameters and then pass it to
 <p>We already printed out the <code>theta.boot</code> object, which
 provided a lot of information about it, but we can obtain specified
 statistics from the Bootstrap MLE using the standard interface in
-<code>algorithmic.mle</code>, e.g.:</p>
+<code>algebraic.mle</code>, e.g.:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">theta.boot</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Maximum likelihood estimator of type mle_boot is normally distributed.</span></span>
+<span><span class="co">#&gt; Maximum likelihood estimator of type mle_fit_boot is normally distributed.</span></span>
 <span><span class="co">#&gt; The estimates of the parameters are given by:</span></span>
 <span><span class="co">#&gt; [1] 1.95 9.27</span></span>
 <span><span class="co">#&gt; The standard error is  0.153 0.501 .</span></span>
@@ -647,9 +647,9 @@ is the number of parameters in the model. The AIC is a measure of the
 tradeoff between the goodness of fit and the complexity of the
 model.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">theta.weibull</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">theta.weibull</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 573</span></span>
-<span><span class="fu"><a href="../reference/aic.html">aic</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">theta.hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 583</span></span></code></pre></div>
 <p>A lower AIC value indicates a better fit. Thus, according to this
 measure, the Weibull distribution is the better fit.</p>
@@ -718,11 +718,12 @@ and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>
 and then compute the empirical quantiles.</p>
 <p>The function <code>pred</code> takes as arguments <code>x</code>, in
-this case an <code>mle</code> object, and a sampler for the distribution
-of the random variable of interest, in this case <code>rweibull</code>
-(the sampler for the normal distribution). The sampler must be
-compatible with the output of <code>point(x)</code>, whether that output
-be a scalar or a vector. Here is how we compute the PI for
+this case an <code>mle_fit</code> object, and a sampler for the
+distribution of the random variable of interest, in this case
+<code>rweibull</code> (the sampler for the normal distribution). The
+sampler must be compatible with the output of <code>point(x)</code>,
+whether that output be a scalar or a vector. Here is how we compute the
+PI for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>T</mi><mo accent="true">̂</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{T}_{n+1}</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pred.html">pred</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">theta.hat</span>, samp<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">=</span><span class="fl">1</span>, <span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>,<span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,<span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>

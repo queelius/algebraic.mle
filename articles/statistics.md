@@ -1,20 +1,19 @@
 # Statistics and characteristics of the MLE
 
-[![GPL-3
-License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-`algebraic.mle` is an R package that provides an algebra over Maximum
-Likelihood Estimators (MLEs). These estimators possess many desirable,
-well-defined statistical properties which the package helps you
-manipulate and utilize.
+`algebraic.mle` provides an algebra over maximum likelihood estimators
+(MLEs). Under regularity conditions, any MLE is asymptotically normal
+with variance given by the inverse Fisher information. The package
+exploits this structure with operations for composition (`joint`,
+`combine`), transformation (`rmap`), and bridging to distribution
+algebra (`as_dist`).
 
 ## Installation
 
-The R package `algebraic.mle` can be installed from GitHub by using the
-devtools package in R:
-
 ``` r
-install.packages("devtools")
+# From CRAN
+install.packages("algebraic.mle")
+
+# Development version from GitHub
 devtools::install_github("queelius/algebraic.mle")
 ```
 
@@ -56,11 +55,9 @@ fit_normal <- function(data) {
 }
 ```
 
-As you can see, we return an `mle` object, and then we give it a
-sub-class `mle_normal` (it is also a subclass of `mle` and
-`algebraic.dist`’s `dist`) so we can specialize some of the methods for
-MLE of the normal distribution, e.g., `bias.mle_normal` which we show
-later.
+As you can see, we return an `mle_fit` object, and then we give it a
+sub-class `mle_normal` so we can specialize some of the methods for MLE
+of the normal distribution, e.g., `bias.mle_normal` which we show later.
 
 ## Monte-carlo (MC) simulation of the sampling distribution of the MLE
 
@@ -700,7 +697,7 @@ a large number of draws from the joint distribution of
 ${\widehat{X}}_{n + 1}$ and $\widehat{\theta}$ and then compute the
 empirical quantiles.
 
-The function `pred` takes as arguments `x`, in this case an `mle`
+The function `pred` takes as arguments `x`, in this case an `mle_fit`
 object, and a sampler for the distribution of the random variable of
 interest, in this case `rnorm` (the sampler for the normal
 distribution). The sampler must be compatible with the parameter value
@@ -769,7 +766,7 @@ mles.sub <- list(length = r)
 for (i in 1:r)
     mles.sub[[i]] <- fit_normal(samp.sub[i,])
 
-mle.wt <- mle_weighted(mles.sub)
+mle.wt <- combine(mles.sub)
 mle <- fit_normal(samp)
 ```
 
@@ -778,7 +775,8 @@ MLE and its MSE:
 
 ``` r
 params(mle.wt)
-#> [1] 1.221 0.778
+#>    mu   var 
+#> 1.221 0.778
 vcov(mle.wt)
 #>                    [,1]               [,2]
 #> [1,] 0.0080147769950214 0.0000000000000257

@@ -1,6 +1,6 @@
-# Determine if an object is an \`mle_boot\` object.
+# Determine if an object is an \`mle_fit_boot\` object.
 
-Determine if an object is an \`mle_boot\` object.
+Determine if an object is an \`mle_fit_boot\` object.
 
 ## Usage
 
@@ -16,12 +16,12 @@ is_mle_boot(x)
 
 ## Value
 
-Logical TRUE if `x` is an `mle_boot` object, FALSE otherwise.
+Logical TRUE if `x` is an `mle_fit_boot` object, FALSE otherwise.
 
 ## Examples
 
 ``` r
-# Create a simple mle object (not bootstrap)
+# Create a simple mle_fit object (not bootstrap)
 fit_mle <- mle(theta.hat = 5, sigma = matrix(0.1))
 is_mle_boot(fit_mle)  # FALSE
 #> [1] FALSE

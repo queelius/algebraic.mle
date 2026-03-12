@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,7 +104,7 @@ reliability inference.</p>
 <p>The package provides three constructors for wrapping estimation
 results into the MLE algebra. Each produces an object that supports the
 full interface: <code><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params()</a></code>, <code><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov()</a></code>,
-<code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>, <code><a href="../reference/se.html">se()</a></code>, <code><a href="../reference/aic.html">aic()</a></code>, and the
+<code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>, <code><a href="../reference/se.html">se()</a></code>, <code><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC()</a></code>, and the
 algebraic operations.</p>
 <div class="section level3">
 <h3 id="direct-construction-with-mle">Direct construction with <code>mle()</code><a class="anchor" aria-label="anchor" href="#direct-construction-with-mle"></a>
@@ -165,18 +165,19 @@ bootstrap the MLE and wrap the <code>boot</code> object:</p>
 <span></span>
 <span><span class="va">boot_result</span> <span class="op">&lt;-</span> <span class="fu">boot</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">y</span>,</span>
-<span>  statistic <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">i</span><span class="op">)</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  statistic <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lambda <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">999</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fit_boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="va">boot_result</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">fit_boot</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2.019</span></span>
+<span><span class="co">#&gt; lambda </span></span>
+<span><span class="co">#&gt;  2.019</span></span>
 <span><span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">fit_boot</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.4629</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit_boot</span>, type <span class="op">=</span> <span class="st">"perc"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         2.5% 97.5%</span></span>
-<span><span class="co">#&gt; param1 1.367 3.175</span></span></code></pre></div>
+<span><span class="co">#&gt; lambda 1.367 3.175</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -335,14 +336,16 @@ Transform the MLE:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># g: rate -&gt; mean lifetime</span></span>
-<span><span class="va">fit_lifetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap</a></span><span class="op">(</span><span class="va">fit_rate</span>, <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, method <span class="op">=</span> <span class="st">"delta"</span><span class="op">)</span></span>
+<span><span class="va">fit_lifetime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap</a></span><span class="op">(</span><span class="va">fit_rate</span>, <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean_life <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"delta"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">fit_lifetime</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 50</span></span>
+<span><span class="co">#&gt; mean_life </span></span>
+<span><span class="co">#&gt;        50</span></span>
 <span><span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">fit_lifetime</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2.5</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit_lifetime</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        2.5% 97.5%</span></span>
-<span><span class="co">#&gt; param1 45.1  54.9</span></span></code></pre></div>
+<span><span class="co">#&gt;           2.5% 97.5%</span></span>
+<span><span class="co">#&gt; mean_life 45.1  54.9</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="multivariate-example-component-rates-to-system-reliability">Multivariate example: component rates to system reliability<a class="anchor" aria-label="anchor" href="#multivariate-example-component-rates-to-system-reliability"></a>
@@ -362,20 +365,21 @@ R(t) = \exp(-\lambda_1 t) \cdot \exp(-\lambda_2 t) = \exp(-(\lambda_1 + \lambda_
 <span>  <span class="fu"><a href="../reference/mle.html">mle</a></span><span class="op">(</span>theta.hat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lambda2 <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0.003</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, nobs <span class="op">=</span> <span class="fl">80L</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># System reliability at t = 100 hours</span></span>
-<span><span class="va">t0</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="co"># System reliability at t = 10 hours</span></span>
+<span><span class="va">t0</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span><span class="va">R_mle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap</a></span><span class="op">(</span><span class="va">fit_rates</span>,</span>
-<span>  <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="va">t0</span><span class="op">)</span>,</span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>R_t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="va">t0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"delta"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">R_mle</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.0009119</span></span>
+<span><span class="co">#&gt;    R_t </span></span>
+<span><span class="co">#&gt; 0.4966</span></span>
 <span><span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">R_mle</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.0002884</span></span>
+<span><span class="co">#&gt; [1] 0.0157</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">R_mle</span><span class="op">)</span></span>
-<span><span class="co">#&gt;             2.5%    97.5%</span></span>
-<span><span class="co">#&gt; param1 0.0003467 0.001477</span></span></code></pre></div>
+<span><span class="co">#&gt;       2.5%  97.5%</span></span>
+<span><span class="co">#&gt; R_t 0.4658 0.5274</span></span></code></pre></div>
 <p>The delta method automatically computes the Jacobian via numerical
 differentiation (using <code><a href="https://rdrr.io/pkg/numDeriv/man/jacobian.html" class="external-link">numDeriv::jacobian</a></code>) and propagates
 the covariance.</p>
@@ -395,11 +399,12 @@ composed.</p>
 <span><span class="co">#&gt; Normal distribution (mu = 0.02, var = 1e-06)</span></span></code></pre></div>
 <p>This is useful when you want to reason about the sampling
 distribution of the MLE as a distribution object. For instance, you can
-compute probabilities that the true parameter exceeds a threshold:</p>
+compute the probability that the true rate exceeds a regulatory
+threshold:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># P(lambda &gt; 0.025) under the asymptotic distribution</span></span>
-<span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/cdf.html" class="external-link">cdf</a></span><span class="op">(</span><span class="va">d1</span><span class="op">)</span><span class="op">(</span><span class="fl">0.025</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2.867e-07</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># P(lambda &gt; 0.021) under the asymptotic distribution</span></span>
+<span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/cdf.html" class="external-link">cdf</a></span><span class="op">(</span><span class="va">d1</span><span class="op">)</span><span class="op">(</span><span class="fl">0.021</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.1587</span></span></code></pre></div>
 <p>For bootstrap MLEs, <code><a href="https://queelius.github.io/algebraic.dist/reference/as_dist.html" class="external-link">as_dist()</a></code> returns an empirical
 distribution built from the bootstrap replicates:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -416,7 +421,7 @@ operations.</p>
 components with exponential lifetimes. Separate accelerated life tests
 estimate each component’s failure rate. We want to infer the system
 reliability at a mission time of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">t = 500</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">t = 50</annotation></semantics></math>
 hours, including a confidence interval.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -465,35 +470,35 @@ hours, including a confidence interval.</p>
 <span><span class="co">#&gt; [1,] 3.336e-08 0.000e+00</span></span>
 <span><span class="co">#&gt; [2,] 0.000e+00 5.142e-07</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># --- Step 3: Transform to system reliability at t = 500 ---</span></span>
-<span><span class="va">mission_time</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
+<code class="sourceCode R"><span><span class="co"># --- Step 3: Transform to system reliability at t = 50 ---</span></span>
+<span><span class="va">mission_time</span> <span class="op">&lt;-</span> <span class="fl">50</span></span>
 <span><span class="va">R_system</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap</a></span><span class="op">(</span><span class="va">fit_system</span>,</span>
-<span>  <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="va">mission_time</span><span class="op">)</span>,</span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>R_sys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="va">mission_time</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"delta"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"System reliability R(500):"</span>, <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">R_system</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; System reliability R(500): 0.004167</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"SE of R(500):             "</span>, <span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">R_system</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; SE of R(500):              0.001542</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"System reliability R(50):"</span>, <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">R_system</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; System reliability R(50): 0.5781</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"SE of R(50):             "</span>, <span class="fu"><a href="../reference/se.html">se</a></span><span class="op">(</span><span class="va">R_system</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; SE of R(50):              0.02139</span></span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># --- Step 4: Inference ---</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"95% CI for R(500):\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 95% CI for R(500):</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"95% CI for R(50):\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 95% CI for R(50):</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">R_system</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            2.5%    97.5%</span></span>
-<span><span class="co">#&gt; param1 0.001145 0.007188</span></span></code></pre></div>
+<span><span class="co">#&gt;         2.5% 97.5%</span></span>
+<span><span class="co">#&gt; R_sys 0.5361  0.62</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># --- Step 5: Bridge to distribution algebra ---</span></span>
 <span><span class="va">R_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/as_dist.html" class="external-link">as_dist</a></span><span class="op">(</span><span class="va">R_system</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Asymptotic distribution of R(500):"</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Asymptotic distribution of R(500):</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Asymptotic distribution of R(50):"</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Asymptotic distribution of R(50):</span></span>
 <span><span class="va">R_dist</span></span>
-<span><span class="co">#&gt; Normal distribution (mu = 0.00416658, var = 2.3765e-06)</span></span>
+<span><span class="co">#&gt; Normal distribution (mu = 0.578067, var = 0.000457439)</span></span>
 <span></span>
-<span><span class="co"># Probability that system reliability exceeds 90%</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"P(R(500) &gt; 0.90):"</span>, <span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/cdf.html" class="external-link">cdf</a></span><span class="op">(</span><span class="va">R_dist</span><span class="op">)</span><span class="op">(</span><span class="fl">0.90</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; P(R(500) &gt; 0.90): 0</span></span></code></pre></div>
+<span><span class="co"># Probability that system reliability exceeds 55%</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"P(R(50) &gt; 0.55):"</span>, <span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/cdf.html" class="external-link">cdf</a></span><span class="op">(</span><span class="va">R_dist</span><span class="op">)</span><span class="op">(</span><span class="fl">0.55</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; P(R(50) &gt; 0.55): 0.9053</span></span></code></pre></div>
 <p>The pipeline reads as a chain of algebraic operations: two
 independent MLEs are composed via <code><a href="../reference/joint.html">joint()</a></code>, transformed to
 the quantity of interest via <code><a href="https://queelius.github.io/algebraic.dist/reference/rmap.html" class="external-link">rmap()</a></code>, and then reasoned
