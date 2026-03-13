@@ -20,3 +20,9 @@ It creates a sampler for the `mle_fit` object. It returns a function
 that accepts a single parameter `n` denoting the number of samples
 to draw from the `mle_fit` object.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+s <- sampler(fit)
+head(s(10))
+}

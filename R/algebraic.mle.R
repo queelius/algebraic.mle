@@ -71,6 +71,11 @@ NULL
 #' @param x the object to obtain the fisher information of
 #' @param ... additional arguments to pass
 #' @return The observed Fisher Information Matrix.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+#'   loglike = -120, nobs = 100L)
+#' observed_fim(fit)
 #' @export
 observed_fim <- function(x, ...) {
     UseMethod("observed_fim", x)
@@ -82,6 +87,10 @@ observed_fim <- function(x, ...) {
 #' @param x the object to compute the MSE of
 #' @param theta the true parameter value
 #' @return The mean squared error (matrix or scalar).
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' mse(fit, theta = c(mu = 5, sigma2 = 4))
 #' @export
 mse <- function(x, theta) {
     UseMethod("mse", x)
@@ -95,6 +104,10 @@ mse <- function(x, theta) {
 #' @param ... pass additional arguments
 #' @return The bias of the estimator. The return type depends on the specific
 #'         method.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' bias(fit, theta = c(mu = 5, sigma2 = 4))
 #' @export
 bias <- function(x, theta = NULL, ...) {
     UseMethod("bias", x)
@@ -107,6 +120,11 @@ bias <- function(x, theta = NULL, ...) {
 #' @param x the object to compute the score of.
 #' @param ... pass additional arguments
 #' @return The score vector evaluated at the MLE.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), score = c(0.001, -0.002),
+#'   loglike = -120, nobs = 100L)
+#' score_val(fit)
 #' @export
 score_val <- function(x, ...) {
     UseMethod("score_val", x)
@@ -117,6 +135,10 @@ score_val <- function(x, ...) {
 #' @param x the estimator
 #' @param ... additional arguments to pass
 #' @return Vector of standard errors for each parameter.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' se(fit)
 #' @export
 se <- function(x, ...) {
     UseMethod("se", x)
@@ -128,6 +150,11 @@ se <- function(x, ...) {
 #' @param tol the tolerance for determining if a number is close enough to zero
 #' @param ... additional arguments to pass
 #' @return Logical vector or matrix indicating which parameters are orthogonal.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+#'   loglike = -120, nobs = 100L)
+#' orthogonal(fit)
 #' @export
 orthogonal <- function(x, tol, ...) {
     UseMethod("orthogonal", x)
@@ -140,6 +167,11 @@ orthogonal <- function(x, tol, ...) {
 #' @param samp a sampler for random variable that is parameterized by mle `x`
 #' @param ... additional arguments to pass
 #' @return Matrix of predictive confidence intervals.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+#' \donttest{
+#' pred(fit, samp = function(n, theta) rnorm(n, theta[1], 1))
+#' }
 #' @export
 pred <- function(x, samp = NULL, alpha = .05, ...) {
     UseMethod("pred", x)

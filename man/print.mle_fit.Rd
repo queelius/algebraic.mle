@@ -17,3 +17,8 @@ Invisibly returns \code{x}.
 \description{
 Print method for `mle_fit` objects.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+print(fit)
+}

@@ -63,6 +63,10 @@ mle <- function(theta.hat,
 #' @param x the `mle_fit` object to print
 #' @param ... additional arguments to pass
 #' @return Invisibly returns \code{x}.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' print(fit)
 #' @export
 print.mle_fit <- function(x, ...) {
     print(summary(x, ...))
@@ -74,6 +78,10 @@ print.mle_fit <- function(x, ...) {
 #' @param object the `mle_fit` object to obtain the variance-covariance of
 #' @param ... additional arguments to pass (not used)
 #' @return the variance-covariance matrix
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' vcov(fit)
 #' @export
 vcov.mle_fit <- function(object, ...) {
     object$sigma
@@ -84,6 +92,10 @@ vcov.mle_fit <- function(object, ...) {
 #'
 #' @param x the `mle_fit` object to obtain the parameters of
 #' @return Numeric vector of parameter estimates.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' params(fit)
 #' @export
 params.mle_fit <- function(x) {
     x$theta.hat
@@ -94,6 +106,10 @@ params.mle_fit <- function(x) {
 #'
 #' @param x the `mle_fit` object to obtain the number of parameters of
 #' @return Integer number of parameters.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' nparams(fit)
 #' @importFrom algebraic.dist params nparams
 #' @export
 nparams.mle_fit <- function(x) {
@@ -109,6 +125,10 @@ nparams.mle_fit <- function(x) {
 #' @param object the \code{mle_fit} object
 #' @param ... additional arguments (not used)
 #' @return A \code{"logLik"} object.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' logLik(fit)
 #' @importFrom stats logLik
 #' @export
 logLik.mle_fit <- function(object, ...) {
@@ -127,6 +147,10 @@ logLik.mle_fit <- function(object, ...) {
 #' @param object the \code{mle_fit} object
 #' @param ... additional arguments (not used)
 #' @return Named numeric vector of parameter estimates.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' coef(fit)
 #' @importFrom stats coef
 #' @export
 coef.mle_fit <- function(object, ...) {
@@ -139,6 +163,10 @@ coef.mle_fit <- function(object, ...) {
 #' @param object the `mle_fit` object to obtain the number of observations for
 #' @param ... additional arguments to pass (not used)
 #' @return Integer number of observations, or NULL if not available.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' nobs(fit)
 #' @importFrom stats nobs
 #' @export
 nobs.mle_fit <- function(object, ...) {
@@ -149,6 +177,10 @@ nobs.mle_fit <- function(object, ...) {
 #'
 #' @param x the `mle_fit` object to obtain the number of observations for
 #' @return The observation data used to fit the MLE, or NULL if not stored.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), obs = rnorm(100), nobs = 100L)
+#' head(obs(fit))
 #' @export
 obs.mle_fit <- function(x) {
     x$obs
@@ -163,6 +195,10 @@ obs.mle_fit <- function(x) {
 #'                   the confidence intervals.
 #' @param ... additional arguments to pass
 #' @return Matrix of confidence intervals with columns for lower and upper bounds.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' confint(fit)
 #' @importFrom stats qt qnorm vcov nobs
 #' @importFrom algebraic.dist params
 #' @export
@@ -213,6 +249,11 @@ confint.mle_fit <- function(object, parm = NULL, level = .95,
 #' @param ... additional arguments to pass
 #' @return A function that takes parameter \code{n} and returns \code{n} samples
 #'   from the asymptotic distribution of the MLE.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' s <- sampler(fit)
+#' head(s(10))
 #' @importFrom stats rnorm vcov
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom algebraic.dist params nparams
@@ -249,6 +290,10 @@ sampler.mle_fit <- function(x, ...) {
 #'             then we let the bias method deal with it. Maybe it has a nice way
 #'             of estimating the bias.
 #' @return The MSE as a scalar (univariate) or matrix (multivariate).
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' mse(fit)
 #' @importFrom algebraic.dist nparams
 #' @importFrom stats vcov
 #' @export
@@ -276,6 +321,11 @@ mse.mle_fit <- function(x, theta = NULL) {
 #' @param x the `mle_fit` object to obtain the FIM of.
 #' @param ... pass additional arguments
 #' @return The observed Fisher Information Matrix, or NULL if not available.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+#'   nobs = 100L)
+#' observed_fim(fit)
 #' @export
 observed_fim.mle_fit <- function(x, ...) {
     x$info
@@ -287,6 +337,10 @@ observed_fim.mle_fit <- function(x, ...) {
 #' @param object the `mle_fit` object
 #' @param ... pass additional arguments
 #' @return An object of class \code{summary_mle_fit}.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' summary(fit)
 #' @export
 summary.mle_fit <- function(object, ...) {
     structure(list(x = object), class = c("summary_mle_fit", "summary"))
@@ -297,6 +351,10 @@ summary.mle_fit <- function(object, ...) {
 #' @param x the `summary_mle_fit` object
 #' @param ... pass additional arguments
 #' @return Invisibly returns \code{x}.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' print(summary(fit))
 #' @importFrom stats vcov AIC
 #' @importFrom algebraic.dist nparams params
 #' @export
@@ -334,6 +392,10 @@ print.summary_mle_fit <- function(x, ...) {
 #' @param ... additional arguments to pass (not used)
 #' @return Vector of standard errors, or matrix if \code{se.matrix = TRUE}, or
 #'   NULL if variance-covariance is not available.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' se(fit)
 #' @importFrom stats vcov
 #' @export
 se.mle_fit <- function(x, se.matrix = FALSE, ...) {
@@ -373,6 +435,11 @@ is_mle <- function(x) {
 #' @param ... pass additional arguments
 #' @return Logical matrix indicating which off-diagonal FIM elements are
 #'   approximately zero (orthogonal parameters), or NULL if FIM unavailable.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+#'   nobs = 100L)
+#' orthogonal(fit)
 #' @export
 orthogonal.mle_fit <- function(x, tol = sqrt(.Machine$double.eps), ...) {
     I <- observed_fim(x, ...)
@@ -391,6 +458,11 @@ orthogonal.mle_fit <- function(x, tol = sqrt(.Machine$double.eps), ...) {
 #' @param x the `mle_fit` object to compute the score of.
 #' @param ... additional arguments to pass (not used)
 #' @return The score vector evaluated at the MLE, or NULL if not available.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), score = c(0.001, -0.002),
+#'   nobs = 100L)
+#' score_val(fit)
 #' @export
 score_val.mle_fit <- function(x, ...) {
     x$score
@@ -409,6 +481,10 @@ score_val.mle_fit <- function(x, ...) {
 #' @param ... additional arguments to pass
 #' @return Numeric vector of zeros (asymptotic bias is zero under regularity
 #'   conditions).
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' bias(fit)
 #' @importFrom algebraic.dist nparams
 #' @export
 bias.mle_fit <- function(x, theta = NULL, ...) {
@@ -444,6 +520,11 @@ bias.mle_fit <- function(x, theta = NULL, ...) {
 #' @param ... additional arguments to pass into `samp`.
 #' @return Matrix with columns for mean, lower, and upper bounds of the
 #'   predictive interval.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+#' \donttest{
+#' pred(fit, samp = function(n, theta) rnorm(n, theta[1], 1))
+#' }
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom stats vcov quantile rnorm
 #' @importFrom algebraic.dist params
@@ -493,6 +574,11 @@ pred.mle_fit <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 #'   value - The estimate of the expectation
 #'   ci    - The confidence intervals for each component of the expectation
 #'   n     - The number of samples
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+#' \donttest{
+#' expectation(fit)
+#' }
 #' @importFrom algebraic.dist expectation_data expectation
 #' @importFrom utils modifyList
 #' @export
@@ -531,6 +617,10 @@ expectation.mle_fit <- function(
 #' @param indices The indices of the marginal distribution to obtain.
 #' @return An \code{mle_fit} object representing the marginal distribution for the
 #'   selected parameter indices.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' marginal(fit, 1)
 #' @importFrom algebraic.dist marginal params obs
 #' @importFrom stats vcov nobs
 #' @export
@@ -562,6 +652,10 @@ marginal.mle_fit <- function(x, indices) {
 #' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return A function computing the PDF at given points.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+#' f <- density(fit)
+#' f(5)
 #' @importFrom stats density
 #' @importFrom algebraic.dist normal mvn
 #' @export
@@ -574,6 +668,10 @@ density.mle_fit <- function(x, ...) {
 #' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return A function computing the CDF at given points.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+#' F <- cdf(fit)
+#' F(5)
 #' @importFrom algebraic.dist cdf
 #' @export
 cdf.mle_fit <- function(x, ...) {
@@ -585,6 +683,10 @@ cdf.mle_fit <- function(x, ...) {
 #' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return A function computing quantiles for given probabilities.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+#' q <- inv_cdf(fit)
+#' q(0.975)
 #' @importFrom algebraic.dist inv_cdf
 #' @export
 inv_cdf.mle_fit <- function(x, ...) {
@@ -595,6 +697,9 @@ inv_cdf.mle_fit <- function(x, ...) {
 #'
 #' @param x An \code{mle_fit} object.
 #' @return A support object (interval for normal distributions).
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+#' sup(fit)
 #' @importFrom algebraic.dist sup
 #' @export
 sup.mle_fit <- function(x) {
@@ -605,6 +710,10 @@ sup.mle_fit <- function(x) {
 #'
 #' @param x An \code{mle_fit} object.
 #' @return Integer; the number of parameters.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' dim(fit)
 #' @export
 dim.mle_fit <- function(x) {
     nparams(x)
@@ -618,6 +727,10 @@ dim.mle_fit <- function(x) {
 #' @param x An \code{mle_fit} object.
 #' @param ... Additional arguments (not used).
 #' @return Numeric vector of parameter estimates.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' mean(fit)
 #' @export
 mean.mle_fit <- function(x, ...) {
     params(x)
@@ -636,6 +749,10 @@ mean.mle_fit <- function(x, ...) {
 #' @param given_indices Integer vector of conditioned parameter indices.
 #' @param given_values Numeric vector of observed values.
 #' @return A \code{normal}, \code{mvn}, or \code{empirical_dist} object.
+#' @examples
+#' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+#'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+#' conditional(fit, given_indices = 2, given_values = 4)
 #' @importFrom algebraic.dist conditional
 #' @export
 conditional.mle_fit <- function(x, P = NULL, ...,

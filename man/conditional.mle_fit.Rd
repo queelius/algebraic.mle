@@ -26,3 +26,8 @@ observed values for other parameters. Uses the closed-form Schur complement
 for the multivariate normal. Returns a \code{dist} object (not an \code{mle_fit}),
 since conditioning loses the MLE context.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+conditional(fit, given_indices = 2, given_values = 4)
+}

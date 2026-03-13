@@ -22,3 +22,9 @@ Logical matrix indicating which off-diagonal FIM elements are
 Method for determining the orthogonal components of an `mle_fit` object
 `x`.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+  nobs = 100L)
+orthogonal(fit)
+}

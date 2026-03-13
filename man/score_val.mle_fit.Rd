@@ -18,3 +18,9 @@ The score vector evaluated at the MLE, or NULL if not available.
 If reguarlity conditions are satisfied, it should be zero (or approximately,
 if rounding errors occur).
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), score = c(0.001, -0.002),
+  nobs = 100L)
+score_val(fit)
+}

@@ -19,3 +19,8 @@ An object of class \code{summary_mle_fit}.
 Function for obtaining a summary of `object`, which is a fitted
 `mle_fit` object.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+summary(fit)
+}

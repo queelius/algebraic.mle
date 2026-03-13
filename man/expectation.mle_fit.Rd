@@ -36,3 +36,9 @@ the sample mean and Var(g(x)) with the sigma^2/n, where sigma^2
 is the sample variance of g(x) and n is the number of samples.
 From these, we construct the CI.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+\donttest{
+expectation(fit)
+}
+}

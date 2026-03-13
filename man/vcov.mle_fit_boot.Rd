@@ -19,3 +19,9 @@ The variance-covariance matrix estimated from bootstrap replicates.
 Computes the variance-covariance matrix of `boot` object.
 Note: This impelements the `vcov` method defined in `stats`.
 }
+\examples{
+set.seed(1)
+b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+fit <- mle_boot(b)
+vcov(fit)
+}

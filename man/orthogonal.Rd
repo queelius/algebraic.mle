@@ -19,3 +19,9 @@ Logical vector or matrix indicating which parameters are orthogonal.
 \description{
 Generic method for determining the orthogonal parameters of an estimator.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+  loglike = -120, nobs = 100L)
+orthogonal(fit)
+}

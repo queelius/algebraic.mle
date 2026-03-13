@@ -15,3 +15,8 @@ Numeric vector of parameter estimates.
 \description{
 Method for obtaining the parameters of an `mle_fit` object.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+params(fit)
+}

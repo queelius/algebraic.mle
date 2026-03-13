@@ -15,3 +15,9 @@ Integer number of parameters.
 \description{
 Method for obtaining the number of parameters of an `boot` object.
 }
+\examples{
+set.seed(1)
+b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+fit <- mle_boot(b)
+nparams(fit)
+}

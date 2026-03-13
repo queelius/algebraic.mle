@@ -17,3 +17,9 @@ The observed Fisher Information Matrix, or NULL if not available.
 \description{
 Function for obtaining the observed FIM of an `mle_fit` object.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+  nobs = 100L)
+observed_fim(fit)
+}

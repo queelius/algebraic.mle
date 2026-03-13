@@ -15,3 +15,7 @@ A support object (interval for normal distributions).
 \description{
 Support of the asymptotic distribution of an MLE.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+sup(fit)
+}

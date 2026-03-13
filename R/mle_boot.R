@@ -58,6 +58,11 @@ is_mle_boot <- function(x) inherits(x, "mle_fit_boot")
 #'
 #' @param x the `boot` object to obtain the parameters of.
 #' @return Numeric vector of parameter estimates (the original MLE).
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' params(fit)
 #' @importFrom algebraic.dist params
 #' @export
 params.mle_fit_boot <- function(x) {
@@ -68,6 +73,11 @@ params.mle_fit_boot <- function(x) {
 #'
 #' @param x the `boot` object to obtain the number of parameters of
 #' @return Integer number of parameters.
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' nparams(fit)
 #' @importFrom algebraic.dist nparams
 #' @export
 nparams.mle_fit_boot <- function(x) {
@@ -80,6 +90,11 @@ nparams.mle_fit_boot <- function(x) {
 #' @param object the `mle_fit_boot` object to obtain the number of observations for
 #' @param ... additional arguments to pass (not used)
 #' @return Integer number of observations in the original sample.
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' nobs(fit)
 #' @importFrom stats nobs
 #' @export
 nobs.mle_fit_boot <- function(object, ...) {
@@ -94,6 +109,11 @@ nobs.mle_fit_boot <- function(object, ...) {
 #'
 #' @param x the `mle_fit_boot` object to obtain the number of observations for
 #' @return The original data used for bootstrapping.
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' head(obs(fit))
 #' @importFrom algebraic.dist obs
 #' @export
 obs.mle_fit_boot <- function(x) {
@@ -106,6 +126,11 @@ obs.mle_fit_boot <- function(x) {
 #' @param object the `boot` object to obtain the variance-covariance of
 #' @param ... additional arguments to pass into `stats::cov`
 #' @return The variance-covariance matrix estimated from bootstrap replicates.
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' vcov(fit)
 #' @importFrom stats vcov cov
 #' @export
 vcov.mle_fit_boot <- function(object, ...) {
@@ -119,6 +144,11 @@ vcov.mle_fit_boot <- function(object, ...) {
 #' @param ... pass additional arguments into `vcov`
 #' @return The MSE matrix estimated from bootstrap variance and bias.
 #' @importFrom algebraic.dist params
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' mse(fit)
 #' @importFrom stats vcov
 #' @export
 mse.mle_fit_boot <- function(x, theta = NULL, ...) {
@@ -132,6 +162,11 @@ mse.mle_fit_boot <- function(x, theta = NULL, ...) {
 #' @param ... pass additional arguments (not used)
 #' @return Numeric vector of estimated bias (mean of bootstrap replicates minus
 #'   original estimate).
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' bias(fit)
 #' @importFrom algebraic.dist params nparams
 #' @export
 bias.mle_fit_boot <- function(x, theta = NULL, ...) {
@@ -160,6 +195,11 @@ bias.mle_fit_boot <- function(x, theta = NULL, ...) {
 #' @param ... additional arguments to pass (not used)
 #' @return A function that takes parameter \code{n} and returns \code{n} samples
 #'   drawn from the bootstrap replicates.
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' sampler(fit)(5)
 #' @export
 sampler.mle_fit_boot <- function(x, ...) {
     if (length(x$t) == 1) {
@@ -186,6 +226,11 @@ sampler.mle_fit_boot <- function(x, ...) {
 #' @importFrom boot boot.ci
 #' @importFrom stats confint
 #' @importFrom algebraic.dist nparams
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' confint(fit)
 #' @importFrom utils tail
 #' @export
 confint.mle_fit_boot <- function(object, parm = NULL, level = 0.95,
@@ -226,6 +271,11 @@ confint.mle_fit_boot <- function(object, parm = NULL, level = 0.95,
 #' @param x An \code{mle_fit_boot} object.
 #' @param ... Additional arguments (not used).
 #' @return A function computing the empirical PMF at given points.
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' density(fit)
 #' @importFrom stats density
 #' @importFrom algebraic.dist empirical_dist
 #' @export
@@ -237,6 +287,11 @@ density.mle_fit_boot <- function(x, ...) {
 #'
 #' @param x An \code{mle_fit_boot} object.
 #' @return Integer; the number of parameters.
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' dim(fit)
 #' @export
 dim.mle_fit_boot <- function(x) {
     nparams(x)
@@ -250,6 +305,11 @@ dim.mle_fit_boot <- function(x) {
 #' @param x An \code{mle_fit_boot} object.
 #' @param ... Additional arguments (not used).
 #' @return Numeric vector of column means of bootstrap replicates.
+#' @examples
+#' set.seed(1)
+#' b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+#' fit <- mle_boot(b)
+#' mean(fit)
 #' @export
 mean.mle_fit_boot <- function(x, ...) {
     if (ncol(x$t) == 1L) {

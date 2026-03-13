@@ -43,3 +43,9 @@ marginal distribution of `T`. That is, we:
 The `samp` function is used to sample from the distribution of `T|x`. It should
 be designed to take
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+\donttest{
+pred(fit, samp = function(n, theta) rnorm(n, theta[1], 1))
+}
+}

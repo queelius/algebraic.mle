@@ -15,3 +15,8 @@ The observation data used to fit the MLE, or NULL if not stored.
 \description{
 Method for obtaining the observations used by the `mle_fit` object `x`.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), obs = rnorm(100), nobs = 100L)
+head(obs(fit))
+}

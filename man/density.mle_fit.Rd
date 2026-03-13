@@ -19,3 +19,8 @@ Returns a closure computing the probability density function of the
 asymptotic normal (univariate) or multivariate normal (multivariate)
 distribution of the MLE.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+f <- density(fit)
+f(5)
+}

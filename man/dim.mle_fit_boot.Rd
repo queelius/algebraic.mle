@@ -15,3 +15,9 @@ Integer; the number of parameters.
 \description{
 Dimension (number of parameters) of a bootstrap MLE.
 }
+\examples{
+set.seed(1)
+b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+fit <- mle_boot(b)
+dim(fit)
+}

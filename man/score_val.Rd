@@ -21,3 +21,9 @@ Generic method for computing the score of an estimator
 object (gradient of its log-likelihood function evaluated
 at the MLE).
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), score = c(0.001, -0.002),
+  loglike = -120, nobs = 100L)
+score_val(fit)
+}

@@ -23,3 +23,8 @@ An \code{mle_fit} object representing the marginal distribution for the
 where H is the (observed or expecation) Fisher information
 matrix.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+marginal(fit, 1)
+}

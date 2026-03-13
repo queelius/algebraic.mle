@@ -21,3 +21,9 @@ Matrix of predictive confidence intervals.
 \description{
 Generic method for computing the predictive confidence interval given an estimator object `x`.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+\donttest{
+pred(fit, samp = function(n, theta) rnorm(n, theta[1], 1))
+}
+}

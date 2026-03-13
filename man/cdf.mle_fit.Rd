@@ -17,3 +17,8 @@ A function computing the CDF at given points.
 \description{
 CDF of the asymptotic distribution of an MLE.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+F <- cdf(fit)
+F(5)
+}

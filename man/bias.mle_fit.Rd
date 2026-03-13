@@ -24,3 +24,8 @@ Numeric vector of zeros (asymptotic bias is zero under regularity
 This is not a good estimate of the bias in general, but it's
 arguably better than returning `NULL`.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+bias(fit)
+}

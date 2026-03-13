@@ -19,3 +19,8 @@ The mean squared error (matrix or scalar).
 Generic method for computing the mean squared error (MSE) of an estimator,
 `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+mse(fit, theta = c(mu = 5, sigma2 = 4))
+}

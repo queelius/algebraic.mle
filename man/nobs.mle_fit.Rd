@@ -19,3 +19,8 @@ Integer number of observations, or NULL if not available.
 Method for obtaining the number of observations in the sample used by
 an `mle_fit`.
 }
+\examples{
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+nobs(fit)
+}
