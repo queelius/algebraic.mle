@@ -50,3 +50,14 @@ the mean of the \`f(t,x)\` values asn an estimate of \`f(t)\`.
 
 The \`samp\` function is used to sample from the distribution of
 \`T\|x\`. It should be designed to take
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+# \donttest{
+pred(fit, samp = function(n, theta) rnorm(n, theta[1], 1))
+#>          mean    lower    upper
+#> [1,] 5.001801 2.927087 7.064163
+# }
+```

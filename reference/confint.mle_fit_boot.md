@@ -42,3 +42,14 @@ confint(
 
 Matrix of bootstrap confidence intervals with columns for lower and
 upper bounds.
+
+## Examples
+
+``` r
+set.seed(1)
+b <- boot::boot(rexp(50, 2), function(d, i) 1/mean(d[i]), R = 99)
+fit <- mle_boot(b)
+confint(fit)
+#>            2.5%    97.5%
+#> param1 1.445856 2.571918
+```

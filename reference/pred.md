@@ -30,3 +30,14 @@ pred(x, samp = NULL, alpha = 0.05, ...)
 ## Value
 
 Matrix of predictive confidence intervals.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+# \donttest{
+pred(fit, samp = function(n, theta) rnorm(n, theta[1], 1))
+#>          mean    lower    upper
+#> [1,] 5.000322 2.962705 7.027373
+# }
+```

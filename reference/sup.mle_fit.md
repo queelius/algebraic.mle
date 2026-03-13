@@ -18,3 +18,11 @@ sup(x)
 ## Value
 
 A support object (interval for normal distributions).
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+sup(fit)
+#> (-Inf, Inf)
+```

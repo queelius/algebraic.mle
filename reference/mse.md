@@ -23,3 +23,14 @@ mse(x, theta)
 ## Value
 
 The mean squared error (matrix or scalar).
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+mse(fit, theta = c(mu = 5, sigma2 = 4))
+#>      [,1] [,2]
+#> [1,] 0.04 0.00
+#> [2,] 0.00 0.32
+```

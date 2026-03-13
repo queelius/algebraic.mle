@@ -74,6 +74,21 @@ to draw from the `mle_fit` object.</p>
   from the asymptotic distribution of the MLE.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle.html">mle</a></span><span class="op">(</span>theta.hat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fl">5</span>, sigma2 <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.04</span>, <span class="fl">0.32</span><span class="op">)</span><span class="op">)</span>, loglike <span class="op">=</span> <span class="op">-</span><span class="fl">120</span>, nobs <span class="op">=</span> <span class="fl">100L</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/sampler.html" class="external-link">sampler</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">s</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          [,1]     [,2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.857919 4.145315</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4.950662 3.803400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 4.809676 3.974528</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 4.843019 3.056470</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 4.923955 4.519863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 4.884931 4.343917</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

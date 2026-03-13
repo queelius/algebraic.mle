@@ -37,3 +37,12 @@ conditional(x, P = NULL, ..., given_indices = NULL, given_values = NULL)
 ## Value
 
 A `normal`, `mvn`, or `empirical_dist` object.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+conditional(fit, given_indices = 2, given_values = 4)
+#> Normal distribution (mu = 5, var = 0.04) 
+```

@@ -18,3 +18,12 @@ nparams(x)
 ## Value
 
 Integer number of parameters.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+nparams(fit)
+#> [1] 2
+```

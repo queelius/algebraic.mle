@@ -22,3 +22,15 @@ observed_fim(x, ...)
 ## Value
 
 The observed Fisher Information Matrix, or NULL if not available.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+  nobs = 100L)
+observed_fim(fit)
+#>      [,1]  [,2]
+#> [1,]   25 0.000
+#> [2,]    0 3.125
+```

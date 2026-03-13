@@ -28,3 +28,12 @@ se(x, se.matrix = FALSE, ...)
 
 Vector of standard errors, or matrix if `se.matrix = TRUE`, or NULL if
 variance-covariance is not available.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+se(fit)
+#> [1] 0.2000000 0.5656854
+```

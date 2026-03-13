@@ -31,3 +31,15 @@ of the MLE for \`theta\`.
 
 Some MLE objects do not have an observed FIM, e.g., if the MLE's
 sampling distribution was bootstrapped.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), info = solve(diag(c(0.04, 0.32))),
+  loglike = -120, nobs = 100L)
+observed_fim(fit)
+#>      [,1]  [,2]
+#> [1,]   25 0.000
+#> [2,]    0 3.125
+```

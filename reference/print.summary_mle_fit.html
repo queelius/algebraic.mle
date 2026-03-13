@@ -67,6 +67,28 @@
     <p>Invisibly returns <code>x</code>.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle.html">mle</a></span><span class="op">(</span>theta.hat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fl">5</span>, sigma2 <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.04</span>, <span class="fl">0.32</span><span class="op">)</span><span class="op">)</span>, loglike <span class="op">=</span> <span class="op">-</span><span class="fl">120</span>, nobs <span class="op">=</span> <span class="fl">100L</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maximum likelihood estimator of type mle_fit is normally distributed.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The estimates of the parameters are given by:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     mu sigma2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      5      4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The standard error is  0.2 0.5656854 .</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The asymptotic 95% confidence interval of the parameters are given by:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            2.5%    97.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mu     4.608007 5.391993</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sigma2 2.891277 5.108723</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The MSE of the individual components in a multivariate estimator is:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.04 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 0.00 0.32</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The log-likelihood is  -120 .</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The AIC is  244 .</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

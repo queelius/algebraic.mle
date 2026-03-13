@@ -24,3 +24,12 @@ density(x, ...)
 ## Value
 
 A function computing the PDF at given points.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1))
+f <- density(fit)
+f(5)
+#> [1] 1.261566
+```

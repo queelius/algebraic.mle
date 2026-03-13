@@ -67,6 +67,40 @@
     <p>A function computing the empirical PMF at given points.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu">boot</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html" class="external-link">boot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">2</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">i</span><span class="op">)</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>, R <span class="op">=</span> <span class="fl">99</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle_boot.html">mle_boot</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (t, log = FALSE) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     stopifnot(is.numeric(t))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is.matrix(t)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         stopifnot(ncol(t) == p)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         counts &lt;- apply(t, 1, function(t_ob) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             sum(apply(xobs, 1, function(xob) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 all(xob == t_ob)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             }))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         })</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         stopifnot(length(t) == p)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         counts &lt;- sum(apply(xobs, 1, function(xob) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             all(xob == t)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (log) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         return(log(counts) - log(n))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         return(counts/n)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x559c328238a8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x559c32824d80&gt;</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

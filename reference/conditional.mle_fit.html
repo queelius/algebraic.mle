@@ -88,6 +88,14 @@ since conditioning loses the MLE context.</p>
     <p>A <code>normal</code>, <code>mvn</code>, or <code>empirical_dist</code> object.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="mle.html">mle</a></span><span class="op">(</span>theta.hat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fl">5</span>, sigma2 <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.04</span>, <span class="fl">0.32</span><span class="op">)</span><span class="op">)</span>, loglike <span class="op">=</span> <span class="op">-</span><span class="fl">120</span>, nobs <span class="op">=</span> <span class="fl">100L</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/conditional.html" class="external-link">conditional</a></span><span class="op">(</span><span class="va">fit</span>, given_indices <span class="op">=</span> <span class="fl">2</span>, given_values <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Normal distribution (mu = 5, var = 0.04) </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

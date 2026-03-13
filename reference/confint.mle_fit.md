@@ -35,3 +35,14 @@ confint(object, parm = NULL, level = 0.95, use_t_dist = FALSE, ...)
 ## Value
 
 Matrix of confidence intervals with columns for lower and upper bounds.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+confint(fit)
+#>            2.5%    97.5%
+#> mu     4.608007 5.391993
+#> sigma2 2.891277 5.108723
+```

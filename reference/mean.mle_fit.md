@@ -23,3 +23,13 @@ mean(x, ...)
 ## Value
 
 Numeric vector of parameter estimates.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+mean(fit)
+#>     mu sigma2 
+#>      5      4 
+```

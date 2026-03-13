@@ -43,3 +43,14 @@ replacement, computing the MLE, and then computing the difference
 between the bootstrapped MLE and the MLE. We can repeat this process
 \`B\` times, and then average the differences to get an estimate of the
 bias.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+mse(fit)
+#>      [,1] [,2]
+#> [1,] 0.04 0.00
+#> [2,] 0.00 0.32
+```

@@ -40,3 +40,13 @@ If \`compute_stats\` is FALSE, then the estimate of the expectation,
 otherwise a list with the following components: value - The estimate of
 the expectation ci - The confidence intervals for each component of the
 expectation n - The number of samples
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+# \donttest{
+expectation(fit)
+#> [1] 5.000277
+# }
+```

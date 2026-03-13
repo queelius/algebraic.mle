@@ -24,3 +24,12 @@ logLik(object, ...)
 ## Value
 
 A `"logLik"` object.
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+logLik(fit)
+#> 'log Lik.' -120 (df=2)
+```

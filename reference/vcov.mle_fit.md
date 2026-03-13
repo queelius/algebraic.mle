@@ -22,3 +22,14 @@ vcov(object, ...)
 ## Value
 
 the variance-covariance matrix
+
+## Examples
+
+``` r
+fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+  sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
+vcov(fit)
+#>      [,1] [,2]
+#> [1,] 0.04 0.00
+#> [2,] 0.00 0.32
+```
