@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-options(digits = 4)
+oldopts <- options(digits = 4)
 ```
 
 ## Introduction
@@ -390,3 +390,7 @@ The pipeline reads as a chain of algebraic operations: two independent MLEs
 are composed via `joint()`, transformed to the quantity of interest via `rmap()`,
 and then reasoned about as a distribution via `as_dist()`. Each step preserves
 the uncertainty structure inherited from the original experiments.
+
+```{r, include = FALSE}
+options(oldopts)
+```
