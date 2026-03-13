@@ -66,6 +66,7 @@ mle <- function(theta.hat,
 #' @export
 print.mle_fit <- function(x, ...) {
     print(summary(x, ...))
+    invisible(x)
 }
 
 #' Computes the variance-covariance matrix of `mle_fit` object.
@@ -322,6 +323,7 @@ print.summary_mle_fit <- function(x, ...) {
         cat("The log-likelihood is ", as.numeric(ll), ".\n")
         cat("The AIC is ", AIC(x$x), ".\n")
     }
+    invisible(x)
 }
 
 #' Function for obtaining an estimate of the standard error of the MLE

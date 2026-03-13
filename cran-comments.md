@@ -1,29 +1,29 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-* This is a new submission.
+## Breaking changes in v2.0.0
+
+This is a major version update addressing the CRAN rejection of v1.2.0.
+
+The S3 class was renamed from `"mle"` to `"mle_fit"` to resolve a name
+collision with `stats4::mle` (S4 class). When both packages were loaded,
+S4 dispatch intercepted calls to `AIC()`, `BIC()`, `logLik()`, `coef()`,
+`summary()`, `vcov()`, `confint()`, and `nobs()`, causing errors.
+
+Additional breaking changes:
+- Custom generics `aic()`, `bic()`, `loglik_val()` removed in favor of
+  standard R generics `AIC()`, `BIC()`, `logLik()`
+- `mle_weighted()` removed (replaced by `combine()`)
+
+Constructor function names (`mle()`, `mle_numerical()`, `mle_boot()`) are
+unchanged.
 
 ## Downstream dependencies
 
-There are currently no downstream dependencies for this package.
-
-## Notes
-
-This package provides an algebraic framework for working with Maximum
-Likelihood Estimators (MLEs). It depends on `algebraic.dist` which is
-already on CRAN.
-
-## Resubmission
-
-This is a resubmission addressing reviewer feedback:
-
-1. Added references to DESCRIPTION with ISBN format (Casella & Berger 2002,
-   Lehmann & Casella 1998)
-2. Added \value tags to all exported function documentation
-3. Fixed options() save/restore in vignettes
+- `likelihood.model` (on CRAN): updated to `algebraic.mle (>= 2.0.0)`
+- `compositional.mle` (not on CRAN): updated
 
 ## Test environments
 
 * local Ubuntu 24.04, R 4.3.3
-* win-builder (devel and release)

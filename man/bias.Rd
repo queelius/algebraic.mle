@@ -4,7 +4,7 @@
 \alias{bias}
 \title{Generic method for computing the bias of an estimator object.}
 \usage{
-bias(x, theta, ...)
+bias(x, theta = NULL, ...)
 }
 \arguments{
 \item{x}{the object to compute the bias of.}

@@ -17,6 +17,11 @@ test_that("mle_boot wraps boot object correctly", {
   expect_true(inherits(fit, "mle_fit_boot"))
 })
 
+test_that("mle_boot rejects non-boot input", {
+  expect_error(mle_boot(list(a = 1)), "must be a 'boot' object")
+  expect_error(mle_boot(42), "must be a 'boot' object")
+})
+
 test_that("is_mle_boot returns FALSE for non-boot objects", {
   fit <- mle(theta.hat = 5, sigma = matrix(0.1))
   expect_false(is_mle_boot(fit))

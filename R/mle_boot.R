@@ -36,6 +36,8 @@
 #' confint(fit)
 #' @export
 mle_boot <- function(x) {
+    if (!inherits(x, "boot"))
+        stop("'x' must be a 'boot' object (from the boot package).")
     class(x) <- c("mle_fit_boot", "mle_fit", class(x))
     x
 }

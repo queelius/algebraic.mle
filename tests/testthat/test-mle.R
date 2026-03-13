@@ -240,3 +240,80 @@ test_that("superclasses are prepended to class vector", {
   expect_equal(class(fit), c("my_custom_mle", "mle_fit"))
   expect_true(is_mle(fit))
 })
+
+## ── print return value ──────────────────────────────────────────────────
+
+test_that("print.mle_fit returns invisible(x)", {
+  fit <- mle(theta.hat = c(x = 5), sigma = matrix(0.1), loglike = -20)
+  out <- withVisible(print(fit))
+  expect_false(out$visible)
+  expect_identical(out$value, fit)
+})
+
+test_that("print.summary_mle_fit returns invisible(x)", {
+  fit <- mle(theta.hat = c(x = 5), sigma = matrix(0.1), loglike = -20)
+  s <- summary(fit)
+  out <- withVisible(print(s))
+  expect_false(out$visible)
+  expect_identical(out$value, s)
+})
+
+## ── confint branches ────────────────────────────────────────────────────
+
+test_that("confint with use_t_dist = TRUE uses t quantiles", {
+  fit <- mle(theta.hat = c(x = 5), sigma = matrix(0.1), nobs = 20L)
+  ci_norm <- confint(fit, use_t_dist = FALSE)
+  ci_t <- confint(fit, use_t_dist = TRUE)
+
+  # t-distribution CI should be wider than normal for small n
+  expect_gt(ci_t[1, 2] - ci_t[1, 1], ci_norm[1, 2] - ci_norm[1, 1])
+})
+
+test_that("confint with use_t_dist = TRUE warns when nobs is NULL", {
+  fit <- mle(theta.hat = c(x = 5), sigma = matrix(0.1))
+  expect_warning(confint(fit, use_t_dist = TRUE), "Unknown number of observations")
+})
+
+## ── se branches ─────────────────────────────────────────────────────────
+
+test_that("se with se.matrix = TRUE returns Cholesky factor", {
+  sigma <- matrix(c(0.04, 0.01, 0.01, 0.09), 2, 2)
+  fit <- mle(theta.hat = c(a = 1, b = 2), sigma = sigma)
+  se_mat <- se(fit, se.matrix = TRUE)
+
+  expect_true(is.matrix(se_mat))
+  # chol(sigma) %*% t(chol(sigma)) should reconstruct sigma
+  expect_equal(crossprod(se_mat), sigma, tolerance = 1e-10)
+})
+
+## ── pred ────────────────────────────────────────────────────────────────
+
+test_that("pred returns predictive interval matrix", {
+  set.seed(42)
+  fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
+  pi <- pred(fit, samp = function(n, theta) rnorm(n, theta[1], 1), R = 5000)
+
+  expect_equal(ncol(pi), 3)
+  expect_equal(colnames(pi), c("mean", "lower", "upper"))
+  expect_true(pi[1, "lower"] < pi[1, "mean"])
+  expect_true(pi[1, "mean"] < pi[1, "upper"])
+})
+
+## ── expectation ─────────────────────────────────────────────────────────
+
+test_that("expectation.mle returns expected value", {
+  set.seed(42)
+  fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.01), nobs = 100L)
+  ev <- expectation(fit, g = function(t) t)
+
+  expect_equal(ev, 5, tolerance = 0.1)
+})
+
+test_that("expectation with compute_stats returns list", {
+  set.seed(42)
+  fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.01), nobs = 100L)
+  result <- expectation(fit, control = list(compute_stats = TRUE))
+
+  expect_type(result, "list")
+  expect_true("value" %in% names(result))
+})

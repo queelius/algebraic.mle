@@ -157,7 +157,7 @@ ggplot(as_tibble(mles), aes(x = mu, y = var)) +
     geom_vline(xintercept = mu) + 
     geom_point(aes(x = tmp[1], y = tmp[2]), color = "green") +
     geom_point(aes(x = mu, y = var), color = "red") +
-    stat_density2d(aes(fill = ..level..), geom = "polygon", alpha = 0.2) +
+    stat_density2d(aes(fill = after_stat(level)), geom = "polygon", alpha = 0.2) +
     scale_fill_gradient(low = "blue", high = "red")
 ```
 

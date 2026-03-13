@@ -35,18 +35,3 @@ confint_from_sigma <- function(sigma, theta, level = .95) {
     }
     ci
 }
-
-
-get_first_attr <- function(xs, g, props) {
-    for (x in xs)
-    {
-        y <- g(x)
-        for (prop in props)
-        {
-            if (!is.null(prop(y))) {
-                return(prop(y))
-            }
-        }
-    }
-    NULL
-}

@@ -96,7 +96,7 @@ mse <- function(x, theta) {
 #' @return The bias of the estimator. The return type depends on the specific
 #'         method.
 #' @export
-bias <- function(x, theta, ...) {
+bias <- function(x, theta = NULL, ...) {
     UseMethod("bias", x)
 }
 
