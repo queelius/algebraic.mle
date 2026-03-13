@@ -727,13 +727,12 @@ is a bit smaller than ${\widehat{X}}_{n + 1}$, which is what we
 expected. Of course, for sufficiently large sample sizes, they will
 converge to the same quantiles.
 
-## Weighted MLE: a weighted sum of maximum likelihood estimators
+## Combining Independent MLEs
 
 Since the variance-covariance of an MLE is inversely proportional to the
-FIM that the MLE is defined with respect to, we can combine multiple
-MLEs of $\theta$, each of which may be defined with respect to a
-different kind of sample, to arrive at the MLE that incorporates the
-Fisher information in all of those samples.
+FIM, we can combine multiple independent MLEs of the same $\theta$ —
+each estimated from a different sample — into a single MLE that
+incorporates the Fisher information from all samples.
 
 Consider $k$ mutually independent MLEs of parameter $\theta$,
 ${\widehat{\theta}}_{1},\ldots,{\widehat{\theta}}_{k}$, where
@@ -746,16 +745,18 @@ which, asymptotically, has an expected value of $\theta$ and a
 variance-covariance of
 $\left( \sum_{j = 1}^{k}I_{j}(\theta) \right)^{- 1}$.
 
-To evaluate the performance of the weighted MLE, we generate a sample of
-$N = 1000$ observations from $\mathcal{N}(\theta)$ and compute the MLE
-for the observed sample, denoted by $\widehat{\theta}$.
+To evaluate the performance of
+[`combine()`](https://queelius.github.io/algebraic.mle/reference/combine.md),
+we generate a sample of $N = 100$ observations from
+$\mathcal{N}(\theta)$ and compute the MLE for the observed sample,
+denoted by $\widehat{\theta}$.
 
 We then divide the observed sample into $r = 5$ sub-samples, each of
-size $N/r = 100$, and compute the MLE for each sub-sampled, denoted by
+size $N/r = 20$, and compute the MLE for each sub-sample, denoted by
 $\theta^{(1)},\ldots,\theta^{(r)}$.
 
-Finally, we do a weighted combination these MLEs to form the weighted
-MLE, denoted by $\theta_{w}$:
+Finally, we combine these MLEs via inverse-variance weighting to form
+the combined MLE, denoted by $\theta_{w}$:
 
 ``` r
 N <- 100
@@ -770,8 +771,8 @@ mle.wt <- combine(mles.sub)
 mle <- fit_normal(samp)
 ```
 
-We show the results in the following R code. First, we show the weighted
-MLE and its MSE:
+We show the results in the following R code. First, we show the combined
+MLE and its variance-covariance:
 
 ``` r
 params(mle.wt)
@@ -795,10 +796,10 @@ vcov(mle)
 #> [2,] 0.0000000000000244 0.0149328747769700
 ```
 
-Unfortuantely, $\widehat{\theta}$ is a much better estimator of $\theta$
+Unfortunately, $\widehat{\theta}$ is a much better estimator of $\theta$
 than ${\widehat{\theta}}_{w}$. According to theory, they should be
 identical, but in practice, there may be issues like numerical
-instability that cause the weighted MLE to perform poorly.
+instability that cause the combined MLE to perform poorly.
 
 We are in fact using numerical differentiation to compute the FIM, which
 may be a source of error. We can try to improve the accuracy of the FIM

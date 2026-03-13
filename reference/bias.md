@@ -5,7 +5,7 @@ Generic method for computing the bias of an estimator object.
 ## Usage
 
 ``` r
-bias(x, theta, ...)
+bias(x, theta = NULL, ...)
 ```
 
 ## Arguments

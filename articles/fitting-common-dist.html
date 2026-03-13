@@ -440,15 +440,14 @@ using both methods:</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="weighted-mle-a-weighted-sum-of-mles">Weighted MLE: A Weighted Sum of MLEs<a class="anchor" aria-label="anchor" href="#weighted-mle-a-weighted-sum-of-mles"></a>
+<h2 id="combining-independent-mles">Combining Independent MLEs<a class="anchor" aria-label="anchor" href="#combining-independent-mles"></a>
 </h2>
 <p>Since the variance-covariance of an MLE is inversely proportional to
-the Fisher information that the MLE is defined with respect to, we can
-combine multiple MLEs of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
-each of which may be defined with respect to a different kind of sample,
-to arrive at the MLE that incorporates the Fisher information in all of
-those samples.</p>
+the Fisher information, we can combine multiple independent MLEs of the
+same
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+— each estimated from a different sample — into a single MLE that
+incorporates the Fisher information from all samples.</p>
 <p>Consider
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
 mutually independent MLEs of parameter
@@ -472,9 +471,9 @@ and a variance-covariance of
 <h3 id="example-2">Example 2<a class="anchor" aria-label="anchor" href="#example-2"></a>
 </h3>
 <p>For this example, we use the normal fit.</p>
-<p>To evaluate the performance of the weighted MLE, we generate a sample
-of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>1000</mn></mrow><annotation encoding="application/x-tex">N=1000</annotation></semantics></math>
+<p>To evaluate the performance of <code><a href="../reference/combine.html">combine()</a></code>, we generate a
+sample of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">N=500</annotation></semantics></math>
 observations from
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{N}(\theta)</annotation></semantics></math>
 and compute the MLE for the observed sample, denoted by
@@ -483,10 +482,10 @@ and compute the MLE for the observed sample, denoted by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">r=5</annotation></semantics></math>
 sub-samples, each of size
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>/</mi><mi>r</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">N/r=100</annotation></semantics></math>,
-and compute the MLE for each sub-sampled, denoted by
+and compute the MLE for each sub-sample, denoted by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msup><mo>,</mo><mi>…</mi><mo>,</mo><msup><mi>θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\theta^{(1)},\ldots,\theta^{(r)}</annotation></semantics></math>.</p>
-<p>Finally, we do a weighted combination these MLEs to form the weighted
-MLE, denoted by
+<p>Finally, we combine these MLEs via inverse-variance weighting to form
+the combined MLE, denoted by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>w</mi></msub><annotation encoding="application/x-tex">\theta_w</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
@@ -500,7 +499,7 @@ MLE, denoted by
 <span><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine.html">combine</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span></span>
 <span><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></span></code></pre></div>
 <p>We show the results in the following R code. First, we show the
-weighted MLE and its MSE:</p>
+combined MLE and its MSE:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1.98 8.71</span></span>

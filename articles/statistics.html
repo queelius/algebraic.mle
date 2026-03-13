@@ -814,15 +814,13 @@ which is what we expected. Of course, for sufficiently large sample
 sizes, they will converge to the same quantiles.</p>
 </div>
 <div class="section level2">
-<h2 id="weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators">Weighted MLE: a weighted sum of maximum likelihood estimators<a class="anchor" aria-label="anchor" href="#weighted-mle-a-weighted-sum-of-maximum-likelihood-estimators"></a>
+<h2 id="combining-independent-mles">Combining Independent MLEs<a class="anchor" aria-label="anchor" href="#combining-independent-mles"></a>
 </h2>
 <p>Since the variance-covariance of an MLE is inversely proportional to
-the FIM that the MLE is defined with respect to, we can combine multiple
-MLEs of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
-each of which may be defined with respect to a different kind of sample,
-to arrive at the MLE that incorporates the Fisher information in all of
-those samples.</p>
+the FIM, we can combine multiple independent MLEs of the same
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+— each estimated from a different sample — into a single MLE that
+incorporates the Fisher information from all samples.</p>
 <p>Consider
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
 mutually independent MLEs of parameter
@@ -842,9 +840,9 @@ value of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
 and a variance-covariance of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></msubsup><msub><mi>I</mi><mi>j</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}</annotation></semantics></math>.</p>
-<p>To evaluate the performance of the weighted MLE, we generate a sample
-of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>1000</mn></mrow><annotation encoding="application/x-tex">N=1000</annotation></semantics></math>
+<p>To evaluate the performance of <code><a href="../reference/combine.html">combine()</a></code>, we generate a
+sample of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">N=100</annotation></semantics></math>
 observations from
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{N}(\theta)</annotation></semantics></math>
 and compute the MLE for the observed sample, denoted by
@@ -852,11 +850,11 @@ and compute the MLE for the observed sample, denoted by
 <p>We then divide the observed sample into
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">r=5</annotation></semantics></math>
 sub-samples, each of size
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>/</mi><mi>r</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">N/r=100</annotation></semantics></math>,
-and compute the MLE for each sub-sampled, denoted by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>/</mi><mi>r</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">N/r=20</annotation></semantics></math>,
+and compute the MLE for each sub-sample, denoted by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msup><mo>,</mo><mi>…</mi><mo>,</mo><msup><mi>θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\theta^{(1)},\ldots,\theta^{(r)}</annotation></semantics></math>.</p>
-<p>Finally, we do a weighted combination these MLEs to form the weighted
-MLE, denoted by
+<p>Finally, we combine these MLEs via inverse-variance weighting to form
+the combined MLE, denoted by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>w</mi></msub><annotation encoding="application/x-tex">\theta_w</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
@@ -870,7 +868,7 @@ MLE, denoted by
 <span><span class="va">mle.wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine.html">combine</a></span><span class="op">(</span><span class="va">mles.sub</span><span class="op">)</span></span>
 <span><span class="va">mle</span> <span class="op">&lt;-</span> <span class="fu">fit_normal</span><span class="op">(</span><span class="va">samp</span><span class="op">)</span></span></code></pre></div>
 <p>We show the results in the following R code. First, we show the
-weighted MLE and its MSE:</p>
+combined MLE and its variance-covariance:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params</a></span><span class="op">(</span><span class="va">mle.wt</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    mu   var </span></span>
@@ -888,14 +886,14 @@ weighted MLE and its MSE:</p>
 <span><span class="co">#&gt;                    [,1]               [,2]</span></span>
 <span><span class="co">#&gt; [1,] 0.0086408549278714 0.0000000000000244</span></span>
 <span><span class="co">#&gt; [2,] 0.0000000000000244 0.0149328747769700</span></span></code></pre></div>
-<p>Unfortuantely,
+<p>Unfortunately,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>θ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat\theta</annotation></semantics></math>
 is a much better estimator of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
 than
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mi>w</mi></msub><annotation encoding="application/x-tex">\hat\theta_w</annotation></semantics></math>.
 According to theory, they should be identical, but in practice, there
-may be issues like numerical instability that cause the weighted MLE to
+may be issues like numerical instability that cause the combined MLE to
 perform poorly.</p>
 <p>We are in fact using numerical differentiation to compute the FIM,
 which may be a source of error. We can try to improve the accuracy of

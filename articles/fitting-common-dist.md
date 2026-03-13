@@ -310,13 +310,12 @@ round(vcov(g.delta), digits=3)
 
 They are pretty close.
 
-## Weighted MLE: A Weighted Sum of MLEs
+## Combining Independent MLEs
 
 Since the variance-covariance of an MLE is inversely proportional to the
-Fisher information that the MLE is defined with respect to, we can
-combine multiple MLEs of $\theta$, each of which may be defined with
-respect to a different kind of sample, to arrive at the MLE that
-incorporates the Fisher information in all of those samples.
+Fisher information, we can combine multiple independent MLEs of the same
+$\theta$ — each estimated from a different sample — into a single MLE
+that incorporates the Fisher information from all samples.
 
 Consider $k$ mutually independent MLEs of parameter $\theta$,
 ${\widehat{\theta}}_{1},\ldots,{\widehat{\theta}}_{k}$, where
@@ -333,16 +332,18 @@ $\left( \sum_{j = 1}^{k}I_{j}(\theta) \right)^{- 1}$.
 
 For this example, we use the normal fit.
 
-To evaluate the performance of the weighted MLE, we generate a sample of
-$N = 1000$ observations from $\mathcal{N}(\theta)$ and compute the MLE
-for the observed sample, denoted by $\widehat{\theta}$.
+To evaluate the performance of
+[`combine()`](https://queelius.github.io/algebraic.mle/reference/combine.md),
+we generate a sample of $N = 500$ observations from
+$\mathcal{N}(\theta)$ and compute the MLE for the observed sample,
+denoted by $\widehat{\theta}$.
 
 We then divide the observed sample into $r = 5$ sub-samples, each of
-size $N/r = 100$, and compute the MLE for each sub-sampled, denoted by
+size $N/r = 100$, and compute the MLE for each sub-sample, denoted by
 $\theta^{(1)},\ldots,\theta^{(r)}$.
 
-Finally, we do a weighted combination these MLEs to form the weighted
-MLE, denoted by $\theta_{w}$:
+Finally, we combine these MLEs via inverse-variance weighting to form
+the combined MLE, denoted by $\theta_{w}$:
 
 ``` r
 N <- 500
@@ -357,7 +358,7 @@ mle.wt <- combine(mles.sub)
 mle <- fit_normal(samp)
 ```
 
-We show the results in the following R code. First, we show the weighted
+We show the results in the following R code. First, we show the combined
 MLE and its MSE:
 
 ``` r
