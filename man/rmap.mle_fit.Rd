@@ -9,7 +9,9 @@
 \arguments{
 \item{x}{an `mle_fit` object}
 
-\item{g}{a function}
+\item{g}{a deterministic, differentiable function mapping a numeric parameter
+vector to a numeric vector. The Jacobian is computed numerically via
+\code{numDeriv::jacobian} when \code{method = "delta"}.}
 
 \item{...}{additional arguments to pass to the `g` function}
 
@@ -27,7 +29,7 @@ An \code{mle_fit} object of class \code{mle_fit_rmap} representing the
 By the invariance property of the MLE, if `x` is an `mle_fit` object,
 then under the right conditions, asymptotically, `g(x)` is normally
 distributed,
-    g(x) ~ normal(g(point(x)),sigma)
+    g(x) ~ normal(g(params(x)),sigma)
 where `sigma` is the variance-covariance of `f(x)`
 }
 \details{

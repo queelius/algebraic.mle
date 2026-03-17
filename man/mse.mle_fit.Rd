@@ -4,7 +4,7 @@
 \alias{mse.mle_fit}
 \title{Computes the MSE of an `mle_fit` object.}
 \usage{
-\method{mse}{mle_fit}(x, theta = NULL)
+\method{mse}{mle_fit}(x, theta = NULL, ...)
 }
 \arguments{
 \item{x}{the `mle_fit` object to compute the MSE of.}
@@ -12,6 +12,8 @@
 \item{theta}{true parameter value, defaults to `NULL` for unknown. If `NULL`,
 then we let the bias method deal with it. Maybe it has a nice way
 of estimating the bias.}
+
+\item{...}{additional arguments (not used)}
 }
 \value{
 The MSE as a scalar (univariate) or matrix (multivariate).

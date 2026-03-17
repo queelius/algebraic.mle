@@ -4,6 +4,7 @@
 .httr-oauth
 .DS_Store
 /Meta/
+vignettes/*_cache/
 .RData
 .vscode
 /doc/

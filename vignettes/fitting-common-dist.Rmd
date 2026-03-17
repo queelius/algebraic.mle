@@ -153,7 +153,7 @@ fit_weibull <- function(data) {
         superclasses = c("mle_weibull"))
 }
 
-bias.mle_normal <- function(x, theta = NULL) {
+bias.mle_normal <- function(x, theta = NULL, ...) {
     if (is.null(theta))
         theta <- params(x)
     c(0, -theta[2] / nobs(x))
@@ -309,7 +309,7 @@ g <- function(x) A %*% x + b
 
 We compute the variance-covariance of the MLE of $g(\theta)$ 
 using both methods:
-```{r}
+```{r rmap-mc, cache = TRUE}
 g.mc <- rmap(theta.weibull,g,n=100000L)
 g.delta <- rmap(theta.weibull,g,method="delta")
 round(vcov(g.mc), digits=3)
@@ -387,7 +387,7 @@ to call `boot` to bootstrap our MLE for the Weibull fit.
 We just need to wrap it in a function that
 takes the data as input and returns the MLE of the parameters and then
 pass it to `mle_boot` constructor:
-```{r}
+```{r boot-weibull, cache = TRUE}
 theta.boot <- mle_boot(
     boot(data = x,
          statistic = function(x, i) params(fit_weibull(x[i])),
@@ -511,10 +511,10 @@ of $\hat{T}_{n+1}$ and $\hat\theta$ and then compute the empirical quantiles.
 The function `pred` takes as arguments `x`, in this case an `mle_fit` object,
 and a sampler for the distribution of the random variable of interest, in this
 case `rweibull` (the sampler for the normal distribution). The sampler
-must be compatible with the output of `point(x)`, whether that output be
+must be compatible with the output of `params(x)`, whether that output be
 a scalar or a vector.
 Here is how we compute the PI for $\hat{T}_{n+1}$:
-```{r}
+```{r pred-normal, cache = TRUE}
 pred(x=theta.hat, samp=function(n=1, theta) rnorm(n,theta[1],theta[2]))
 ```
 

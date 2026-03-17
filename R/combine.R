@@ -63,31 +63,24 @@ combine_mles <- function(mles) {
     }
     if (length(mles) == 1L) return(mles[[1L]])
 
-    # Get FIMs, falling back to ginv(vcov) when needed
-    fims <- lapply(mles, function(m) {
-        I <- observed_fim(m)
-        if (!is.null(I)) return(if (is.matrix(I)) I else matrix(I, 1, 1))
-        V <- vcov(m)
-        if (is.null(V)) {
-            stop("combine() requires either a Fisher information matrix or ",
-                 "variance-covariance matrix for each mle_fit object.")
-        }
-        if (!is.matrix(V)) V <- matrix(V, 1, 1)
-        ginv(V)
-    })
+    dims <- vapply(mles, nparams, integer(1))
+    if (length(unique(dims)) > 1L) {
+        stop("All MLEs must have the same number of parameters for combine(). ",
+             "Got: ", paste(dims, collapse = ", "))
+    }
+
+    fims <- lapply(mles, fim_or_ginv_vcov)
 
     info_combined <- Reduce(`+`, fims)
     sigma_combined <- ginv(info_combined)
-    theta_combined <- as.vector(
-        sigma_combined %*%
-        Reduce(`+`, Map(`%*%`, fims, lapply(mles, function(m) {
-            p <- params(m)
-            matrix(p, ncol = 1)
-        })))
-    )
+
+    # Inverse-variance weighted combination: (sum I_i)^{-1} sum(I_i theta_i)
+    weighted_sum <- Reduce(`+`, Map(
+        function(I, m) I %*% matrix(params(m), ncol = 1),
+        fims, mles))
+    theta_combined <- as.vector(sigma_combined %*% weighted_sum)
     names(theta_combined) <- names(params(mles[[1L]]))
 
-    # Sum nobs (use 0L for NULL, then convert back)
     nobs_vals <- vapply(mles, function(m) {
         n <- nobs(m)
         if (is.null(n)) NA_integer_ else as.integer(n)
@@ -95,10 +88,27 @@ combine_mles <- function(mles) {
     nobs_combined <- if (anyNA(nobs_vals)) NULL else sum(nobs_vals)
 
     mle(theta.hat = theta_combined,
-        loglike = NULL,
-        score = NULL,
         sigma = sigma_combined,
         info = info_combined,
-        obs = NULL,
         nobs = nobs_combined)
+}
+
+#' Extract FIM from an MLE, falling back to ginv(vcov).
+#'
+#' @param m An mle_fit object.
+#' @return A matrix (FIM).
+#' @keywords internal
+fim_or_ginv_vcov <- function(m) {
+    I <- observed_fim(m)
+    if (!is.null(I)) {
+        if (!is.matrix(I)) I <- matrix(I, 1, 1)
+        return(I)
+    }
+    V <- vcov(m)
+    if (is.null(V)) {
+        stop("combine() requires either a Fisher information matrix or ",
+             "variance-covariance matrix for each mle_fit object.")
+    }
+    if (!is.matrix(V)) V <- matrix(V, 1, 1)
+    ginv(V)
 }

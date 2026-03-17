@@ -35,6 +35,37 @@ joint <- function(x, ...) {
     UseMethod("joint", x)
 }
 
+#' Build a block-diagonal matrix from a list of square matrices.
+#'
+#' @param blocks List of matrices (scalars are promoted to 1x1 matrices).
+#' @param dims Integer vector of block dimensions.
+#' @return A square matrix with blocks placed along the diagonal.
+#' @keywords internal
+block_diag <- function(blocks, dims) {
+    p <- sum(dims)
+    result <- matrix(0, p, p)
+    offset <- 0L
+    for (i in seq_along(blocks)) {
+        idx <- offset + seq_len(dims[i])
+        B <- blocks[[i]]
+        if (!is.matrix(B)) B <- matrix(B, 1, 1)
+        result[idx, idx] <- B
+        offset <- offset + dims[i]
+    }
+    result
+}
+
+#' Collect a field from a list of MLEs, returning NULL if any are NULL.
+#'
+#' @param mles List of mle_fit objects.
+#' @param extractor Function that extracts the field from a single MLE.
+#' @return A list of field values, or NULL if any value is NULL.
+#' @keywords internal
+collect_or_null <- function(mles, extractor) {
+    vals <- lapply(mles, extractor)
+    if (any(vapply(vals, is.null, logical(1)))) NULL else vals
+}
+
 #' @rdname joint
 #' @importFrom algebraic.dist params nparams
 #' @importFrom stats vcov nobs
@@ -50,7 +81,6 @@ joint.mle_fit <- function(x, ...) {
         stop("All arguments to joint() must be mle_fit objects.")
     }
 
-    # Validate disjoint parameter names
     all_names <- unlist(lapply(mles, function(m) names(params(m))))
     if (anyDuplicated(all_names)) {
         dups <- all_names[duplicated(all_names)]
@@ -58,66 +88,22 @@ joint.mle_fit <- function(x, ...) {
              paste(unique(dups), collapse = ", "))
     }
 
-    # All must have vcov
     vcovs <- lapply(mles, vcov)
     if (any(vapply(vcovs, is.null, logical(1)))) {
         stop("All mle_fit objects must have a variance-covariance matrix for joint().")
     }
 
-    # Concatenate parameters
-    theta_joint <- unlist(lapply(mles, params))
-
-    # Build block-diagonal vcov
     dims <- vapply(mles, nparams, integer(1))
-    p <- sum(dims)
-    sigma_joint <- matrix(0, p, p)
-    offset <- 0L
-    for (i in seq_along(mles)) {
-        idx <- offset + seq_len(dims[i])
-        V <- vcovs[[i]]
-        if (!is.matrix(V)) V <- matrix(V, 1, 1)
-        sigma_joint[idx, idx] <- V
-        offset <- offset + dims[i]
-    }
 
-    # Sum log-likelihoods (NULL if any missing)
-    loglikes <- lapply(mles, function(m) m$loglike)
-    loglike_joint <- if (any(vapply(loglikes, is.null, logical(1)))) {
-        NULL
-    } else {
-        sum(unlist(loglikes))
-    }
+    loglikes <- collect_or_null(mles, function(m) m$loglike)
+    scores <- collect_or_null(mles, score_val)
+    fims <- collect_or_null(mles, observed_fim)
 
-    # Block-diagonal FIM (NULL if any missing)
-    fims <- lapply(mles, observed_fim)
-    info_joint <- if (any(vapply(fims, is.null, logical(1)))) {
-        NULL
-    } else {
-        info <- matrix(0, p, p)
-        offset <- 0L
-        for (i in seq_along(mles)) {
-            idx <- offset + seq_len(dims[i])
-            I <- fims[[i]]
-            if (!is.matrix(I)) I <- matrix(I, 1, 1)
-            info[idx, idx] <- I
-            offset <- offset + dims[i]
-        }
-        info
-    }
-
-    # Concatenate scores (NULL if any missing)
-    scores <- lapply(mles, score_val)
-    score_joint <- if (any(vapply(scores, is.null, logical(1)))) {
-        NULL
-    } else {
-        unlist(scores)
-    }
-
-    mle(theta.hat = theta_joint,
-        loglike = loglike_joint,
-        score = score_joint,
-        sigma = sigma_joint,
-        info = info_joint,
+    mle(theta.hat = unlist(lapply(mles, params)),
+        loglike = if (!is.null(loglikes)) sum(unlist(loglikes)),
+        score = if (!is.null(scores)) unlist(scores),
+        sigma = block_diag(vcovs, dims),
+        info = if (!is.null(fims)) block_diag(fims, dims),
         obs = NULL,
         nobs = NULL)
 }

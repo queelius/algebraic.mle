@@ -189,7 +189,8 @@ obs.mle_fit <- function(x) {
 #' Function to compute the confidence intervals of `mle_fit` objects.
 #'
 #' @param object the `mle_fit` object to compute the confidence intervals for
-#' @param parm the parameters to compute the confidence intervals for (not used)
+#' @param parm character or integer vector of parameters to return intervals for.
+#'   If NULL (default), all parameters are returned.
 #' @param level confidence level, defaults to 0.95 (alpha=.05)
 #' @param use_t_dist logical, whether to use the t-distribution to compute
 #'                   the confidence intervals.
@@ -207,35 +208,26 @@ confint.mle_fit <- function(object, parm = NULL, level = .95,
     stopifnot(is.numeric(level), level >= 0, level <= 1)
     V <- vcov(object)
     if (is.null(V)) stop("No variance-covariance matrix available.")
-    if (is.matrix(V)) {
-        V <- diag(V)
+    if (is.matrix(V)) V <- diag(V)
+    if (any(V < 0)) {
+        stop("Negative variance estimate detected. The Hessian may be ",
+             "unreliable (check convergence or model specification).")
     }
-    sigma <- V
 
     theta <- params(object)
     alpha <- (1 - level) / 2
-    p <- length(theta)
 
     if (use_t_dist && is.null(nobs(object))) {
         warning("Unknown number of observations, using large sample approximation.")
         use_t_dist <- FALSE
     }
 
-    if (use_t_dist) {
-        q <- qt(1 - alpha, df = nobs(object) - 1)
-    } else {
-        q <- qnorm(1 - alpha)
-    }
-    se <- sqrt(sigma)
+    q <- if (use_t_dist) qt(1 - alpha, df = nobs(object) - 1) else qnorm(1 - alpha)
+    se <- sqrt(V)
     ci <- cbind(theta - q * se, theta + q * se)
-    colnames(ci) <- c(paste0(alpha * 100, "%"),
-                      paste0((1 - alpha) * 100, "%"))
+    ci <- label_ci(ci, theta, alpha)
 
-    if (is.null(names(theta))) {
-        rownames(ci) <- paste0("param", seq_len(p))
-    } else {
-        rownames(ci) <- names(theta)[seq_len(p)]
-    }
+    if (!is.null(parm)) ci <- ci[parm, , drop = FALSE]
     ci
 }
 
@@ -289,6 +281,7 @@ sampler.mle_fit <- function(x, ...) {
 #' @param theta true parameter value, defaults to `NULL` for unknown. If `NULL`,
 #'             then we let the bias method deal with it. Maybe it has a nice way
 #'             of estimating the bias.
+#' @param ... additional arguments (not used)
 #' @return The MSE as a scalar (univariate) or matrix (multivariate).
 #' @examples
 #' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
@@ -297,7 +290,7 @@ sampler.mle_fit <- function(x, ...) {
 #' @importFrom algebraic.dist nparams
 #' @importFrom stats vcov
 #' @export
-mse.mle_fit <- function(x, theta = NULL) {
+mse.mle_fit <- function(x, theta = NULL, ...) {
 
     if (!is.null(theta)) {
         stopifnot(length(theta) == nparams(x))
@@ -399,18 +392,15 @@ print.summary_mle_fit <- function(x, ...) {
 #' @importFrom stats vcov
 #' @export
 se.mle_fit <- function(x, se.matrix = FALSE, ...) {
-
     V <- vcov(x)
     if (is.null(V)) return(NULL)
 
     if (se.matrix && is.matrix(V)) {
-        return(chol(V))
+        chol(V)
+    } else if (is.matrix(V)) {
+        sqrt(diag(V))
     } else {
-        if (is.matrix(V)) {
-            return(sqrt(diag(V)))
-        } else {
-            return(sqrt(V))
-        }
+        sqrt(V)
     }
 }
 
@@ -531,10 +521,9 @@ bias.mle_fit <- function(x, theta = NULL, ...) {
 #' @export
 pred.mle_fit <- function(x, samp, alpha = 0.05, R = 50000, ...) {
 
-    theta <- params(x)
     thetas <- as.matrix(sampler(x)(R), nrow = R)
 
-    ob <- samp(n = 1, theta, ...)
+    ob <- samp(n = 1, thetas[1, ], ...)
     p <- length(ob)
 
     data <- matrix(NA, nrow = R, ncol = p)
@@ -628,15 +617,12 @@ marginal.mle_fit <- function(x, indices) {
     if (length(indices) == 0) {
         stop("indices must be non-empty")
     }
-    else if (any(indices < 1) || any(indices > nparams(x))) {
+    if (any(indices < 1) || any(indices > nparams(x))) {
         stop("indices must be in [1, dim(x)]")
     }
-    
+
     mle(theta.hat = params(x)[indices],
         sigma = vcov(x)[indices, indices],
-        loglike = NULL,
-        score = NULL,
-        info = NULL,
         obs = obs(x),
         nobs = nobs(x))
 }

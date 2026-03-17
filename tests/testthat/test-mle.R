@@ -139,6 +139,27 @@ test_that("confint errors without vcov", {
   expect_error(confint(fit), "No variance-covariance matrix")
 })
 
+test_that("confint honors parm by name", {
+  fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+    sigma = diag(c(0.04, 0.32)), nobs = 100L)
+  ci <- confint(fit, parm = "mu")
+  expect_equal(nrow(ci), 1)
+  expect_equal(rownames(ci), "mu")
+})
+
+test_that("confint honors parm by index", {
+  fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
+    sigma = diag(c(0.04, 0.32)), nobs = 100L)
+  ci <- confint(fit, parm = 2)
+  expect_equal(nrow(ci), 1)
+  expect_equal(rownames(ci), "sigma2")
+})
+
+test_that("confint errors on negative variance", {
+  fit <- mle(theta.hat = c(x = 5), sigma = matrix(-0.1))
+  expect_error(confint(fit), "Negative variance")
+})
+
 ## ── bias ──────────────────────────────────────────────────────────────────
 
 test_that("bias.mle returns zero vector (asymptotic)", {

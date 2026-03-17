@@ -9,7 +9,8 @@
 \arguments{
 \item{object}{the `mle_fit` object to compute the confidence intervals for}
 
-\item{parm}{the parameters to compute the confidence intervals for (not used)}
+\item{parm}{character or integer vector of parameters to return intervals for.
+If NULL (default), all parameters are returned.}
 
 \item{level}{confidence level, defaults to 0.95 (alpha=.05)}
 

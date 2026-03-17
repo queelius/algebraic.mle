@@ -92,3 +92,9 @@ test_that("combine errors when no vcov or FIM available", {
   expect_error(combine(fit1, fit2), "variance-covariance|information")
 })
 
+test_that("combine errors when MLEs have different parameter dimensions", {
+  fit1 <- mle(theta.hat = c(x = 1), sigma = matrix(0.1))
+  fit2 <- mle(theta.hat = c(a = 1, b = 2), sigma = diag(2))
+  expect_error(combine(fit1, fit2), "same number of parameters")
+})
+

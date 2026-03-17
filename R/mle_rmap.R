@@ -3,7 +3,7 @@
 #' By the invariance property of the MLE, if `x` is an `mle_fit` object,
 #' then under the right conditions, asymptotically, `g(x)` is normally
 #' distributed,
-#'     g(x) ~ normal(g(point(x)),sigma)
+#'     g(x) ~ normal(g(params(x)),sigma)
 #' where `sigma` is the variance-covariance of `f(x)`
 #'
 #' We provide two different methods for estimating the
@@ -12,7 +12,9 @@
 #'     method = "mc" -> monte carlo method
 #'
 #' @param x an `mle_fit` object
-#' @param g a function 
+#' @param g a deterministic, differentiable function mapping a numeric parameter
+#'   vector to a numeric vector. The Jacobian is computed numerically via
+#'   \code{numDeriv::jacobian} when \code{method = "delta"}.
 #' @param ... additional arguments to pass to the `g` function
 #' @param n number of samples to take to estimate distribution of `g(x)` if
 #'         `method == "mc"`.
@@ -43,33 +45,27 @@
 #' @importFrom MASS ginv
 #' @export
 rmap.mle_fit <- function(x, g, ...,
-    n = 1000, method = c("mc", "delta"))
-{
+    n = 1000, method = c("mc", "delta")) {
     stopifnot(is.numeric(n), n > 0, is_mle(x), is.function(g))
     n <- as.integer(n)
 
     method <- match.arg(method)
     theta <- unname(params(x))
+
     if (method == "mc") {
-        mle.samp <- as.matrix(sampler(x)(n), nrow = n)
-        p <- length(g(mle.samp[1, ], ...))
-
-        g.mle.samp <- matrix(nrow=n,ncol=p)
-        for (i in seq_len(n))
-            g.mle.samp[i,] <- g(mle.samp[i,], ...)
-        g.sigma <- cov(g.mle.samp)
-    }
-    else { # method == "delta"
+        samp <- as.matrix(sampler(x)(n), nrow = n)
+        p <- length(g(samp[1, ], ...))
+        g_samp <- matrix(nrow = n, ncol = p)
+        for (i in seq_len(n)) g_samp[i, ] <- g(samp[i, ], ...)
+        g_sigma <- cov(g_samp)
+    } else {
         J <- jacobian(func = g, x = theta, ...)
-        g.sigma <- J %*% vcov(x) %*% t(J)
+        g_sigma <- J %*% vcov(x) %*% t(J)
     }
 
-    mle(theta.hat=g(theta),
-        loglike=NULL,
-        score=NULL,
-        sigma=g.sigma,
-        info=ginv(g.sigma),
-        obs=NULL,
-        nobs=nobs(x),
-        superclasses=c("mle_fit_rmap"))
+    mle(theta.hat = g(theta),
+        sigma = g_sigma,
+        info = ginv(g_sigma),
+        nobs = nobs(x),
+        superclasses = "mle_fit_rmap")
 }

@@ -86,13 +86,14 @@ observed_fim <- function(x, ...) {
 #'
 #' @param x the object to compute the MSE of
 #' @param theta the true parameter value
+#' @param ... additional arguments passed to methods
 #' @return The mean squared error (matrix or scalar).
 #' @examples
 #' fit <- mle(theta.hat = c(mu = 5, sigma2 = 4),
 #'   sigma = diag(c(0.04, 0.32)), loglike = -120, nobs = 100L)
 #' mse(fit, theta = c(mu = 5, sigma2 = 4))
 #' @export
-mse <- function(x, theta) {
+mse <- function(x, theta, ...) {
     UseMethod("mse", x)
 }
 

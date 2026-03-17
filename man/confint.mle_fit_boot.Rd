@@ -16,7 +16,8 @@ Note: This impelements the `vcov` method defined in `stats`.}
 \arguments{
 \item{object}{the `mle_fit_boot` object to obtain the confidence interval of}
 
-\item{parm}{the parameter to obtain the confidence interval of (not used)}
+\item{parm}{character or integer vector of parameters to return intervals for.
+If NULL (default), all parameters are returned.}
 
 \item{level}{the confidence level}
 

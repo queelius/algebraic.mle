@@ -137,6 +137,24 @@ test_that("confint.mle_boot returns bootstrap CIs", {
   expect_true(ci[1, 2] > params(fit))
 })
 
+test_that("confint.mle_boot honors parm argument", {
+  set.seed(42)
+  x <- rexp(50, rate = 2)
+
+  # Bivariate statistic: rate and mean
+  stat <- function(data, indices) {
+    d <- data[indices]
+    c(rate = 1 / mean(d), mu = mean(d))
+  }
+
+  b <- boot::boot(data = x, statistic = stat, R = 500)
+  fit <- mle_boot(b)
+
+  ci <- confint(fit, parm = "rate", type = "perc")
+  expect_equal(nrow(ci), 1)
+  expect_equal(rownames(ci), "rate")
+})
+
 ## ── sampler ───────────────────────────────────────────────────────────────
 
 test_that("sampler.mle_boot resamples from replicates", {

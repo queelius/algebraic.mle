@@ -99,7 +99,7 @@ nparams.mle_fit_boot <- function(x) {
 #' @export
 nobs.mle_fit_boot <- function(object, ...) {
     if (is.matrix(object$data) || is.data.frame(object$data)) {
-        return(nrow(object$data))
+        nrow(object$data)
     } else {
         length(object$data)
     }
@@ -173,11 +173,7 @@ bias.mle_fit_boot <- function(x, theta = NULL, ...) {
     if (!is.null(theta)) {
         warning("We ignore the `theta` argument for `mle_fit_boot` objects.")
     }
-    if (length(params(x)) == 1) {
-        return(mean(x$t) - params(x))
-    } else {
-        return(colMeans(x$t) - params(x))
-    }
+    colMeans(x$t) - params(x)
 }
 
 #' Method for sampling from an `mle_fit_boot` object.
@@ -202,7 +198,7 @@ bias.mle_fit_boot <- function(x, theta = NULL, ...) {
 #' sampler(fit)(5)
 #' @export
 sampler.mle_fit_boot <- function(x, ...) {
-    if (length(x$t) == 1) {
+    if (ncol(x$t) == 1L) {
         function(n) {
             x$t[sample.int(nrow(x$t), n, replace = TRUE)]
         }
@@ -217,7 +213,8 @@ sampler.mle_fit_boot <- function(x, ...) {
 #' Note: This impelements the `vcov` method defined in `stats`.
 #'
 #' @param object the `mle_fit_boot` object to obtain the confidence interval of
-#' @param parm the parameter to obtain the confidence interval of (not used)
+#' @param parm character or integer vector of parameters to return intervals for.
+#'   If NULL (default), all parameters are returned.
 #' @param level the confidence level
 #' @param type the type of confidence interval to compute
 #' @param ... additional arguments to pass into `boot.ci`
@@ -240,27 +237,19 @@ confint.mle_fit_boot <- function(object, parm = NULL, level = 0.95,
     type_long <- switch(type,
         norm = "normal",
         basic = "basic",
-        stud = "student",
         perc = "percent",
         bca = "bca")
 
     p <- nparams(object)
-    alpha <- 1 - level
+    alpha <- (1 - level) / 2
     CI <- matrix(NA, nrow = p, ncol = 2)
-    colnames(CI) <- c(paste0(alpha / 2 * 100, "%"),
-                      paste0((1 - alpha / 2) * 100, "%"))
-
     for (j in seq_len(p)) {
         ci <- boot.ci(object, conf = level, type = type, index = j, ...)
         CI[j, ] <- tail(ci[[type_long]][1,], 2)
     }
 
-    theta <- params(object)
-    if (is.null(names(theta))) {
-        rownames(CI) <- paste0("param", seq_len(p))
-    } else {
-        rownames(CI) <- names(theta)[seq_len(p)]
-    }
+    CI <- label_ci(CI, params(object), alpha)
+    if (!is.null(parm)) CI <- CI[parm, , drop = FALSE]
     CI
 }
 
@@ -312,9 +301,5 @@ dim.mle_fit_boot <- function(x) {
 #' mean(fit)
 #' @export
 mean.mle_fit_boot <- function(x, ...) {
-    if (ncol(x$t) == 1L) {
-        mean(x$t)
-    } else {
-        colMeans(x$t)
-    }
+    colMeans(x$t)
 }

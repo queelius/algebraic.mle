@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>The Algebra of MLEs</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">The Algebra of MLEs</h1>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The maximum likelihood estimator (MLE) is a technology. Under
+regularity conditions, any MLE is asymptotically normal: <span class="math inline">\(\hat\theta \sim N(\theta,
+I(\theta)^{-1})\)</span>, where <span class="math inline">\(I(\theta)\)</span> is the Fisher information
+matrix. This fact is remarkable because it holds regardless of the
+underlying model – exponential, Weibull, normal, or anything else. The
+MLE reduces the problem of inference to a mean vector and a covariance
+matrix.</p>
+<p><code>algebraic.mle</code> is the algebra that follows from this
+fact. It does not find MLEs – it takes them as input and provides
+operations for composition, transformation, and inference. Given two
+independent experiments, <code>joint()</code> composes their MLEs into a
+single joint estimator with block-diagonal covariance. Given three labs
+estimating the same quantity, <code>combine()</code> produces the
+optimal inverse-variance weighted estimate. Given a transformation <span class="math inline">\(g(\theta)\)</span>, <code>rmap()</code> propagates
+uncertainty through the delta method. And <code>as_dist()</code> bridges
+to the distribution algebra in <code>algebraic.dist</code>, where normal
+distributions can be further composed.</p>
+<p>This vignette walks through each operation with concrete examples,
+culminating in a full pipeline from independent experiments to system
+reliability inference.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(algebraic.mle)</span></code></pre></div>
+</div>
+<div id="creating-mles" class="section level2">
+<h2>Creating MLEs</h2>
+<p>The package provides three constructors for wrapping estimation
+results into the MLE algebra. Each produces an object that supports the
+full interface: <code>params()</code>, <code>vcov()</code>,
+<code>confint()</code>, <code>se()</code>, <code>AIC()</code>, and the
+algebraic operations.</p>
+<div id="direct-construction-with-mle" class="section level3">
+<h3>Direct construction with <code>mle()</code></h3>
+<p>When you know the point estimate and its variance-covariance matrix
+(e.g., from analytical results or published tables), construct an MLE
+directly:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Exponential rate from a published study: lambda_hat = 0.5, se = 0.07, n = 200</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>fit_pub <span class="ot">&lt;-</span> <span class="fu">mle</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda =</span> <span class="fl">0.5</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.07</span><span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="at">nobs =</span> <span class="dv">200</span><span class="dt">L</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="fu">params</span>(fit_pub)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; lambda </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt;    0.5</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="fu">se</span>(fit_pub)</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; [1] 0.07</span></span></code></pre></div>
+</div>
+<div id="from-numerical-optimization-with-mle_numerical" class="section level3">
+<h3>From numerical optimization with <code>mle_numerical()</code></h3>
+<p>The most common path: maximize a log-likelihood with
+<code>optim()</code>, then wrap the result. The Hessian at the optimum
+gives the variance-covariance matrix.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rexp</span>(<span class="dv">80</span>, <span class="at">rate =</span> <span class="dv">2</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>loglik <span class="ot">&lt;-</span> <span class="cf">function</span>(rate) {</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="cf">if</span> (rate <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="sc">-</span><span class="cn">Inf</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">dexp</span>(x, <span class="at">rate =</span> rate, <span class="at">log =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>}</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="at">par =</span> <span class="fu">c</span>(<span class="at">lambda =</span> <span class="dv">1</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  <span class="at">fn =</span> loglik,</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;Brent&quot;</span>, <span class="at">lower =</span> <span class="fl">0.01</span>, <span class="at">upper =</span> <span class="dv">20</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>  <span class="at">hessian =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>)</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>fit_num <span class="ot">&lt;-</span> <span class="fu">mle_numerical</span>(result, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">nobs =</span> <span class="fu">length</span>(x)))</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="fu">params</span>(fit_num)</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; [1] 1.687</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="fu">se</span>(fit_num)</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; [1] 0.1886</span></span></code></pre></div>
+</div>
+<div id="from-bootstrap-with-mle_boot" class="section level3">
+<h3>From bootstrap with <code>mle_boot()</code></h3>
+<p>When the sample is small or regularity conditions are questionable,
+bootstrap the MLE and wrap the <code>boot</code> object:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rexp</span>(<span class="dv">30</span>, <span class="at">rate =</span> <span class="dv">2</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>boot_result <span class="ot">&lt;-</span> boot<span class="sc">::</span><span class="fu">boot</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">data =</span> y,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cf">function</span>(d, i) <span class="fu">c</span>(<span class="at">lambda =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">mean</span>(d[i])),</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">R =</span> <span class="dv">999</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>)</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>fit_boot <span class="ot">&lt;-</span> <span class="fu">mle_boot</span>(boot_result)</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="fu">params</span>(fit_boot)</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; lambda </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;  2.019</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="fu">se</span>(fit_boot)</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; [1] 0.4629</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="fu">confint</span>(fit_boot, <span class="at">type =</span> <span class="st">&quot;perc&quot;</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;         2.5% 97.5%</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; lambda 1.367 3.175</span></span></code></pre></div>
+</div>
+</div>
+<div id="composing-independent-mles" class="section level2">
+<h2>Composing Independent MLEs</h2>
+<p>When independent experiments measure different parameters of a
+system, <code>joint()</code> composes their MLEs into a single joint
+estimator. The result has a block-diagonal variance-covariance matrix
+because the experiments are independent – there is no cross-covariance
+between their parameter estimates.</p>
+<p><strong>Motivating example</strong>: A series system has two
+components. Lab A tests component 1 and estimates its failure rate <span class="math inline">\(\lambda_1\)</span>. Lab B tests component 2 and
+estimates <span class="math inline">\(\lambda_2\)</span>. Neither lab
+knows about the other component, but we need the joint parameter vector
+<span class="math inline">\((\lambda_1, \lambda_2)\)</span> for
+system-level inference.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Lab A: component 1 failure rate</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>fit_A <span class="ot">&lt;-</span> <span class="fu">mle</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda1 =</span> <span class="fl">0.02</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.001</span><span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">nobs =</span> <span class="dv">150</span><span class="dt">L</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co"># Lab B: component 2 failure rate</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>fit_B <span class="ot">&lt;-</span> <span class="fu">mle</span>(</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda2 =</span> <span class="fl">0.05</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.003</span><span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  <span class="at">nobs =</span> <span class="dv">80</span><span class="dt">L</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>)</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co"># Joint MLE: block-diagonal covariance</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>fit_joint <span class="ot">&lt;-</span> <span class="fu">joint</span>(fit_A, fit_B)</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="fu">params</span>(fit_joint)</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; lambda1 lambda2 </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt;    0.02    0.05</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="fu">vcov</span>(fit_joint)</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; [1,] 1e-06 0e+00</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; [2,] 0e+00 9e-06</span></span></code></pre></div>
+<p>The off-diagonal entries are zero – the hallmark of independence. The
+joint MLE supports the full interface:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">confint</span>(fit_joint)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;            2.5%   97.5%</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; lambda1 0.01804 0.02196</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; lambda2 0.04412 0.05588</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">se</span>(fit_joint)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; [1] 0.001 0.003</span></span></code></pre></div>
+<p>Use <code>marginal()</code> to recover individual component estimates
+from the joint:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Recover component 2 parameters</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>fit_B_recovered <span class="ot">&lt;-</span> <span class="fu">marginal</span>(fit_joint, <span class="dv">2</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">params</span>(fit_B_recovered)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; lambda2 </span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;    0.05</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="fu">se</span>(fit_B_recovered)</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; [1] 0.003</span></span></code></pre></div>
+<p><code>joint()</code> extends to any number of independent MLEs:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>fit_C <span class="ot">&lt;-</span> <span class="fu">mle</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda3 =</span> <span class="fl">0.01</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.0005</span><span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">nobs =</span> <span class="dv">200</span><span class="dt">L</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>fit_system <span class="ot">&lt;-</span> <span class="fu">joint</span>(fit_A, fit_B, fit_C)</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="fu">params</span>(fit_system)</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; lambda1 lambda2 lambda3 </span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt;    0.02    0.05    0.01</span></span></code></pre></div>
+</div>
+<div id="combining-repeated-estimates" class="section level2">
+<h2>Combining Repeated Estimates</h2>
+<p>When multiple independent experiments estimate the
+<strong>same</strong> parameter, <code>combine()</code> produces the
+optimal estimator via inverse-variance weighting. The combined estimate
+weights more precise estimates more heavily, and the combined variance
+is always less than any individual variance.</p>
+<p><strong>Motivating example</strong>: Three labs independently
+estimate the failure rate <span class="math inline">\(\lambda\)</span>
+of the same component type.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lab1 <span class="ot">&lt;-</span> <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda =</span> <span class="fl">0.050</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.004</span><span class="sc">^</span><span class="dv">2</span>), <span class="at">nobs =</span> <span class="dv">50</span><span class="dt">L</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>lab2 <span class="ot">&lt;-</span> <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda =</span> <span class="fl">0.048</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.002</span><span class="sc">^</span><span class="dv">2</span>), <span class="at">nobs =</span> <span class="dv">200</span><span class="dt">L</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>lab3 <span class="ot">&lt;-</span> <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda =</span> <span class="fl">0.053</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.003</span><span class="sc">^</span><span class="dv">2</span>), <span class="at">nobs =</span> <span class="dv">100</span><span class="dt">L</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>combined <span class="ot">&lt;-</span> <span class="fu">combine</span>(lab1, lab2, lab3)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="fu">params</span>(combined)</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt;  lambda </span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; 0.04961</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="fu">se</span>(combined)</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; [1] 0.001536</span></span></code></pre></div>
+<p>The combined standard error is smaller than any individual standard
+error:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Lab SEs:     &quot;</span>, <span class="fu">se</span>(lab1), <span class="fu">se</span>(lab2), <span class="fu">se</span>(lab3), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; Lab SEs:      0.004 0.002 0.003</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Combined SE: &quot;</span>, <span class="fu">se</span>(combined), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; Combined SE:  0.001536</span></span></code></pre></div>
+<p>The combined estimate is pulled toward the more precise estimates.
+Lab 2 has the smallest variance, so it receives the most weight.</p>
+<p>When all estimates have equal precision, <code>combine()</code>
+reduces to the simple average:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>eq1 <span class="ot">&lt;-</span> <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">mu =</span> <span class="fl">10.0</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="dv">1</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>eq2 <span class="ot">&lt;-</span> <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">mu =</span> <span class="fl">12.0</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="dv">1</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>eq3 <span class="ot">&lt;-</span> <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">mu =</span> <span class="fl">11.0</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="dv">1</span>))</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>eq_combined <span class="ot">&lt;-</span> <span class="fu">combine</span>(eq1, eq2, eq3)</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="fu">params</span>(eq_combined)  <span class="co"># (10 + 12 + 11) / 3 = 11</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; mu </span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; 11</span></span></code></pre></div>
+</div>
+<div id="transformations-via-invariance" class="section level2">
+<h2>Transformations via Invariance</h2>
+<p>By the invariance property of the MLE, if <span class="math inline">\(\hat\theta\)</span> is the MLE of <span class="math inline">\(\theta\)</span>, then <span class="math inline">\(g(\hat\theta)\)</span> is the MLE of <span class="math inline">\(g(\theta)\)</span> for any function <span class="math inline">\(g\)</span>. The <code>rmap()</code> function
+computes this transformation and propagates uncertainty using the delta
+method: <span class="math display">\[
+\text{Var}(g(\hat\theta)) \approx J \, \text{Var}(\hat\theta) \, J^\top,
+\]</span> where <span class="math inline">\(J\)</span> is the Jacobian
+of <span class="math inline">\(g\)</span> evaluated at <span class="math inline">\(\hat\theta\)</span>.</p>
+<div id="univariate-example-rate-to-mean-lifetime" class="section level3">
+<h3>Univariate example: rate to mean lifetime</h3>
+<p>An exponential component has rate <span class="math inline">\(\lambda\)</span>. The mean lifetime is <span class="math inline">\(\mu = 1/\lambda\)</span>. Transform the MLE:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>fit_rate <span class="ot">&lt;-</span> <span class="fu">mle</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda =</span> <span class="fl">0.02</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.001</span><span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="at">nobs =</span> <span class="dv">150</span><span class="dt">L</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>)</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># g: rate -&gt; mean lifetime</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>fit_lifetime <span class="ot">&lt;-</span> <span class="fu">rmap</span>(fit_rate, <span class="cf">function</span>(theta) <span class="fu">c</span>(<span class="at">mean_life =</span> <span class="dv">1</span> <span class="sc">/</span> theta[<span class="dv">1</span>]),</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;delta&quot;</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="fu">params</span>(fit_lifetime)</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt; mean_life </span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt;        50</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="fu">se</span>(fit_lifetime)</span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; [1] 2.5</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="fu">confint</span>(fit_lifetime)</span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co">#&gt;           2.5% 97.5%</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co">#&gt; mean_life 45.1  54.9</span></span></code></pre></div>
+</div>
+<div id="multivariate-example-component-rates-to-system-reliability" class="section level3">
+<h3>Multivariate example: component rates to system reliability</h3>
+<p>For a series system with independent exponential components, the
+system reliability at time <span class="math inline">\(t\)</span> is
+<span class="math display">\[
+R(t) = \exp(-\lambda_1 t) \cdot \exp(-\lambda_2 t) = \exp(-(\lambda_1 +
+\lambda_2) t).
+\]</span></p>
+<p>Starting from the joint MLE of <span class="math inline">\((\lambda_1, \lambda_2)\)</span>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>fit_rates <span class="ot">&lt;-</span> <span class="fu">joint</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda1 =</span> <span class="fl">0.02</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.001</span><span class="sc">^</span><span class="dv">2</span>), <span class="at">nobs =</span> <span class="dv">150</span><span class="dt">L</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda2 =</span> <span class="fl">0.05</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.003</span><span class="sc">^</span><span class="dv">2</span>), <span class="at">nobs =</span> <span class="dv">80</span><span class="dt">L</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>)</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co"># System reliability at t = 10 hours</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>R_mle <span class="ot">&lt;-</span> <span class="fu">rmap</span>(fit_rates,</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  <span class="cf">function</span>(theta) <span class="fu">c</span>(<span class="at">R_t =</span> <span class="fu">exp</span>(<span class="sc">-</span>(theta[<span class="dv">1</span>] <span class="sc">+</span> theta[<span class="dv">2</span>]) <span class="sc">*</span> t0)),</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;delta&quot;</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>)</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="fu">params</span>(R_mle)</span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt;    R_t </span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; 0.4966</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="fu">se</span>(R_mle)</span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt; [1] 0.0157</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="fu">confint</span>(R_mle)</span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt;       2.5%  97.5%</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; R_t 0.4658 0.5274</span></span></code></pre></div>
+<p>The delta method automatically computes the Jacobian via numerical
+differentiation (using <code>numDeriv::jacobian</code>) and propagates
+the covariance.</p>
+</div>
+</div>
+<div id="bridging-to-distribution-algebra" class="section level2">
+<h2>Bridging to Distribution Algebra</h2>
+<p><code>as_dist()</code> converts an MLE to its asymptotic normal (or
+multivariate normal) distribution, bridging into the
+<code>algebraic.dist</code> package where distributions can be further
+composed.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">mle</span>(<span class="at">theta.hat =</span> <span class="fu">c</span>(<span class="at">lambda =</span> <span class="fl">0.02</span>), <span class="at">sigma =</span> <span class="fu">matrix</span>(<span class="fl">0.001</span><span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">as_dist</span>(fit1)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>d1</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt; Normal distribution (mu = 0.02, var = 1e-06)</span></span></code></pre></div>
+<p>This is useful when you want to reason about the sampling
+distribution of the MLE as a distribution object. For instance, you can
+compute the probability that the true rate exceeds a regulatory
+threshold:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># P(lambda &gt; 0.021) under the asymptotic distribution</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">cdf</span>(d1)(<span class="fl">0.021</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&gt; [1] 0.1587</span></span></code></pre></div>
+<p>For bootstrap MLEs, <code>as_dist()</code> returns an empirical
+distribution built from the bootstrap replicates:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>d_boot <span class="ot">&lt;-</span> <span class="fu">as_dist</span>(fit_boot)</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>d_boot</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="co">#&gt; Empirical distribution (999 observations, 1 dimensions)</span></span></code></pre></div>
+</div>
+<div id="full-pipeline" class="section level2">
+<h2>Full Pipeline</h2>
+<p>Here is an end-to-end example tying together all the algebraic
+operations.</p>
+<p><strong>Scenario</strong>: A series system has two independent
+components with exponential lifetimes. Separate accelerated life tests
+estimate each component’s failure rate. We want to infer the system
+reliability at a mission time of <span class="math inline">\(t =
+50\)</span> hours, including a confidence interval.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="co"># --- Step 1: Independent MLEs from separate experiments ---</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co"># Component 1: 200 observed lifetimes</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rexp</span>(<span class="dv">200</span>, <span class="at">rate =</span> <span class="fl">0.003</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>loglik1 <span class="ot">&lt;-</span> <span class="cf">function</span>(rate) {</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>  <span class="cf">if</span> (rate <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="sc">-</span><span class="cn">Inf</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">dexp</span>(x1, <span class="at">rate =</span> rate, <span class="at">log =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>}</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">mle_numerical</span>(</span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>  <span class="fu">optim</span>(<span class="at">par =</span> <span class="fu">c</span>(<span class="at">lambda1 =</span> <span class="fl">0.001</span>), <span class="at">fn =</span> loglik1,</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">&quot;Brent&quot;</span>, <span class="at">lower =</span> <span class="fl">1e-6</span>, <span class="at">upper =</span> <span class="dv">1</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>        <span class="at">hessian =</span> <span class="cn">TRUE</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>)),</span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(<span class="at">nobs =</span> <span class="fu">length</span>(x1))</span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a>)</span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a><span class="co"># Component 2: 120 observed lifetimes</span></span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rexp</span>(<span class="dv">120</span>, <span class="at">rate =</span> <span class="fl">0.008</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a>loglik2 <span class="ot">&lt;-</span> <span class="cf">function</span>(rate) {</span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a>  <span class="cf">if</span> (rate <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="sc">-</span><span class="cn">Inf</span>)</span>
+<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">dexp</span>(x2, <span class="at">rate =</span> rate, <span class="at">log =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a>}</span>
+<span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">mle_numerical</span>(</span>
+<span id="cb17-25"><a href="#cb17-25" tabindex="-1"></a>  <span class="fu">optim</span>(<span class="at">par =</span> <span class="fu">c</span>(<span class="at">lambda2 =</span> <span class="fl">0.001</span>), <span class="at">fn =</span> loglik2,</span>
+<span id="cb17-26"><a href="#cb17-26" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">&quot;Brent&quot;</span>, <span class="at">lower =</span> <span class="fl">1e-6</span>, <span class="at">upper =</span> <span class="dv">1</span>,</span>
+<span id="cb17-27"><a href="#cb17-27" tabindex="-1"></a>        <span class="at">hessian =</span> <span class="cn">TRUE</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>)),</span>
+<span id="cb17-28"><a href="#cb17-28" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(<span class="at">nobs =</span> <span class="fu">length</span>(x2))</span>
+<span id="cb17-29"><a href="#cb17-29" tabindex="-1"></a>)</span>
+<span id="cb17-30"><a href="#cb17-30" tabindex="-1"></a></span>
+<span id="cb17-31"><a href="#cb17-31" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Component 1 rate:&quot;</span>, <span class="fu">params</span>(fit1), <span class="st">&quot;  SE:&quot;</span>, <span class="fu">se</span>(fit1), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb17-32"><a href="#cb17-32" tabindex="-1"></a><span class="co">#&gt; Component 1 rate: 0.002978   SE: 0.0001827</span></span>
+<span id="cb17-33"><a href="#cb17-33" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Component 2 rate:&quot;</span>, <span class="fu">params</span>(fit2), <span class="st">&quot;  SE:&quot;</span>, <span class="fu">se</span>(fit2), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" tabindex="-1"></a><span class="co">#&gt; Component 2 rate: 0.007983   SE: 0.0007171</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># --- Step 2: Compose into joint parameter space ---</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>fit_system <span class="ot">&lt;-</span> <span class="fu">joint</span>(fit1, fit2)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Joint parameters:&quot;</span>, <span class="fu">params</span>(fit_system), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="co">#&gt; Joint parameters: 0.002978 0.007983</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Joint vcov:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co">#&gt; Joint vcov:</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="fu">vcov</span>(fit_system)</span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="co">#&gt;           [,1]      [,2]</span></span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="co">#&gt; [1,] 3.336e-08 0.000e+00</span></span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="co">#&gt; [2,] 0.000e+00 5.142e-07</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># --- Step 3: Transform to system reliability at t = 50 ---</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>mission_time <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>R_system <span class="ot">&lt;-</span> <span class="fu">rmap</span>(fit_system,</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="cf">function</span>(theta) <span class="fu">c</span>(<span class="at">R_sys =</span> <span class="fu">exp</span>(<span class="sc">-</span>(theta[<span class="dv">1</span>] <span class="sc">+</span> theta[<span class="dv">2</span>]) <span class="sc">*</span> mission_time)),</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;delta&quot;</span></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>)</span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;System reliability R(50):&quot;</span>, <span class="fu">params</span>(R_system), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="co">#&gt; System reliability R(50): 0.5781</span></span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SE of R(50):             &quot;</span>, <span class="fu">se</span>(R_system), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a><span class="co">#&gt; SE of R(50):              0.02139</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="co"># --- Step 4: Inference ---</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;95% CI for R(50):</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="co">#&gt; 95% CI for R(50):</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="fu">confint</span>(R_system)</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a><span class="co">#&gt;         2.5% 97.5%</span></span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="co">#&gt; R_sys 0.5361  0.62</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="co"># --- Step 5: Bridge to distribution algebra ---</span></span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>R_dist <span class="ot">&lt;-</span> <span class="fu">as_dist</span>(R_system)</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Asymptotic distribution of R(50):&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="co">#&gt; Asymptotic distribution of R(50):</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>R_dist</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="co">#&gt; Normal distribution (mu = 0.578067, var = 0.000457439)</span></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="co"># Probability that system reliability exceeds 55%</span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;P(R(50) &gt; 0.55):&quot;</span>, <span class="dv">1</span> <span class="sc">-</span> <span class="fu">cdf</span>(R_dist)(<span class="fl">0.55</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a><span class="co">#&gt; P(R(50) &gt; 0.55): 0.9053</span></span></code></pre></div>
+<p>The pipeline reads as a chain of algebraic operations: two
+independent MLEs are composed via <code>joint()</code>, transformed to
+the quantity of interest via <code>rmap()</code>, and then reasoned
+about as a distribution via <code>as_dist()</code>. Each step preserves
+the uncertainty structure inherited from the original experiments.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

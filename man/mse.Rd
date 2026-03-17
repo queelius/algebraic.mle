@@ -5,12 +5,14 @@
 \title{Generic method for computing the mean squared error (MSE) of an estimator,
 `mse(x) = E[(x-mu)^2]` where `mu` is the true parameter value.}
 \usage{
-mse(x, theta)
+mse(x, theta, ...)
 }
 \arguments{
 \item{x}{the object to compute the MSE of}
 
 \item{theta}{the true parameter value}
+
+\item{...}{additional arguments passed to methods}
 }
 \value{
 The mean squared error (matrix or scalar).

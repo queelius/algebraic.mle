@@ -1,3 +1,22 @@
+# algebraic.mle 2.0.1
+
+## Bug fixes
+
+* Fixed `pred()` using point estimate instead of random draw for first Monte
+  Carlo sample, breaking the parameter-uncertainty integration
+* Fixed `confint()` ignoring the `parm` argument. Now honors parameter
+  subsetting by name or index, matching the `stats::confint` contract.
+* Fixed `confint()` producing NaN without informative error when
+  variance-covariance has negative diagonal (bad Hessian). Now gives
+  actionable error message.
+* Fixed `combine()` giving cryptic "non-conformable arrays" error when MLEs
+  have different parameter dimensions. Now validates upfront.
+* Fixed `sampler.mle_fit_boot()` unreachable code branch (`length(x$t) == 1`
+  is never true for boot objects; corrected to `ncol(x$t) == 1L`)
+* Removed dead `stud` case in `confint.mle_fit_boot()` switch
+* Fixed stale `point()` references in roxygen and vignette prose (now `params()`)
+* Fixed `bias.mle_normal` vignette example missing `...` in method signature
+
 # algebraic.mle 2.0.0
 
 ## Breaking changes

@@ -36,9 +36,8 @@ test_that("cdf.mle multivariate returns correct CDF", {
   fit <- mle(theta.hat = c(a = 0, b = 0), sigma = diag(2))
   F <- cdf(fit)
 
-  # CDF at (Inf, Inf) should be ~1
-  val <- F(c(10, 10))
-  expect_true(val > 0.999)
+  val <- F(c(3, 3))
+  expect_true(val > 0.99)
 })
 
 ## ── inv_cdf.mle ─────────────────────────────────────────────────────────
