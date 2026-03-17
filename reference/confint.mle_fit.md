@@ -17,7 +17,8 @@ confint(object, parm = NULL, level = 0.95, use_t_dist = FALSE, ...)
 
 - parm:
 
-  the parameters to compute the confidence intervals for (not used)
+  character or integer vector of parameters to return intervals for. If
+  NULL (default), all parameters are returned.
 
 - level:
 

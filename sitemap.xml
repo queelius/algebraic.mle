@@ -20,8 +20,10 @@
 <url><loc>https://queelius.github.io/algebraic.mle/reference/bias.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/bias.mle_fit.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/bias.mle_fit_boot.html</loc></url>
+<url><loc>https://queelius.github.io/algebraic.mle/reference/block_diag.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/cdf.mle_fit.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/coef.mle_fit.html</loc></url>
+<url><loc>https://queelius.github.io/algebraic.mle/reference/collect_or_null.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/combine.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/combine_mles.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/conditional.mle_fit.html</loc></url>
@@ -33,11 +35,13 @@
 <url><loc>https://queelius.github.io/algebraic.mle/reference/dim.mle_fit.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/dim.mle_fit_boot.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/expectation.mle_fit.html</loc></url>
+<url><loc>https://queelius.github.io/algebraic.mle/reference/fim_or_ginv_vcov.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/index.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/inv_cdf.mle_fit.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/is_mle.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/is_mle_boot.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/joint.html</loc></url>
+<url><loc>https://queelius.github.io/algebraic.mle/reference/label_ci.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/logLik.mle_fit.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/marginal.mle_fit.html</loc></url>
 <url><loc>https://queelius.github.io/algebraic.mle/reference/mean.mle_fit.html</loc></url>

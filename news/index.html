@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">algebraic.mle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,20 @@
       <small>Source: <a href="https://github.com/queelius/algebraic.mle/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.1" id="algebraicmle-201">algebraic.mle 2.0.1<a class="anchor" aria-label="anchor" href="#algebraicmle-201"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-2-0-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-0-1"></a></h3>
+<ul><li>Fixed <code><a href="../reference/pred.html">pred()</a></code> using point estimate instead of random draw for first Monte Carlo sample, breaking the parameter-uncertainty integration</li>
+<li>Fixed <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code> ignoring the <code>parm</code> argument. Now honors parameter subsetting by name or index, matching the <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">stats::confint</a></code> contract.</li>
+<li>Fixed <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code> producing NaN without informative error when variance-covariance has negative diagonal (bad Hessian). Now gives actionable error message.</li>
+<li>Fixed <code><a href="../reference/combine.html">combine()</a></code> giving cryptic “non-conformable arrays” error when MLEs have different parameter dimensions. Now validates upfront.</li>
+<li>Fixed <code><a href="../reference/sampler.mle_fit_boot.html">sampler.mle_fit_boot()</a></code> unreachable code branch (<code>length(x$t) == 1</code> is never true for boot objects; corrected to <code>ncol(x$t) == 1L</code>)</li>
+<li>Removed dead <code>stud</code> case in <code><a href="../reference/confint.mle_fit_boot.html">confint.mle_fit_boot()</a></code> switch</li>
+<li>Fixed stale <code>point()</code> references in roxygen and vignette prose (now <code><a href="https://queelius.github.io/algebraic.dist/reference/params.html" class="external-link">params()</a></code>)</li>
+<li>Fixed <code>bias.mle_normal</code> vignette example missing <code>...</code> in method signature</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.0" id="algebraicmle-200">algebraic.mle 2.0.0<a class="anchor" aria-label="anchor" href="#algebraicmle-200"></a></h2>
 <div class="section level3">

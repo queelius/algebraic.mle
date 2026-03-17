@@ -118,7 +118,7 @@ fit_weibull <- function(data) {
         superclasses = c("mle_weibull"))
 }
 
-bias.mle_normal <- function(x, theta = NULL) {
+bias.mle_normal <- function(x, theta = NULL, ...) {
     if (is.null(theta))
         theta <- params(x)
     c(0, -theta[2] / nobs(x))
@@ -555,7 +555,7 @@ The function `pred` takes as arguments `x`, in this case an `mle_fit`
 object, and a sampler for the distribution of the random variable of
 interest, in this case `rweibull` (the sampler for the normal
 distribution). The sampler must be compatible with the output of
-`point(x)`, whether that output be a scalar or a vector. Here is how we
+`params(x)`, whether that output be a scalar or a vector. Here is how we
 compute the PI for ${\widehat{T}}_{n + 1}$:
 
 ``` r

@@ -7,7 +7,7 @@ value.
 ## Usage
 
 ``` r
-mse(x, theta)
+mse(x, theta, ...)
 ```
 
 ## Arguments
@@ -19,6 +19,10 @@ mse(x, theta)
 - theta:
 
   the true parameter value
+
+- ...:
+
+  additional arguments passed to methods
 
 ## Value
 

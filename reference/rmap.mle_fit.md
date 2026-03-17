@@ -2,7 +2,7 @@
 
 By the invariance property of the MLE, if \`x\` is an \`mle_fit\`
 object, then under the right conditions, asymptotically, \`g(x)\` is
-normally distributed, g(x) ~ normal(g(point(x)),sigma) where \`sigma\`
+normally distributed, g(x) ~ normal(g(params(x)),sigma) where \`sigma\`
 is the variance-covariance of \`f(x)\`
 
 ## Usage
@@ -20,7 +20,10 @@ rmap(x, g, ..., n = 1000, method = c("mc", "delta"))
 
 - g:
 
-  a function
+  a deterministic, differentiable function mapping a numeric parameter
+  vector to a numeric vector. The Jacobian is computed numerically via
+  [`numDeriv::jacobian`](https://rdrr.io/pkg/numDeriv/man/jacobian.html)
+  when `method = "delta"`.
 
 - ...:
 

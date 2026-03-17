@@ -24,7 +24,8 @@ confint(
 
 - parm:
 
-  the parameter to obtain the confidence interval of (not used)
+  character or integer vector of parameters to return intervals for. If
+  NULL (default), all parameters are returned.
 
 - level:
 

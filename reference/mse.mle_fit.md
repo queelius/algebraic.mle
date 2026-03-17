@@ -9,7 +9,7 @@ bias(x.hat, x) “\`
 
 ``` r
 # S3 method for class 'mle_fit'
-mse(x, theta = NULL)
+mse(x, theta = NULL, ...)
 ```
 
 ## Arguments
@@ -23,6 +23,10 @@ mse(x, theta = NULL)
   true parameter value, defaults to \`NULL\` for unknown. If \`NULL\`,
   then we let the bias method deal with it. Maybe it has a nice way of
   estimating the bias.
+
+- ...:
+
+  additional arguments (not used)
 
 ## Value
 

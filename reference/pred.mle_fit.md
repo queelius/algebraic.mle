@@ -57,7 +57,7 @@ The \`samp\` function is used to sample from the distribution of
 fit <- mle(theta.hat = c(mu = 5), sigma = matrix(0.1), nobs = 100L)
 # \donttest{
 pred(fit, samp = function(n, theta) rnorm(n, theta[1], 1))
-#>          mean    lower    upper
-#> [1,] 5.001801 2.927087 7.064163
+#>        mean    lower    upper
+#> [1,] 5.0018 2.927087 7.064163
 # }
 ```

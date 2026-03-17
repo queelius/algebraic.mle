@@ -1,5 +1,36 @@
 # Changelog
 
+## algebraic.mle 2.0.1
+
+### Bug fixes
+
+- Fixed
+  [`pred()`](https://queelius.github.io/algebraic.mle/reference/pred.md)
+  using point estimate instead of random draw for first Monte Carlo
+  sample, breaking the parameter-uncertainty integration
+- Fixed [`confint()`](https://rdrr.io/r/stats/confint.html) ignoring the
+  `parm` argument. Now honors parameter subsetting by name or index,
+  matching the [`stats::confint`](https://rdrr.io/r/stats/confint.html)
+  contract.
+- Fixed [`confint()`](https://rdrr.io/r/stats/confint.html) producing
+  NaN without informative error when variance-covariance has negative
+  diagonal (bad Hessian). Now gives actionable error message.
+- Fixed
+  [`combine()`](https://queelius.github.io/algebraic.mle/reference/combine.md)
+  giving cryptic “non-conformable arrays” error when MLEs have different
+  parameter dimensions. Now validates upfront.
+- Fixed
+  [`sampler.mle_fit_boot()`](https://queelius.github.io/algebraic.mle/reference/sampler.mle_fit_boot.md)
+  unreachable code branch (`length(x$t) == 1` is never true for boot
+  objects; corrected to `ncol(x$t) == 1L`)
+- Removed dead `stud` case in
+  [`confint.mle_fit_boot()`](https://queelius.github.io/algebraic.mle/reference/confint.mle_fit_boot.md)
+  switch
+- Fixed stale `point()` references in roxygen and vignette prose (now
+  [`params()`](https://queelius.github.io/algebraic.dist/reference/params.html))
+- Fixed `bias.mle_normal` vignette example missing `...` in method
+  signature
+
 ## algebraic.mle 2.0.0
 
 ### Breaking changes
