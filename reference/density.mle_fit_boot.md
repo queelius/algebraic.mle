@@ -54,6 +54,6 @@ density(fit)
 #>         return(counts/n)
 #>     }
 #> }
-#> <bytecode: 0x55b294f15550>
-#> <environment: 0x55b294f14eb0>
+#> <bytecode: 0x56447601b958>
+#> <environment: 0x564476017450>
 ```
