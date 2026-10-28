@@ -27,3 +27,9 @@ methods, and parameter alignment with correlated covariance matrices.
 
 Package installation, examples (including --run-donttest), tests, vignette
 rebuilding, and the PDF manual all passed.
+
+## Current R-devel
+
+GitHub Actions, R Under development (2026-10-26 r90766),
+R CMD check --no-manual --as-cran: Status: OK.
+https://github.com/queelius/algebraic.mle/actions/runs/40640406846/job/122656973839
