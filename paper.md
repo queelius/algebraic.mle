@@ -20,6 +20,7 @@ into an `mle_numerical` object, after which the full suite of methods
 becomes available:
 
 ``` r
+
 sol <- mle_numerical(optim(
   par = c(b0 = 0, b1 = 0), fn = loglik,
   control = list(fnscale = -1), hessian = TRUE))
@@ -103,8 +104,8 @@ variance-covariance as the inverse of the negative Hessian; `mle_boot`
 wraps a [`boot::boot`](https://rdrr.io/pkg/boot/man/boot.html) object,
 estimating bias and variance from bootstrap replicates \[@efron1993\]
 rather than asymptotic theory; and `rmap_mle` represents a transformed
-MLE $g\left( \widehat{\theta} \right)$, with variance estimated either
-by the delta method (using the Jacobian from
+MLE $`g(\hat{\theta})`$, with variance estimated either by the delta
+method (using the Jacobian from
 [`numDeriv::jacobian`](https://rdrr.io/pkg/numDeriv/man/jacobian.html))
 or by Monte Carlo simulation.
 

@@ -1,6 +1,7 @@
 # Fitting Common Distributions to a DGP
 
 ``` r
+
 library(algebraic.mle)
 library(algebraic.dist)
 library(boot)
@@ -20,6 +21,7 @@ provides a better fit.
 First, here are the simulation parameters:
 
 ``` r
+
 n <- 100
 err <- 0.1
 shape <- 2
@@ -28,15 +30,24 @@ theta = c(shape, scale)
 set.seed(142334)
 ```
 
-We simulate a sample of size $n = 100$ from the DGP:
-$$T_{i} = W_{i} + \epsilon_{i}$$ where
-$$W_{i} \sim \operatorname{Weibull}(k = 2,\lambda = 10)$$ and
-$$\epsilon_{i} \sim \operatorname{normal}(\mu = 0,\sigma = 0.1).$$
+We simulate a sample of size $`n = 100`$ from the DGP:
+``` math
+    T_i = W_i + \epsilon_i
+```
+where
+``` math
+    W_i \sim \operatorname{Weibull}(k = 2, \lambda = 10)
+```
+and
+``` math
+    \epsilon_i \sim \operatorname{normal}(\mu = 0, \sigma = 0.1).
+```
 
 We can simulate a sample from this DGP mixture distribution using the
 `rweibull` and `rnorm` functions:
 
 ``` r
+
 x <- rweibull(n = n, shape = shape, scale = scale) +
   rnorm(n = n, mean = 0, sd = err)
 ```
@@ -46,6 +57,7 @@ x <- rweibull(n = n, shape = shape, scale = scale) +
 Here are some observations:
 
 ``` r
+
 head(x, n = 4)
 #> [1]  6.69  2.96 13.05  5.34
 ```
@@ -78,6 +90,7 @@ parameters of both the Weibull and the Normal, and then wrap these
 estimates into an `mle_fit` object provided by `algebraic.mle` package:
 
 ``` r
+
 fit_normal <- function(data) {
     loglik <- function(theta) {
         sum(dnorm(data, mean = theta[1], sd = sqrt(theta[2]), log = TRUE))
@@ -176,45 +189,48 @@ distribution, but we will not pursue this.
 A nice property of MLEs is that, asymptotically, given some regularity
 conditions, they are normally distributed with a mean given by the true
 true parameter and a variance-covariance given by the inverse of the FIM
-evaluated at $\theta$.
+evaluated at $`\theta`$.
 
-We do not know $\theta$, but we have have estimates, and thus we may
-approximate the sampling distribution of $\widehat{\theta}$ with
-$\mathcal{N}\left( \widehat{\theta},I^{- 1}\left( \widehat{\theta} \right) \right)$.
+We do not know $`\theta`$, but we have have estimates, and thus we may
+approximate the sampling distribution of $`\hat\theta`$ with
+$`\mathcal{N}(\hat\theta,I^{-1}(\hat\theta))`$.
 
-Let $F$ denote the true distribution function such that $X_{j} \sim F$
-for all $j$. Suppose we have some population parameter $\theta = t(F)$
-and an estimator of $\theta$ given by
-$\widehat{\theta} = s\left( \{ X_{1},\ldots,X_{n}\} \right)$. A
-reasonable requirement for an estimator $\widehat{\theta}$ is that it
-converges to the true parameter value $\theta$ as we collect more and
-more data. In particular, we say that it is a consistent estimator of
-$\theta$ if $\widehat{\theta}$ converges in probability to $\theta$,
-denoted by $\widehat{\theta}\overset{p}{\mapsto}\theta$.
+Let $`F`$ denote the true distribution function such that $`X_j \sim F`$
+for all $`j`$. Suppose we have some population parameter
+$`\theta = t(F)`$ and an estimator of $`\theta`$ given by
+$`\hat\theta = s(\{X_1,\ldots,X_n\})`$. A reasonable requirement for an
+estimator $`\hat\theta`$ is that it converges to the true parameter
+value $`\theta`$ as we collect more and more data. In particular, we say
+that it is a consistent estimator of $`\theta`$ if $`\hat\theta`$
+converges in probability to $`\theta`$, denoted by
+$`\hat\theta \overset{p}{\mapsto} \theta`$.
 
-If the regularity conditions hold for the MLE, then $\widehat{\theta}$
-is a consistent estimator of $\theta$. However, for finite sample sizes,
-the estimator may be biased. The bias of $\widehat{\theta}$ with respect
-to $\theta$ is defined as
-$$\operatorname{bias}\left( \widehat{\theta},\theta \right) = E\left( \widehat{\theta} \right) - \theta,$$
-where $\operatorname{bias}\left( \widehat{\theta},\theta \right) = 0$
-indicates that $\widehat{\theta}$ is an *unbiased* estimator of
-$\theta$.
+If the regularity conditions hold for the MLE, then $`\hat\theta`$ is a
+consistent estimator of $`\theta`$. However, for finite sample sizes,
+the estimator may be biased. The bias of $`\hat\theta`$ with respect to
+$`\theta`$ is defined as
+``` math
+    \operatorname{bias}(\hat\theta,\theta) = E(\hat\theta) - \theta,
+```
+where $`\operatorname{bias}(\hat\theta,\theta) = 0`$ indicates that
+$`\hat\theta`$ is an *unbiased* estimator of $`\theta`$.
 
-As a function of the true distribution $F$, the bias is unknown and is
-not a statistic. However, in the case of the normal, $\widehat{\mu}$ is
-unbiased and, analytically, the bias of ${\widehat{\sigma}}^{2}$ is
-given by $- \frac{1}{n}\sigma^{2}$:
+As a function of the true distribution $`F`$, the bias is unknown and is
+not a statistic. However, in the case of the normal, $`\hat\mu`$ is
+unbiased and, analytically, the bias of $`\hat\sigma^2`$ is given by
+$`-\frac{1}{n} \sigma^2`$:
 
 ``` r
+
 bias(theta.hat,theta)
 #> [1]  0.0 -0.1
 ```
 
-If $\sigma^{2}$ is not known, we may estimate it by using replacing
-${\widehat{\sigma}}^{2}$ instead:
+If $`\sigma^2`$ is not known, we may estimate it by using replacing
+$`\hat\sigma^2`$ instead:
 
 ``` r
+
 bias(theta.hat)
 #> [1]  0.000 -0.191
 ```
@@ -227,13 +243,21 @@ or something else, but we don’t attempt to do that here.
 
 The mean squared error (MSE) is another performance measure of an
 estimator. It is given by
-$$\operatorname{mse}\left( \widehat{\theta} \right) = E\{\left( \widehat{\theta} - \theta \right)^{T}\left( \widehat{\theta} - \theta \right)\},$$
+``` math
+    \operatorname{mse}(\hat\theta) = E\bigl\{(\hat\theta - \theta)^T(\hat\theta - \theta)\bigr\},
+```
 Another way to compute the MSE is given by
-$$\operatorname{mse}\left( \widehat{\theta} \right) = \operatorname{trace}(\operatorname{cov}\left( \widehat{\theta} \right) + \operatorname{bias}\left( \widehat{\theta} \right)^{T}\operatorname{bias}\left( \widehat{\theta} \right).$$
+``` math
+    \operatorname{mse}(\hat\theta) =
+        \operatorname{trace}(\operatorname{cov}(\hat\theta) +
+        \operatorname{bias}(\hat\theta)^T
+        \operatorname{bias}(\hat\theta).
+```
 
-Here’s R code to compute the MSE of $\widehat{\theta}$:
+Here’s R code to compute the MSE of $`\hat\theta`$:
 
 ``` r
+
 round(mse(theta.hat), digits=3)
 #>       [,1] [,2]
 #> [1,] 0.191 0.00
@@ -248,50 +272,55 @@ The normal distribution has significant MSE compared to the Weibull.
 
 ## Invariance Property of the MLE
 
-An interesting property of an MLE $\widehat{\theta}$ is that the MLE of
-$f(\theta)$ is given by $f\left( \widehat{\theta} \right)$. What is the
-distribution of $f\left( \widehat{\theta} \right)$? Asymptotically, it
-is normally distributed with a mean given by $f(\theta)$ and a
-variace-covariance given by the covariance of the sampling distribution
-of $f\left( \widehat{\theta} \right)$.
+An interesting property of an MLE $`\hat\theta`$ is that the MLE of
+$`f(\theta)`$ is given by $`f(\hat\theta)`$. What is the distribution of
+$`f(\hat\theta)`$? Asymptotically, it is normally distributed with a
+mean given by $`f(\theta)`$ and a variace-covariance given by the
+covariance of the sampling distribution of $`f(\hat\theta)`$.
 
 We provide two methods to compute the variance-covariance.
 
 ### Delta Method
 
-If $f$ is differentiable, the variance-covariance is given by
-$$\operatorname{var}\left( f\left( \widehat{\theta} \right) \right) = E\{(f\left( \widehat{\theta} \right) - f(\theta))^{2}\} = E\{ J_{f}\left( \widehat{\theta} \right)I\left( \widehat{\theta} \right)^{- 1}J_{f}\left( \widehat{\theta} \right)^{T}\}.$$
-Here, $J_{f}\left( \widehat{\theta} \right)$ is the Jacobian of $f$
-evaluated at $\widehat{\theta}$.
+If $`f`$ is differentiable, the variance-covariance is given by
+``` math
+\operatorname{var}(f(\hat\theta)) = \operatorname{E}\bigl\{
+    \bigl(f(\hat\theta) - f(\theta)\bigr)^2\bigr\} =
+    \operatorname{E}\bigl\{J_f(\hat\theta) I(\hat\theta)^{-1} J_f(\hat\theta)^T\bigr\}.
+```
+Here, $`J_f(\hat\theta)`$ is the Jacobian of $`f`$ evaluated at
+$`\hat\theta`$.
 
 ### Monte-Carlo Method
 
-The delta method requires that $f$ be differentiable, but we may use the
-Monte-carlo method to estimate the distribution of
-$f\left( \widehat{\theta} \right)$ for any function $f$. We simply
-sample from the MLE of $\widehat{\theta}$ and apply $f$ to its estimates
-and take the covariance of the sample.
+The delta method requires that $`f`$ be differentiable, but we may use
+the Monte-carlo method to estimate the distribution of $`f(\hat\theta)`$
+for any function $`f`$. We simply sample from the MLE of $`\hat\theta`$
+and apply $`f`$ to its estimates and take the covariance of the sample.
 
 Next, we show how to compute the sampling distribution of
-$g\left( \widehat{\theta} \right)$ for some function $g$ and some MLE
-$\widehat{\theta}$ using both the delta and mc methods.
+$`g(\hat\theta)`$ for some function $`g`$ and some MLE $`\hat\theta`$
+using both the delta and mc methods.
 
 ### Example 1
 
-For this example, we use the Weibull fit. Let $g(\theta) = A\theta + b$
-for some matrix $A$ and vector $b$. (This is a simple linear
-transformation of $\theta$.) We can define $g$ in R with:
+For this example, we use the Weibull fit. Let
+$`g(\theta) = A \theta + b`$ for some matrix $`A`$ and vector $`b`$.
+(This is a simple linear transformation of $`\theta`$.) We can define
+$`g`$ in R with:
 
 ``` r
+
 A <- matrix(c(2,3),nrow=2)
 b <- c(1,0)
 g <- function(x) A %*% x + b
 ```
 
-We compute the variance-covariance of the MLE of $g(\theta)$ using both
-methods:
+We compute the variance-covariance of the MLE of $`g(\theta)`$ using
+both methods:
 
 ``` r
+
 g.mc <- rmap(theta.weibull,g,n=100000L)
 g.delta <- rmap(theta.weibull,g,method="delta")
 round(vcov(g.mc), digits=3)
@@ -314,19 +343,20 @@ They are pretty close.
 
 Since the variance-covariance of an MLE is inversely proportional to the
 Fisher information, we can combine multiple independent MLEs of the same
-$\theta$ — each estimated from a different sample — into a single MLE
+$`\theta`$ — each estimated from a different sample — into a single MLE
 that incorporates the Fisher information from all samples.
 
-Consider $k$ mutually independent MLEs of parameter $\theta$,
-${\widehat{\theta}}_{1},\ldots,{\widehat{\theta}}_{k}$, where
-${\widehat{\theta}}_{j} \sim N\left( \theta,I_{j}^{- 1}(\theta) \right)$.
-Then, the sampling MLE of $\theta$ that incorporates all of the data in
-${\widehat{\theta}}_{1},\ldots,{\widehat{\theta}}_{k}$ is given by the
-inverse-variance weighted mean,
-$${\widehat{\theta}}_{w} = \left( \sum\limits_{j = 1}^{k}I_{j}(\theta) \right)^{- 1}\left( \sum\limits_{j = 1}^{k}I_{j}(\theta){\widehat{\theta}}_{j} \right),$$
-which, asymptotically, has an expected value of $\theta$ and a
-variance-covariance of
-$\left( \sum_{j = 1}^{k}I_{j}(\theta) \right)^{- 1}$.
+Consider $`k`$ mutually independent MLEs of parameter $`\theta`$,
+$`\hat\theta_1,\ldots,\hat\theta_k`$, where
+$`\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))`$. Then, the sampling MLE
+of $`\theta`$ that incorporates all of the data in
+$`\hat\theta_1,\ldots,\hat\theta_k`$ is given by the inverse-variance
+weighted mean,
+``` math
+    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
+```
+which, asymptotically, has an expected value of $`\theta`$ and a
+variance-covariance of $`\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}`$.
 
 ### Example 2
 
@@ -334,18 +364,19 @@ For this example, we use the normal fit.
 
 To evaluate the performance of
 [`combine()`](https://queelius.github.io/algebraic.mle/reference/combine.md),
-we generate a sample of $N = 500$ observations from
-$\mathcal{N}(\theta)$ and compute the MLE for the observed sample,
-denoted by $\widehat{\theta}$.
+we generate a sample of $`N=500`$ observations from
+$`\mathcal{N}(\theta)`$ and compute the MLE for the observed sample,
+denoted by $`\hat\theta`$.
 
-We then divide the observed sample into $r = 5$ sub-samples, each of
-size $N/r = 100$, and compute the MLE for each sub-sample, denoted by
-$\theta^{(1)},\ldots,\theta^{(r)}$.
+We then divide the observed sample into $`r=5`$ sub-samples, each of
+size $`N/r=100`$, and compute the MLE for each sub-sample, denoted by
+$`\theta^{(1)},\ldots,\theta^{(r)}`$.
 
 Finally, we combine these MLEs via inverse-variance weighting to form
-the combined MLE, denoted by $\theta_{w}$:
+the combined MLE, denoted by $`\theta_w`$:
 
 ``` r
+
 N <- 500
 r <- 5
 samp <- rnorm(N, mean = theta[1], sd = sqrt(theta[2]))
@@ -362,6 +393,7 @@ We show the results in the following R code. First, we show the combined
 MLE and its MSE:
 
 ``` r
+
 params(mle.wt)
 #> [1] 1.98 8.71
 round(mse(mle.wt), digits=3)
@@ -373,6 +405,7 @@ round(mse(mle.wt), digits=3)
 The MLE for the total sample and its MSE is:
 
 ``` r
+
 params(mle)
 #> [1] 1.98 9.28
 round(mse(mle), digits=3)
@@ -381,8 +414,8 @@ round(mse(mle), digits=3)
 #> [2,] 0.000 0.345
 ```
 
-We see that $\widehat{\theta}$ and ${\widehat{\theta}}_{w}$ model
-approximately the same sampling distribution.
+We see that $`\hat\theta`$ and $`\hat\theta_w`$ model approximately the
+same sampling distribution.
 
 ## Bootstrapping the MLEs
 
@@ -397,6 +430,7 @@ returns the MLE of the parameters and then pass it to `mle_boot`
 constructor:
 
 ``` r
+
 theta.boot <- mle_boot(
     boot(data = x,
          statistic = function(x, i) params(fit_weibull(x[i])),
@@ -408,6 +442,7 @@ information about it, but we can obtain specified statistics from the
 Bootstrap MLE using the standard interface in `algebraic.mle`, e.g.:
 
 ``` r
+
 print(theta.boot)
 #> Maximum likelihood estimator of type mle_fit_boot is normally distributed.
 #> The estimates of the parameters are given by:
@@ -431,23 +466,29 @@ obtained using the large sampling assumption.
 ## Goodness-of-Fit
 
 We are fitting a model to the data that does not precisely capture the
-generative model $W$. So, how good of a fit is it?
+generative model $`W`$. So, how good of a fit is it?
 
-We will conduct a goodness of fit test, $$\begin{aligned}
-H_{0} & {:\text{the data is compatible with the Weibull distribution}} \\
-H_{A} & {:\text{the data is not compatible with the Weibull distribution}.}
-\end{aligned}$$
+We will conduct a goodness of fit test,
+``` math
+\begin{align}
+  H_0 &: \text{the data is compatible with the Weibull distribution}\\
+  H_A &: \text{the data is not compatible with the Weibull distribution}.
+\end{align}
+```
 
 To perform this test, we will use the Cramer-von Mises test. This test
 is based on the Cramer-von Mises statistic, which is a measure of the
 distance between the empirical distribution function of the data and the
 distribution function of the model. The Cramer-von Mises statistic is
 given by
-$${\widehat{D}}_{n}^{2} = \frac{1}{n}\sum\limits_{i = 1}^{n}\left( {\widehat{F}}_{n}\left( x_{i} \right) - F\left( x_{i} \right) \right)^{2}$$
-where ${\widehat{F}}_{n}$ is the empirical distribution function of the
-data and $F$ is the distribution function of the model.
+``` math
+  \hat D_n^2 = \frac{1}{n}\sum_{i=1}^n \left(\hat F_n(x_i) - F(x_i)\right)^2
+```
+where $`\hat F_n`$ is the empirical distribution function of the data
+and $`F`$ is the distribution function of the model.
 
 ``` r
+
 cramer.test <- function(obs.dat,ref.dat)
 {
   stat <- CDFt::CramerVonMisesTwoSamples(obs.dat,ref.dat)
@@ -474,11 +515,12 @@ cramer.test(x, ref.dat)
 #> [1] 1000000
 ```
 
-Looking at the $p$-value, we see that the data is compatible with the
+Looking at the $`p`$-value, we see that the data is compatible with the
 Weibull distribution. Now, let’s do the same for the normal
 distribution:
 
 ``` r
+
 norm.mu <- params(theta.hat)[1]
 norm.var <- params(theta.hat)[2]
 ref.dat <- rnorm(1000000, mean = norm.mu, sd = sqrt(norm.var))
@@ -497,14 +539,18 @@ cramer.test(x, ref.dat)
 ```
 
 They are both compatible with the data. However, the Weibull
-distribution has a larger $p$-value, which may suggest it is a better
+distribution has a larger $`p`$-value, which may suggest it is a better
 fit. We also have the AIC measure of goodness of fit. The AIC is given
-by $$\text{AIC} = - 2\log L + 2k,$$ where $L$ is the likelihood of the
-model and $k$ is the number of parameters in the model. The AIC is a
-measure of the tradeoff between the goodness of fit and the complexity
-of the model.
+by
+``` math
+  \text{AIC} = -2\log L + 2k,
+```
+where $`L`$ is the likelihood of the model and $`k`$ is the number of
+parameters in the model. The AIC is a measure of the tradeoff between
+the goodness of fit and the complexity of the model.
 
 ``` r
+
 AIC(theta.weibull)
 #> [1] 573
 AIC(theta.hat)
@@ -519,60 +565,67 @@ measure, the Weibull distribution is the better fit.
 Frequently, we are actually interested in predicting the outcome of the
 random variable (or vector) that we are estimating the parameters of.
 
-We observed a sample $\mathcal{D} = \{ T_{i}\}_{i = 1}^{n}$ where
-$T_{i} \sim N\left( \mu,\sigma^{2} \right)$,
-$\theta = \left( \mu,\sigma^{2} \right)^{T}$ is not known. We compute
-the MLE of $\theta$, which, asymptotically, is normally distributed with
-a mean $\theta$ and a variance-covariance $I^{- 1}(\theta)/n$.
+We observed a sample $`\mathcal{D} = \{T_i\}_{i=1}^n`$ where
+$`T_i \sim N(\mu,\sigma^2)`$, $`\theta = (\mu,\sigma^2)^T`$ is not
+known. We compute the MLE of $`\theta`$, which, asymptotically, is
+normally distributed with a mean $`\theta`$ and a variance-covariance
+$`I^{-1}(\theta)/n`$.
 
 We wish to model the uncertainty of a new observation,
-${\widehat{T}}_{n + 1}|\mathcal{D}$. We do so by considering both the
+$`\hat{T}_{n+1}|\mathcal{D}`$. We do so by considering both the
 uncertainty inherent to the Normal distribution and the uncertainty of
-our estimate $\widehat{\theta}$ of $\theta$. In particular, we let
-${\widehat{T}}_{n + 1}|\widehat{\theta} \sim N\left( \widehat{\mu},{\widehat{\sigma}}^{2} \right)$
-and $\widehat{\theta} \sim N\left( \theta,I^{- 1}(\theta)/n \right)$
-(the sampling distribution of the MLE). Then, the joint distribution of
-${\widehat{T}}_{n + 1}$ and $\widehat{\theta}$ has the pdf given by
-$$f(t,\theta) = f_{\widehat{T}|\widehat{\theta}}\left( t|\theta = \left( \mu,\sigma^{2} \right) \right)f_{\widehat{\theta}}(\theta),$$
-and thus to find $f(t)$, we marginalize over $\theta$, obtaining
-$$f(t) = \int_{- \infty}^{\infty}\int_{- \infty}^{\infty}f_{{\widehat{T}}_{n + 1},\widehat{\mu},{\widehat{\sigma}}^{2}}\left( t,\mu,\sigma^{2} \right)d\mu d\sigma^{2}.$$
+our estimate $`\hat\theta`$ of $`\theta`$. In particular, we let
+$`\hat{T}_{n+1}|\hat\theta \sim N(\hat\mu,\hat\sigma^2)`$ and
+$`\hat\theta \sim N(\theta,I^{-1}(\theta)/n)`$ (the sampling
+distribution of the MLE). Then, the joint distribution of
+$`\hat{T}_{n+1}`$ and $`\hat\theta`$ has the pdf given by
+``` math
+    f(t,\theta) = f_{\hat{T}|\hat\theta}(t|\theta=(\mu,\sigma^2)) f_{\hat\theta}(\theta),
+```
+and thus to find $`f(t)`$, we marginalize over $`\theta`$, obtaining
+``` math
+    f(t) = \int_{-\infty}^\infty \int_{-\infty}^{\infty} f_{\hat{T}_{n+1},\hat\mu,\hat\sigma^2}(t,\mu,\sigma^2) d\mu d\sigma^2.
+```
 
 Given the information in the sample, the uncertainty in the new
 observation is characterized by the distribution
-$${\widehat{T}}_{n + 1} \sim f(t).$$
+``` math
+    \hat{T}_{n+1} \sim f(t).
+```
 
-It has greater variance than $T_{n + 1}|\widehat{\theta}$ because, as
-stated earlier, we do not know $\theta$, we only have an uncertain
-estimate $\widehat{\theta}$.
+It has greater variance than $`T_{n+1}|\hat\theta`$ because, as stated
+earlier, we do not know $`\theta`$, we only have an uncertain estimate
+$`\hat\theta`$.
 
 In `pred`, we compute the predictive interval (PI) of the distribution
-of ${\widehat{T}}_{n + 1}$ using Monte Carlo simulation, where we
-replace the integral with a sum over a large number of draws from the
-joint distribution of ${\widehat{T}}_{n + 1}$ and $\widehat{\theta}$ and
-then compute the empirical quantiles.
+of $`\hat{T}_{n+1}`$ using Monte Carlo simulation, where we replace the
+integral with a sum over a large number of draws from the joint
+distribution of $`\hat{T}_{n+1}`$ and $`\hat\theta`$ and then compute
+the empirical quantiles.
 
 The function `pred` takes as arguments `x`, in this case an `mle_fit`
 object, and a sampler for the distribution of the random variable of
 interest, in this case `rweibull` (the sampler for the normal
 distribution). The sampler must be compatible with the output of
 `params(x)`, whether that output be a scalar or a vector. Here is how we
-compute the PI for ${\widehat{T}}_{n + 1}$:
+compute the PI for $`\hat{T}_{n+1}`$:
 
 ``` r
+
 pred(x=theta.hat, samp=function(n=1, theta) rnorm(n,theta[1],theta[2]))
 #>      mean lower upper
 #> [1,] 8.39 -29.8  46.6
 ```
 
-In general, it will return a $p$-by-$3$ matrix, where $p$ is the
-dimension of $T$ and the columns are the mean, lower quantile, and upper
-quantile of the predictive distribution.
+In general, it will return a $`p`$-by-$`3`$ matrix, where $`p`$ is the
+dimension of $`T`$ and the columns are the mean, lower quantile, and
+upper quantile of the predictive distribution.
 
-How does this compare to $T_{n + 1}|\widehat{\theta}$? We can compute
-the 95% quantile interval for $T_{n + 1}|\widehat{\theta}$ using the
-`qnorm` function:
+How does this compare to $`T_{n+1}|\hat\theta`$? We can compute the 95%
+quantile interval for $`T_{n+1}|\hat\theta`$ using the `qnorm` function:
 
 ``` r
+
 mu <- params(theta.hat)[1]
 sd <- sqrt(params(theta.hat)[2])
 c(mean=mu,lower=qnorm(.025,mean=mu, sd=sd),upper=qnorm(.975,mean=mu, sd=sd))
@@ -580,9 +633,9 @@ c(mean=mu,lower=qnorm(.025,mean=mu, sd=sd),upper=qnorm(.975,mean=mu, sd=sd))
 #>  8.230 -0.338 16.799
 ```
 
-We see that the 95% quantile interval for $T_{n + 1}|\widehat{\theta}$
-is smaller than ${\widehat{T}}_{n + 1}$, which is what we expected.
-After all, there is uncertainty about the parameter value $\theta$.
+We see that the 95% quantile interval for $`T_{n+1}|\hat\theta`$ is
+smaller than $`\hat{T}_{n+1}`$, which is what we expected. After all,
+there is uncertainty about the parameter value $`\theta`$.
 
 ## Conclusion
 
@@ -599,7 +652,7 @@ name.
 We have shown how to compare the two models using the Cramer-von Mises
 test and the AIC measure of goodness of fit. We came to no definitive
 conclusion about which model is better, but the Weibull distribution has
-a larger $p$-value from the Cramer-von Mises test, and a lower AIC
+a larger $`p`$-value from the Cramer-von Mises test, and a lower AIC
 value, which serves as some evidence that it is a better fit. We saw the
 true DGP is visually different from both the Weibull and the normal
 distributions. Notably, the DGP has longer tails than both, suggesting

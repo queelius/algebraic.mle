@@ -4,11 +4,11 @@
 
 The maximum likelihood estimator (MLE) is a technology. Under regularity
 conditions, any MLE is asymptotically normal:
-$\widehat{\theta} \sim N\left( \theta,I(\theta)^{- 1} \right)$, where
-$I(\theta)$ is the Fisher information matrix. This fact is remarkable
-because it holds regardless of the underlying model – exponential,
-Weibull, normal, or anything else. The MLE reduces the problem of
-inference to a mean vector and a covariance matrix.
+$`\hat\theta \sim N(\theta, I(\theta)^{-1})`$, where $`I(\theta)`$ is
+the Fisher information matrix. This fact is remarkable because it holds
+regardless of the underlying model – exponential, Weibull, normal, or
+anything else. The MLE reduces the problem of inference to a mean vector
+and a covariance matrix.
 
 `algebraic.mle` is the algebra that follows from this fact. It does not
 find MLEs – it takes them as input and provides operations for
@@ -19,7 +19,7 @@ composes their MLEs into a single joint estimator with block-diagonal
 covariance. Given three labs estimating the same quantity,
 [`combine()`](https://queelius.github.io/algebraic.mle/reference/combine.md)
 produces the optimal inverse-variance weighted estimate. Given a
-transformation $g(\theta)$,
+transformation $`g(\theta)`$,
 [`rmap()`](https://queelius.github.io/algebraic.dist/reference/rmap.html)
 propagates uncertainty through the delta method. And
 [`as_dist()`](https://queelius.github.io/algebraic.dist/reference/as_dist.html)
@@ -31,6 +31,7 @@ culminating in a full pipeline from independent experiments to system
 reliability inference.
 
 ``` r
+
 library(algebraic.mle)
 ```
 
@@ -53,6 +54,7 @@ When you know the point estimate and its variance-covariance matrix
 directly:
 
 ``` r
+
 # Exponential rate from a published study: lambda_hat = 0.5, se = 0.07, n = 200
 fit_pub <- mle(
   theta.hat = c(lambda = 0.5),
@@ -73,6 +75,7 @@ The most common path: maximize a log-likelihood with
 The Hessian at the optimum gives the variance-covariance matrix.
 
 ``` r
+
 set.seed(42)
 x <- rexp(80, rate = 2)
 
@@ -102,6 +105,7 @@ When the sample is small or regularity conditions are questionable,
 bootstrap the MLE and wrap the `boot` object:
 
 ``` r
+
 set.seed(42)
 y <- rexp(30, rate = 2)
 
@@ -132,12 +136,13 @@ independent – there is no cross-covariance between their parameter
 estimates.
 
 **Motivating example**: A series system has two components. Lab A tests
-component 1 and estimates its failure rate $\lambda_{1}$. Lab B tests
-component 2 and estimates $\lambda_{2}$. Neither lab knows about the
+component 1 and estimates its failure rate $`\lambda_1`$. Lab B tests
+component 2 and estimates $`\lambda_2`$. Neither lab knows about the
 other component, but we need the joint parameter vector
-$\left( \lambda_{1},\lambda_{2} \right)$ for system-level inference.
+$`(\lambda_1, \lambda_2)`$ for system-level inference.
 
 ``` r
+
 # Lab A: component 1 failure rate
 fit_A <- mle(
   theta.hat = c(lambda1 = 0.02),
@@ -167,6 +172,7 @@ The off-diagonal entries are zero – the hallmark of independence. The
 joint MLE supports the full interface:
 
 ``` r
+
 confint(fit_joint)
 #>            2.5%   97.5%
 #> lambda1 0.01804 0.02196
@@ -180,6 +186,7 @@ Use
 to recover individual component estimates from the joint:
 
 ``` r
+
 # Recover component 2 parameters
 fit_B_recovered <- marginal(fit_joint, 2)
 params(fit_B_recovered)
@@ -193,6 +200,7 @@ se(fit_B_recovered)
 extends to any number of independent MLEs:
 
 ``` r
+
 fit_C <- mle(
   theta.hat = c(lambda3 = 0.01),
   sigma = matrix(0.0005^2),
@@ -214,9 +222,10 @@ combined estimate weights more precise estimates more heavily, and the
 combined variance is always less than any individual variance.
 
 **Motivating example**: Three labs independently estimate the failure
-rate $\lambda$ of the same component type.
+rate $`\lambda`$ of the same component type.
 
 ``` r
+
 lab1 <- mle(theta.hat = c(lambda = 0.050), sigma = matrix(0.004^2), nobs = 50L)
 lab2 <- mle(theta.hat = c(lambda = 0.048), sigma = matrix(0.002^2), nobs = 200L)
 lab3 <- mle(theta.hat = c(lambda = 0.053), sigma = matrix(0.003^2), nobs = 100L)
@@ -233,6 +242,7 @@ The combined standard error is smaller than any individual standard
 error:
 
 ``` r
+
 cat("Lab SEs:     ", se(lab1), se(lab2), se(lab3), "\n")
 #> Lab SEs:      0.004 0.002 0.003
 cat("Combined SE: ", se(combined), "\n")
@@ -247,6 +257,7 @@ When all estimates have equal precision,
 reduces to the simple average:
 
 ``` r
+
 eq1 <- mle(theta.hat = c(mu = 10.0), sigma = matrix(1))
 eq2 <- mle(theta.hat = c(mu = 12.0), sigma = matrix(1))
 eq3 <- mle(theta.hat = c(mu = 11.0), sigma = matrix(1))
@@ -259,21 +270,24 @@ params(eq_combined)  # (10 + 12 + 11) / 3 = 11
 
 ## Transformations via Invariance
 
-By the invariance property of the MLE, if $\widehat{\theta}$ is the MLE
-of $\theta$, then $g\left( \widehat{\theta} \right)$ is the MLE of
-$g(\theta)$ for any function $g$. The
+By the invariance property of the MLE, if $`\hat\theta`$ is the MLE of
+$`\theta`$, then $`g(\hat\theta)`$ is the MLE of $`g(\theta)`$ for any
+function $`g`$. The
 [`rmap()`](https://queelius.github.io/algebraic.dist/reference/rmap.html)
 function computes this transformation and propagates uncertainty using
 the delta method:
-$$\text{Var}\left( g\left( \widehat{\theta} \right) \right) \approx J\,\text{Var}\left( \widehat{\theta} \right)\, J^{\top},$$
-where $J$ is the Jacobian of $g$ evaluated at $\widehat{\theta}$.
+``` math
+\text{Var}(g(\hat\theta)) \approx J \, \text{Var}(\hat\theta) \, J^\top,
+```
+where $`J`$ is the Jacobian of $`g`$ evaluated at $`\hat\theta`$.
 
 ### Univariate example: rate to mean lifetime
 
-An exponential component has rate $\lambda$. The mean lifetime is
-$\mu = 1/\lambda$. Transform the MLE:
+An exponential component has rate $`\lambda`$. The mean lifetime is
+$`\mu = 1/\lambda`$. Transform the MLE:
 
 ``` r
+
 fit_rate <- mle(
   theta.hat = c(lambda = 0.02),
   sigma = matrix(0.001^2),
@@ -296,12 +310,15 @@ confint(fit_lifetime)
 ### Multivariate example: component rates to system reliability
 
 For a series system with independent exponential components, the system
-reliability at time $t$ is
-$$R(t) = \exp\left( - \lambda_{1}t \right) \cdot \exp\left( - \lambda_{2}t \right) = \exp\left( - \left( \lambda_{1} + \lambda_{2} \right)t \right).$$
+reliability at time $`t`$ is
+``` math
+R(t) = \exp(-\lambda_1 t) \cdot \exp(-\lambda_2 t) = \exp(-(\lambda_1 + \lambda_2) t).
+```
 
-Starting from the joint MLE of $\left( \lambda_{1},\lambda_{2} \right)$:
+Starting from the joint MLE of $`(\lambda_1, \lambda_2)`$:
 
 ``` r
+
 fit_rates <- joint(
   mle(theta.hat = c(lambda1 = 0.02), sigma = matrix(0.001^2), nobs = 150L),
   mle(theta.hat = c(lambda2 = 0.05), sigma = matrix(0.003^2), nobs = 80L)
@@ -337,6 +354,7 @@ distribution, bridging into the `algebraic.dist` package where
 distributions can be further composed.
 
 ``` r
+
 fit1 <- mle(theta.hat = c(lambda = 0.02), sigma = matrix(0.001^2))
 d1 <- as_dist(fit1)
 d1
@@ -348,6 +366,7 @@ of the MLE as a distribution object. For instance, you can compute the
 probability that the true rate exceeds a regulatory threshold:
 
 ``` r
+
 # P(lambda > 0.021) under the asymptotic distribution
 1 - cdf(d1)(0.021)
 #> [1] 0.1587
@@ -358,6 +377,7 @@ For bootstrap MLEs,
 returns an empirical distribution built from the bootstrap replicates:
 
 ``` r
+
 d_boot <- as_dist(fit_boot)
 d_boot
 #> Empirical distribution (999 observations, 1 dimensions)
@@ -371,9 +391,10 @@ operations.
 **Scenario**: A series system has two independent components with
 exponential lifetimes. Separate accelerated life tests estimate each
 component’s failure rate. We want to infer the system reliability at a
-mission time of $t = 50$ hours, including a confidence interval.
+mission time of $`t = 50`$ hours, including a confidence interval.
 
 ``` r
+
 set.seed(123)
 
 # --- Step 1: Independent MLEs from separate experiments ---
@@ -411,6 +432,7 @@ cat("Component 2 rate:", params(fit2), "  SE:", se(fit2), "\n")
 ```
 
 ``` r
+
 # --- Step 2: Compose into joint parameter space ---
 fit_system <- joint(fit1, fit2)
 cat("Joint parameters:", params(fit_system), "\n")
@@ -424,6 +446,7 @@ vcov(fit_system)
 ```
 
 ``` r
+
 # --- Step 3: Transform to system reliability at t = 50 ---
 mission_time <- 50
 R_system <- rmap(fit_system,
@@ -438,6 +461,7 @@ cat("SE of R(50):             ", se(R_system), "\n")
 ```
 
 ``` r
+
 # --- Step 4: Inference ---
 cat("95% CI for R(50):\n")
 #> 95% CI for R(50):
@@ -447,6 +471,7 @@ confint(R_system)
 ```
 
 ``` r
+
 # --- Step 5: Bridge to distribution algebra ---
 R_dist <- as_dist(R_system)
 cat("Asymptotic distribution of R(50):", "\n")

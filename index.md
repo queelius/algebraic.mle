@@ -12,17 +12,20 @@ propagating uncertainty automatically.
 Install from CRAN:
 
 ``` r
+
 install.packages("algebraic.mle")
 ```
 
 Or the development version from GitHub:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("queelius/algebraic.mle")
 ```
 
 ``` r
+
 library(algebraic.mle)
 library(algebraic.dist)
 ```
@@ -37,6 +40,7 @@ concatenates the parameter vectors and produces a block-diagonal
 covariance:
 
 ``` r
+
 fit_rate <- mle(theta.hat = c(lambda = 2.1), sigma = matrix(0.04), nobs = 50L)
 fit_shape <- mle(
   theta.hat = c(k = 1.5, s = 3.2),
@@ -67,6 +71,7 @@ uses inverse-variance weighting to produce the minimum-variance unbiased
 combination:
 
 ``` r
+
 fit1 <- mle(theta.hat = c(lambda = 2.1), sigma = matrix(0.04), nobs = 50L)
 fit2 <- mle(theta.hat = c(lambda = 1.9), sigma = matrix(0.02), nobs = 100L)
 fit3 <- mle(theta.hat = c(lambda = 2.0), sigma = matrix(0.03), nobs = 70L)
@@ -89,6 +94,7 @@ to the MLE (invariance property).
 propagates uncertainty through the Jacobian:
 
 ``` r
+
 # MLE for an exponential rate
 fit_exp <- mle(theta.hat = c(lambda = 2.0), sigma = matrix(0.08), nobs = 50L)
 
@@ -111,6 +117,7 @@ Convert an MLE to its asymptotic normal distribution, then use the full
 distribution algebra from `algebraic.dist`:
 
 ``` r
+
 d1 <- as_dist(fit1)   # Normal(2.1, 0.04)
 d2 <- as_dist(fit2)   # Normal(1.9, 0.02)
 
@@ -125,6 +132,7 @@ d_sum
 All MLE objects support a common interface for statistical inference:
 
 ``` r
+
 fit <- mle(
   theta.hat = c(mu = 5.1, sigma2 = 3.8),
   sigma = diag(c(0.04, 0.29)),
@@ -145,6 +153,7 @@ aic(fit)
 Draw samples from the asymptotic distribution:
 
 ``` r
+
 samp <- sampler(fit)
 head(samp(5))
 #>          [,1]     [,2]
@@ -163,6 +172,7 @@ When you know the point estimate and variance-covariance (e.g., from
 analytical results), construct directly:
 
 ``` r
+
 fit <- mle(
   theta.hat = c(mu = 5.0),
   sigma = matrix(0.04),
@@ -189,6 +199,7 @@ Fit a conditional exponential model `Y | x ~ Exp(rate(x))` where
 `rate(x) = exp(b0 + b1 * x)`:
 
 ``` r
+
 # Simulate data from the model
 set.seed(1231)
 n <- 75
@@ -242,6 +253,7 @@ When sample size is small or regularity conditions are in doubt, use the
 bootstrap:
 
 ``` r
+
 set.seed(42)
 x <- rexp(30, rate = 2)
 boot_fn <- function(data, idx) c(lambda = 1 / mean(data[idx]))

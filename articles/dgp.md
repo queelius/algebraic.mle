@@ -10,6 +10,7 @@ algebra (`as_dist`).
 ## Installation
 
 ``` r
+
 # From CRAN
 install.packages("algebraic.mle")
 
@@ -59,6 +60,7 @@ In this model, `Y | x ~ EXP(rate(x))` where `rate(x) = exp(b0 + b1*x)`.
 First, let’s define the DGP (data generating process):
 
 ``` r
+
 library(algebraic.dist)
 b0 <- -.1
 b1 <- 0.5
@@ -74,6 +76,7 @@ dgp <- function(n, x) {
 Let’s generate some data:
 
 ``` r
+
 n <- 75 # number of observations
 set.seed(1231) # for reproducibility
 df <- data.frame(x = rep(NA, n), y = rep(NA, n))
@@ -88,6 +91,7 @@ Now, we define two functions, `resp`, `rate`, and `loglik` function
 which will be used to define the model.
 
 ``` r
+
 resp <- function(df) df$y
 rate <- function(df, beta) exp(beta[1] + beta[2] * df$x)
 loglik <- function(df, resp, rate) {
@@ -100,6 +104,7 @@ the model and then wrap it into an `mle_fit` object using
 `mle_numerical`.
 
 ``` r
+
 library(algebraic.mle)
 
 # initial guess for the parameters
@@ -131,6 +136,7 @@ summary(sol)
 Let’s plot it:
 
 ``` r
+
 # plot the x-y points from the data frame
 plot(df$x,df$y)
 
@@ -155,6 +161,7 @@ the full model. The null model is `Y | x ~ EXP(rate(x))` where
 where `rate(x) = exp(b0 + b1*x)`.
 
 ``` r
+
 # construct null model where b1 = 0
 rate_b0_zero <- function(df, b1) exp(b1 * df$x)
 
@@ -181,6 +188,7 @@ summary(sol2)
 Let’s compute the likelihood ratio test statistic and p-value:
 
 ``` r
+
 (lrt.sol2 <- -2 * (as.numeric(logLik(sol2)) - as.numeric(logLik(sol))))
 #> [1] 4.037435
 pchisq(lrt.sol2, df = 1, lower.tail = FALSE) # compute the p-value
@@ -193,6 +201,7 @@ compatible with the null hypothesis `b0 = 0`.
 If we wanted to do model selection, we could use the AIC:
 
 ``` r
+
 AIC(sol)
 #> [1] 243.3954
 AIC(sol2)
@@ -215,6 +224,7 @@ Let’s do another test, `b1 = 0`, i.e., it’s an unconditional exponential
 model, or just a standard exponential distribution.
 
 ``` r
+
 rate_b1_zero <- function(df, b0) exp(b0)
 # fit the model under the null hypothesis
 sol3 <- mle_numerical(optim(par = 0,
@@ -234,6 +244,7 @@ hypothesis that `b1 = 0`.
 Let’s compare the confidence intervals for each of these models.
 
 ``` r
+
 CI <- confint(sol)
 # print the confidence interval
 print(CI)

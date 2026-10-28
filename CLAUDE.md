@@ -18,6 +18,7 @@ subclasses (`mle_numerical`, `mle_boot`, `rmap_mle`).
 ### Build and Installation
 
 ``` r
+
 # Install dependencies first (required)
 devtools::install_github("queelius/algebraic.dist")
 
@@ -31,6 +32,7 @@ devtools::load_all()
 ### Documentation
 
 ``` r
+
 # Generate documentation from roxygen comments
 devtools::document()
 
@@ -46,6 +48,7 @@ directory with unit tests.
 Validation is done through:
 
 ``` r
+
 # Run R CMD check (validates package structure, examples, vignettes)
 devtools::check()
 
@@ -63,6 +66,7 @@ adding a `tests/testthat/` directory structure
 Build vignettes using `knitr`:
 
 ``` r
+
 # Render specific vignette
 rmarkdown::render("vignettes/fitting-common-dist.Rmd")
 ```
@@ -212,6 +216,7 @@ Transformations (invariance property)
 The standard pattern for fitting custom models:
 
 ``` r
+
 # 1. Define response extractor
 resp <- function(df) df$y
 

@@ -10,6 +10,7 @@ algebra (`as_dist`).
 ## Installation
 
 ``` r
+
 # From CRAN
 install.packages("algebraic.mle")
 
@@ -32,6 +33,7 @@ use `algebraic.mle`. We are using it for a few reasons:
 So, first, we define a simple MLE solver for the normal distribution.
 
 ``` r
+
 fit_normal <- function(data) {
     sigma <- function(data) {
         mean((data - mean(data))^2)
@@ -69,6 +71,7 @@ column is the MLE of the mean and the second column is the MLE of the
 variance.
 
 ``` r
+
 theta_samp_mc <- function(n, theta, B = 10000) {
     mu <- theta[1]
     var <- theta[2]
@@ -83,6 +86,7 @@ theta_samp_mc <- function(n, theta, B = 10000) {
 ```
 
 ``` r
+
 # Set up the parameters of a simulation
 set.seed(913254)
 n <- 70
@@ -103,8 +107,8 @@ head(mles)
 
 The matrix `mles` is a sample of MLEs from the sampling distribution of
 the MLE. It is an *empirical distribution* of the MLE
-$\left( \mu,\sigma^{2} \right)\prime$ from samples of size
-$n$$X_{i} \sim N\left( \mu,\sigma^{2} \right)$ for $i = 1,\ldots,n$.
+$`(\mu, \sigma^2)'`$ from samples of size
+$`n`$$`X_i \sim N(\mu, \sigma^2)`$ for $`i=1,\ldots,n`$.
 
 This particular example is Monte Carlo simulation of the sampling
 distribution, since we are simulating the sampling distribution by
@@ -116,7 +120,7 @@ MLE for each sample.
 > results. See the bootstrap section for more details, where we’ll
 > compare the two.
 
-For a sufficiently large number of simulations $B$, the empirical
+For a sufficiently large number of simulations $`B`$, the empirical
 sampling distribution should be very close to the true sampling
 distribution. We can plot the empirical sampling distribution of the
 MLEs using the `plot` function on the `mles` matrix.
@@ -131,14 +135,15 @@ empirical sampling distribution by giving it the sample of MLEs
 previously generated:
 
 ``` r
+
 theta.mc <- algebraic.dist::empirical_dist(mles)
 ```
 
 In general, for any MLE and assuming the the regularity conditions hold,
 the asymptotic sampling distribution of the MLE is normal with mean
-$\theta$ and variance-covariance matrix $\Sigma = I^{- 1}(\theta)_{n}$,
-where $I$ is the Fisher information matrix and $n$ is the sample size.
-However, in general:
+$`\theta`$ and variance-covariance matrix $`\Sigma = I^{-1}(\theta)_n`$,
+where $`I`$ is the Fisher information matrix and $`n`$ is the sample
+size. However, in general:
 
 1.  We don’t know when the asymptotic sampling distribution is a good
     approximation to the true sampling distribution. In these cases, the
@@ -158,13 +163,16 @@ Let’s look at some basic parameters of the sampling distribution of the
 MLE for the normal distribution. First, let’s look at the mean:
 
 ``` r
+
 (mu.mc <- mean(theta.mc))
 #>    mu   var 
 #> 0.995 0.982
 ```
 
 The mean looks pretty close to the true parameter vector
-$$\theta = \left( \mu = 1,\sigma^{2} = 1 \right)\prime.$$
+``` math
+    \theta = (\mu = 1, \sigma^2 = 1)'.
+```
 
 We can actually compute any parameter, since `theta.mc`, models the
 concept of a distribution. In particular, it models a distribution in
@@ -173,6 +181,7 @@ available to us. For instance, we can compute various parameters of the
 sampling distribution of the MLE using the `expectation` function:
 
 ``` r
+
 # should sum to 1
 expectation(theta.mc, function(x) 1)
 #> [1] 1
@@ -208,26 +217,32 @@ Bias is a measure of the systematic error of an estimator; it measures
 how far its average value is from the true value being estimated.
 Formally, it is defined as the difference between the expected value of
 the estimator and the true value of the parameter, i.e.,
-$$\operatorname{Bias}\left( \widehat{\theta} \right) = E_{\widehat{\theta}}\left( \widehat{\theta} \right) - \theta,$$
-where $E_{\widehat{\theta}}$ denotes the expectation operator with
-respect to the sampling distribution of $\widehat{\theta}$. (Normally,
-we drop the subscript in the expectation operator and write $E$ instead
-of $E_{\widehat{\theta}}$ unless it’s not clear from context which
-expectation operator we are using.)
+``` math
+\operatorname{Bias}(\hat\theta) = E_{\hat\theta}(\hat\theta) - \theta,
+```
+where $`E_{\hat\theta}`$ denotes the expectation operator with respect
+to the sampling distribution of $`\hat\theta`$. (Normally, we drop the
+subscript in the expectation operator and write $`E`$ instead of
+$`E_{\hat\theta}`$ unless it’s not clear from context which expectation
+operator we are using.)
 
 When the bias is zero, the estimator is *unbiased*, otherwise it is
 *biased*. Analytically, the asymptotic bias of the MLE for the
 parameters of the normal distribution is
-$$\operatorname{Bias}\left( \widehat{\theta} \right) = \begin{pmatrix}
-0 \\
-{- \frac{\sigma^{2}}{n}}
-\end{pmatrix}.$$ Plugging in the true value of $\sigma^{2} = 1$ and the
-sample size $n = 70$, we get $(0,0.014)$. We may also provide an
-appropriate implementation of the `bias` method in `algebraic.mle` for
-`mle_normal` (which is what we called our the object that we returned
-from `fit_normal`):
+``` math
+    \operatorname{Bias}(\hat\theta) = \left(\begin{array}{c}
+        0 \\
+        -\frac{\sigma^2}{n}
+    \end{array}\right).
+```
+Plugging in the true value of $`\sigma^2 = 1`$ and the sample size
+$`n = 70`$, we get $`(0, 0.014)`$. We may also provide an appropriate
+implementation of the `bias` method in `algebraic.mle` for `mle_normal`
+(which is what we called our the object that we returned from
+`fit_normal`):
 
 ``` r
+
 bias.mle_normal <- function(x, par = NULL, ...) {
     if (is.null(par)) {
         par <- params(x)
@@ -240,6 +255,7 @@ Now, let’s compute the bias using this function, and the estimate of the
 bias provided by the `bias.mle_emp`:
 
 ``` r
+
 # first, we sample some data from the true distribution
 data <- rnorm(n = n, mean = mu, sd = sqrt(var))
 
@@ -260,6 +276,7 @@ The asymptotic bias and the empirical bias are pretty close. Let’s see
 how the bias of the variance changes as the sample size increases.
 
 ``` r
+
 N <- 1000
 ns <- seq(10, 500, 10)
 bias_var <- numeric(length(ns))
@@ -286,18 +303,22 @@ variability of the individual parameter estimates and how they co-vary
 with each other.
 
 The variance-covariance matrix of a parameter vector
-$\theta = \left( \theta_{1},\ldots,\theta_{p} \right)\prime$ is an
-$n \times n$ matrix defined as
-$$\operatorname{Var}\left( \widehat{\theta} \right) = E_{\widehat{\theta}}\!\lbrack\left( \widehat{\theta} - E_{\widehat{\theta}}\left( \widehat{\theta} \right) \right)\left( \widehat{\theta} - E_{\widehat{\theta}}\left( \widehat{\theta} \right) \right)\prime\rbrack.$$
+$`\theta = (\theta_1, \ldots, \theta_p)'`$ is an $`n \times n`$ matrix
+defined as
+``` math
+\operatorname{Var}(\hat\theta) = E_{\hat\theta}\!\bigl[(\hat\theta - E_{\hat\theta}(\hat\theta))
+    (\hat\theta - E_{\hat\theta}(\hat\theta))'\bigr].
+```
 
-The $(i,j)$th element of the variance-covariance matrix is the
-covariance between the $i$th and $j$th elements of the parameter vector,
-respectively $\theta_{i}$ and $\theta_{j}$. Thus, the diagonal elements
-of the variance-covariance matrix are the variances of the individual
-parameter estimates, and the off-diagonal elements are the covariances
-between the parameter estimates.
+The $`(i, j)`$th element of the variance-covariance matrix is the
+covariance between the $`i`$th and $`j`$th elements of the parameter
+vector, respectively $`\theta_i`$ and $`\theta_j`$. Thus, the diagonal
+elements of the variance-covariance matrix are the variances of the
+individual parameter estimates, and the off-diagonal elements are the
+covariances between the parameter estimates.
 
 ``` r
+
 round(vcov(theta.hat), digits=3)
 #>       [,1]  [,2]
 #> [1,] 0.011 0.000
@@ -308,7 +329,7 @@ round(vcov(theta.mc), digits=3)
 #> var 0.000 0.028
 ```
 
-They look reasonably close, suggesting at $n = 500$, the asymptotic
+They look reasonably close, suggesting at $`n = 500`$, the asymptotic
 sampling distribution is a good approximation to the “true” sampling
 distribution of the MLE.
 
@@ -317,6 +338,7 @@ distribution of the MLE.
 We can compute the CI of a parameter using the `confint` function:
 
 ``` r
+
 confint(theta.hat)
 #>      2.5% 97.5%
 #> mu  0.724  1.14
@@ -326,11 +348,11 @@ confint(theta.hat)
 A very important measure of the accuracy of an estimator is its coverage
 probability, which is the probability that the confidence interval for
 the parameter estimate contains the true value of the parameter. If the
-coverage probability for an $(1 - \alpha)\%$-confidence interval is
-$1 - \alpha$, then the confidence interval is said to be
+coverage probability for an $`(1-\alpha) \%`$-confidence interval is
+$`1-\alpha`$, then the confidence interval is said to be
 *well-calibrated*. If the coverage probability is less than
-$1 - \alpha$, then the confidence interval is said to be *conservative*;
-if the coverage probability is greater than $1 - \alpha$, then the
+$`1-\alpha`$, then the confidence interval is said to be *conservative*;
+if the coverage probability is greater than $`1-\alpha`$, then the
 confidence interval is said to be *anti-conservative*.
 
 We can estimate it by simulating a large number of samples from the
@@ -341,6 +363,7 @@ this for both the mean and variance of the normal distribution.
 Click to show/hide R code
 
 ``` r
+
 N <- 1000
 ns <- c(seq(50, 200, 50), 300, 600, 1000)
 coverage_prob <- matrix(NA, nrow=length(ns), ncol=2)
@@ -374,23 +397,27 @@ suggests that the confidence intervals are well-calibrated.
 ## Mean squared error matrix
 
 The mean squared error (MSE) of an estimator of a parameter vector
-$\theta$ is defined as
-$$\operatorname{MSE}\left( \widehat{\theta} \right) = E\lbrack\left( \widehat{\theta} - \theta \right)\left( \widehat{\theta} - \theta \right)\prime\rbrack,$$
-where $\widehat{\theta} - \theta$ is a column vector of differences
-between the estimator and the true parameter and
-$\left( \widehat{\theta} - \theta \right)\prime$ is a row vector of the
-same differences, and we are performing a standard matrix multiplication
-between the two vectors. The MSE is a measure of the average squared
-error of the estimator. It is a function of the true parameter value
-$\theta$.
+$`\theta`$ is defined as
+``` math
+\operatorname{MSE}(\hat\theta) = E\bigl[(\hat\theta - \theta)(\hat\theta - \theta)'\bigr],
+```
+where $`\hat\theta - \theta`$ is a column vector of differences between
+the estimator and the true parameter and $`(\hat\theta - \theta)'`$ is a
+row vector of the same differences, and we are performing a standard
+matrix multiplication between the two vectors. The MSE is a measure of
+the average squared error of the estimator. It is a function of the true
+parameter value $`\theta`$.
 
 This MSE is a *matrix*. It is very similar to the variance-covariance
 matrix, which is defined as
-$$\operatorname{Var}\left( \widehat{\theta} \right) = E\lbrack\left( \widehat{\theta} - E\left( \widehat{\theta} \right) \right)\left( \widehat{\theta} - E\left( \widehat{\theta} \right) \right)\prime\rbrack,$$
-where we replace the true paramater $\theta$ with the expected value of
-the estimator $\widehat{\theta}$. If the estimator is unbiased, then
-$E\left( \widehat{\theta} \right) = \theta$ and
-$\operatorname{Var}\left( \widehat{\theta} \right) = \operatorname{MSE}\left( \widehat{\theta} \right)$.
+``` math
+\operatorname{Var}(\hat\theta) = E\bigl[(\hat\theta - E(\hat\theta))
+    (\hat\theta - E(\hat\theta))'\bigr],
+```
+where we replace the true paramater $`\theta`$ with the expected value
+of the estimator $`\hat\theta`$. If the estimator is unbiased, then
+$`E(\hat\theta) = \theta`$ and
+$`\operatorname{Var}(\hat\theta) = \operatorname{MSE}(\hat\theta)`$.
 
 We not only need to consider the estimation error for each parameter
 individually, but also how these errors might relate to each other. For
@@ -401,8 +428,8 @@ off-diagonal elements of the MSE matrix, which represent the covariances
 between errors.
 
 The diagonal elements of the MSE represent the MSE of the individual
-parameter estimators, e.g., the $i$th diagonal element represents
-$\operatorname{MSE}\left( {\widehat{\theta}}_{j} \right)$.
+parameter estimators, e.g., the $`i`$th diagonal element represents
+$`\operatorname{MSE}(\hat\theta_j)`$.
 
 The *trace* of the MSE, the sum of the diagonal elements, represents the
 total MSE across all parameters. As a single summary statistic, it may
@@ -417,9 +444,13 @@ The MSE can be decomposed into two parts:
 The MSE is then computed as the sum of the bias outer product and the
 variance-covariance matrix:
 
-$$\operatorname{MSE}\left( \widehat{\theta} \right) = \operatorname{Bias}\left( \widehat{\theta} \right)\operatorname{Bias}\left( \widehat{\theta} \right)\prime + \operatorname{Var}\left( \widehat{\theta} \right).$$
+``` math
+\operatorname{MSE}(\hat\theta) = \operatorname{Bias}(\hat\theta)\operatorname{Bias}(\hat\theta)'
+    + \operatorname{Var}(\hat\theta).
+```
 
 ``` r
+
 mse.hat <- mse(theta.hat, theta)
 mse.mc <- matrix(expectation(theta.mc,
     function(x) (x - theta) %*% t(x - theta)), nrow = 2)
@@ -439,9 +470,10 @@ matrices reported previously, which is not surprising, since the bias is
 relatively small and so the MSE is dominated by the variance.
 
 Let’s take a closer look at the variance and MSE of the mean
-$\widehat{\mu}$:
+$`\hat\mu`$:
 
 ``` r
+
 # temporarily show more digits in the numbers/outputs for this code block
 op <- options(digits = 12)
 # mse(mu)
@@ -466,6 +498,7 @@ the asymptotic MSE (`mse.hat`) and the MC MSE (`mse.mc`) will converge
 to the same value. In fact, let’s run a little experiment to show this:
 
 ``` r
+
 ns <- seq(25, 200, 25)
 mses.mc <- matrix(NA, nrow = length(ns), ncol = 2)
 mses.hat <- matrix(NA, nrow = length(ns), ncol = 2)
@@ -493,9 +526,9 @@ to the “true” MSE, which is the MSE computed from the empirical sampling
 distribution of the MLE.
 
 It’s difficult to distinguish the estimated asymptotic MSE, where the
-true parameter $\theta$ is not known, from the asymptotic MSE, where the
-true parameter $\theta$ is known. This is because the bias is so small,
-and so the MSE is dominated by the variance.
+true parameter $`\theta`$ is not known, from the asymptotic MSE, where
+the true parameter $`\theta`$ is known. This is because the bias is so
+small, and so the MSE is dominated by the variance.
 
 ## Bootstrap of the sampling distribution of the MLE
 
@@ -517,6 +550,7 @@ to each of these to generate an Bootstrapped empirical sampling
 distribution of the MLE.
 
 ``` r
+
 # Simulate a sample of n observations from a normal with mean 1 and variance 2.
 library(boot)
 theta.boot <- mle_boot(boot(
@@ -530,6 +564,7 @@ theta.boot <- mle_boot(boot(
 Let’s compute some statistics:
 
 ``` r
+
 params(theta.boot)
 #>   mu  var 
 #> 1.09 1.01
@@ -543,6 +578,7 @@ Let’s use these Bootstrapped MLEs to generate an aproximation of the
 empirical sampling distribution:
 
 ``` r
+
 theta.b <- empirical_dist(theta.boot$t)
 ```
 
@@ -550,6 +586,7 @@ As before, let’s do some basic expectations of the Bootstrapped sampling
 distribution of the MLE and compare to the previous results:
 
 ``` r
+
 # should sum to 1
 expectation(theta.b, function(x) 1)
 #> [1] 1
@@ -576,6 +613,7 @@ These are not too bad.
 Let’s compute the bias and compare it to the previous results:
 
 ``` r
+
 bias(theta.boot)
 #>       mu      var 
 #> -0.00144 -0.00459
@@ -590,7 +628,9 @@ bias(theta.hat, theta)
 We see that the `bias` function for `mle_boot` is not too bad. Note that
 the `bias` is an expectation w.r.t. the sampling distribution of the
 MLE. In general, we can have a better estimator if we use
-$${\widehat{\theta}}^{*} = \widehat{\theta} - \operatorname{Bias}\left( \widehat{\theta} \right),$$
+``` math
+    \hat\theta^* = \hat\theta - \operatorname{Bias}(\hat\theta),
+```
 assuming the bias estimate is accurate. In this particular example that
 transformation makes it worse, which is fine, the bias of the
 transformed estimator would be less in theory. Howevever, in practice,
@@ -605,6 +645,7 @@ sampling distribution of the MLE to the “true” sampling distribution and
 the asymptotic sampling distribution:
 
 ``` r
+
 round(vcov(theta.b), digits = 3)
 #>       [,1]  [,2]
 #> [1,] 0.005 0.001
@@ -625,6 +666,7 @@ the Bootstrapped CIs:
 Click to show/hide R code
 
 ``` r
+
 N <- 100
 ns <- c(50, 100)
 coverage_prob <- matrix(NA, nrow=length(ns), ncol=2)
@@ -662,58 +704,64 @@ for (n in ns) {
 Frequently, we are actually interested in predicting the outcome of the
 random variable (or vector) that we are estimating the parameters of.
 
-We observed a sample $\mathcal{D} = \{ X_{i}\}_{i = 1}^{n}$ where
-$X_{i} \sim \operatorname{Normal}(\mu,\sigma)$, $\theta = (\mu,\sigma)$
-not known. To estimate $\theta$, we solved the MLE which,
-asymptotically, is normally distributed with a mean $\theta$ and a
-variance-covariance given by the inverse of the FIM (or, using the
-Bootstrap, by estimating the covariance of the sampling distribution of
-the Bootstrapped MLEs).
+We observed a sample $`\mathcal{D} = \{X_i\}_{i=1}^n`$ where
+$`X_i \sim \operatorname{Normal}(\mu, \sigma)`$,
+$`\theta = (\mu, \sigma)`$ not known. To estimate $`\theta`$, we solved
+the MLE which, asymptotically, is normally distributed with a mean
+$`\theta`$ and a variance-covariance given by the inverse of the FIM
+(or, using the Bootstrap, by estimating the covariance of the sampling
+distribution of the Bootstrapped MLEs).
 
 We wish to model the uncertainty of a new observation,
-${\widehat{X}}_{n + 1}|\mathcal{D}$. We do so by considering both the
+$`\hat{X}_{n+1}|\mathcal{D}`$. We do so by considering both the
 uncertainty inherent to the Normal distribution and the uncertainty of
-our estimate $\widehat{\theta}$. In particular, we let
-${\widehat{X}}_{n + 1}|\widehat{\theta} \sim \operatorname{Normal}\left( \widehat{\theta} \right)$
-and
-$\widehat{\theta} \sim \operatorname{MVN}\left( \theta,I^{- 1}(\theta)/n \right)$.
-Then, the joint distribution of ${\widehat{X}}_{n + 1}$ and
-$\widehat{\theta}$ has the pdf given by
-$$f(t,\theta) = f_{\widehat{X}|\widehat{\theta}}\left( x|\theta \right)f_{\widehat{\theta}}(\theta),$$
-and thus to find $f(t)$, we marginalize over $\theta$, obtaining
-$$f(x) = \int_{R^{2}}f_{{\widehat{X}}_{n + 1},\widehat{\theta}}(x,\theta)d\theta.$$
+our estimate $`\hat\theta`$. In particular, we let
+$`\hat{X}_{n+1}|\hat\theta \sim \operatorname{Normal}(\hat\theta)`$ and
+$`\hat\theta \sim \operatorname{MVN}(\theta,I^{-1}(\theta)/n)`$. Then,
+the joint distribution of $`\hat{X}_{n+1}`$ and $`\hat\theta`$ has the
+pdf given by
+``` math
+    f(t,\theta) = f_{\hat{X}|\hat\theta}(x|\theta) f_{\hat\theta}(\theta),
+```
+and thus to find $`f(t)`$, we marginalize over $`\theta`$, obtaining
+``` math
+    f(x) = \int_{R^2} f_{\hat{X}_{n+1},\hat\theta}(x,\theta) d\theta.
+```
 
 Given the information in the sample, the uncertainty in the new
 observation is characterized by the distribution
-$${\widehat{X}}_{n + 1} \sim f(x).$$
+``` math
+    \hat{X}_{n+1} \sim f(x).
+```
 
-It has greater variance than $X_{n + 1}|\widehat{\theta}$ because, as
-stated earlier, we do not know $\theta$, we only have an uncertain
-estimate $\widehat{\theta}$.
+It has greater variance than $`X_{n+1}|\hat\theta`$ because, as stated
+earlier, we do not know $`\theta`$, we only have an uncertain estimate
+$`\hat\theta`$.
 
 In `pred`, we compute the predictive interval (PI) of the distribution
-of ${\widehat{X}}_{n + 1}$ using Monte Carlo integration, i.e., sum over
-a large number of draws from the joint distribution of
-${\widehat{X}}_{n + 1}$ and $\widehat{\theta}$ and then compute the
-empirical quantiles.
+of $`\hat{X}_{n+1}`$ using Monte Carlo integration, i.e., sum over a
+large number of draws from the joint distribution of $`\hat{X}_{n+1}`$
+and $`\hat\theta`$ and then compute the empirical quantiles.
 
 The function `pred` takes as arguments `x`, in this case an `mle_fit`
 object, and a sampler for the distribution of the random variable of
 interest, in this case `rnorm` (the sampler for the normal
 distribution). The sampler must be compatible with the parameter value
 of `x` (i.e., `params(x)`). Here is how we compute the PI for
-${\widehat{X}}_{n + 1}$:
+$`\hat{X}_{n+1}`$:
 
 ``` r
+
 samp <- function(n, par) rnorm(n = n, mean = par[1], sd = sqrt(par[2]))
 pred(x = theta.hat, samp = samp)
 #>       mean  lower upper
 #> [1,] 0.933 -0.824   2.7
 ```
 
-How does this compare to $X_{n + 1}|\widehat{\theta}$?
+How does this compare to $`X_{n+1}|\hat\theta`$?
 
 ``` r
+
 par <- params(theta.hat)
 mu.hat <- par[1]
 var.hat <- par[2]
@@ -722,43 +770,45 @@ c(mu.hat, qnorm(c(.025,.975), mean = mu.hat, sd = sqrt(var.hat)))
 #>  0.931 -0.801  2.663
 ```
 
-We see that the 95% quantile interval for $X_{n + 1}|\widehat{\theta}$
-is a bit smaller than ${\widehat{X}}_{n + 1}$, which is what we
-expected. Of course, for sufficiently large sample sizes, they will
-converge to the same quantiles.
+We see that the 95% quantile interval for $`X_{n+1}|\hat\theta`$ is a
+bit smaller than $`\hat{X}_{n+1}`$, which is what we expected. Of
+course, for sufficiently large sample sizes, they will converge to the
+same quantiles.
 
 ## Combining Independent MLEs
 
 Since the variance-covariance of an MLE is inversely proportional to the
-FIM, we can combine multiple independent MLEs of the same $\theta$ —
+FIM, we can combine multiple independent MLEs of the same $`\theta`$ —
 each estimated from a different sample — into a single MLE that
 incorporates the Fisher information from all samples.
 
-Consider $k$ mutually independent MLEs of parameter $\theta$,
-${\widehat{\theta}}_{1},\ldots,{\widehat{\theta}}_{k}$, where
-${\widehat{\theta}}_{j} \sim N\left( \theta,I_{j}^{- 1}(\theta) \right)$.
-Then, the sampling MLE of $\theta$ that incorporates all of the data in
-${\widehat{\theta}}_{1},\ldots,{\widehat{\theta}}_{k}$ is given by the
-inverse-variance weighted mean,
-$${\widehat{\theta}}_{w} = \left( \sum\limits_{j = 1}^{k}I_{j}(\theta) \right)^{- 1}\left( \sum\limits_{j = 1}^{k}I_{j}(\theta){\widehat{\theta}}_{j} \right),$$
-which, asymptotically, has an expected value of $\theta$ and a
-variance-covariance of
-$\left( \sum_{j = 1}^{k}I_{j}(\theta) \right)^{- 1}$.
+Consider $`k`$ mutually independent MLEs of parameter $`\theta`$,
+$`\hat\theta_1,\ldots,\hat\theta_k`$, where
+$`\hat\theta_j \sim N(\theta,I_j^{-1}(\theta))`$. Then, the sampling MLE
+of $`\theta`$ that incorporates all of the data in
+$`\hat\theta_1,\ldots,\hat\theta_k`$ is given by the inverse-variance
+weighted mean,
+``` math
+    \hat\theta_w = \left(\sum_{j=1}^k I_j(\theta)\right)^{-1} \left(\sum_{j=1}^k I_j(\theta) \hat\theta_j\right),
+```
+which, asymptotically, has an expected value of $`\theta`$ and a
+variance-covariance of $`\left(\sum_{j=1}^k I_j(\theta)\right)^{-1}`$.
 
 To evaluate the performance of
 [`combine()`](https://queelius.github.io/algebraic.mle/reference/combine.md),
-we generate a sample of $N = 100$ observations from
-$\mathcal{N}(\theta)$ and compute the MLE for the observed sample,
-denoted by $\widehat{\theta}$.
+we generate a sample of $`N=100`$ observations from
+$`\mathcal{N}(\theta)`$ and compute the MLE for the observed sample,
+denoted by $`\hat\theta`$.
 
-We then divide the observed sample into $r = 5$ sub-samples, each of
-size $N/r = 20$, and compute the MLE for each sub-sample, denoted by
-$\theta^{(1)},\ldots,\theta^{(r)}$.
+We then divide the observed sample into $`r=5`$ sub-samples, each of
+size $`N/r=20`$, and compute the MLE for each sub-sample, denoted by
+$`\theta^{(1)},\ldots,\theta^{(r)}`$.
 
 Finally, we combine these MLEs via inverse-variance weighting to form
-the combined MLE, denoted by $\theta_{w}$:
+the combined MLE, denoted by $`\theta_w`$:
 
 ``` r
+
 N <- 100
 r <- 5
 samp <- rnorm(N, mean = theta[1], sd = sqrt(theta[2]))
@@ -775,6 +825,7 @@ We show the results in the following R code. First, we show the combined
 MLE and its variance-covariance:
 
 ``` r
+
 params(mle.wt)
 #>    mu   var 
 #> 1.221 0.778
@@ -787,6 +838,7 @@ vcov(mle.wt)
 The MLE for the total sample and its MSE is:
 
 ``` r
+
 params(mle)
 #>    mu   var 
 #> 1.210 0.864
@@ -796,10 +848,10 @@ vcov(mle)
 #> [2,] 0.0000000000000244 0.0149328747769700
 ```
 
-Unfortunately, $\widehat{\theta}$ is a much better estimator of $\theta$
-than ${\widehat{\theta}}_{w}$. According to theory, they should be
-identical, but in practice, there may be issues like numerical
-instability that cause the combined MLE to perform poorly.
+Unfortunately, $`\hat\theta`$ is a much better estimator of $`\theta`$
+than $`\hat\theta_w`$. According to theory, they should be identical,
+but in practice, there may be issues like numerical instability that
+cause the combined MLE to perform poorly.
 
 We are in fact using numerical differentiation to compute the FIM, which
 may be a source of error. We can try to improve the accuracy of the FIM

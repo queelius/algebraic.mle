@@ -1,12 +1,12 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   dgp: dgp.html
   fitting-common-dist: fitting-common-dist.html
   mle-algebra: mle-algebra.html
   statistics: statistics.html
-last_built: 2026-03-17T17:12Z
+last_built: 2026-10-28T05:53Z
 urls:
   reference: https://queelius.github.io/algebraic.mle/reference
   article: https://queelius.github.io/algebraic.mle/articles
