@@ -98,3 +98,38 @@ test_that("combine errors when MLEs have different parameter dimensions", {
   expect_error(combine(fit1, fit2), "same number of parameters")
 })
 
+test_that("combine aligns named estimates and information matrices", {
+  covariance <- matrix(c(2, 0.5, 0.5, 5), 2)
+  first <- mle(c(a = 1, b = 10), sigma = covariance)
+  second <- mle(c(b = 10, a = 1), sigma = covariance[2:1, 2:1])
+  pooled <- combine(first, second)
+  expect_equal(params(pooled), c(a = 1, b = 10))
+  expect_equal(vcov(pooled), covariance / 2)
+  expect_equal(observed_fim(pooled), 2 * solve(covariance))
+
+  second$info <- solve(covariance)[2:1, 2:1]
+  expect_equal(params(combine(first, second)), params(pooled))
+  expect_equal(vcov(combine(first, second)), vcov(pooled))
+})
+
+test_that("combine rejects ambiguous or incompatible parameter names", {
+  first <- mle(c(a = 1, b = 2), sigma = diag(2))
+  invalid <- list(c(a = 1, c = 2), c(a = 1, a = 2), c(a = 1, 2),
+                  setNames(c(1, 2), c("a", NA_character_)), c(1, 2))
+  for (theta in invalid) {
+    expect_error(combine(first, mle(theta, sigma = diag(2))), "parameter names")
+  }
+  expect_error(combine(mle(c(1, 2), sigma = diag(2)), first), "parameter names")
+})
+
+test_that("combine preserves positional matching for unnamed estimates", {
+  first <- mle(c(1, 10), sigma = diag(c(2, 4)))
+  second <- mle(c(3, 8), sigma = diag(c(2, 4)))
+  expect_equal(params(combine(first, second)), c(2, 9))
+  expect_equal(vcov(combine(first, second)), diag(c(1, 2)))
+})
+
+test_that("combine rejects an empty collection", {
+  expect_error(combine(list()), "at least one")
+})
+

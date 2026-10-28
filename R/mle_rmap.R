@@ -63,7 +63,7 @@ rmap.mle_fit <- function(x, g, ...,
         g_sigma <- J %*% vcov(x) %*% t(J)
     }
 
-    mle(theta.hat = g(theta),
+    mle(theta.hat = g(theta, ...),
         sigma = g_sigma,
         info = ginv(g_sigma),
         nobs = nobs(x),

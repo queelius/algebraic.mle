@@ -36,6 +36,11 @@ The combined estimator has:
 
 When the Fisher information matrix is not directly available but the
 variance-covariance matrix is, the FIM is computed as \code{ginv(vcov)}.
+Named parameter vectors are matched by name, with each information matrix
+reordered along both axes to match. All estimates must have the same set of
+unique, non-empty parameter names, or all must be unnamed (matched by
+position). Matrix rows and columns must follow their estimate's parameter
+order. The output follows the first estimate's order.
 }
 \examples{
 # Three independent estimates of the same rate

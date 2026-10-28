@@ -90,3 +90,16 @@ test_that("rmap handles vector-valued transformation", {
   expect_true(is.matrix(vcov(g_mle)))
   expect_equal(dim(vcov(g_mle)), c(2, 2))
 })
+
+test_that("rmap forwards transformation arguments to the point estimate", {
+  fit <- mle(c(x = 2), sigma = matrix(0.25))
+  transform <- function(theta, scale, offset = 0) scale * theta + offset
+  for (method in c("delta", "mc")) {
+    set.seed(812)
+    result <- rmap(fit, transform, scale = 3, offset = 4,
+                   method = method, n = 10000)
+    expect_equal(as.numeric(params(result)), 10)
+    expect_equal(as.numeric(vcov(result)), 2.25,
+                 tolerance = if (method == "delta") 1e-6 else 0.05)
+  }
+})

@@ -14,6 +14,11 @@
 #'
 #' When the Fisher information matrix is not directly available but the
 #' variance-covariance matrix is, the FIM is computed as \code{ginv(vcov)}.
+#' Named parameter vectors are matched by name, with each information matrix
+#' reordered along both axes to match. All estimates must have the same set of
+#' unique, non-empty parameter names, or all must be unnamed (matched by
+#' position). Matrix rows and columns must follow their estimate's parameter
+#' order. The output follows the first estimate's order.
 #'
 #' @param x An \code{mle_fit} object, or a list of \code{mle_fit} objects.
 #' @param ... Additional \code{mle_fit} objects to combine.
@@ -58,6 +63,9 @@ combine.mle_fit <- function(x, ...) {
 #' @return An mle_fit object.
 #' @keywords internal
 combine_mles <- function(mles) {
+    if (length(mles) == 0L) {
+        stop("combine() requires at least one mle_fit object.")
+    }
     if (!all(vapply(mles, is_mle, logical(1)))) {
         stop("All arguments to combine() must be mle_fit objects.")
     }
@@ -69,17 +77,38 @@ combine_mles <- function(mles) {
              "Got: ", paste(dims, collapse = ", "))
     }
 
-    fims <- lapply(mles, fim_or_ginv_vcov)
+    estimates <- lapply(mles, params)
+    parameter_names <- lapply(estimates, names)
+    reference_names <- parameter_names[[1L]]
+    named <- !vapply(parameter_names, is.null, logical(1))
+    if (any(named)) {
+        valid_names <- vapply(parameter_names, function(nms) {
+            !is.null(nms) && !anyNA(nms) && all(nzchar(nms)) &&
+                !anyDuplicated(nms) && setequal(nms, reference_names)
+        }, logical(1))
+        if (!all(valid_names)) {
+            stop("All MLEs must have the same unique, non-empty parameter names, ",
+                 "or all must be unnamed.")
+        }
+    }
+
+    orderings <- lapply(parameter_names, function(nms) {
+        if (is.null(reference_names)) seq_len(dims[[1L]]) else match(reference_names, nms)
+    })
+    estimates <- Map(function(theta, idx) theta[idx], estimates, orderings)
+    fims <- Map(function(m, idx) {
+        fim_or_ginv_vcov(m)[idx, idx, drop = FALSE]
+    }, mles, orderings)
 
     info_combined <- Reduce(`+`, fims)
     sigma_combined <- ginv(info_combined)
 
     # Inverse-variance weighted combination: (sum I_i)^{-1} sum(I_i theta_i)
     weighted_sum <- Reduce(`+`, Map(
-        function(I, m) I %*% matrix(params(m), ncol = 1),
-        fims, mles))
+        function(I, theta) I %*% matrix(theta, ncol = 1),
+        fims, estimates))
     theta_combined <- as.vector(sigma_combined %*% weighted_sum)
-    names(theta_combined) <- names(params(mles[[1L]]))
+    names(theta_combined) <- reference_names
 
     nobs_vals <- vapply(mles, function(m) {
         n <- nobs(m)

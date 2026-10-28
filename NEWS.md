@@ -1,3 +1,14 @@
+# algebraic.mle 2.0.3
+
+* `combine()` now aligns named estimates and their information matrices by
+  parameter name. Incompatible, duplicate, missing, or partially named
+  parameters are rejected rather than silently pooling different quantities.
+  Fully unnamed estimates retain positional matching.
+* `combine(list())` now reports that at least one estimate is required.
+* `rmap()` now forwards transformation arguments to the transformed point
+  estimate as well as to the variance calculation, for both delta and Monte
+  Carlo methods.
+
 # algebraic.mle 2.0.1
 
 ## Bug fixes

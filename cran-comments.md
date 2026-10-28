@@ -1,26 +1,29 @@
+## Changes in 2.0.3
+
+`combine()` now aligns named parameter estimates and information matrices by
+name, preventing estimates of different quantities from being silently pooled
+when parameter orders differ. Incompatible or ambiguous parameter names are
+rejected; fully unnamed inputs retain positional matching. Empty collections
+now produce an informative error.
+
+`rmap()` now forwards transformation arguments to the point estimate as well
+as the variance calculation. Regression tests cover both delta and Monte Carlo
+methods, and parameter alignment with correlated covariance matrices.
+
+## Test environment
+
+* Ubuntu 24.04.3 LTS, R 4.3.3, x86_64-pc-linux-gnu
+* Local source build and R CMD check --as-cran, 2026-10-28
+
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 2 notes
 
-## Breaking changes (v0.9.0 → v2.0.2)
+* Checking for future file timestamps: unable to verify current time.
+  This is an environment/network time-verification limitation.
+* HTML manual validation was skipped because `tidy` is not installed and
+  math rendering checks were skipped because the check tool `V8` is unavailable
+  in this environment.
 
-This is a major update. The S3 class was renamed from "mle" to "mle_fit" to
-resolve a name collision with the S4 class stats4::mle. Custom generics
-aic(), bic(), loglik_val() were removed in favor of standard R generics
-AIC(), BIC(), logLik().
-
-## Coordinated submission
-
-This is part of a coordinated 6-package submission. All packages are
-maintained by me. Updated versions being submitted simultaneously:
-
-- algebraic.dist 1.0.0
-- algebraic.mle 2.0.2 (this package)
-- likelihood.model 1.0.0
-- compositional.mle 2.0.0
-- flexhaz 0.5.1
-- maskedcauses 0.9.3
-
-## Test environments
-
-* local Ubuntu 24.04, R 4.3.3
+Package installation, examples (including --run-donttest), tests, vignette
+rebuilding, and the PDF manual all passed.

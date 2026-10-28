@@ -31,9 +31,11 @@ Typical local workflow uses `devtools`:
 
 ## Testing Guidelines
 
-There is currently **no** `tests/` directory. Treat `devtools::check()` plus vignette execution as the primary validation path.
-
-If adding unit tests, prefer `testthat` (edition 3 is configured in `DESCRIPTION`) with `tests/testthat/test-*.R`.
+Run the testthat suite with `devtools::test()` (edition 3 is configured in
+`DESCRIPTION`). Tests live in `tests/testthat/test-*.R`. Add regression tests for
+changes to estimator composition, parameter identity, and uncertainty
+propagation. Use `devtools::check()` to exercise package installation, examples,
+and vignettes before release; inspect coverage with `covr::package_coverage()`.
 
 ## Commit & Pull Request Guidelines
 
